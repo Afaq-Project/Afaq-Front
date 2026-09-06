@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /*
- * Levora design tokens (v1).
- * Source of truth: levora_design_system.md
+ * Afaq design tokens (v1).
+ * Source of truth: Afaq_design_system.md
  * Tailwind v4 reads the `@theme` block below and generates utilities from it
  * (bg-primary-600, text-danger-800, rounded-lg, text-h1, ...) — there is no
  * tailwind.config.js in this project, this file *is* the config.
