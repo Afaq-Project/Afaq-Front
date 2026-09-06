@@ -1,5 +1,5 @@
-import { Header } from "@/src/feature/layout/components/header";
-import { Sidebar } from "@/src/feature/layout/components/sidebar";
+import { Header } from "@/feature/layout/components/header";
+import { Sidebar } from "@/feature/layout/components/sidebar";
 import type { ReactNode } from "react";
 
 export default function AppLayout({ children }: { children: ReactNode }) {

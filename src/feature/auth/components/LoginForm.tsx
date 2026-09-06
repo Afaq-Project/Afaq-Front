@@ -1,5 +1,5 @@
-import Button from "@/src/shared/ui/Button";
-import Input from "@/src/shared/ui/Input";
+import Button from "@/shared/ui/Button";
+import Input from "@/shared/ui/Input";
 import Link from "next/link";
 import FormHeader from "./FormHeader";
 import SocialAuth from "./SocialAuth";

@@ -5,7 +5,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import Card from "@/src/shared/ui/Card";
+import Card from "@/shared/ui/Card";
 import { DeadlineTone } from "../types/status";
 import { APPLICATIONS } from "../mocks/dashboard";
 import { cn, formatDeadline, getDeadlineTone } from "../services/utils";

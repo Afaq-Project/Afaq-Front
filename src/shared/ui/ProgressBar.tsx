@@ -1,9 +1,9 @@
-import { cn } from "@/src/feature/dashboard/services/utils";
+import { cn } from "@/feature/dashboard/services/utils";
 
 export interface ProgressBarProps {
-  /** 0-100 */
+ 
   value: number;
-  /** profile completion (primary-600) vs. application progress (primary-800) */
+ 
   variant?: "profile" | "application";
   className?: string;
   label?: string;

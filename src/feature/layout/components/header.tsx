@@ -10,7 +10,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import Brand from "@/src/shared/ui/Brand";
+import Brand from "@/shared/ui/Brand";
 
 const menuItems = [
   { href: "/profile", label: "Profile", icon: User },
