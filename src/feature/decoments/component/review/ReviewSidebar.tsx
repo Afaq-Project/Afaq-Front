@@ -47,7 +47,7 @@ export default function ReviewSidebar({ review }: { review: ReviewResult }) {
                 </a>
             </div>
 
-            {/* Review Results */}
+            {}
             <div>
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="font-semibold text-stone-900">Review Results</h2>
@@ -64,7 +64,7 @@ export default function ReviewSidebar({ review }: { review: ReviewResult }) {
                             <span className="font-medium text-green-900 text-sm">Strengths</span>
                         </div>
                         <ul className="space-y-1.5">
-                            {strengths.map((item, i) => (
+                            {(strengths || []).map((item, i) => (
                                 <li
                                     key={i}
                                     className="text-sm text-green-900 pl-3 relative before:content-['•'] before:absolute before:left-0"
@@ -104,7 +104,7 @@ export default function ReviewSidebar({ review }: { review: ReviewResult }) {
                             </span>
                         </div>
                         <ul className="space-y-1.5">
-                            {concerns.map((item, i) => (
+                        {(concerns || []).map((item, i) => (
                                 <li
                                     key={i}
                                     className="text-sm text-amber-900 pl-3 relative before:content-['•'] before:absolute before:left-0"
