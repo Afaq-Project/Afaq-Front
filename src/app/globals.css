@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 @import "tailwindcss";
 
 /*
@@ -9,8 +10,10 @@
  */
 
 :root {
-  --background: #eaf3deb3; /* neutral-50 — soft gray app canvas */
-  --foreground: #2c2c2a; /* neutral-900 */
+  --background: #eaf3deb3;
+  /* neutral-50 — soft gray app canvas */
+  --foreground: #2c2c2a;
+  /* neutral-900 */
 }
 
 @theme inline {
@@ -55,6 +58,22 @@
   --color-danger-400: #b95d5d;
   --color-danger-600: #a32d2d;
   --color-danger-800: #791f1f;
+
+  /* ---- Surface & Onboarding Tokens ---- */
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f8faf8;
+  --color-surface-container: #eff4ef;
+  --color-surface-container-high: #e5ede5;
+  --color-surface-container-highest: #dce5dc;
+  --color-on-surface: #2c2c2a;
+  --color-on-surface-variant: #5f5e5a;
+  --color-outline: #888780;
+  --color-outline-variant: #d3d1c7;
+  --color-primary: #3b6d11;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #eaf3de;
+  --color-on-primary-container: #173404;
+  --color-error: #a32d2d;
 
   /* ---- Typography ---- */
   --font-sans: var(--font-ibm-plex-sans);

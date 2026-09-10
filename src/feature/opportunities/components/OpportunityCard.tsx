@@ -1,15 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Bookmark, Calendar } from "lucide-react";
 
 import MatchBadge from "./MatchBadge";
-import { OpportunitySummary } from "../mocks/dashboard";
-
-function formatDaysLeft(daysLeft: number): string {
-  if (daysLeft === 1) return "1 day left";
-  if (daysLeft < 30) return `${daysLeft} days left`;
-  const months = Math.round(daysLeft / 30);
-  return months === 1 ? "1 month left" : `${months} months left`;
-}
+import { OpportunitySummary } from "../types/opportunity";
+import { formatDaysLeft } from "../services/utils";
 
 export function OpportunityCard({
   opportunity,
@@ -17,8 +12,14 @@ export function OpportunityCard({
   opportunity: OpportunitySummary;
 }) {
   return (
-    <div className="flex flex-col bg-white shadow-card rounded-lg overflow-hidden">
-      <div className="relative w-full h-40">
+    <div className="group relative flex flex-col bg-white shadow-card rounded-lg overflow-hidden">
+      <Link
+        href={`/discover/${opportunity.id}`}
+        aria-label={opportunity.title}
+        className="z-10 absolute inset-0"
+      />
+
+      <div className="z-20 relative w-full h-40">
         <Image
           src={opportunity.imageUrl}
           alt={opportunity.title}
@@ -31,7 +32,7 @@ export function OpportunityCard({
           <button
             type="button"
             aria-label="Save opportunity"
-            className="flex justify-center items-center bg-white shadow-card rounded-md w-8 h-8 text-neutral-600 hover:text-primary-800 transition-colors shrink-0"
+            className="relative flex justify-center items-center bg-white shadow-card rounded-md w-8 h-8 text-neutral-600 hover:text-primary-800 transition-colors shrink-0"
           >
             <Bookmark size={16} strokeWidth={1.75} />
           </button>
@@ -40,7 +41,9 @@ export function OpportunityCard({
 
       <div className="flex flex-col gap-3 p-5">
         <div>
-          <h3 className="text-h3">{opportunity.title}</h3>
+          <h3 className="text-h3 group-hover:text-primary-800 transition-colors">
+            {opportunity.title}
+          </h3>
           <p className="mt-1 text-neutral-600 text-small line-clamp-2">
             {opportunity.description}
           </p>

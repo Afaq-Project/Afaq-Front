@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { RECOMMENDED_OPPORTUNITIES } from "../mocks/dashboard";
-import { OpportunityCard } from "./OpportunityCard";
+import { RECOMMENDED_OPPORTUNITIES } from "@/src/feature/opportunities/mocks/opportunities";
+import { OpportunityCard } from "@/src/feature/opportunities/components/OpportunityCard";
 
 export function OpportunitiesSection() {
   return (
