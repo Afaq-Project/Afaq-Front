@@ -1,5 +1,5 @@
-import { OnboardingWizard } from "@/src/feature/onboarding/components/OnboardingWizard";
+import { redirect } from "next/navigation";
 
 export default function OnboardingPage() {
-  return <OnboardingWizard />;
+  redirect("/onboarding/step-1");
 }
