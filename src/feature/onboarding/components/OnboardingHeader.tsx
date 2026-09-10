@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Brand from "@/src/shared/ui/Brand";
 
 interface OnboardingHeaderProps {
   currentStep: number;
@@ -16,17 +17,8 @@ export function OnboardingHeader({
 
   return (
     <header className="w-full px-4 md:px-6 py-4 flex justify-between items-center bg-surface-container-lowest border-b border-outline-variant/30 sticky top-0 z-40 shadow-sm">
-      <Link
-        href="/dashboard"
-        className="font-bold text-xl md:text-2xl text-primary flex items-center gap-2 hover:opacity-90 transition-opacity"
-      >
-        <span
-          className="material-symbols-outlined text-primary text-2xl"
-          style={{ fontVariationSettings: "'FILL' 1" }}
-        >
-          spa
-        </span>
-        <span>Levora</span>
+      <Link href="/dashboard" className="hover:opacity-90 transition-opacity">
+        <Brand />
       </Link>
 
       {currentStep <= totalSteps && (
@@ -52,3 +44,4 @@ export function OnboardingHeader({
     </header>
   );
 }
+
