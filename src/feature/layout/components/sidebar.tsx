@@ -48,7 +48,7 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex flex-col items-center rounded-lg">
+      <aside className="hidden md:flex flex-col items-center rounded-lg sticky top-6 self-start h-[calc(100vh-5rem)] z-20">
         <nav className="flex flex-col gap-2">
           {NAV_ITEMS.map(({ href, label, icon: Icon }) =>
             renderNavItem(href, label, Icon),
