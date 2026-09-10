@@ -6,9 +6,13 @@ import {
 } from "lucide-react";
 
 import Card from "@/src/shared/ui/Card";
-import { DeadlineTone } from "../types/status";
-import { APPLICATIONS } from "../mocks/dashboard";
-import { cn, formatDeadline, getDeadlineTone } from "../services/utils";
+import { DeadlineTone } from "@/src/feature/applications/types/status";
+import { APPLICATIONS } from "@/src/feature/applications/mocks/applications";
+import {
+  formatDeadline,
+  getDeadlineTone,
+} from "@/src/feature/applications/services/utils";
+import { cn } from "../services/utils";
 
 const TONE_CLASSES: Record<
   DeadlineTone,
