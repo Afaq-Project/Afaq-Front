@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-type Tone = "gray" | "blue" | "green" | "amber" | "teal" | "red";
+export type Tone = "gray" | "blue" | "green" | "amber" | "teal" | "red";
 type Status =
   | "not-started"
   | "in-progress"
