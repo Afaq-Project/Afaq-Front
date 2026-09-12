@@ -47,8 +47,8 @@ export function Sidebar() {
         className={cn(
           "flex justify-center items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 transition-colors",
           active
-            ? "bg-neutral-900 text-white hover:bg-neutral-800"
-            : "bg-white text-neutral-400 shadow-card hover:bg-primary-50 hover:text-primary-800",
+            ? "bg-white text-neutral-900"
+            : "text-neutral-400 hover:bg-neutral-800 hover:text-white",
           "w-11 h-11 md:w-11 md:h-11",
         )}
       >
@@ -59,8 +59,8 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex flex-col items-center rounded-lg sticky top-6 self-start h-[calc(100vh-5rem)] z-20">
-        <nav className="flex flex-col gap-2">
+      <aside className="hidden md:flex flex-col items-center rounded-lg z-20">
+        <nav className="flex flex-col gap-2 bg-neutral-900 shadow-card p-2 rounded-lg">
           {NAV_ITEMS.map(({ href, label, icon: Icon }) =>
             renderNavItem(href, label, Icon),
           )}
