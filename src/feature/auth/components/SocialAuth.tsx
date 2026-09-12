@@ -1,5 +1,4 @@
-import { BsLinkedin } from "react-icons/bs";
-import { FcGoogle } from "react-icons/fc";
+import { GoogleIcon, LinkedInIcon } from "@/src/shared/ui/icons/SocialIcons";
 
 export default function SocialAuth() {
   return (
@@ -8,14 +7,14 @@ export default function SocialAuth() {
         type="button"
         className="flex justify-center items-center gap-2 border border-neutral-200 hover:border-neutral-400 rounded-sm h-11 font-medium text-neutral-800 text-sm transition-colors"
       >
-        <FcGoogle className="text-lg" />
+        <GoogleIcon className="w-5 h-5" />
         Google
       </button>
       <button
         type="button"
         className="flex justify-center items-center gap-2 border border-neutral-200 hover:border-neutral-400 rounded-sm h-11 font-medium text-neutral-800 text-sm transition-colors"
       >
-        <BsLinkedin className="text-[#0A66C2]" />
+        <LinkedInIcon className="w-4 h-4 text-[#0A66C2]" />
         LinkedIn
       </button>
     </div>
