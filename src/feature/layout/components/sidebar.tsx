@@ -35,8 +35,11 @@ export function Sidebar() {
     await logout();
   };
 
+  const isNavItemActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
+
   const renderNavItem = (href: string, label: string, Icon: any) => {
-    const active = pathname === href;
+    const active = isNavItemActive(href);
 
     return (
       <Link
@@ -102,7 +105,7 @@ export function Sidebar() {
 
       <nav className="md:hidden right-3 bottom-3 left-3 z-50 fixed flex justify-between items-center gap-2 shadow-card backdrop-blur-sm p-2 border border-neutral-200 rounded-full">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href;
+          const active = isNavItemActive(href);
 
           return (
             <Link
