@@ -44,14 +44,14 @@ export function ApplicationsFilters({
           })
         }
         className="sm:w-48"
-      >
-        <option value="all">All statuses</option>
-        {FILTERABLE_STATUSES.map((status) => (
-          <option key={status} value={status}>
-            {STATUS_LABEL[status]}
-          </option>
-        ))}
-      </Select>
+        options={[
+          { value: "all", label: "All statuses" },
+          ...FILTERABLE_STATUSES.map((status) => ({
+            value: status,
+            label: STATUS_LABEL[status],
+          })),
+        ]}
+      />
 
       <Select
         aria-label="Filter by type"
@@ -63,14 +63,11 @@ export function ApplicationsFilters({
           })
         }
         className="sm:w-40"
-      >
-        <option value="all">All types</option>
-        {FILTERABLE_TYPES.map((type) => (
-          <option key={type} value={type}>
-            {type}
-          </option>
-        ))}
-      </Select>
+        options={[
+          { value: "all", label: "All types" },
+          ...FILTERABLE_TYPES.map((type) => ({ value: type, label: type })),
+        ]}
+      />
     </div>
   );
 }

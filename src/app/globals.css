@@ -138,3 +138,23 @@ body {
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
 }
+
+/* Thin scrollbar with a black thumb and no visible track. */
+.scrollbar-minimal {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-900) transparent;
+}
+
+.scrollbar-minimal::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-minimal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-minimal::-webkit-scrollbar-thumb {
+  background-color: var(--color-neutral-900);
+  border-radius: 9999px;
+}

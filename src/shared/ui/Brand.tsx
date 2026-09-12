@@ -5,12 +5,12 @@ export default function Brand() {
         <img
           src="/afaq.png"
           alt=""
-          className="w-[25px] sm:w-[50px] h-[25px] sm:h-[50px]"
-          width={50}
-          height={50}
+          className="w-[50px] sm:w-[60px] h-[50px] sm:h-[60px]"
+          width={60}
+          height={60}
         />
       </span>
-      <span className="font-extrabold text-primary-800 text-2xl sm:text-3xl">
+      <span className="font-extrabold text-primary-800 text-2xl sm:text-4xl">
         Afaq
       </span>
     </div>
