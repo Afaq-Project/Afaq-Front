@@ -33,7 +33,7 @@ export default function SignupForm() {
     setFormError(null);
     try {
       await registerUser(values);
-      router.push("/dashboard?welcome=1");
+      router.push("/onboarding/step-1");
     } catch (error) {
       setFormError(getErrorMessage(error));
     }
