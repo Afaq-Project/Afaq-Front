@@ -56,7 +56,7 @@ export function Header() {
             type="button"
             onClick={() => setIsUserMenuOpen((prev) => !prev)}
             aria-label="Account menu"
-            className="flex items-center gap-2 bg-white hover:bg-primary-50 shadow-card pr-3 pl-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 h-11 font-medium text-neutral-800 text-small hover:text-primary-800 transition-colors"
+            className="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 shadow-card pr-3 pl-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 h-11 font-medium text-neutral-300 text-small hover:text-white transition-colors"
           >
             <Avatar
               name={user ? `${user.firstName} ${user.lastName}` : "?"}
@@ -68,7 +68,7 @@ export function Header() {
             <ChevronDown
               size={14}
               strokeWidth={1.75}
-              className={`text-neutral-400 transition-transform ${
+              className={`text-neutral-500 transition-transform ${
                 isUserMenuOpen ? "rotate-180" : "rotate-0"
               }`}
             />
