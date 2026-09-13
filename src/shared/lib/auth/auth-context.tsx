@@ -28,9 +28,7 @@ export interface AuthUser {
   isActive: boolean;
   createdAt: string;
   userProfile: AuthUserProfile;
-  // TODO: confirm with backend - the API collection doesn't document the shape of
-  // individual role entries.
-  roles: unknown[];
+  roles: string[];
 }
 
 interface LoginResponse {
@@ -54,8 +52,9 @@ export interface RegisterPayload {
 interface AuthContextValue {
   user: AuthUser | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<AuthUser>;
   register: (payload: RegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -108,6 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loggedInRef.current = true;
     tokenStorage.setTokens(accessToken, refreshToken);
     setUser(loggedInUser);
+    return loggedInUser;
   }, []);
 
   const register = useCallback(
@@ -135,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         isAuthenticated: Boolean(user),
+        isAdmin: Boolean(user?.roles.includes("admin")),
         isLoading,
         login,
         register,
