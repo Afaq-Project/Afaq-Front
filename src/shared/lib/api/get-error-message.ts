@@ -1,13 +1,16 @@
 import { isAxiosError } from "axios";
 
+interface ApiErrorItem {
+  field?: string;
+  code?: string;
+  message?: string;
+}
+
 interface ApiErrorEnvelope {
   message?: string;
-  // TODO: confirm with backend - the API collection only documents `errors: null`
-  // alongside a top-level `message` string for validation failures (duplicate email,
-  // wrong password, weak password). There's no confirmed example of `errors` being
-  // populated with field-level detail. Once confirmed, extend this to map `errors`
-  // onto individual form fields instead of only surfacing a general message.
-  errors?: unknown;
+  errors?: ApiErrorItem[] | Record<string, unknown> | string | null;
+  statusCode?: number;
+  status?: number;
 }
 
 export function getErrorMessage(
@@ -15,7 +18,31 @@ export function getErrorMessage(
   fallback = "Something went wrong. Please try again.",
 ): string {
   if (isAxiosError<ApiErrorEnvelope>(error)) {
-    return error.response?.data?.message ?? fallback;
+    const data = error.response?.data;
+    if (data) {
+      if (Array.isArray(data.errors) && data.errors.length > 0) {
+        const first = data.errors[0];
+        if (typeof first === "string") return first;
+        if (first && typeof first === "object" && first.message) {
+          return first.message;
+        }
+      }
+      if (typeof data.errors === "string") {
+        return data.errors;
+      }
+      if (typeof data.message === "string" && data.message.trim().length > 0) {
+        return data.message;
+      }
+    }
+    if (error.message) {
+      return error.message;
+    }
   }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
   return fallback;
 }
+
