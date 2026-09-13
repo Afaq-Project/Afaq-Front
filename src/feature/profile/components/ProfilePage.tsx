@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
 import Image from "next/image";
 import type { DocumentItem } from "@/src/feature/profile/types";
+import { ErrorState } from "@/src/shared/ui/ErrorState";
 
 /* ───────────────────── experience-level display map ───────────────────── */
 const EXP_LABELS: Record<string, string> = {
@@ -44,18 +45,27 @@ function DocIcon({ type }: { type: string }) {
 /*  ProfilePage                                                              */
 /* ═══════════════════════════════════════════════════════════════════════════ */
 export function ProfilePage() {
-  const { profile, completionPercentage } = useProfile();
+  const {
+    profile,
+    completionPercentage,
+    isLoading,
+    isSaving,
+    error,
+    clearError,
+    refetchProfile,
+    removeDocument,
+  } = useProfile();
   const [activeNav, setActiveNav] = useState("profile");
 
   /* Collect uploaded documents */
-  const uploadedDocs: DocumentItem[] = Object.values(profile.documents).filter(
-    (d): d is DocumentItem => d !== null && d.status === "uploaded"
+  const uploadedDocs: DocumentItem[] = Object.values(profile?.documents || {}).filter(
+    (d): d is DocumentItem => d !== null && d?.status === "uploaded"
   );
 
   /* Derive readable degree label from educationLevel + fieldsOfStudy */
   const degreeLabel = (() => {
-    const level = profile.education.educationLevel;
-    const field = profile.education.fieldsOfStudy[0] ?? "";
+    const level = profile?.education?.educationLevel || "";
+    const field = profile?.education?.fieldsOfStudy?.[0] ?? "";
     if (level === "Graduate" && field) return `Master's in ${field}`;
     if (level === "PhD" && field) return `PhD in ${field}`;
     if (level === "Undergraduate" && field) return `Bachelor's in ${field}`;
@@ -63,8 +73,35 @@ export function ProfilePage() {
     return level || "—";
   })();
 
+  /* ──────────── Loading state ──────────── */
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center gap-3 min-h-[400px] w-full">
+        <span className="material-symbols-outlined text-4xl text-primary-600 animate-spin">
+          progress_activity
+        </span>
+        <p className="font-medium text-neutral-600 text-body">
+          Loading profile...
+        </p>
+      </div>
+    );
+  }
+
+  /* ──────────── Server Error state ──────────── */
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load profile"
+        message={error}
+        onRetry={() => refetchProfile()}
+        retryLabel="Try Again"
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6 w-full">
+
       {/* ──────────── Top header card ──────────── */}
       <div className="bg-neutral-50 rounded-xl shadow-card px-6 py-5 flex items-center gap-5">
         {/* Avatar */}
@@ -72,7 +109,7 @@ export function ProfilePage() {
           {profile.avatarUrl ? (
             <Image
               src={profile.avatarUrl}
-              alt={profile.name}
+              alt={profile.name || "User Avatar"}
               fill
               className="rounded-full object-cover"
             />
@@ -87,10 +124,19 @@ export function ProfilePage() {
 
         {/* Name + email */}
         <div className="flex-1 min-w-0">
-          <h1 className="text-h1 font-semibold text-neutral-900 truncate">
-            {profile.name}
-          </h1>
-          <p className="text-small text-neutral-600 truncate">{profile.email}</p>
+          <div className="flex items-center gap-2">
+            <h1 className="text-h1 font-semibold text-neutral-900 truncate">
+              {profile.name || (isLoading ? "Loading..." : "User Profile")}
+            </h1>
+            {isSaving && (
+              <span className="text-caption text-neutral-400 animate-pulse">
+                Saving changes...
+              </span>
+            )}
+          </div>
+          <p className="text-small text-neutral-600 truncate">
+            {profile.email || (isLoading ? "..." : "")}
+          </p>
         </div>
 
         {/* Completion badge + bar */}
@@ -158,8 +204,8 @@ export function ProfilePage() {
               <div>
                 <p className="text-caption text-neutral-400 mb-1">GPA</p>
                 <p className="text-body font-medium text-neutral-900">
-                  {profile.background.gpa
-                    ? `${profile.background.gpa} / ${profile.background.gpaScale}`
+                  {profile.background?.gpa
+                    ? `${profile.background.gpa} / ${profile.background.gpaScale || "4.0"}`
                     : "—"}
                 </p>
               </div>
@@ -185,13 +231,13 @@ export function ProfilePage() {
               <div>
                 <p className="text-caption text-neutral-400 mb-1">Nationality</p>
                 <p className="text-body font-medium text-neutral-900">
-                  {profile.education.nationality || "—"}
+                  {profile.education?.nationality || "—"}
                 </p>
               </div>
               <div>
                 <p className="text-caption text-neutral-400 mb-1">Experience Level</p>
                 <p className="text-body font-medium text-neutral-900">
-                  {EXP_LABELS[profile.background.experienceLevel] ?? "—"}
+                  {EXP_LABELS[profile.background?.experienceLevel] ?? "—"}
                 </p>
               </div>
             </div>
@@ -217,7 +263,7 @@ export function ProfilePage() {
             <div className="mb-4">
               <p className="text-caption text-neutral-400 mb-2">Skills</p>
               <div className="flex flex-wrap gap-2">
-                {profile.skills.skills.map((skill) => (
+                {(profile.skills?.skills || []).map((skill) => (
                   <span
                     key={skill}
                     className="px-3 py-1 rounded-full text-small font-medium bg-neutral-100 text-neutral-800 border border-neutral-200"
@@ -232,7 +278,7 @@ export function ProfilePage() {
             <div>
               <p className="text-caption text-neutral-400 mb-2">Languages</p>
               <div className="flex flex-wrap gap-3">
-                {profile.skills.languages.map((lang) => (
+                {(profile.skills?.languages || []).map((lang) => (
                   <div key={lang.id} className="flex items-center gap-2">
                     <span className="text-body font-medium text-neutral-900">
                       {lang.language}
@@ -298,6 +344,7 @@ export function ProfilePage() {
                       </button>
                       <button
                         aria-label="Delete document"
+                        onClick={() => removeDocument(doc.slotId)}
                         className="p-1.5 rounded-md hover:bg-danger-50 text-neutral-400 hover:text-danger-600 transition-colors cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-xl">
