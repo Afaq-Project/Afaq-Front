@@ -1,6 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { useProfileApi } from "../hooks/useProfileApi";
+import { EMPTY_PROFILE } from "../services/profileService";
+import { profileSchema } from "@/src/shared/lib/validation/profile-schemas";
 import type {
   UserProfile,
   EducationData,
@@ -63,25 +66,26 @@ export const INITIAL_PROFILE: UserProfile = {
   },
 };
 
-export function calculateProfileCompletion(profile: UserProfile): number {
+export function calculateProfileCompletion(profile?: UserProfile | null): number {
+  if (!profile) return 0;
   let score = 0;
   // Education contributes up to 30%
-  if (profile.education.educationLevel) score += 10;
-  if (profile.education.fieldsOfStudy.length > 0) score += 10;
-  if (profile.education.nationality) score += 10;
+  if (profile.education?.educationLevel) score += 10;
+  if (profile.education?.fieldsOfStudy?.length > 0) score += 10;
+  if (profile.education?.nationality) score += 10;
 
   // Background contributes up to 25%
-  if (profile.background.gpa) score += 10;
-  if (profile.background.experienceLevel) score += 10;
-  if (profile.background.goals) score += 5;
+  if (profile.background?.gpa) score += 10;
+  if (profile.background?.experienceLevel) score += 10;
+  if (profile.background?.goals) score += 5;
 
   // Skills contribute up to 25%
-  if (profile.skills.skills.length > 0) score += 15;
-  if (profile.skills.languages.length > 0) score += 10;
+  if (profile.skills?.skills?.length > 0) score += 15;
+  if (profile.skills?.languages?.length > 0) score += 10;
 
   // Documents contribute up to 20%
-  const uploadedDocs = Object.values(profile.documents).filter(
-    (doc): doc is DocumentItem => doc !== null && doc.status === "uploaded"
+  const uploadedDocs = Object.values(profile.documents || {}).filter(
+    (doc): doc is DocumentItem => doc !== null && doc?.status === "uploaded",
   );
   if (uploadedDocs.length > 0) score += 10;
   if (uploadedDocs.length > 1) score += 10;
@@ -92,6 +96,10 @@ export function calculateProfileCompletion(profile: UserProfile): number {
 interface ProfileContextType {
   profile: UserProfile;
   completionPercentage: number;
+  isLoading: boolean;
+  isSaving: boolean;
+  error: string | null;
+  clearError: () => void;
   updateEducation: (data: EducationData) => void;
   updateBackground: (data: BackgroundData) => void;
   updateSkills: (data: SkillsData) => void;
@@ -99,80 +107,95 @@ interface ProfileContextType {
   addDocument: (doc: DocumentItem) => void;
   removeDocument: (slotId: DocumentSlotId) => void;
   resetToDefault: () => void;
+  saveProfile: (newProfile: UserProfile) => Promise<void>;
+  refetchProfile: () => Promise<unknown>;
 }
 
 const ProfileContext = createContext<ProfileContextType | null>(null);
 
-const STORAGE_KEY = "levora_user_profile";
-
 export function ProfileProvider({ children }: { children: ReactNode }) {
-  const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const {
+    profile: apiProfile,
+    isLoading,
+    isSaving,
+    error,
+    refetchProfile,
+    updateProfile,
+  } = useProfileApi();
 
-  useEffect(() => {
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const activeProfile = apiProfile || EMPTY_PROFILE;
+
+  const saveProfile = async (newProfile: UserProfile) => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setProfile(JSON.parse(stored));
+      setLocalError(null);
+
+      // Validate data against Zod schema before sending API request
+      const validation = profileSchema.safeParse(newProfile);
+      if (!validation.success) {
+        const issue = validation.error.issues[0]?.message || "Invalid profile data";
+        setLocalError(issue);
+        return;
       }
-    } catch {
-      // ignore
-    }
-    setIsHydrated(true);
-  }, []);
 
-  const saveProfile = (newProfile: UserProfile) => {
-    setProfile(newProfile);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
+      await updateProfile(validation.data as UserProfile);
     } catch {
-      // ignore
+      // Error handled by mutation
     }
   };
 
   const updateEducation = (data: EducationData) => {
-    saveProfile({ ...profile, education: data });
+    saveProfile({ ...activeProfile, education: data });
   };
 
   const updateBackground = (data: BackgroundData) => {
-    saveProfile({ ...profile, background: data });
+    saveProfile({ ...activeProfile, background: data });
   };
 
   const updateSkills = (data: SkillsData) => {
-    saveProfile({ ...profile, skills: data });
+    saveProfile({ ...activeProfile, skills: data });
   };
 
   const updateDocuments = (data: DocumentsData) => {
-    saveProfile({ ...profile, documents: data });
+    saveProfile({ ...activeProfile, documents: data });
   };
 
   const addDocument = (doc: DocumentItem) => {
     const updatedDocs: DocumentsData = {
-      ...profile.documents,
+      ...activeProfile.documents,
       [doc.slotId]: doc,
     };
-    saveProfile({ ...profile, documents: updatedDocs });
+    saveProfile({ ...activeProfile, documents: updatedDocs });
   };
 
   const removeDocument = (slotId: DocumentSlotId) => {
     const updatedDocs: DocumentsData = {
-      ...profile.documents,
+      ...activeProfile.documents,
       [slotId]: null,
     };
-    saveProfile({ ...profile, documents: updatedDocs });
+    saveProfile({ ...activeProfile, documents: updatedDocs });
   };
 
   const resetToDefault = () => {
-    saveProfile(INITIAL_PROFILE);
+    saveProfile(EMPTY_PROFILE);
   };
 
-  const completionPercentage = calculateProfileCompletion(profile);
+  const clearError = () => {
+    setLocalError(null);
+  };
+
+  const completionPercentage = calculateProfileCompletion(activeProfile);
 
   return (
     <ProfileContext.Provider
       value={{
-        profile,
+        profile: activeProfile,
         completionPercentage,
+        isLoading,
+        isSaving,
+        error: localError || error,
+        clearError,
         updateEducation,
         updateBackground,
         updateSkills,
@@ -180,6 +203,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         addDocument,
         removeDocument,
         resetToDefault,
+        saveProfile,
+        refetchProfile,
       }}
     >
       {children}
@@ -194,6 +219,10 @@ export function useProfile(): ProfileContextType {
     return {
       profile: INITIAL_PROFILE,
       completionPercentage: calculateProfileCompletion(INITIAL_PROFILE),
+      isLoading: false,
+      isSaving: false,
+      error: null,
+      clearError: () => {},
       updateEducation: () => {},
       updateBackground: () => {},
       updateSkills: () => {},
@@ -201,6 +230,8 @@ export function useProfile(): ProfileContextType {
       addDocument: () => {},
       removeDocument: () => {},
       resetToDefault: () => {},
+      saveProfile: async () => {},
+      refetchProfile: async () => {},
     };
   }
   return context;
