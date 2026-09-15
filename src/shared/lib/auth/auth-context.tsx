@@ -135,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         isAuthenticated: Boolean(user),
-        isAdmin: Boolean(user?.roles.includes("admin")),
+        isAdmin: Boolean(user?.roles.includes("system_admin")),
         isLoading,
         login,
         register,
