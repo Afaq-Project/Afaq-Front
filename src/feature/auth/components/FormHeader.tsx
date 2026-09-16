@@ -1,4 +1,4 @@
-import Brand from "@/src/shared/ui/Brand";
+import Brand from "@/shared/ui/Brand";
 
 export default function FormHeader() {
   return (

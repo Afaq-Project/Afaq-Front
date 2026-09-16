@@ -15,7 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { cn } from "../../dashboard/services/utils";
-import { useAuth } from "@/src/shared/lib/auth/auth-context";
+import { useAuth } from "@/shared/lib/auth/auth-context";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },

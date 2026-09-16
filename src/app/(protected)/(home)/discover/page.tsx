@@ -1,4 +1,4 @@
-import { DiscoverExplorer } from "@/src/feature/discover/components/DiscoverExplorer";
+import { DiscoverExplorer } from "@/feature/discover/components/DiscoverExplorer";
 
 export default function DiscoverPage() {
   return (

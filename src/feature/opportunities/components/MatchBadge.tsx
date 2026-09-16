@@ -1,6 +1,6 @@
 import { Sparkles } from "lucide-react";
 
-import { cn } from "@/src/feature/dashboard/services/utils";
+import { cn } from "@/feature/dashboard/services/utils";
 import { getMatchTier, MATCH_BADGE_CLASSES } from "../services/utils";
 
 interface MatchBadgeProps {

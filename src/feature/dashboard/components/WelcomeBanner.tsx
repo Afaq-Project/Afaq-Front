@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
-import { useAuth } from "@/src/shared/lib/auth/auth-context";
+import { useAuth } from "@/shared/lib/auth/auth-context";
 
 export function WelcomeBanner() {
   const searchParams = useSearchParams();

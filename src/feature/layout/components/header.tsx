@@ -10,11 +10,10 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
-import Brand from "@/src/shared/ui/Brand";
-import { Avatar } from "@/src/shared/ui/Avatar";
-import { useAuth } from "@/src/shared/lib/auth/auth-context";
-import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
-
+import Brand from "@/shared/ui/Brand";
+import { Avatar } from "@/shared/ui/Avatar";
+import { useAuth } from "@/shared/lib/auth/auth-context";
+import { useClickOutside } from "@/shared/hooks/useClickOutside";
 export function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
