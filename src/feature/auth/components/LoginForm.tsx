@@ -4,17 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import Button from "@/src/shared/ui/Button";
-import Input from "@/src/shared/ui/Input";
+import Button from "@/shared/ui/Button";
+import Input from "@/shared/ui/Input";
 import Link from "next/link";
 import FormHeader from "./FormHeader";
 import SocialAuth from "./SocialAuth";
-import { useAuth } from "@/src/shared/lib/auth/auth-context";
-import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
+import { useAuth } from "@/shared/lib/auth/auth-context";
+import { getErrorMessage } from "@/shared/lib/api/get-error-message";
 import {
   loginSchema,
   type LoginFormValues,
-} from "@/src/shared/lib/validation/auth-schemas";
+} from "@/shared/lib/validation/auth-schemas";
 
 export default function LoginForm() {
   const { login } = useAuth();

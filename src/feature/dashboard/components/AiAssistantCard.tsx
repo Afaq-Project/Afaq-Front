@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-import Button from "@/src/shared/ui/Button";
+import Button from "@/shared/ui/Button";
 import { cn } from "../services/utils";
 
 export function AiAssistantCard() {

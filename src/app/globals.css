@@ -4,16 +4,11 @@
 /*
  * Afaq design tokens (v1).
  * Source of truth: Afaq_design_system.md
- * Tailwind v4 reads the `@theme` block below and generates utilities from it
- * (bg-primary-600, text-danger-800, rounded-lg, text-h1, ...) — there is no
- * tailwind.config.js in this project, this file *is* the config.
  */
 
 :root {
-  --background: #eaf3deb3;
-  /* neutral-50 — soft gray app canvas */
+  --background: #f4f8f0;
   --foreground: #2c2c2a;
-  /* neutral-900 */
 }
 
 @theme inline {
@@ -22,23 +17,29 @@
 
   /* ---- Color: Primary (green) — brand accent ---- */
   --color-primary-50: #eaf3de;
-  --color-primary-100: #c0dd97;
-  --color-primary-200: #97c459;
+  --color-primary-100: #d4e8be;
+  --color-primary-200: #b5d894;
+  --color-primary-300: #93c568;
   --color-primary-400: #639922;
+  --color-primary-500: #4e8019;
   --color-primary-600: #3b6d11;
+  --color-primary-700: #30580e;
   --color-primary-800: #27500a;
   --color-primary-900: #173404;
 
   /* ---- Color: Neutral (gray) — text, borders, backgrounds ---- */
-  --color-neutral-50: #efefefd8;
-  --color-neutral-100: #d3d1c7;
-  --color-neutral-200: #b4b2a9;
+  --color-neutral-50: #f7f7f6;
+  --color-neutral-100: #ebeae6;
+  --color-neutral-200: #d3d1c7;
+  --color-neutral-300: #b4b2a9;
   --color-neutral-400: #888780;
+  --color-neutral-500: #71706a;
   --color-neutral-600: #5f5e5a;
+  --color-neutral-700: #4e4d49;
   --color-neutral-800: #444441;
   --color-neutral-900: #2c2c2a;
 
-  /* ---- Color: Semantic — meaning only, never decorative ---- */
+  /* ---- Color: Semantic ---- */
   --color-info-50: #e6f1fb;
   --color-info-400: #4c84bb;
   --color-info-600: #185fa5;
@@ -104,31 +105,18 @@
   --text-caption--line-height: 16px;
   --text-caption--font-weight: 500;
 
-  /* ---- Radius ----
-   * Soft/rounded direction: cards read as large rounded panels, small
-   * chrome (icon buttons) is medium-rounded, pills/buttons are full.
-   */
+  /* ---- Radius ---- */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
-  /* ---- Shadow ----
-   * Floating-card elevation: surfaces are separated from the gray canvas by
-   * a soft ambient shadow, not a border. Used by Card and any chrome that
-   * sits directly on the page background (header pills, icon buttons).
-   */
+  /* ---- Shadow ---- */
   --shadow-card:
     0 1px 2px 0 rgb(44 44 42 / 0.04), 0 12px 24px -8px rgb(44 44 42 / 0.12);
-
-  /* ---- Spacing note ----
-   * The 4px base scale (4·8·12·16·24·32·48·64) is already Tailwind's default
-   * spacing scale: p-1 p-2 p-3 p-4 p-6 p-8 p-12 p-16. No override needed —
-   * just use those step numbers instead of arbitrary values.
-   */
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--color-foreground);
   font-family:
     var(--font-sans),
@@ -139,7 +127,6 @@ body {
   line-height: var(--text-body--line-height);
 }
 
-/* Thin scrollbar with a black thumb and no visible track. */
 .scrollbar-minimal {
   scrollbar-width: thin;
   scrollbar-color: var(--color-neutral-900) transparent;

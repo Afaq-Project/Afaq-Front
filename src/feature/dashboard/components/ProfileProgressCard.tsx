@@ -1,6 +1,6 @@
 import { MoreHorizontal } from "lucide-react";
-import { TickGauge } from "@/src/shared/ui/TickGauge";
-import Card from "@/src/shared/ui/Card";
+import { TickGauge } from "@/shared/ui/TickGauge";
+import Card from "@/shared/ui/Card";
 import { PROFILE_COMPLETION, PROFILE_SECTIONS } from "../mocks/dashboard";
 import { cn } from "../services/utils";
 

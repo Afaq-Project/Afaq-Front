@@ -1,7 +1,8 @@
-import { Header } from "@/src/feature/layout/components/header";
-import { Sidebar } from "@/src/feature/layout/components/sidebar";
-import { ProfileProvider } from "@/src/feature/profile/context/ProfileContext";
+import { Header } from "@/feature/layout/components/header";
+import { Sidebar } from "@/feature/layout/components/sidebar";
+import { ProfileProvider } from "@/feature/profile/context/ProfileContext";
 import type { ReactNode } from "react";
+
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (

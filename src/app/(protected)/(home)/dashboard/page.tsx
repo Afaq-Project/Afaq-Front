@@ -1,11 +1,12 @@
-import { AiAssistantCard } from "@/src/feature/dashboard/components/AiAssistantCard";
-import { DeadlinesCard } from "@/src/feature/dashboard/components/DeadlinesCard";
-import { OpportunitiesSection } from "@/src/feature/dashboard/components/OpportunitiesSection";
-import { OverviewPanel } from "@/src/feature/dashboard/components/OverviewPanel";
-import { ProfileProgressCard } from "@/src/feature/dashboard/components/ProfileProgressCard";
-import { WelcomeBanner } from "@/src/feature/dashboard/components/WelcomeBanner";
+import { Suspense } from "react";
+import { AiAssistantCard } from "@/feature/dashboard/components/AiAssistantCard";
+import { DeadlinesCard } from "@/feature/dashboard/components/DeadlinesCard";
+import { OpportunitiesSection } from "@/feature/dashboard/components/OpportunitiesSection";
+import { OverviewPanel } from "@/feature/dashboard/components/OverviewPanel";
+import { ProfileProgressCard } from "@/feature/dashboard/components/ProfileProgressCard";
+import { WelcomeBanner } from "@/feature/dashboard/components/WelcomeBanner";
 
-export default function DashboardPage() {
+function DashboardContent() {
   return (
     <div className="flex flex-col gap-4">
       <WelcomeBanner />
@@ -26,5 +27,13 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-sm text-neutral-500">Loading dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

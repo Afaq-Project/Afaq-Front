@@ -10,8 +10,8 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import apiClient from "@/src/shared/lib/api/axios-client";
-import { tokenStorage } from "@/src/shared/lib/auth/token-storage";
+import apiClient from "@/shared/lib/api/axios-client";
+import { tokenStorage } from "@/shared/lib/auth/token-storage";
 
 export interface AuthUserProfile {
   fullName: string;
@@ -28,8 +28,7 @@ export interface AuthUser {
   isActive: boolean;
   createdAt: string;
   userProfile: AuthUserProfile;
-  // TODO: confirm with backend - the API collection doesn't document the shape of
-  // individual role entries.
+ 
   roles: unknown[];
 }
 
@@ -82,10 +81,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           await apiClient.post<RefreshResponse>("/auth/refresh", { refreshToken });
         tokenStorage.setTokens(accessToken, newRefreshToken);
 
-        // Re-fetch rather than trusting any cached user, since it may be stale.
+       
         const freshUser = await apiClient.get<AuthUser>("/auth/me");
-        // A login can complete while this was in flight - never let a stale
-        // hydrate response clobber a session established after it started.
+       
         if (!loggedInRef.current) setUser(freshUser);
       } catch {
         if (!loggedInRef.current) {
@@ -112,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (payload: RegisterPayload) => {
-      // Register doesn't return tokens, so sign the user in immediately after.
+   
       await apiClient.post<AuthUser>("/auth/register", payload);
       await login(payload.email, payload.password);
     },
@@ -123,7 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await apiClient.post("/auth/logout");
     } catch {
-      // Best-effort: local state is cleared regardless of the call's outcome.
+    
     }
     tokenStorage.clearTokens();
     setUser(null);

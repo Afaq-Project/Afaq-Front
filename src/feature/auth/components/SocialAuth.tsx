@@ -1,4 +1,4 @@
-import { GoogleIcon, LinkedInIcon } from "@/src/shared/ui/icons/SocialIcons";
+import { GoogleIcon, LinkedInIcon } from "@/shared/ui/icons/SocialIcons";
 
 export default function SocialAuth() {
   return (
