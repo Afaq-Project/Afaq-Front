@@ -6,6 +6,7 @@ import {
   Bell,
   ChevronDown,
   User,
+  Settings,
   LogOut,
   Loader2,
   CalendarDays,
@@ -98,6 +99,14 @@ export function Header() {
               >
                 <User size={16} strokeWidth={1.75} />
                 <span className="text-small">Profile</span>
+              </Link>
+              <Link
+                href="/settings"
+                onClick={() => setIsUserMenuOpen(false)}
+                className="flex items-center gap-3 hover:bg-primary-50 px-3 py-2 rounded-md text-neutral-700 hover:text-primary-800 transition-colors"
+              >
+                <Settings size={16} strokeWidth={1.75} />
+                <span className="text-small">Settings</span>
               </Link>
               <Link
                 href="/notifications"
