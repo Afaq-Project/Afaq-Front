@@ -9,8 +9,6 @@ import {
   Settings2,
   Users,
   CreditCard,
-  Settings,
-  CircleUserRound,
   LogOut,
   Loader2,
 } from "lucide-react";
@@ -66,29 +64,13 @@ export function AdminSidebar() {
         </nav>
 
         <div className="flex flex-col gap-2 mt-auto">
-          <Link
-            href="/settings"
-            aria-label="Settings"
-            title="Settings"
-            className="flex justify-center items-center bg-white hover:bg-primary-50 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-primary-800 transition-colors"
-          >
-            <Settings size={20} strokeWidth={1.75} />
-          </Link>
-          <Link
-            href="/profile"
-            aria-label="Profile"
-            title="Profile"
-            className="flex justify-center items-center bg-white hover:bg-primary-50 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-primary-800 transition-colors"
-          >
-            <CircleUserRound size={20} strokeWidth={1.75} />
-          </Link>
           <button
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
             aria-label="Logout"
             title="Logout"
-            className="flex justify-center items-center bg-white hover:bg-danger-50 disabled:opacity-50 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 disabled:pointer-events-none w-11 h-11 text-neutral-400 hover:text-danger-800 transition-colors"
+            className="flex justify-center items-center bg-neutral-900 hover:bg-danger-600 disabled:opacity-50 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 disabled:pointer-events-none w-11 h-11 text-neutral-400 hover:text-white transition-colors"
           >
             {isLoggingOut ? (
               <Loader2 size={20} strokeWidth={1.75} className="animate-spin" />
