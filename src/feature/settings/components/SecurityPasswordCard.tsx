@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { Lock } from "lucide-react";
 
 import Button from "@/src/shared/ui/Button";
-import Input from "@/src/shared/ui/Input";
+import PasswordInput from "@/src/shared/ui/PasswordInput";
 import {
   updatePasswordSchema,
   type UpdatePasswordFormValues,
@@ -53,16 +53,14 @@ export function SecurityPasswordCard() {
         )}
 
         <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">
-          <Input
+          <PasswordInput
             id="currentPassword"
-            type="password"
             label="Current Password"
             error={errors.currentPassword?.message}
             {...register("currentPassword")}
           />
-          <Input
+          <PasswordInput
             id="newPassword"
-            type="password"
             label="New Password"
             error={errors.newPassword?.message}
             {...register("newPassword")}
