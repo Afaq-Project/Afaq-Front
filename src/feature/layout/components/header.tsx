@@ -8,6 +8,8 @@ import {
   User,
   LogOut,
   Loader2,
+  CalendarDays,
+  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import Brand from "@/src/shared/ui/Brand";
@@ -29,10 +31,29 @@ export function Header() {
   };
 
   return (
-    <header className="flex justify-between items-center gap-4">
+    <header className="flex items-center gap-4">
       <Brand />
 
-      <div className="flex items-center gap-1 sm:gap-3">
+      <div className="hidden lg:flex flex-1 justify-center items-center min-w-0">
+        <div className="inline-flex items-center gap-2.5 bg-white shadow-card p-1.5 border border-neutral-100 rounded-full max-w-xl h-13">
+          <span className="relative flex justify-center items-center bg-linear-to-br from-primary-600 to-primary-800 rounded-full w-10 h-10 text-white shrink-0">
+            <CalendarDays size={16} strokeWidth={2} />
+            <span className="top-0 right-0 absolute bg-danger-600 border-2 border-white rounded-full w-3 h-3">
+              <span className="absolute inset-0 bg-danger-600 rounded-full animate-ping" />
+            </span>
+          </span>
+          <p className="min-w-0 font-medium text-neutral-700 text-small truncate">
+            <span className="text-neutral-400">Free workshop:</span> Preparing
+            your scholarship application
+          </p>
+          <span className="flex items-center gap-1 bg-primary-50 px-3.5 rounded-full h-9 font-semibold text-primary-700 text-caption whitespace-nowrap shrink-0">
+            Learn more
+            <ArrowRight size={12} strokeWidth={2.5} />
+          </span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-1 sm:gap-3 ml-auto lg:ml-0">
         <label className="flex items-center gap-2 bg-white shadow-card pr-4 pl-4 rounded-md focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 h-11 transition-shadow">
           <Search size={16} strokeWidth={1.75} />
           <input

@@ -11,7 +11,7 @@ export default function MatchBadge({ percent }: MatchBadgeProps) {
   return (
     <span
       className={cn(
-        "absolute top-3 right-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-white shadow-card ring-1 ring-white/30",
+        "inline-flex top-3 right-3 absolute items-center gap-1.5 shadow-card px-3 py-1.5 rounded-full text-white",
         MATCH_BADGE_CLASSES[getMatchTier(percent)],
       )}
     >

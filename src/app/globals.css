@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
 @import "tailwindcss";
 
 /*
@@ -10,7 +10,7 @@
  */
 
 :root {
-  --background: #eaf3deb3;
+  --background: #efefef;
   /* neutral-50 — soft gray app canvas */
   --foreground: #2c2c2a;
   /* neutral-900 */
