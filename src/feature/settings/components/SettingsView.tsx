@@ -1,4 +1,5 @@
 import PageHeader from "@/src/shared/ui/PageHeader";
+import { BillingLinkCard } from "./BillingLinkCard";
 import { ConnectedAccountsCard } from "./ConnectedAccountsCard";
 import { DataPrivacyCard } from "./DataPrivacyCard";
 import { NeedHelpCard } from "./NeedHelpCard";
@@ -11,6 +12,8 @@ export function SettingsView() {
         title="Account & Security"
         description="Update your password, manage connected accounts, and control your data."
       />
+
+      <BillingLinkCard />
 
       <div className="gap-4 grid grid-cols-1 lg:grid-cols-3 items-stretch">
         <div className="lg:col-span-2">
