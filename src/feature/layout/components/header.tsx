@@ -6,14 +6,18 @@ import {
   Bell,
   ChevronDown,
   User,
+  Settings,
   LogOut,
   Loader2,
+  CalendarDays,
+  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import Brand from "@/src/shared/ui/Brand";
 import { Avatar } from "@/src/shared/ui/Avatar";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
+import { NotificationsDropdown } from "@/src/feature/notifications/components/NotificationsDropdown";
 
 export function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -29,10 +33,29 @@ export function Header() {
   };
 
   return (
-    <header className="flex justify-between items-center gap-4">
+    <header className="flex items-center gap-4">
       <Brand />
 
-      <div className="flex items-center gap-1 sm:gap-3">
+      <div className="hidden lg:flex flex-1 justify-center items-center min-w-0">
+        <div className="inline-flex items-center gap-2.5 bg-white shadow-card p-1.5 border border-neutral-100 rounded-full max-w-xl h-13">
+          <span className="relative flex justify-center items-center bg-linear-to-br from-primary-600 to-primary-800 rounded-full w-10 h-10 text-white shrink-0">
+            <CalendarDays size={16} strokeWidth={2} />
+            <span className="top-0 right-0 absolute bg-danger-600 border-2 border-white rounded-full w-3 h-3">
+              <span className="absolute inset-0 bg-danger-600 rounded-full animate-ping" />
+            </span>
+          </span>
+          <p className="min-w-0 font-medium text-neutral-700 text-small truncate">
+            <span className="text-neutral-400">Free workshop:</span> Preparing
+            your scholarship application
+          </p>
+          <span className="flex items-center gap-1 bg-primary-50 px-3.5 rounded-full h-9 font-semibold text-primary-700 text-caption whitespace-nowrap shrink-0">
+            Learn more
+            <ArrowRight size={12} strokeWidth={2.5} />
+          </span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-1 sm:gap-3 ml-auto lg:ml-0">
         <label className="flex items-center gap-2 bg-white shadow-card pr-4 pl-4 rounded-md focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 h-11 transition-shadow">
           <Search size={16} strokeWidth={1.75} />
           <input
@@ -42,14 +65,7 @@ export function Header() {
           />
         </label>
 
-        <button
-          type="button"
-          aria-label="Notifications"
-          title="Notifications"
-          className="hidden lg:flex justify-center items-center bg-white hover:bg-primary-50 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-primary-800 transition-colors"
-        >
-          <Bell size={20} strokeWidth={1.75} />
-        </button>
+        <NotificationsDropdown className="hidden lg:block" />
 
         <div className="relative" ref={userMenuRef}>
           <button
@@ -83,6 +99,14 @@ export function Header() {
               >
                 <User size={16} strokeWidth={1.75} />
                 <span className="text-small">Profile</span>
+              </Link>
+              <Link
+                href="/settings"
+                onClick={() => setIsUserMenuOpen(false)}
+                className="flex items-center gap-3 hover:bg-primary-50 px-3 py-2 rounded-md text-neutral-700 hover:text-primary-800 transition-colors"
+              >
+                <Settings size={16} strokeWidth={1.75} />
+                <span className="text-small">Settings</span>
               </Link>
               <Link
                 href="/notifications"
