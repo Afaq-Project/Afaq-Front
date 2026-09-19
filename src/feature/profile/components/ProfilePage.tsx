@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
 import Image from "next/image";
+import Link from "next/link";
 import type { DocumentItem } from "@/src/feature/profile/types";
 
 /* ───────────────────── experience-level display map ───────────────────── */
@@ -21,6 +22,12 @@ const NAV_ITEMS = [
   { id: "security", label: "Security", icon: "shield" },
   { id: "billing", label: "Billing", icon: "payments" },
 ] as const;
+
+/* ───────────────────── nav items that link to their own page instead of switching tabs ───────────────────── */
+const NAV_ROUTES: Partial<Record<(typeof NAV_ITEMS)[number]["id"], string>> = {
+  security: "/settings",
+  billing: "/billing",
+};
 
 /* ───────────────────── document file-type icon helper ───────────────────── */
 function DocIcon({ type }: { type: string }) {
@@ -113,22 +120,37 @@ export function ProfilePage() {
         <nav className="w-52 flex-shrink-0 flex flex-col gap-1 hidden md:flex">
           {NAV_ITEMS.map((item) => {
             const isActive = item.id === activeNav;
+            const navClassName = `flex items-center gap-3 px-4 py-2.5 rounded-lg text-body font-medium transition-colors cursor-pointer ${
+              isActive
+                ? "bg-primary-600 text-white"
+                : "text-neutral-800 hover:bg-neutral-50"
+            }`;
+            const navIcon = (
+              <span
+                className="material-symbols-outlined text-xl"
+                style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+              >
+                {item.icon}
+              </span>
+            );
+
+            const route = NAV_ROUTES[item.id];
+            if (route) {
+              return (
+                <Link key={item.id} href={route} className={navClassName}>
+                  {navIcon}
+                  {item.label}
+                </Link>
+              );
+            }
+
             return (
               <button
                 key={item.id}
                 onClick={() => setActiveNav(item.id)}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-body font-medium transition-colors cursor-pointer ${
-                  isActive
-                    ? "bg-primary-600 text-white"
-                    : "text-neutral-800 hover:bg-neutral-50"
-                }`}
+                className={navClassName}
               >
-                <span
-                  className="material-symbols-outlined text-xl"
-                  style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
-                >
-                  {item.icon}
-                </span>
+                {navIcon}
                 {item.label}
               </button>
             );

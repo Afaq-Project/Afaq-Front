@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Button from "@/src/shared/ui/Button";
 import Input from "@/src/shared/ui/Input";
+import PasswordInput from "@/src/shared/ui/PasswordInput";
 import Link from "next/link";
 import FormHeader from "./FormHeader";
 import SocialAuth from "./SocialAuth";
@@ -79,9 +80,8 @@ export default function LoginForm() {
                 Forgot password?
               </Link>
             </div>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               error={errors.password?.message}
               {...register("password")}
             />

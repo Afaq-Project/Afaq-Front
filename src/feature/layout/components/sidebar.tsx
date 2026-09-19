@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   LogOut,
   Loader2,
+  Settings,
 } from "lucide-react";
 import { cn } from "../../dashboard/services/utils";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
@@ -69,6 +70,14 @@ export function Sidebar() {
         </nav>
 
         <div className="flex flex-col gap-2 mt-auto">
+          <Link
+            href="/settings"
+            aria-label="Settings"
+            title="Settings"
+            className="flex justify-center items-center bg-neutral-900 hover:bg-primary-600 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-white transition-colors"
+          >
+            <Settings size={20} strokeWidth={1.75} />
+          </Link>
           <Link
             href="/profile"
             aria-label="Profile"
