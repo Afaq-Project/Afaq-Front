@@ -15,19 +15,19 @@ const metrics: Array<{
   {
     label: "Applications",
     value: "23",
-    tone: "bg-[#f4e6c9]",
+    tone: "bg-warning-400",
     icon: ClipboardList,
   },
   {
     label: "Submitted",
     value: "12",
-    tone: "bg-[#dfeaf8]",
+    tone: "bg-info-400",
     icon: CheckCircle2,
   },
   {
     label: "In progress",
     value: "11",
-    tone: "bg-[#e7e4e2]",
+    tone: "bg-success-400",
     icon: Clock3,
   },
 ];
@@ -35,33 +35,34 @@ const metrics: Array<{
 export function ApplicationsStatus() {
   return (
     <>
-      <div className="md:hidden gap-4 grid">
-        <div className="flex flex-col gap-3 bg-[#f4e6c9] shadow-card p-4 rounded-[22px]">
-          {metrics.map((metric) => {
-            const Icon = metric.icon;
+      <div className="md:hidden gap-3 grid">
+        {metrics.map((metric) => {
+          const Icon = metric.icon;
 
-            return (
-              <div
-                key={metric.label}
-                className="flex justify-between items-center gap-3 bg-white/20 px-3 py-2 rounded-[18px]"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex justify-center items-center bg-neutral-900 rounded-full w-9 h-9 text-white">
-                    <Icon className="w-4 h-4" strokeWidth={2.25} />
+          return (
+            <div
+              key={metric.label}
+              className={cn(
+                "flex justify-between items-center gap-3 shadow-card px-3 py-2 rounded-[18px]",
+                metric.tone,
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex justify-center items-center bg-white/20 rounded-full w-9 h-9 text-white">
+                  <Icon className="w-4 h-4" strokeWidth={2.25} />
+                </div>
+                <div>
+                  <div className="text-white/80 text-xs uppercase tracking-[0.08em]">
+                    {metric.label}
                   </div>
-                  <div>
-                    <div className="text-gray-700 text-xs uppercase tracking-[0.08em]">
-                      {metric.label}
-                    </div>
-                    <div className="font-semibold text-neutral-900 text-2xl leading-none">
-                      {metric.value}
-                    </div>
+                  <div className="font-semibold text-white text-2xl leading-none">
+                    {metric.value}
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="hidden gap-4 md:grid md:grid-cols-3">
@@ -77,17 +78,17 @@ export function ApplicationsStatus() {
               )}
             >
               <div className="flex justify-between items-start gap-3">
-                <span className="font-medium text-neutral-800 text-lg leading-tight">
+                <span className="font-medium text-white text-lg leading-tight">
                   {metric.label}
                 </span>
               </div>
 
               <div className="flex justify-between items-end gap-2">
                 <div>
-                  <div className="font-semibold text-neutral-900 text-4xl leading-none tracking-[-0.05em]">
+                  <div className="font-semibold text-white text-4xl leading-none tracking-[-0.05em]">
                     {metric.value}
                   </div>
-                  <div className="mt-2 text-neutral-700 text-sm">
+                  <div className="mt-2 text-white/80 text-sm">
                     {metric.label}
                   </div>
                 </div>

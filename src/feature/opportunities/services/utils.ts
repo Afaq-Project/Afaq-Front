@@ -39,9 +39,9 @@ export function getMatchTier(percent: number): MatchTier {
 }
 
 export const MATCH_BADGE_CLASSES: Record<MatchTier, string> = {
-  strong: "bg-success-600",
-  possible: "bg-warning-600",
-  low: "bg-neutral-600",
+  strong: "bg-primary-400",
+  possible: "bg-warning-400",
+  low: "bg-neutral-400",
 };
 
 export const MATCH_TIER_LABEL: Record<MatchTier, string> = {

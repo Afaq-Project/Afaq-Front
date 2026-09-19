@@ -1,31 +1,93 @@
-import { MoreHorizontal } from "lucide-react";
-import { TickGauge } from "@/src/shared/ui/TickGauge";
+"use client";
+
+import Link from "next/link";
+import { ArrowUpRight, Check } from "lucide-react";
+import { RadialBar, RadialBarChart, PolarAngleAxis } from "recharts";
 import Card from "@/src/shared/ui/Card";
+import Badge, { type Tone } from "@/src/shared/ui/Badge";
 import { PROFILE_COMPLETION, PROFILE_SECTIONS } from "../mocks/dashboard";
 import { cn } from "../services/utils";
 
+const chartData = [{ value: PROFILE_COMPLETION }];
+
+function completionStatus(percent: number): { label: string; tone: Tone } {
+  if (percent >= 90) return { label: "Almost done", tone: "teal" };
+  if (percent >= 60) return { label: "On track", tone: "green" };
+  return { label: "Get started", tone: "amber" };
+}
+
 export function ProfileProgressCard() {
+  const status = completionStatus(PROFILE_COMPLETION);
+
   return (
     <Card className="hidden lg:block">
       <div className="flex justify-between items-center">
         <h2 className="text-h2">Profile progress</h2>
-        <button
-          type="button"
-          aria-label="More options"
-          className="flex justify-center items-center hover:bg-neutral-50 rounded-md w-8 h-8 text-neutral-400 hover:text-neutral-900 transition-colors"
+        <Link
+          href="/profile"
+          className="inline-flex items-center gap-1 bg-neutral-900 hover:bg-neutral-800 px-3 py-1.5 rounded-md font-medium text-white text-caption transition-colors"
         >
-          <MoreHorizontal size={18} strokeWidth={1.75} />
-        </button>
+          View profile
+          <ArrowUpRight size={14} strokeWidth={2} />
+        </Link>
       </div>
 
-      <div className="flex flex-col items-center gap-6 mt-4">
+      <div className="flex flex-col items-center gap-3 mt-4">
         <div className="relative w-35 h-35">
-          <TickGauge value={PROFILE_COMPLETION} />
+          <div
+            className="absolute inset-0 opacity-60 blur-2xl"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, #c0dd97 0%, transparent 70%)",
+            }}
+            aria-hidden="true"
+          />
+          <RadialBarChart
+            width={140}
+            height={140}
+            cx="50%"
+            cy="50%"
+            innerRadius="58%"
+            outerRadius="100%"
+            barSize={24}
+            data={chartData}
+            startAngle={90}
+            endAngle={-270}
+            className="relative"
+          >
+            <defs>
+              <linearGradient
+                id="profileProgressGradient"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1"
+              >
+                <stop offset="0%" stopColor="#639922" />
+                <stop offset="100%" stopColor="#3b6d11" />
+              </linearGradient>
+            </defs>
+            <PolarAngleAxis
+              type="number"
+              domain={[0, 100]}
+              angleAxisId={0}
+              tick={false}
+            />
+            <RadialBar
+              dataKey="value"
+              cornerRadius={12}
+              fill="url(#profileProgressGradient)"
+              background={{ className: "fill-neutral-100" }}
+              isAnimationActive={false}
+            />
+          </RadialBarChart>
           <div className="absolute inset-0 flex flex-col justify-center items-center">
             <span className="text-h1">{PROFILE_COMPLETION}%</span>
             <span className="text-caption text-neutral-600">Complete</span>
           </div>
         </div>
+
+        <Badge tone={status.tone}>{status.label}</Badge>
 
         <ul className="flex flex-col gap-2.5 w-full">
           {PROFILE_SECTIONS.map((section) => (
@@ -33,18 +95,24 @@ export function ProfileProgressCard() {
               key={section.label}
               className="flex justify-between items-center text-small"
             >
-              <span className="flex items-center gap-2 text-neutral-700">
+              <span className="flex items-center gap-2.5 text-neutral-700">
                 <span
                   className={cn(
-                    "rounded-full w-2 h-2",
-                    section.complete ? "bg-primary-600" : "bg-neutral-200",
+                    "flex justify-center items-center rounded-full w-5 h-5 shrink-0",
+                    section.complete
+                      ? "bg-primary-600 text-white"
+                      : "border-2 border-neutral-200",
                   )}
-                />
+                >
+                  {section.complete && <Check size={12} strokeWidth={3} />}
+                </span>
                 {section.label}
               </span>
               <span
                 className={
-                  section.complete ? "text-primary-800" : "text-neutral-400"
+                  section.complete
+                    ? "font-medium text-primary-800"
+                    : "text-neutral-400"
                 }
               >
                 {section.complete ? "Done" : "Pending"}

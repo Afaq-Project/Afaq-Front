@@ -18,9 +18,11 @@ export default function PageHeader({
       className={`flex sm:flex-row flex-col sm:justify-between sm:items-center gap-3 ${className}`}
     >
       <div>
-        <h1 className="text-h1">{title}</h1>
+        <h1 className="font-bold text-2xl md:text-3xl lg:text-4xl">{title}</h1>
         {description && (
-          <p className="mt-1 text-neutral-600 text-small">{description}</p>
+          <p className="mt-1 text-neutral-600 text-sm lg:text-lg">
+            {description}
+          </p>
         )}
       </div>
 
