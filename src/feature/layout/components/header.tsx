@@ -16,6 +16,7 @@ import Brand from "@/src/shared/ui/Brand";
 import { Avatar } from "@/src/shared/ui/Avatar";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
+import { NotificationsDropdown } from "@/src/feature/notifications/components/NotificationsDropdown";
 
 export function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -63,14 +64,7 @@ export function Header() {
           />
         </label>
 
-        <button
-          type="button"
-          aria-label="Notifications"
-          title="Notifications"
-          className="hidden lg:flex justify-center items-center bg-white hover:bg-primary-50 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-primary-800 transition-colors"
-        >
-          <Bell size={20} strokeWidth={1.75} />
-        </button>
+        <NotificationsDropdown className="hidden lg:block" />
 
         <div className="relative" ref={userMenuRef}>
           <button
