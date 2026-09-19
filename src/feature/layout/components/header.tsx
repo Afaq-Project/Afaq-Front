@@ -22,7 +22,7 @@ import { NotificationsDropdown } from "@/src/feature/notifications/components/No
 export function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
@@ -92,22 +92,26 @@ export function Header() {
 
           {isUserMenuOpen && (
             <div className="top-full right-0 z-50 absolute bg-white shadow-card mt-2 p-2 border border-neutral-200 rounded-lg w-48 overflow-hidden">
-              <Link
-                href="/profile"
-                onClick={() => setIsUserMenuOpen(false)}
-                className="flex items-center gap-3 hover:bg-primary-50 px-3 py-2 rounded-md text-neutral-700 hover:text-primary-800 transition-colors"
-              >
-                <User size={16} strokeWidth={1.75} />
-                <span className="text-small">Profile</span>
-              </Link>
-              <Link
-                href="/settings"
-                onClick={() => setIsUserMenuOpen(false)}
-                className="flex items-center gap-3 hover:bg-primary-50 px-3 py-2 rounded-md text-neutral-700 hover:text-primary-800 transition-colors"
-              >
-                <Settings size={16} strokeWidth={1.75} />
-                <span className="text-small">Settings</span>
-              </Link>
+              {!isAdmin && (
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="flex items-center gap-3 hover:bg-primary-50 px-3 py-2 rounded-md text-neutral-700 hover:text-primary-800 transition-colors"
+                  >
+                    <User size={16} strokeWidth={1.75} />
+                    <span className="text-small">Profile</span>
+                  </Link>
+                  <Link
+                    href="/settings"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="flex items-center gap-3 hover:bg-primary-50 px-3 py-2 rounded-md text-neutral-700 hover:text-primary-800 transition-colors"
+                  >
+                    <Settings size={16} strokeWidth={1.75} />
+                    <span className="text-small">Settings</span>
+                  </Link>
+                </>
+              )}
               <Link
                 href="/notifications"
                 onClick={() => setIsUserMenuOpen(false)}

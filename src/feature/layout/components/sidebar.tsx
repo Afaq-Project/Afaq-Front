@@ -74,7 +74,12 @@ export function Sidebar() {
             href="/settings"
             aria-label="Settings"
             title="Settings"
-            className="flex justify-center items-center bg-neutral-900 hover:bg-primary-600 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-white transition-colors"
+            className={cn(
+              "flex justify-center items-center shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 transition-colors",
+              isNavItemActive("/settings")
+                ? "bg-primary-600 text-white"
+                : "bg-neutral-900 text-neutral-400 hover:bg-primary-600 hover:text-white",
+            )}
           >
             <Settings size={20} strokeWidth={1.75} />
           </Link>
@@ -82,7 +87,12 @@ export function Sidebar() {
             href="/profile"
             aria-label="Profile"
             title="Profile"
-            className="flex justify-center items-center bg-neutral-900 hover:bg-primary-600 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-white transition-colors"
+            className={cn(
+              "flex justify-center items-center shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 transition-colors",
+              isNavItemActive("/profile")
+                ? "bg-primary-600 text-white"
+                : "bg-neutral-900 text-neutral-400 hover:bg-primary-600 hover:text-white",
+            )}
           >
             <CircleUserRound size={20} strokeWidth={1.75} />
           </Link>

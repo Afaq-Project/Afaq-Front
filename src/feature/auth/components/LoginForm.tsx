@@ -18,7 +18,7 @@ import {
 } from "@/src/shared/lib/validation/auth-schemas";
 
 export default function LoginForm() {
-  const { login } = useAuth();
+  const { login, isAdmin } = useAuth();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -34,7 +34,7 @@ export default function LoginForm() {
     setFormError(null);
     try {
       await login(values.email, values.password);
-      router.push("/dashboard");
+      router.push(isAdmin ? "/admin/dashboard" : "/dashboard");
     } catch (error) {
       setFormError(getErrorMessage(error));
     }

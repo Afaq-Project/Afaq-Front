@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Bell } from "lucide-react";
 
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
@@ -19,6 +20,9 @@ const ICON_TONE_CLASSES: Record<"amber" | "blue", string> = {
 export function NotificationsDropdown({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const isActive =
+    pathname === "/notifications" || pathname.startsWith("/notifications/");
 
   useClickOutside(containerRef, () => setIsOpen(false));
 
@@ -36,7 +40,12 @@ export function NotificationsDropdown({ className }: { className?: string }) {
         aria-haspopup="true"
         aria-expanded={isOpen}
         title="Notifications"
-        className="relative flex justify-center items-center bg-white hover:bg-primary-50 shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 text-neutral-400 hover:text-primary-800 transition-colors"
+        className={cn(
+          "relative flex justify-center items-center shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 transition-colors",
+          isActive
+            ? "bg-neutral-900 text-white"
+            : "bg-neutral-900  text-neutral-400 hover:bg-primary-50 hover:text-primary-800",
+        )}
       >
         <Bell size={20} strokeWidth={1.75} />
         {unreadCount > 0 && (
@@ -53,7 +62,7 @@ export function NotificationsDropdown({ className }: { className?: string }) {
               Notifications
             </p>
             {unreadCount > 0 && (
-              <span className="bg-primary-50 px-2 py-0.5 rounded-full font-medium text-primary-800 text-caption">
+              <span className="bg-primary-50 px-2 py-0.5 rounded-full font-medium text-caption text-primary-800">
                 {unreadCount} unread
               </span>
             )}
@@ -75,7 +84,7 @@ export function NotificationsDropdown({ className }: { className?: string }) {
                       href="/notifications"
                       onClick={() => setIsOpen(false)}
                       className={cn(
-                        "flex items-start gap-3 px-4 py-3 transition-colors hover:bg-neutral-50",
+                        "flex items-start gap-3 hover:bg-neutral-50 px-4 py-3 transition-colors",
                         notification.unread && "bg-primary-50/40",
                       )}
                     >
@@ -91,7 +100,7 @@ export function NotificationsDropdown({ className }: { className?: string }) {
                         <p className="font-medium text-neutral-900 text-small truncate">
                           {notification.title}
                         </p>
-                        <p className="mt-0.5 text-neutral-400 text-caption">
+                        <p className="mt-0.5 text-caption text-neutral-400">
                           {notification.timeAgo}
                         </p>
                       </div>
