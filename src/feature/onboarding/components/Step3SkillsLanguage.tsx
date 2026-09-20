@@ -184,11 +184,22 @@ export function Step3SkillsLanguage({
   };
 
   return (
-    <div className="flex flex-col flex-grow min-h-[calc(100vh-10rem)]">
-      <main className="flex-grow w-full max-w-4xl mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-8 flex flex-col gap-8">
+    <div className="flex flex-col min-h-full bg-white relative w-full">
+      {/* Top right actions */}
+      <div className="absolute top-8 right-8 z-20">
+        <button
+          type="button"
+          className="text-[13px] font-medium text-neutral-500 hover:text-neutral-800 transition-colors cursor-pointer"
+        >
+          Save &amp; exit
+        </button>
+      </div>
+
+      <div className="flex-1 relative z-10 w-full flex flex-col">
+        <main className="px-10 pt-20 pb-28 flex flex-col max-w-[700px] mx-auto w-full gap-8">
         {/* Header Section */}
         <div>
-          <h1 className="text-2xl md:text-3xl lg:text-[34px] font-semibold text-on-surface mb-2 tracking-tight">
+          <h1 className="text-3xl md:text-[34px] font-bold text-on-surface mb-2 tracking-tight">
             What are your skills and interests?
           </h1>
           <p className="text-sm md:text-base text-on-surface-variant">
@@ -197,7 +208,7 @@ export function Step3SkillsLanguage({
         </div>
 
         {/* Section 1: Skills & Interests */}
-        <section className="bg-surface-container-low rounded-xl p-5 md:p-6 flex flex-col gap-5 border border-outline-variant shadow-xs">
+        <section className="bg-surface-container-lowest rounded-xl p-5 md:p-6 flex flex-col gap-5 border border-outline-variant/40 shadow-sm">
           <div className="flex justify-between items-center">
             <h2 className="text-base md:text-lg font-semibold text-on-surface">
               Skills &amp; Interests
@@ -211,48 +222,18 @@ export function Step3SkillsLanguage({
             </span>
           </div>
 
-          {/* Search & Custom Input */}
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-2">
-              <div className="relative flex-grow">
-                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
-                  search
-                </span>
-                <input
-                  type="text"
-                  value={customSkillInput}
-                  onChange={(e) => setCustomSkillInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddCustomSkill();
-                    }
-                  }}
-                  placeholder="Search or add a custom skill..."
-                  className="w-full pl-11 pr-4 py-3 bg-surface-container-low rounded-md text-sm md:text-base border border-outline-variant focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 placeholder:text-on-surface-variant transition-colors"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() => handleAddCustomSkill()}
-                disabled={!customSkillInput.trim() || data.skills.length >= 20}
-                className="px-4 md:px-5 py-3 bg-primary text-on-primary rounded-lg text-xs md:text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-              >
-                Add
-              </button>
-            </div>
-
-            {/* Selected Chips */}
-            <div className="flex flex-wrap gap-2 min-h-[44px] p-2.5 bg-surface-container/60 rounded-lg border border-outline-variant/60 items-center">
+          <div className="flex flex-col gap-4">
+            {/* Selected Chips Area */}
+            <div className="flex flex-wrap gap-2 min-h-[48px] p-3 bg-surface-container-low/50 rounded-xl border border-outline-variant/40 items-center">
               {data.skills.length === 0 ? (
-                <span className="text-xs md:text-sm text-on-surface-variant/60 italic pl-1">
-                  No skills selected yet. Choose from categories below or type your own.
+                <span className="text-sm text-on-surface-variant/70 italic pl-1">
+                  No skills selected yet. Choose from the categories below.
                 </span>
               ) : (
                 data.skills.map((skill) => (
                   <div
                     key={skill}
-                    className="inline-flex items-center gap-1.5 bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full text-xs md:text-sm font-medium transition-colors shadow-sm-subtle"
+                    className="inline-flex items-center gap-1.5 bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full text-sm font-medium transition-colors shadow-sm"
                   >
                     <span>{skill}</span>
                     <button
@@ -267,23 +248,41 @@ export function Step3SkillsLanguage({
                 ))
               )}
             </div>
+
+            {/* Search Input */}
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+                search
+              </span>
+              <input
+                type="text"
+                value={customSkillInput}
+                onChange={(e) => setCustomSkillInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddCustomSkill();
+                  }
+                }}
+                placeholder="Search skills..."
+                className="w-full pl-12 pr-4 py-3 bg-white rounded-xl text-sm md:text-base border border-outline-variant/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/60 transition-colors"
+              />
+            </div>
           </div>
 
-          <div className="h-px w-full bg-outline-variant/50 my-1"></div>
-
           {/* Categories Accordion Container */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3 mt-2">
             {SKILL_CATEGORIES.map((cat) => {
               const isOpen = openCategories[cat.category] ?? false;
               return (
                 <div
                   key={cat.category}
-                  className="border border-outline-variant rounded-md bg-surface overflow-hidden transition-colors"
+                  className="border border-outline-variant/60 rounded-xl bg-white overflow-hidden transition-colors"
                 >
                   <button
                     type="button"
                     onClick={() => toggleCategory(cat.category)}
-                    className="w-full flex items-center justify-between p-4 hover:bg-surface-container-low rounded-md transition-colors text-left cursor-pointer"
+                    className="w-full flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors text-left cursor-pointer"
                   >
                     <span className="text-sm md:text-base font-semibold text-on-surface">
                       {cat.category}
@@ -298,7 +297,7 @@ export function Step3SkillsLanguage({
                   </button>
 
                   {isOpen && (
-                    <div className="p-4 pt-1 border-t border-outline-variant/30 flex flex-wrap gap-2.5 bg-surface-bright">
+                    <div className="p-4 pt-2 border-t border-outline-variant/30 flex flex-wrap gap-2.5 bg-surface-container-lowest">
                       {cat.skills.map((skill) => {
                         const isSelected = data.skills.includes(skill);
                         const isDisabled = !isSelected && data.skills.length >= 20;
@@ -309,12 +308,12 @@ export function Step3SkillsLanguage({
                             type="button"
                             disabled={isDisabled}
                             onClick={() => handleToggleSkill(skill)}
-                            className={`px-3.5 py-1.5 rounded-full text-xs md:text-sm font-medium flex items-center gap-1.5 cursor-pointer ${
+                            className={`px-4 py-2 rounded-full text-sm font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
                               isSelected
-                                ? "bg-primary text-on-primary shadow-sm-subtle"
+                                ? "bg-primary text-on-primary shadow-sm"
                                 : isDisabled
                                 ? "border border-outline-variant/50 text-on-surface-variant/40 cursor-not-allowed"
-                                : "border border-outline-variant text-on-surface hover:border-primary hover:bg-surface-container-high"
+                                : "border border-outline-variant/60 text-on-surface hover:border-primary hover:bg-surface-container-low"
                             }`}
                           >
                             {isSelected && (
@@ -333,9 +332,14 @@ export function Step3SkillsLanguage({
         </section>
 
         {/* Section 2: Language Proficiency */}
-        <section className="flex flex-col gap-4">
+        <section className="bg-surface-container-lowest rounded-xl p-5 md:p-6 flex flex-col gap-4 border border-outline-variant/40 shadow-sm">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-on-surface">Language Proficiency</h2>
+            <h2 className="text-base md:text-lg font-semibold text-on-surface flex items-center gap-2">
+              <span className="material-symbols-outlined text-on-surface-variant">
+                translate
+              </span>
+              <span>Language Proficiency</span>
+            </h2>
             <span
               className={`text-xs md:text-sm font-medium ${
                 data.languages.length >= 5 ? "text-warning font-bold" : "text-on-surface-variant"
@@ -345,16 +349,16 @@ export function Step3SkillsLanguage({
             </span>
           </div>
 
-          <div className="bg-surface-container-low rounded-xl p-4 md:p-6 flex flex-col gap-3 border border-outline-variant shadow-xs">
+          <div className="flex flex-col gap-3">
             {data.languages.length === 0 ? (
-              <p className="text-xs md:text-sm text-on-surface-variant italic p-2">
+              <p className="text-sm text-on-surface-variant italic p-2 bg-surface-container-low/50 rounded-lg">
                 No languages added yet. Click &quot;Add another language&quot; below.
               </p>
             ) : (
               data.languages.map((langItem) => (
                 <div
                   key={langItem.id}
-                  className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full bg-surface p-2.5 rounded-lg border border-outline-variant/60 hover:border-outline-variant transition-colors"
+                  className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full bg-white p-3 rounded-xl border border-outline-variant/60 hover:border-outline-variant transition-colors"
                 >
                   <div className="relative w-full sm:w-[45%]">
                     <select
@@ -362,7 +366,7 @@ export function Step3SkillsLanguage({
                       onChange={(e) =>
                         handleLanguageChange(langItem.id, "language", e.target.value)
                       }
-                      className="w-full appearance-none bg-surface-container text-on-surface border border-outline-variant rounded-lg px-4 py-2.5 text-sm md:text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition-colors hover:bg-surface-container-high"
+                      className="w-full appearance-none bg-white text-on-surface border border-outline-variant/60 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer hover:bg-surface-container-lowest transition-colors"
                     >
                       {AVAILABLE_LANGUAGES.map((lang) => (
                         <option key={lang} value={lang}>
@@ -381,7 +385,7 @@ export function Step3SkillsLanguage({
                       onChange={(e) =>
                         handleLanguageChange(langItem.id, "level", e.target.value)
                       }
-                      className="w-full appearance-none bg-surface-container text-on-surface border border-outline-variant rounded-lg px-4 py-2.5 text-sm md:text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition-colors hover:bg-surface-container-high"
+                      className="w-full appearance-none bg-white text-on-surface border border-outline-variant/60 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer hover:bg-surface-container-lowest transition-colors"
                     >
                       {CEFR_LEVELS.map((lvl) => (
                         <option key={lvl} value={lvl}>
@@ -411,7 +415,7 @@ export function Step3SkillsLanguage({
               <button
                 type="button"
                 onClick={handleAddLanguage}
-                className="flex items-center justify-center gap-2 py-2.5 px-4 w-full sm:w-max rounded-lg border border-dashed border-outline text-primary text-xs md:text-sm font-semibold hover:bg-primary-container/20 hover:border-primary transition-all mt-2 cursor-pointer"
+                className="flex items-center justify-center gap-2 py-3 px-4 w-full rounded-xl border border-dashed border-outline-variant text-primary text-sm font-semibold hover:bg-primary-container/20 hover:border-primary transition-all mt-2 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
                 <span>Add another language</span>
@@ -419,39 +423,40 @@ export function Step3SkillsLanguage({
             )}
           </div>
         </section>
-      </main>
+        </main>
+      </div>
 
-      {/* Shared Component: BottomNavBar */}
-      <nav className="sticky bottom-0 z-30 w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/80 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] px-4 md:px-8 py-4 rounded-t-xl mt-auto flex justify-between items-center">
-        {/* Leading Action */}
+      {/* Footer / Bottom Navigation */}
+      <footer className="shrink-0 sticky bottom-0 z-20 w-full bg-white border-t border-neutral-100 px-10 py-5 flex justify-between items-center mt-auto">
+        {/* Left Action: Back */}
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1.5 text-xs md:text-sm font-medium text-on-surface-variant hover:text-on-surface px-3 md:px-4 py-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-[14px] font-medium text-neutral-500 hover:text-neutral-800 transition-colors cursor-pointer"
         >
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
           <span>Back</span>
         </button>
 
-        {/* Trailing Actions */}
-        <div className="flex items-center gap-2 md:gap-3">
+        {/* Right Actions: Skip & Next */}
+        <div className="flex items-center gap-6">
           <button
             type="button"
             onClick={onSkip}
-            className="text-xs md:text-sm font-medium text-primary hover:bg-primary-container/30 px-3 md:px-4 py-2 md:py-2.5 rounded-lg transition-colors cursor-pointer"
+            className="text-[14px] font-bold text-[#397A0F] hover:opacity-80 transition-colors cursor-pointer"
           >
             Skip for now
           </button>
           <button
             type="button"
             onClick={onNext}
-            className="bg-primary text-on-primary rounded-lg px-5 md:px-6 py-2.5 text-xs md:text-sm font-semibold hover:opacity-90 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="text-[14px] font-semibold bg-[#397A0F] text-white hover:opacity-90 px-8 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm cursor-pointer"
           >
             <span>Next</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
         </div>
-      </nav>
+      </footer>
     </div>
   );
 }
