@@ -172,7 +172,7 @@ export function Step4Documents({
   );
 
   return (
-    <div className="flex flex-col flex-grow min-h-[calc(100vh-10rem)]">
+    <div className="flex flex-col min-h-full bg-white relative w-full">
       {/* Hidden native file input */}
       <input
         ref={fileInputRef}
@@ -182,250 +182,182 @@ export function Step4Documents({
         onChange={handleFileInputChange}
       />
 
-      <main className="flex-grow flex flex-col items-center justify-center px-4 md:px-6 pt-8 md:pt-12 pb-8">
-        <div className="w-full max-w-4xl space-y-6 md:space-y-8">
-          {/* Header Section */}
-          <div className="text-center space-y-1.5">
-            <h1 className="text-2xl md:text-3xl lg:text-[34px] font-semibold text-on-background tracking-tight">
-              Add your documents
-            </h1>
-            <p className="text-sm md:text-base text-on-surface-variant font-medium">
-              (you can also do this later)
-            </p>
-            <p className="text-xs md:text-sm text-outline">
-              PDF, DOC, DOCX, PNG, or JPG, up to 5MB per file
-            </p>
-          </div>
+      {/* Top right actions */}
+      <div className="absolute top-8 right-8 z-20">
+        <button
+          type="button"
+          className="text-[13px] font-medium text-neutral-500 hover:text-neutral-800 transition-colors cursor-pointer"
+        >
+          Save &amp; exit
+        </button>
+      </div>
 
-          {/* Drag & Drop Area */}
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => triggerFileInput()}
-            className={`w-full border-2 border-dashed rounded-xl p-8 md:p-12 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${
-              isDragOver
-                ? "border-primary bg-primary-container/20 scale-[1.01]"
-                : "border-outline-variant bg-surface-container hover:bg-surface-container-high hover:border-primary"
-            }`}
-          >
-            <span
-              className="material-symbols-outlined text-4xl md:text-5xl text-primary mb-3 group-hover:scale-110 transition-transform"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              cloud_upload
-            </span>
-            <p className="text-sm md:text-base font-semibold text-on-surface">
-              Drag and drop files here or click to browse
-            </p>
-            <p className="text-xs text-on-surface-variant mt-1">
-              Drop any document to automatically assign to an available slot
-            </p>
-          </div>
+      <div className="flex-1 relative z-10 w-full flex flex-col">
+        <main className="px-10 pt-20 pb-28 flex flex-col max-w-[700px] mx-auto w-full gap-8">
+        {/* Header Section */}
+        <div>
+          <h1 className="text-3xl md:text-[34px] font-bold text-on-surface mb-2 tracking-tight">
+            Upload your documents
+          </h1>
+          <p className="text-sm md:text-base text-on-surface-variant">
+            Please upload your resume/CV and any other relevant documents.
+          </p>
+        </div>
 
-          {/* Document Cards Grid (5 independent slots) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {DOCUMENT_SLOTS.map(({ slotId, label, badge }) => {
-              const item = data[slotId];
-              const isUploading = item?.status === "uploading";
-              const isUploaded = item?.status === "uploaded";
-              const isError = item?.status === "error";
+        {/* Document Slots List */}
+        <div className="flex flex-col gap-6">
+          {DOCUMENT_SLOTS.map(({ slotId, label, badge }) => {
+            const item = data[slotId];
+            const isUploading = item?.status === "uploading";
+            const isUploaded = item?.status === "uploaded";
+            const isError = item?.status === "error";
 
-              // Uploading State
-              if (isUploading) {
-                return (
+            return (
+              <div key={slotId} className="flex flex-col gap-2">
+                <label className="text-base font-semibold text-on-surface flex items-center gap-2">
+                  <span>{label}</span>
+                  {badge && (
+                    <span className="text-xs text-on-surface-variant font-normal">
+                      ({badge})
+                    </span>
+                  )}
+                </label>
+
+                {!item && (
                   <div
-                    key={slotId}
-                    className="bg-surface-container-low p-4 rounded-xl flex flex-col border border-primary-container shadow-xs gap-3 relative overflow-hidden"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setActiveSlotTarget(slotId);
+                      setIsDragOver(true);
+                    }}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setIsDragOver(false);
+                      const files = e.dataTransfer.files;
+                      if (files && files[0]) {
+                        simulateUpload(slotId, files[0]);
+                      }
+                    }}
+                    onClick={() => triggerFileInput(slotId)}
+                    className={`w-full border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${
+                      isDragOver && activeSlotTarget === slotId
+                        ? "border-primary bg-primary-container/10"
+                        : "border-outline-variant/60 bg-white hover:bg-surface-container-lowest hover:border-primary/60"
+                    }`}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant">
-                          {badge}
-                        </span>
-                        <span className="text-sm md:text-base font-semibold text-on-background">
-                          {label}
-                        </span>
-                      </div>
-                      <span className="text-xs md:text-sm font-semibold text-primary">
-                        {item.progress}%
+                    <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-primary transition-colors">
+                        cloud_upload
                       </span>
                     </div>
+                    <p className="text-sm font-semibold text-on-surface mb-1">
+                      Select a file or drag and drop here
+                    </p>
+                    <p className="text-xs text-on-surface-variant">
+                      PDF, Word document, file size no more than 10MB
+                    </p>
+                  </div>
+                )}
 
-                    <div className="w-full h-1.5 bg-surface-variant rounded-full mt-auto overflow-hidden">
+                {isUploading && (
+                  <div className="w-full border border-outline-variant/60 rounded-xl p-4 flex flex-col gap-3 bg-surface-container-lowest">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <span className="material-symbols-outlined text-primary">description</span>
+                        <span className="text-sm font-medium text-on-surface">{item.name}</span>
+                      </div>
+                      <span className="text-sm font-semibold text-primary">{item.progress}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden">
                       <div
                         className="h-full bg-primary rounded-full transition-all duration-300"
                         style={{ width: `${item.progress}%` }}
                       />
                     </div>
                   </div>
-                );
-              }
+                )}
 
-              // Uploaded State
-              if (isUploaded) {
-                return (
-                  <div
-                    key={slotId}
-                    className="bg-surface-container-low p-4 rounded-xl flex items-center justify-between border border-primary/30 shadow-xs group"
-                  >
-                    <div className="flex flex-col min-w-0 pr-2">
-                      <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">
-                        Uploaded
+                {isUploaded && (
+                  <div className="w-full border border-outline-variant/60 rounded-xl p-4 flex justify-between items-center bg-surface-container-lowest group">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="material-symbols-outlined text-primary text-2xl">
+                        description
                       </span>
-                      <span className="text-sm md:text-base font-semibold text-on-background truncate">
-                        {item.name}
-                      </span>
-                      <span className="text-xs text-on-surface-variant">
-                        {item.size}
-                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm font-medium text-on-surface truncate">
+                          {item.name}
+                        </span>
+                        <span className="text-xs text-on-surface-variant">
+                          {item.size} • Uploaded {item.uploadedAt}
+                        </span>
+                      </div>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleDelete(slotId)}
-                      title="Remove file"
-                      className="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center hover:bg-error-container hover:text-danger transition-colors flex-shrink-0 cursor-pointer"
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error-container hover:text-error transition-colors"
                     >
-                      <span
-                        className="material-symbols-outlined text-sm group-hover:hidden"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        done
-                      </span>
-                      <span className="material-symbols-outlined text-sm hidden group-hover:block">
-                        delete
-                      </span>
+                      <span className="material-symbols-outlined text-[20px]">delete</span>
                     </button>
                   </div>
-                );
-              }
+                )}
 
-              // Error State
-              if (isError) {
-                return (
-                  <div
-                    key={slotId}
-                    className="bg-surface-container-low p-4 rounded-xl flex items-center justify-between border border-error shadow-xs"
-                  >
-                    <div className="flex flex-col min-w-0 pr-2">
-                      <span className="text-[10px] uppercase tracking-wider font-semibold text-error">
-                        {item.errorMessage || "Upload failed"}
-                      </span>
-                      <span className="text-sm font-semibold text-on-background truncate">
-                        {label}
-                      </span>
+                {isError && (
+                  <div className="w-full border border-error/50 rounded-xl p-4 flex justify-between items-center bg-error-container/20">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="material-symbols-outlined text-error text-2xl">error</span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm font-medium text-on-surface truncate">
+                          {item.name}
+                        </span>
+                        <span className="text-xs text-error">
+                          {item.errorMessage || "Upload failed"}
+                        </span>
+                      </div>
                     </div>
                     <button
                       type="button"
                       onClick={() => triggerFileInput(slotId)}
-                      className="w-9 h-9 rounded-full bg-error-container text-error flex items-center justify-center hover:opacity-80 transition-colors flex-shrink-0 cursor-pointer"
-                      title="Retry upload"
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-error hover:bg-error/10 transition-colors"
+                      title="Try again"
                     >
-                      <span className="material-symbols-outlined text-sm">refresh</span>
+                      <span className="material-symbols-outlined text-[20px]">refresh</span>
                     </button>
                   </div>
-                );
-              }
-
-              // Idle / Default State
-              return (
-                <div
-                  key={slotId}
-                  onClick={() => triggerFileInput(slotId)}
-                  className="bg-surface-container-low p-4 rounded-xl flex items-center justify-between border border-transparent hover:border-outline-variant transition-colors shadow-xs cursor-pointer group"
-                >
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant">
-                      {badge}
-                    </span>
-                    <span className="text-sm md:text-base font-semibold text-on-background">
-                      {label}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    className="w-9 h-9 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors flex-shrink-0"
-                  >
-                    <span className="material-symbols-outlined text-sm">upload</span>
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Uploaded Files List */}
-          {uploadedFiles.length > 0 && (
-            <div className="mt-8 space-y-3">
-              <h3 className="text-sm md:text-base font-semibold text-on-background border-b border-surface-variant pb-2 flex items-center justify-between">
-                <span>Uploaded Files ({uploadedFiles.length})</span>
-                <span className="text-xs font-normal text-on-surface-variant">
-                  Hover to remove
-                </span>
-              </h3>
-              <div className="space-y-2">
-                {uploadedFiles.map((doc) => {
-                  const { icon, colorClass } = getFileIcon(doc.name);
-                  return (
-                    <div
-                      key={doc.id}
-                      className="flex items-center justify-between p-3 bg-surface-container-low/70 hover:bg-surface-container rounded-lg transition-colors group"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span
-                          className={`material-symbols-outlined ${colorClass} text-2xl flex-shrink-0`}
-                          style={{ fontVariationSettings: "'FILL' 1" }}
-                        >
-                          {icon}
-                        </span>
-                        <div className="flex flex-col min-w-0">
-                          <span className="text-sm font-medium text-on-background truncate">
-                            {doc.name}
-                          </span>
-                          <span className="text-xs text-on-surface-variant">
-                            {doc.size} • {doc.uploadedAt}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(doc.slotId)}
-                        title={`Delete ${doc.name}`}
-                        className="text-on-surface-variant hover:text-error hover:bg-error-container p-2 rounded-md transition-colors cursor-pointer"
-                      >
-                        <span className="material-symbols-outlined text-base">delete</span>
-                      </button>
-                    </div>
-                  );
-                })}
+                )}
               </div>
-            </div>
-          )}
+            );
+          })}
         </div>
-      </main>
+        </main>
+      </div>
 
-      {/* Custom Footer for Onboarding */}
-      <footer className="sticky bottom-0 z-30 w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/80 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] px-4 md:px-8 py-4 rounded-t-xl mt-auto flex items-center justify-between">
+      {/* Footer / Bottom Navigation */}
+      <footer className="shrink-0 sticky bottom-0 z-20 w-full bg-white border-t border-neutral-100 px-10 py-5 flex justify-between items-center mt-auto">
+        {/* Left Action: Back */}
         <button
           type="button"
           onClick={onBack}
-          className="text-xs md:text-sm font-medium text-on-surface-variant hover:text-on-surface px-4 py-2 rounded-md hover:bg-surface-container-high transition-colors flex items-center gap-2 cursor-pointer"
+          className="flex items-center gap-2 text-[14px] font-medium text-neutral-500 hover:text-neutral-800 transition-colors cursor-pointer"
         >
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
           <span>Back</span>
         </button>
 
-        <div className="flex items-center gap-2 md:gap-3">
+        {/* Right Actions: Skip & Finish */}
+        <div className="flex items-center gap-6">
           <button
             type="button"
             onClick={onSkip}
-            className="text-xs md:text-sm font-medium text-primary hover:bg-primary-container/30 px-4 py-2.5 rounded-md transition-colors cursor-pointer"
+            className="text-[14px] font-bold text-[#397A0F] hover:opacity-80 transition-colors cursor-pointer"
           >
             Skip for now
           </button>
           <button
             type="button"
             onClick={onFinish}
-            className="bg-primary text-on-primary font-semibold text-xs md:text-sm px-6 py-2.5 rounded-md hover:opacity-90 transition-all shadow-sm flex items-center gap-2 cursor-pointer"
+            className="text-[14px] font-semibold bg-[#397A0F] text-white hover:opacity-90 px-8 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm cursor-pointer"
           >
             <span>Finish</span>
             <span className="material-symbols-outlined text-[18px]">check</span>
