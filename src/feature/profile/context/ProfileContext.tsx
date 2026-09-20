@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import React, { createContext, useContext, useState, type ReactNode } from "react";
 import type {
   UserProfile,
   EducationData,
@@ -105,21 +105,20 @@ const ProfileContext = createContext<ProfileContextType | null>(null);
 
 const STORAGE_KEY = "levora_user_profile";
 
-export function ProfileProvider({ children }: { children: ReactNode }) {
-  const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setProfile(JSON.parse(stored));
-      }
-    } catch {
-      // ignore
+function loadStoredProfile(): UserProfile {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
     }
-    setIsHydrated(true);
-  }, []);
+  } catch {
+    // ignore
+  }
+  return INITIAL_PROFILE;
+}
+
+export function ProfileProvider({ children }: { children: ReactNode }) {
+  const [profile, setProfile] = useState<UserProfile>(loadStoredProfile);
 
   const saveProfile = (newProfile: UserProfile) => {
     setProfile(newProfile);

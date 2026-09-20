@@ -13,6 +13,7 @@ import {
   LogOut,
   Loader2,
   Settings,
+  LucideIcon,
 } from "lucide-react";
 import { cn } from "../../dashboard/services/utils";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
@@ -38,7 +39,7 @@ export function Sidebar() {
   const isNavItemActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
-  const renderNavItem = (href: string, label: string, Icon: any) => {
+  const renderNavItem = (href: string, label: string, Icon: LucideIcon) => {
     const active = isNavItemActive(href);
 
     return (
