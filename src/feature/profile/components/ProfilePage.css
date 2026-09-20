@@ -1,0 +1,267 @@
+.profile-page-wrapper {
+  padding: 24px 40px 40px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.profile-page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 1. Profile Header Card */
+.profile-header-card {
+  background-color: #F4F5F4; /* very light gray/off-white */
+  border-radius: 16px;
+  padding: 24px 40px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 32px;
+}
+
+.profile-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #BDBDBD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4A5568;
+}
+
+.profile-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1A202C; /* dark navy/charcoal */
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.profile-email {
+  font-size: 16px;
+  color: #718096; /* muted blue/gray */
+  margin: 0;
+}
+
+.profile-progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.profile-progress-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #397A0F;
+}
+
+.profile-progress-bar-bg {
+  width: 180px;
+  height: 6px;
+  background-color: #DDE2E5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.profile-progress-bar-fill {
+  height: 100%;
+  background-color: #397A0F;
+  width: 5%;
+  border-radius: 4px;
+}
+
+.profile-divider {
+  height: 1px;
+  background-color: #E2E8F0;
+  margin: 0 0 16px 0;
+  border: none;
+}
+
+/* Personal Details */
+.profile-personal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-personal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1A202C;
+  margin: 0;
+}
+
+.profile-edit-icon {
+  color: #397A0F;
+  cursor: pointer;
+}
+
+.profile-personal-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+}
+
+.profile-field-label {
+  font-size: 15px;
+  color: #718096; /* muted gray */
+  margin: 0 0 8px 0;
+}
+
+.profile-field-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2D3748; /* dark gray */
+  margin: 0;
+}
+
+
+/* 2. Main Layout */
+.profile-main-layout {
+  display: flex;
+  gap: 32px;
+}
+
+/* 3. Sidebar */
+.profile-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  border-radius: 9999px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+.profile-sidebar-item.active {
+  background-color: #397A0F;
+  color: #FFFFFF;
+}
+
+.profile-sidebar-item.inactive {
+  background-color: transparent;
+  color: #1A202C;
+}
+
+.profile-sidebar-item.inactive:hover {
+  background-color: rgba(57, 122, 15, 0.05);
+}
+
+
+/* 4. Education Card */
+.profile-content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-education-card {
+  background-color: #F4F5F4;
+  border-radius: 16px;
+  padding: 32px 40px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.profile-education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.profile-education-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #1A202C;
+}
+
+.profile-education-title-icon {
+  color: #397A0F;
+}
+
+.profile-education-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.profile-education-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 32px;
+  column-gap: 32px;
+}
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .profile-personal-grid {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-wrapper {
+    padding: 20px;
+  }
+  
+  .profile-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .profile-progress-container {
+    align-items: flex-start;
+  }
+  
+  .profile-personal-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .profile-main-layout {
+    flex-direction: column;
+  }
+  
+  .profile-sidebar {
+    width: 100%;
+  }
+  
+  .profile-education-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-personal-grid {
+    grid-template-columns: 1fr;
+  }
+}
