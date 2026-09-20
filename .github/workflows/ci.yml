@@ -13,9 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup npm
-        uses: npm/action-setup@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -23,18 +20,18 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install --frozen-lockfile
+        run: npm ci
 
       - name: Lint
-        run: npm lint
+        run: npm run lint
 
       - name: Generate Next.js types
-        run: npm exec next typegen
+        run: npx next typegen
 
       - name: Type check
-        run: npm exec tsc --noEmit
+        run: npx tsc --noEmit
 
       - name: Build
-        run: npm build
+        run: npm run build
         env:
           NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
