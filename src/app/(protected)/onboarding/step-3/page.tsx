@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Step3SkillsLanguage } from "@/src/feature/onboarding/components/Step3SkillsLanguage";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
@@ -19,15 +19,6 @@ export default function Step3Page() {
             { id: "lang-1", language: "English", level: "C2 Proficient" },
           ],
   });
-
-  useEffect(() => {
-    if (profile.skills.skills.length > 0 || profile.skills.languages.length > 0) {
-      setSkills({
-        skills: profile.skills.skills || [],
-        languages: profile.skills.languages || [],
-      });
-    }
-  }, [profile.skills]);
 
   const handleNext = () => {
     updateSkills(skills);

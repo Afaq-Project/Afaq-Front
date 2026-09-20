@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Step1Education } from "@/src/feature/onboarding/components/Step1Education";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
@@ -15,20 +15,6 @@ export default function Step1Page() {
     fieldsOfStudy: profile.education.fieldsOfStudy || [],
     nationality: profile.education.nationality || "",
   });
-
-  useEffect(() => {
-    if (
-      profile.education.educationLevel ||
-      profile.education.fieldsOfStudy.length > 0 ||
-      profile.education.nationality
-    ) {
-      setEducation({
-        educationLevel: profile.education.educationLevel || "",
-        fieldsOfStudy: profile.education.fieldsOfStudy || [],
-        nationality: profile.education.nationality || "",
-      });
-    }
-  }, [profile.education]);
 
   const handleNext = () => {
     updateEducation(education);

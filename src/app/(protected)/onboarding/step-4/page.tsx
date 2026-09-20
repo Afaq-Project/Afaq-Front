@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Step4Documents } from "@/src/feature/onboarding/components/Step4Documents";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
@@ -17,16 +17,6 @@ export default function Step4Page() {
     recommendation: profile.documents.recommendation || null,
     other: profile.documents.other || null,
   });
-
-  useEffect(() => {
-    setDocuments({
-      resume: profile.documents.resume || null,
-      essay: profile.documents.essay || null,
-      transcript: profile.documents.transcript || null,
-      recommendation: profile.documents.recommendation || null,
-      other: profile.documents.other || null,
-    });
-  }, [profile.documents]);
 
   const handleFinish = () => {
     updateDocuments(documents);
