@@ -4,11 +4,6 @@ import React, { useState } from "react";
 import "./ProfilePage.css";
 import { User, GraduationCap, Brain, Folder, Pencil, Download, Trash2, Eye } from "lucide-react";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
-<<<<<<< Updated upstream
-import Image from "next/image";
-import Link from "next/link";
-=======
->>>>>>> Stashed changes
 import type { DocumentItem } from "@/src/feature/profile/types";
 
 const EXP_LABELS: Record<string, string> = {
@@ -18,45 +13,6 @@ const EXP_LABELS: Record<string, string> = {
   senior: "Senior-level",
 };
 
-<<<<<<< Updated upstream
-/* ───────────────────── sidebar nav items ───────────────────── */
-const NAV_ITEMS = [
-  { id: "profile", label: "Profile", icon: "person" },
-  { id: "applications", label: "Applications", icon: "description" },
-  { id: "notifications", label: "Notifications", icon: "notifications" },
-  { id: "security", label: "Security", icon: "shield" },
-  { id: "billing", label: "Billing", icon: "payments" },
-] as const;
-
-/* ───────────────────── nav items that link to their own page instead of switching tabs ───────────────────── */
-const NAV_ROUTES: Partial<Record<(typeof NAV_ITEMS)[number]["id"], string>> = {
-  security: "/settings",
-  billing: "/billing",
-};
-
-/* ───────────────────── document file-type icon helper ───────────────────── */
-function DocIcon({ type }: { type: string }) {
-  const isPdf = type.includes("pdf");
-  return (
-    <div
-      className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-        isPdf
-          ? "bg-danger-50 text-danger-600"
-          : "bg-info-50 text-info-600"
-      }`}
-    >
-      <span className="material-symbols-outlined text-xl">
-        {isPdf ? "picture_as_pdf" : "image"}
-      </span>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/*  ProfilePage                                                              */
-/* ═══════════════════════════════════════════════════════════════════════════ */
-=======
->>>>>>> Stashed changes
 export function ProfilePage() {
   const { profile, completionPercentage } = useProfile();
   const [activeTab, setActiveTab] = useState("education");
@@ -144,50 +100,6 @@ export function ProfilePage() {
           </div>
         </div>
 
-<<<<<<< Updated upstream
-      {/* ──────────── Body: sidebar + content ──────────── */}
-      <div className="flex gap-6">
-        {/* Left sidebar nav */}
-        <nav className="w-52 flex-shrink-0 flex flex-col gap-1 hidden md:flex">
-          {NAV_ITEMS.map((item) => {
-            const isActive = item.id === activeNav;
-            const navClassName = `flex items-center gap-3 px-4 py-2.5 rounded-lg text-body font-medium transition-colors cursor-pointer ${
-              isActive
-                ? "bg-primary-600 text-white"
-                : "text-neutral-800 hover:bg-neutral-50"
-            }`;
-            const navIcon = (
-              <span
-                className="material-symbols-outlined text-xl"
-                style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
-              >
-                {item.icon}
-              </span>
-            );
-
-            const route = NAV_ROUTES[item.id];
-            if (route) {
-              return (
-                <Link key={item.id} href={route} className={navClassName}>
-                  {navIcon}
-                  {item.label}
-                </Link>
-              );
-            }
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveNav(item.id)}
-                className={navClassName}
-              >
-                {navIcon}
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
-=======
         {/* Main Layout */}
         <div className="profile-main-layout">
           {/* Sidebar */}
@@ -214,7 +126,6 @@ export function ProfilePage() {
               <span>Documents</span>
             </button>
           </aside>
->>>>>>> Stashed changes
 
           {/* Content Area */}
           <div className="profile-content-area">
