@@ -19,7 +19,6 @@ const STEPS = [
 
 export function OnboardingSidebar({
   currentStep,
-  totalSteps = 4,
 }: OnboardingSidebarProps) {
   return (
     <aside className="hidden md:flex flex-col w-[300px] bg-white border-r border-neutral-100 relative z-20 py-10 px-8 shrink-0">

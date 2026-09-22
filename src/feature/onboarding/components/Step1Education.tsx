@@ -75,20 +75,7 @@ const COUNTRIES = [
   "United Kingdom", "United States", "Yemen"
 ];
 
-const POPULAR_COUNTRIES = [
-  "Jordan",
-  "Palestine",
-  "Saudi Arabia",
-  "Egypt",
-  "United Arab Emirates",
-  "Kuwait",
-  "Qatar",
-  "Lebanon",
-  "Syria",
-  "Iraq",
-  "United States",
-  "United Kingdom",
-];
+
 
 export function Step1Education({ data, onChange, onNext }: Step1EducationProps) {
   const [levelDropdownOpen, setLevelDropdownOpen] = useState(false);

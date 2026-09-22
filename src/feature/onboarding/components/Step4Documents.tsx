@@ -41,17 +41,7 @@ export function Step4Documents({
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  // Helper to determine icon based on file type / name
-  const getFileIcon = (fileName: string) => {
-    const ext = fileName.split(".").pop()?.toLowerCase();
-    if (ext === "pdf") {
-      return { icon: "picture_as_pdf", colorClass: "text-danger" };
-    }
-    if (["png", "jpg", "jpeg", "webp"].includes(ext || "")) {
-      return { icon: "image", colorClass: "text-info" };
-    }
-    return { icon: "description", colorClass: "text-primary" };
-  };
+
 
   // Simulate mock upload progress: 0% -> 25% -> 50% -> 75% -> 100%
   const simulateUpload = (slotId: DocumentSlotId, file: File) => {
@@ -136,28 +126,14 @@ export function Step4Documents({
     }
   };
 
-  // Drag and drop handlers
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
+
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    const files = e.dataTransfer.files;
-    if (files && files[0]) {
-      // Find first empty slot or fallback to 'other'
-      const targetSlot =
-        DOCUMENT_SLOTS.find((s) => !data[s.slotId])?.slotId || "other";
-      simulateUpload(targetSlot, files[0]);
-    }
-  };
+
 
   const handleDelete = (slotId: DocumentSlotId) => {
     onChange({
@@ -166,10 +142,7 @@ export function Step4Documents({
     });
   };
 
-  // Collect uploaded documents
-  const uploadedFiles = Object.values(data).filter(
-    (item): item is DocumentItem => item !== null && item.status === "uploaded"
-  );
+
 
   return (
     <div className="flex flex-col min-h-full bg-white relative w-full">

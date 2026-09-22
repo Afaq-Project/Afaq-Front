@@ -18,20 +18,7 @@ export function Step2BackgroundGoals({
   onBack,
   onSkip,
 }: Step2BackgroundGoalsProps) {
-  // CRITICAL REQUIREMENT: Changing scale clears the GPA value!
-  const handleScaleChange = (newScale: GpaScale) => {
-    if (newScale !== data.gpaScale) {
-      onChange({
-        ...data,
-        gpaScale: newScale,
-        gpa: "", // Cleared!
-      });
-    }
-  };
 
-  const handleGpaChange = (value: string) => {
-    onChange({ ...data, gpa: value });
-  };
 
   const handleExperienceChange = (level: ExperienceLevel) => {
     onChange({ ...data, experienceLevel: level });
