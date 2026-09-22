@@ -75,20 +75,7 @@ const COUNTRIES = [
   "United Kingdom", "United States", "Yemen"
 ];
 
-const POPULAR_COUNTRIES = [
-  "Jordan",
-  "Palestine",
-  "Saudi Arabia",
-  "Egypt",
-  "United Arab Emirates",
-  "Kuwait",
-  "Qatar",
-  "Lebanon",
-  "Syria",
-  "Iraq",
-  "United States",
-  "United Kingdom",
-];
+
 
 export function Step1Education({ data, onChange, onNext }: Step1EducationProps) {
   const [levelDropdownOpen, setLevelDropdownOpen] = useState(false);
@@ -181,349 +168,337 @@ export function Step1Education({ data, onChange, onNext }: Step1EducationProps) 
     Boolean(data.nationality);
 
   return (
-    <div className="flex flex-col flex-grow min-h-[calc(100vh-10rem)]">
-      <main className="flex-grow w-full max-w-3xl mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-8 flex flex-col">
-        <h1 className="text-2xl md:text-3xl lg:text-[34px] font-semibold text-on-surface mb-8 tracking-tight">
-          Tell us about your education
-        </h1>
-
-        <form
-          className="space-y-8 flex-grow"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (isComplete) onNext();
-          }}
+    <div className="flex flex-col min-h-full bg-white relative w-full">
+      {/* Top right actions */}
+      <div className="absolute top-8 right-8 z-20">
+        <button
+          type="button"
+          className="text-[13px] font-medium text-neutral-500 hover:text-neutral-800 transition-colors cursor-pointer"
         >
-          {/* Education Level (Single Select) */}
-          <div className="flex flex-col gap-2 relative" ref={levelDropdownRef}>
-            <label
-              htmlFor="education-level"
-              className="text-xs md:text-sm font-medium text-on-surface"
-            >
-              Education Level <span className="text-error">*</span>
-            </label>
-            <div className="relative">
-              <button
-                type="button"
-                id="education-level"
-                aria-haspopup="listbox"
-                aria-expanded={levelDropdownOpen}
-                onClick={() => setLevelDropdownOpen((prev) => !prev)}
-                className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-on-surface flex justify-between items-center hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors text-left shadow-xs cursor-pointer"
+          Save &amp; exit
+        </button>
+      </div>
+
+      <div className="flex-1 relative z-10 w-full flex flex-col">
+        <main className="px-10 pt-20 pb-28 flex flex-col max-w-[700px] mx-auto w-full gap-8">
+          <h1 className="text-[28px] font-bold text-[#1A202C] mb-10 tracking-tight">
+            Tell us about your education
+          </h1>
+
+          <form
+            className="space-y-8 flex-grow"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (isComplete) onNext();
+            }}
+          >
+            {/* Nationality */}
+            <div className="flex flex-col gap-2.5 relative z-50" ref={nationalityDropdownRef}>
+              <label
+                htmlFor="nationality-select"
+                className="text-[13px] font-semibold text-[#2D3748]"
               >
-                <span
-                  className={
-                    data.educationLevel
-                      ? "text-on-surface font-medium"
-                      : "text-on-surface-variant/70"
-                  }
-                >
-                  {data.educationLevel || "Select highest level achieved"}
-                </span>
-                <span
-                  className={`material-symbols-outlined text-on-surface-variant transition-transform ${
-                    levelDropdownOpen ? "rotate-180" : ""
-                  }`}
-                >
-                  expand_more
-                </span>
-              </button>
-
-              {levelDropdownOpen && (
-                <div
-                  role="listbox"
-                  className="absolute top-full left-0 w-full mt-1.5 bg-white border border-neutral-200 rounded-lg shadow-xl z-30 overflow-hidden"
-                >
-                  {EDUCATION_LEVELS.map((level) => (
-                    <button
-                      key={level}
-                      type="button"
-                      role="option"
-                      aria-selected={data.educationLevel === level}
-                      onClick={() => handleSelectLevel(level)}
-                      className={`w-full text-left px-4 py-3 hover:bg-neutral-100 transition-colors text-sm md:text-base flex items-center justify-between cursor-pointer ${
-                        data.educationLevel === level
-                          ? "bg-primary-50 text-primary font-semibold"
-                          : "text-on-surface"
-                      }`}
-                    >
-                      <span>{level}</span>
-                      {data.educationLevel === level && (
-                        <span className="material-symbols-outlined text-primary text-sm">
-                          check
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Field of Study (Multi-select Tag Picker) */}
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-end">
-              <label className="text-xs md:text-sm font-medium text-on-surface">
-                Field of Study <span className="text-error">*</span>
+                Nationality <span className="text-red-500">*</span>
               </label>
-              <span
-                className={`text-xs md:text-sm font-medium ${
-                  data.fieldsOfStudy.length >= 5
-                    ? "text-warning font-semibold"
-                    : "text-on-surface-variant"
-                }`}
-              >
-                {data.fieldsOfStudy.length} of 5 selected
-              </span>
-            </div>
-
-            {/* Selected Chips Area */}
-            <div className="flex flex-wrap gap-2 min-h-[48px] p-2.5 border border-outline-variant border-dashed rounded-lg bg-surface-container-low/50 items-center">
-              {data.fieldsOfStudy.length === 0 ? (
-                <span className="text-xs md:text-sm text-on-surface-variant/60 italic pl-1">
-                  Select up to 5 fields from the categories below or search
-                </span>
-              ) : (
-                data.fieldsOfStudy.map((field) => (
-                  <div
-                    key={field}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-secondary-container text-on-secondary-container rounded-full text-xs md:text-sm font-medium transition-colors shadow-sm-subtle"
-                  >
-                    <span>{field}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveField(field)}
-                      aria-label={`Remove ${field}`}
-                      className="hover:opacity-70 flex items-center justify-center"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">close</span>
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Search Input */}
-            <div className="relative mt-1">
-              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
-                search
-              </span>
-              <input
-                type="text"
-                value={searchFieldQuery}
-                onChange={(e) => setSearchFieldQuery(e.target.value)}
-                placeholder="Search fields of study..."
-                className="w-full pl-11 pr-4 py-3 border border-outline-variant rounded-md bg-surface-container-lowest text-on-surface text-sm md:text-base focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant"
-              />
-              {searchFieldQuery && (
+              <div className="relative">
                 <button
                   type="button"
-                  onClick={() => setSearchFieldQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
+                  id="nationality-select"
+                  aria-haspopup="listbox"
+                  aria-expanded={nationalityDropdownOpen}
+                  onClick={() => setNationalityDropdownOpen((prev) => !prev)}
+                  className="w-full px-4 py-3.5 border border-neutral-200 rounded-[14px] bg-white text-neutral-800 flex justify-between items-center hover:border-[#397A0F] focus:outline-none focus:ring-2 focus:ring-[#397A0F]/20 transition-colors text-left cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
-                </button>
-              )}
-            </div>
-
-            {/* Expandable Categories */}
-            <div className="mt-2 border border-outline-variant rounded-md overflow-hidden bg-surface-container-lowest shadow-sm-subtle">
-              {filteredCategories.length === 0 ? (
-                <div className="p-4 text-center text-sm text-on-surface-variant">
-                  No matching fields found.
-                </div>
-              ) : (
-                filteredCategories.map((cat, index) => {
-                  const isExpanded = expandedCategories[cat.category] ?? false;
-                  return (
-                    <div
-                      key={cat.category}
-                      className={index < filteredCategories.length - 1 ? "border-b border-outline-variant/60" : ""}
+                  <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-neutral-400 text-[22px]">
+                      public
+                    </span>
+                    <span
+                      className={
+                        data.nationality
+                          ? "text-neutral-800 font-medium text-[15px]"
+                          : "text-neutral-400 text-[15px]"
+                      }
                     >
-                      <button
-                        type="button"
-                        onClick={() => toggleCategory(cat.category)}
-                        className="w-full flex justify-between items-center px-4 py-3.5 bg-surface-container-low/70 hover:bg-surface-container-low rounded-md transition-colors cursor-pointer text-left"
-                      >
-                        <span className="text-sm md:text-base font-semibold text-on-surface">
-                          {cat.category}
-                        </span>
-                        <span
-                          className={`material-symbols-outlined text-on-surface-variant transition-transform duration-200 ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
-                        >
-                          expand_more
-                        </span>
-                      </button>
+                      {data.nationality || "Select Country"}
+                    </span>
+                  </div>
+                  <span
+                    className={`material-symbols-outlined text-neutral-400 transition-transform ${
+                      nationalityDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    expand_more
+                  </span>
+                </button>
 
-                      {isExpanded && (
-                        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-surface-container-lowest animate-fadeIn">
-                          {cat.fields.map((field) => {
-                            const isSelected = data.fieldsOfStudy.includes(field);
-                            const isDisabled = !isSelected && data.fieldsOfStudy.length >= 5;
-
-                            return (
-                              <label
-                                key={field}
-                                className={`flex items-center gap-3 p-2 rounded-md transition-colors ${
-                                  isDisabled
-                                    ? "opacity-40 cursor-not-allowed"
-                                    : "cursor-pointer hover:bg-surface-container-low group"
-                                }`}
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  disabled={isDisabled}
-                                  onChange={() => handleToggleField(field)}
-                                  className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer disabled:cursor-not-allowed"
-                                />
-                                <span
-                                  className={`text-sm md:text-base ${
-                                    isSelected
-                                      ? "font-semibold text-primary"
-                                      : "text-on-surface group-hover:text-primary transition-colors"
-                                  }`}
-                                >
-                                  {field}
-                                </span>
-                              </label>
-                            );
-                          })}
+                {nationalityDropdownOpen && (
+                  <div
+                    role="listbox"
+                    className="absolute top-full left-0 w-full mt-2 bg-white border border-neutral-200 rounded-[14px] shadow-lg z-50 max-h-64 overflow-hidden flex flex-col"
+                  >
+                    {/* Search inside nationality */}
+                    <div className="p-2 border-b border-neutral-100 sticky top-0 bg-white">
+                      <input
+                        type="text"
+                        value={countrySearchQuery}
+                        onChange={(e) => setCountrySearchQuery(e.target.value)}
+                        placeholder="Search country..."
+                        className="w-full px-3 py-2 text-[14px] border border-neutral-200 rounded-[10px] bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-1 focus:ring-[#397A0F]"
+                        autoFocus
+                      />
+                    </div>
+                    <div className="overflow-y-auto max-h-52 scrollbar-minimal">
+                      {filteredCountries.length === 0 ? (
+                        <div className="p-4 text-center text-[13px] text-neutral-500">
+                          No country found
                         </div>
+                      ) : (
+                        filteredCountries.map((country) => (
+                          <button
+                            key={country}
+                            type="button"
+                            role="option"
+                            aria-selected={data.nationality === country}
+                            onClick={() => handleSelectNationality(country)}
+                            className={`w-full text-left px-4 py-3 hover:bg-neutral-50 transition-colors text-[14px] flex items-center justify-between cursor-pointer ${
+                              data.nationality === country
+                                ? "text-[#397A0F] font-semibold bg-[#F5FAF5]"
+                                : "text-neutral-700"
+                            }`}
+                          >
+                            <span>{country}</span>
+                            {data.nationality === country && (
+                              <span className="material-symbols-outlined text-[#397A0F] text-[18px]">
+                                check
+                              </span>
+                            )}
+                          </button>
+                        ))
                       )}
                     </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-
-          {/* Nationality (Dropdown with Search & Quick Options) */}
-          <div className="flex flex-col gap-2 relative z-20" ref={nationalityDropdownRef}>
-            <label
-              htmlFor="nationality-select"
-              className="text-xs md:text-sm font-medium text-on-surface"
-            >
-              Nationality <span className="text-error">*</span>
-            </label>
-            <div className="relative">
-              <button
-                type="button"
-                id="nationality-select"
-                aria-haspopup="listbox"
-                aria-expanded={nationalityDropdownOpen}
-                onClick={() => setNationalityDropdownOpen((prev) => !prev)}
-                className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-on-surface flex justify-between items-center hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors text-left shadow-xs cursor-pointer"
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="material-symbols-outlined text-on-surface-variant text-[20px]">
-                    public
-                  </span>
-                  <span
-                    className={
-                      data.nationality
-                        ? "text-on-surface font-medium"
-                        : "text-on-surface-variant/70"
-                    }
-                  >
-                    {data.nationality || "Select Country"}
-                  </span>
-                </div>
-                <span
-                  className={`material-symbols-outlined text-on-surface-variant transition-transform ${
-                    nationalityDropdownOpen ? "rotate-180" : ""
-                  }`}
-                >
-                  expand_more
-                </span>
-              </button>
-
-              {nationalityDropdownOpen && (
-                <div
-                  role="listbox"
-                  className="absolute top-full left-0 w-full mt-1.5 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 max-h-64 overflow-hidden flex flex-col"
-                >
-                  {/* Search inside nationality */}
-                  <div className="p-2 border-b border-neutral-200 sticky top-0 bg-white">
-                    <input
-                      type="text"
-                      value={countrySearchQuery}
-                      onChange={(e) => setCountrySearchQuery(e.target.value)}
-                      placeholder="Search country..."
-                      className="w-full px-3 py-1.5 text-sm border border-neutral-200 rounded-md bg-neutral-50 text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
-                      autoFocus
-                    />
                   </div>
-                  <div className="overflow-y-auto max-h-52 custom-scrollbar">
-                    {filteredCountries.length === 0 ? (
-                      <div className="p-3 text-center text-xs text-on-surface-variant">
-                        No country found
-                      </div>
-                    ) : (
-                      filteredCountries.map((country) => (
-                        <button
-                          key={country}
-                          type="button"
-                          role="option"
-                          aria-selected={data.nationality === country}
-                          onClick={() => handleSelectNationality(country)}
-                          className={`w-full text-left px-4 py-2.5 hover:bg-neutral-100 transition-colors text-sm flex items-center justify-between cursor-pointer ${
-                            data.nationality === country
-                              ? "bg-primary-50 text-primary font-semibold"
-                              : "text-on-surface"
-                          }`}
-                        >
-                          <span>{country}</span>
-                          {data.nationality === country && (
-                            <span className="material-symbols-outlined text-primary text-sm">
-                              check
-                            </span>
-                          )}
-                        </button>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Quick Nationality Choices */}
-            <div className="flex flex-col gap-1.5 pt-1">
-              <span className="text-xs text-on-surface-variant font-medium">Quick options:</span>
-              <div className="flex flex-wrap gap-1.5">
-                {POPULAR_COUNTRIES.map((country) => {
-                  const isSelected = data.nationality === country;
-                  return (
-                    <button
-                      key={country}
-                      type="button"
-                      onClick={() => handleSelectNationality(country)}
-                      className={`px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer border ${
-                        isSelected
-                          ? "bg-primary text-white border-primary shadow-xs"
-                          : "bg-white text-neutral-700 border-neutral-200 hover:border-primary hover:bg-neutral-50"
-                      }`}
-                    >
-                      {country}
-                    </button>
-                  );
-                })}
+                )}
               </div>
             </div>
-          </div>
-        </form>
-      </main>
+
+            {/* Education Level */}
+            <div className="flex flex-col gap-2.5 relative z-40" ref={levelDropdownRef}>
+              <label
+                htmlFor="education-level"
+                className="text-[13px] font-semibold text-[#2D3748]"
+              >
+                Education Level <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <button
+                  type="button"
+                  id="education-level"
+                  aria-haspopup="listbox"
+                  aria-expanded={levelDropdownOpen}
+                  onClick={() => setLevelDropdownOpen((prev) => !prev)}
+                  className="w-full px-5 py-3.5 border border-neutral-200 rounded-[14px] bg-white text-neutral-800 flex justify-between items-center hover:border-[#397A0F] focus:outline-none focus:ring-2 focus:ring-[#397A0F]/20 transition-colors text-left cursor-pointer"
+                >
+                  <span
+                    className={
+                      data.educationLevel
+                        ? "text-neutral-800 font-medium text-[15px]"
+                        : "text-neutral-400 text-[15px]"
+                    }
+                  >
+                    {data.educationLevel || "Select highest level achieved"}
+                  </span>
+                  <span
+                    className={`material-symbols-outlined text-neutral-400 transition-transform ${
+                      levelDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    expand_more
+                  </span>
+                </button>
+
+                {levelDropdownOpen && (
+                  <div
+                    role="listbox"
+                    className="absolute top-full left-0 w-full mt-2 bg-white border border-neutral-200 rounded-[14px] shadow-lg z-50 overflow-hidden"
+                  >
+                    {EDUCATION_LEVELS.map((level) => (
+                      <button
+                        key={level}
+                        type="button"
+                        role="option"
+                        aria-selected={data.educationLevel === level}
+                        onClick={() => handleSelectLevel(level)}
+                        className={`w-full text-left px-5 py-3.5 hover:bg-neutral-50 transition-colors text-[14px] flex items-center justify-between cursor-pointer ${
+                          data.educationLevel === level
+                            ? "text-[#397A0F] font-semibold bg-[#F5FAF5]"
+                            : "text-neutral-700"
+                        }`}
+                      >
+                        <span>{level}</span>
+                        {data.educationLevel === level && (
+                          <span className="material-symbols-outlined text-[#397A0F] text-[18px]">
+                            check
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Field of Study */}
+            <div className="flex flex-col gap-2.5 relative z-30">
+              <div className="flex justify-between items-end">
+                <label className="text-[13px] font-semibold text-[#2D3748]">
+                  Field of Study <span className="text-red-500">*</span>
+                </label>
+                <span
+                  className={`text-[12px] font-medium ${
+                    data.fieldsOfStudy.length >= 5
+                      ? "text-orange-500 font-semibold"
+                      : "text-neutral-500"
+                  }`}
+                >
+                  {data.fieldsOfStudy.length} of 5 selected
+                </span>
+              </div>
+
+              {/* Selected Chips Area */}
+              <div className="flex flex-wrap gap-2 min-h-[56px] p-3 border border-neutral-200 border-dashed rounded-[14px] bg-neutral-50/50 items-center">
+                {data.fieldsOfStudy.length === 0 ? (
+                  <span className="text-[13.5px] text-neutral-400 italic pl-2">
+                    Select up to 5 fields from the categories below or search
+                  </span>
+                ) : (
+                  data.fieldsOfStudy.map((field) => (
+                    <div
+                      key={field}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-neutral-100 text-neutral-700 rounded-[8px] text-[13px] font-medium transition-colors"
+                    >
+                      <span>{field}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveField(field)}
+                        aria-label={`Remove ${field}`}
+                        className="hover:text-red-500 flex items-center justify-center transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">close</span>
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Search Input */}
+              <div className="relative mt-2">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none text-[20px]">
+                  search
+                </span>
+                <input
+                  type="text"
+                  value={searchFieldQuery}
+                  onChange={(e) => setSearchFieldQuery(e.target.value)}
+                  placeholder="Search fields of study..."
+                  className="w-full pl-12 pr-4 py-3.5 border border-neutral-200 rounded-[14px] bg-white text-neutral-800 text-[14.5px] focus:outline-none focus:border-[#397A0F] focus:ring-2 focus:ring-[#397A0F]/20 transition-all placeholder:text-neutral-400"
+                />
+                {searchFieldQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchFieldQuery("")}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">close</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Expandable Categories */}
+              <div className="mt-2 border border-neutral-100 rounded-[14px] overflow-hidden bg-white shadow-sm">
+                {filteredCategories.length === 0 ? (
+                  <div className="p-5 text-center text-[14px] text-neutral-400">
+                    No matching fields found.
+                  </div>
+                ) : (
+                  filteredCategories.map((cat, index) => {
+                    const isExpanded = expandedCategories[cat.category] ?? false;
+                    return (
+                      <div
+                        key={cat.category}
+                        className={index < filteredCategories.length - 1 ? "border-b border-neutral-100" : ""}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => toggleCategory(cat.category)}
+                          className="w-full flex justify-between items-center px-5 py-4 hover:bg-neutral-50 transition-colors cursor-pointer text-left"
+                        >
+                          <span className="text-[14px] font-semibold text-neutral-800">
+                            {cat.category}
+                          </span>
+                          <span
+                            className={`material-symbols-outlined text-neutral-400 transition-transform duration-200 ${
+                              isExpanded ? "rotate-180" : ""
+                            }`}
+                          >
+                            expand_more
+                          </span>
+                        </button>
+
+                        {isExpanded && (
+                          <div className="p-4 pt-0 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white">
+                            {cat.fields.map((field) => {
+                              const isSelected = data.fieldsOfStudy.includes(field);
+                              const isDisabled = !isSelected && data.fieldsOfStudy.length >= 5;
+
+                              return (
+                                <label
+                                  key={field}
+                                  className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors ${
+                                    isDisabled
+                                      ? "opacity-40 cursor-not-allowed"
+                                      : "cursor-pointer hover:bg-neutral-50 group"
+                                  }`}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={isSelected}
+                                    disabled={isDisabled}
+                                    onChange={() => handleToggleField(field)}
+                                    className="w-4 h-4 rounded border-neutral-300 text-[#397A0F] focus:ring-[#397A0F] cursor-pointer disabled:cursor-not-allowed"
+                                  />
+                                  <span
+                                    className={`text-[14px] ${
+                                      isSelected
+                                        ? "font-semibold text-[#397A0F]"
+                                        : "text-neutral-700 group-hover:text-neutral-900 transition-colors"
+                                    }`}
+                                  >
+                                    {field}
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </form>
+        </main>
+      </div>
 
       {/* Bottom Navigation Bar */}
-      <nav className="sticky bottom-0 z-30 w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/80 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] px-4 md:px-8 py-4 rounded-t-xl mt-auto flex justify-between items-center">
-        {/* Back Button (Disabled on Step 1) */}
+      <footer className="shrink-0 sticky bottom-0 z-20 w-full bg-white border-t border-neutral-100 px-10 py-5 flex justify-between items-center mt-auto">
+        {/* Back Button */}
         <button
           type="button"
           disabled
           aria-disabled="true"
-          className="flex items-center gap-2 text-xs md:text-sm font-medium text-on-surface-variant opacity-40 cursor-not-allowed px-4 py-2 rounded-md"
+          className="flex items-center gap-2 text-[14px] font-medium text-neutral-400 cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
           <span>Back</span>
@@ -534,16 +509,16 @@ export function Step1Education({ data, onChange, onNext }: Step1EducationProps) 
           type="button"
           onClick={onNext}
           disabled={!isComplete}
-          className={`flex items-center gap-2 text-xs md:text-sm font-semibold rounded-md px-6 py-3 transition-all ${
+          className={`flex items-center gap-2 text-[14px] font-semibold rounded-full px-8 py-3 transition-all ${
             isComplete
-              ? "bg-primary text-on-primary hover:opacity-90 shadow-sm cursor-pointer"
-              : "bg-primary/40 text-on-primary opacity-50 cursor-not-allowed"
+              ? "bg-[#397A0F] text-white hover:opacity-90 cursor-pointer shadow-sm"
+              : "bg-[#DDE9D8] text-white cursor-not-allowed"
           }`}
         >
           <span>Next</span>
           <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
         </button>
-      </nav>
+      </footer>
     </div>
   );
 }
