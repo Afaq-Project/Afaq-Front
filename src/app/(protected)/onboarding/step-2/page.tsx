@@ -2,43 +2,46 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Step2BackgroundGoals } from "@/src/feature/onboarding/components/Step2BackgroundGoals";
+import { Step2Education } from "@/src/feature/onboarding/components/Step2BackgroundGoals";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
-import type { BackgroundData } from "@/src/feature/onboarding/types";
+import type { EducationData } from "@/src/feature/onboarding/types";
+import { useEducationLevels } from "@/src/shared/lib/api/hooks/useReferenceData";
 
 export default function Step2Page() {
   const router = useRouter();
-  const { profile, updateBackground } = useProfile();
+  const { profile, updateEducation } = useProfile();
 
-  const [background, setBackground] = useState<BackgroundData>({
-    gpa: profile.background.gpa || "",
-    gpaScale: profile.background.gpaScale || "4.0",
-    experienceLevel: profile.background.experienceLevel || "entry",
-    financialNeed: profile.background.financialNeed || "prefer_not",
-    goals: profile.background.goals || "",
+  const [education, setEducation] = useState<EducationData>({
+    educationLevel: profile.education.educationLevel || "",
+    fieldsOfStudy: profile.education.fieldsOfStudy || [],
+    nationality: profile.education.nationality || "",
+    educationLevelId: profile.education.educationLevelId,
+    fieldIds: profile.education.fieldIds,
+    nationalityId: profile.education.nationalityId,
+    institutionName: profile.education.institutionName,
+    institutionId: profile.education.institutionId,
+    gpa: profile.education.gpa,
+    gpaScale: profile.education.gpaScale,
+    startDate: profile.education.startDate,
+    endDate: profile.education.endDate,
+    expectedGraduationDate: profile.education.expectedGraduationDate,
+    isCurrent: profile.education.isCurrent,
   });
 
+  const { data: educationLevels = [], isLoading: loadingLevels } = useEducationLevels();
+
   const handleNext = () => {
-    updateBackground(background);
-    router.push("/onboarding/step-3");
-  };
-
-  const handleBack = () => {
-    router.push("/onboarding/step-1");
-  };
-
-  const handleSkip = () => {
-    updateBackground(background);
+    updateEducation(education);
     router.push("/onboarding/step-3");
   };
 
   return (
-    <Step2BackgroundGoals
-      data={background}
-      onChange={setBackground}
+    <Step2Education
+      data={education}
+      onChange={setEducation}
       onNext={handleNext}
-      onBack={handleBack}
-      onSkip={handleSkip}
+      onBack={() => router.push("/onboarding/step-1")}
+      referenceData={{ educationLevels, isLoading: loadingLevels }}
     />
   );
 }
