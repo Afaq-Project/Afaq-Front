@@ -125,8 +125,10 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
 
   const { data: rawCountries = [], isFetching: countriesFetching } = useCountriesSearch(debouncedCountrySearch);
   const countries = rawCountries.map((c) => ({ id: c.id, name: c.nationalityNameEn ?? c.nameEn }));
-  const { data: majors = [], isFetching: majorsFetching } = useMajorsSearch(debouncedMajorSearch);
-  const { data: institutions = [], isFetching: institutionsFetching } = useInstitutionsSearch(debouncedInstitutionSearch);
+  const { data: rawMajors = [], isFetching: majorsFetching } = useMajorsSearch(debouncedMajorSearch);
+  const majors = rawMajors.map((m) => ({ id: m.id, name: m.nameEn }));
+  const { data: rawInstitutions = [], isFetching: institutionsFetching } = useInstitutionsSearch(debouncedInstitutionSearch);
+  const institutions = rawInstitutions.map((i) => ({ id: i.id, name: i.nameEn }));
 
   useEffect(() => {
     function onOutside(e: MouseEvent) {
@@ -139,7 +141,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
   }, []);
 
   const educationLevels = referenceData?.educationLevels?.length
-    ? referenceData.educationLevels
+    ? referenceData.educationLevels.map((l) => ({ id: l.id, name: l.nameEn }))
     : FALLBACK_EDUCATION_LEVELS.map((name, i) => ({ id: String(i), name }));
 
   const handleSelectLevel = (level: { id: string; name: string }) => {
@@ -147,7 +149,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
     setLevelOpen(false);
   };
 
-  const handleToggleField = (field: RefMajor) => {
+  const handleToggleField = (field: { id: string; name: string }) => {
     const exists = data.fieldsOfStudy.includes(field.name);
     if (exists) {
       onChange({
@@ -258,7 +260,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
             isFetching={institutionsFetching}
             searchValue={institutionSearch}
             onSearchChange={setInstitutionSearch}
-            onSelect={(inst: RefInstitution) => {
+            onSelect={(inst) => {
               onChange({ ...data, institutionName: inst.name, institutionId: inst.id });
               setInstitutionOpen(false);
               setInstitutionSearch("");

@@ -4,9 +4,11 @@ import type {
   ApiEducation,
   ApiLanguageEntry,
   ApiDocument,
+  ApiPreferences,
   UpdatePersonalPayload,
   CreateEducationPayload,
   AddLanguagePayload,
+  UpdatePreferencesPayload,
 } from "../types/api";
 
 export const profileService = {
@@ -61,4 +63,7 @@ export const profileService = {
 
   deleteDocument: (id: string) =>
     apiClient.delete(`/profile/documents/${id}`),
+
+  updatePreferences: (data: UpdatePreferencesPayload) =>
+    apiClient.patch<ApiPreferences>("/profile/preferences", data),
 };

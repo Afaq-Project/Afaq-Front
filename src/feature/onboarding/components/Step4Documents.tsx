@@ -67,7 +67,7 @@ function findDocumentTypeId(
 ): string | undefined {
   const keywords = SLOT_TYPE_KEYWORDS[slotKey];
   const match = documentTypes.find((dt) =>
-    keywords.some((kw) => dt.name.toLowerCase().includes(kw))
+    keywords.some((kw) => dt.nameEn.toLowerCase().includes(kw))
   );
   // If no match, fall back to the first document type
   return match?.id ?? documentTypes[0]?.id;

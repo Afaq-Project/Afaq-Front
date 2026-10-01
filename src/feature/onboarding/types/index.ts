@@ -74,12 +74,24 @@ export interface DocumentItem {
 
 export type DocumentsData = Record<DocumentSlotId, DocumentItem | null>;
 
+export interface PreferencesData {
+  targetDegreeLevel?: string;
+  targetDegreeLevelId?: string;
+  targetFields?: string[];
+  targetFieldIds?: string[];
+  targetCountries?: string[];
+  targetCountryIds?: string[];
+  targetInstitutions?: string[];
+  targetInstitutionIds?: string[];
+}
+
 export interface UserProfile {
   name: string;
   email: string;
   avatarUrl: string;
   personal: PersonalInfoData;
   education: EducationData;
+  preferences: PreferencesData;
   background: BackgroundData;
   skills: SkillsData;
   documents: DocumentsData;

@@ -179,7 +179,7 @@ export function Step1BasicInfo({ data, onChange, onNext, onSkip }: Props) {
 
   return (
     <div className="flex flex-col flex-grow">
-      <main className="flex-grow w-full max-w-3xl mx-auto px-6 pt-8 pb-52 flex flex-col gap-8">
+      <main className="flex-grow w-full max-w-3xl mx-auto px-6 pt-8 pb-24 flex flex-col gap-8">
         <h1 className="text-2xl md:text-3xl font-semibold text-on-surface tracking-tight">
           Tell us about yourself
         </h1>

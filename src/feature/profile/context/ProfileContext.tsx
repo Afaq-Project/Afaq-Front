@@ -1,10 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState, type ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import type {
   UserProfile,
   PersonalInfoData,
   EducationData,
+  PreferencesData,
   BackgroundData,
   SkillsData,
   DocumentsData,
@@ -21,6 +22,14 @@ export const INITIAL_PROFILE: UserProfile = {
     educationLevel: "",
     fieldsOfStudy: [],
     nationality: "",
+  },
+  preferences: {
+    targetFields: [],
+    targetFieldIds: [],
+    targetCountries: [],
+    targetCountryIds: [],
+    targetInstitutions: [],
+    targetInstitutionIds: [],
   },
   background: {
     experienceLevel: "none",
@@ -71,6 +80,7 @@ interface ProfileContextType {
   completionPercentage: number;
   updatePersonal: (data: PersonalInfoData) => void;
   updateEducation: (data: EducationData) => void;
+  updatePreferences: (data: PreferencesData) => void;
   updateBackground: (data: BackgroundData) => void;
   updateSkills: (data: SkillsData) => void;
   updateDocuments: (data: DocumentsData) => void;
@@ -98,53 +108,48 @@ function loadStoredProfile(): UserProfile {
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile>(loadStoredProfile);
 
-  const saveProfile = (newProfile: UserProfile) => {
-    setProfile(newProfile);
+  useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
     } catch {
       // ignore
     }
-  };
+  }, [profile]);
 
   const updatePersonal = (data: PersonalInfoData) => {
-    saveProfile({ ...profile, personal: data });
+    setProfile(prev => ({ ...prev, personal: data }));
   };
 
   const updateEducation = (data: EducationData) => {
-    saveProfile({ ...profile, education: data });
+    setProfile(prev => ({ ...prev, education: data }));
+  };
+
+  const updatePreferences = (data: PreferencesData) => {
+    setProfile(prev => ({ ...prev, preferences: data }));
   };
 
   const updateBackground = (data: BackgroundData) => {
-    saveProfile({ ...profile, background: data });
+    setProfile(prev => ({ ...prev, background: data }));
   };
 
   const updateSkills = (data: SkillsData) => {
-    saveProfile({ ...profile, skills: data });
+    setProfile(prev => ({ ...prev, skills: data }));
   };
 
   const updateDocuments = (data: DocumentsData) => {
-    saveProfile({ ...profile, documents: data });
+    setProfile(prev => ({ ...prev, documents: data }));
   };
 
   const addDocument = (doc: DocumentItem) => {
-    const updatedDocs: DocumentsData = {
-      ...profile.documents,
-      [doc.slotId]: doc,
-    };
-    saveProfile({ ...profile, documents: updatedDocs });
+    setProfile(prev => ({ ...prev, documents: { ...prev.documents, [doc.slotId]: doc } }));
   };
 
   const removeDocument = (slotId: DocumentSlotId) => {
-    const updatedDocs: DocumentsData = {
-      ...profile.documents,
-      [slotId]: null,
-    };
-    saveProfile({ ...profile, documents: updatedDocs });
+    setProfile(prev => ({ ...prev, documents: { ...prev.documents, [slotId]: null } }));
   };
 
   const resetToDefault = () => {
-    saveProfile(INITIAL_PROFILE);
+    setProfile(INITIAL_PROFILE);
   };
 
   const completionPercentage = calculateProfileCompletion(profile);
@@ -156,6 +161,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         completionPercentage,
         updatePersonal,
         updateEducation,
+        updatePreferences,
         updateBackground,
         updateSkills,
         updateDocuments,
@@ -178,6 +184,7 @@ export function useProfile(): ProfileContextType {
       completionPercentage: calculateProfileCompletion(INITIAL_PROFILE),
       updatePersonal: () => {},
       updateEducation: () => {},
+      updatePreferences: () => {},
       updateBackground: () => {},
       updateSkills: () => {},
       updateDocuments: () => {},

@@ -88,13 +88,13 @@ function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxProps) {
                 type="button"
                 onMouseDown={(e) => {
                   e.preventDefault();
-                  onChange(lang.name, lang.id);
+                  onChange(lang.nameEn, lang.id);
                   setOpen(false);
                   setQuery("");
                 }}
                 className={`w-full text-left px-4 py-2.5 text-sm hover:bg-neutral-50 transition-colors cursor-pointer ${valueId === lang.id ? "text-primary font-semibold bg-primary/5" : "text-on-surface"}`}
               >
-                {lang.name}
+                {lang.nameEn}
               </button>
             ))
           )}
@@ -111,7 +111,8 @@ export function Step3SkillsLanguage({ data, onChange, onNext, onBack, onSkip, re
   const [skillSearch, setSkillSearch] = useState("");
 
   const proficiencyLevels = useMemo(() => {
-    if (referenceData?.proficiencyLevels?.length) return referenceData.proficiencyLevels;
+    if (referenceData?.proficiencyLevels?.length)
+      return referenceData.proficiencyLevels.map((p) => ({ id: p.id, name: p.nameEn, code: p.code }));
     return FALLBACK_PROFICIENCY;
   }, [referenceData]);
 

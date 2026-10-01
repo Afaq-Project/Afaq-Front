@@ -19,40 +19,47 @@ export interface RefCity {
 
 export interface RefEducationLevel {
   id: string;
-  name: string;
+  nameEn: string;
+  nameAr?: string;
 }
 
 export interface RefMajorCategory {
   id: string;
-  name: string;
+  nameEn: string;
+  nameAr?: string;
 }
 
 export interface RefMajor {
   id: string;
-  name: string;
+  nameEn: string;
+  nameAr?: string;
   categoryId?: string;
 }
 
 export interface RefLanguage {
   id: string;
-  name: string;
+  nameEn: string;
+  nameAr?: string;
 }
 
 export interface RefProficiencyLevel {
   id: string;
-  name: string;
+  nameEn: string;
+  nameAr?: string;
   code?: string;
 }
 
 export interface RefDocumentType {
   id: string;
-  name: string;
+  nameEn: string;
+  nameAr?: string;
 }
 
 export interface RefInstitution {
   id: string;
-  name: string;
-  country?: { id: string; name: string };
+  nameEn: string;
+  nameAr?: string;
+  country?: { id: string; nameEn: string };
 }
 
 export interface RefStandardizedTest {
@@ -176,4 +183,11 @@ export interface AddLanguagePayload {
   languageId: string;
   proficiencyLevelId: string;
   isNative?: boolean;
+}
+
+export interface UpdatePreferencesPayload {
+  targetDegreeIds?: string[];
+  targetMajorIds?: string[];
+  targetInstitutionIds?: string[];
+  targetCountryIds?: string[];
 }

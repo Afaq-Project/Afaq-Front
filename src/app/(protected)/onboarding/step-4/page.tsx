@@ -77,7 +77,23 @@ export default function Step4Page() {
         });
       }
 
-      // 3. Add languages
+      // 3. Submit preferences
+      const { preferences } = profile;
+      if (
+        preferences?.targetDegreeLevelId ||
+        (preferences?.targetFieldIds?.length ?? 0) > 0 ||
+        (preferences?.targetCountryIds?.length ?? 0) > 0 ||
+        (preferences?.targetInstitutionIds?.length ?? 0) > 0
+      ) {
+        await profileService.updatePreferences({
+          ...(preferences.targetDegreeLevelId && { targetDegreeIds: [preferences.targetDegreeLevelId] }),
+          ...(preferences.targetFieldIds?.length && { targetMajorIds: preferences.targetFieldIds }),
+          ...(preferences.targetCountryIds?.length && { targetCountryIds: preferences.targetCountryIds }),
+          ...(preferences.targetInstitutionIds?.length && { targetInstitutionIds: preferences.targetInstitutionIds }),
+        });
+      }
+
+      // 4. Add languages
       const languagesToSubmit = skills.languages.filter((l) => l.languageId && l.proficiencyLevelId);
       await Promise.all(
         languagesToSubmit.map((l) =>
