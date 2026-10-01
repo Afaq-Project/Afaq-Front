@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, type ReactNode } from "react";
 import type {
   UserProfile,
+  PersonalInfoData,
   EducationData,
   BackgroundData,
   SkillsData,
@@ -12,52 +13,27 @@ import type {
 } from "../types";
 
 export const INITIAL_PROFILE: UserProfile = {
-  name: "Alex Johnson",
-  email: "alex.johnson@example.com",
-  avatarUrl:
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80&auto=format&fit=crop",
+  name: "",
+  email: "",
+  avatarUrl: "",
+  personal: {},
   education: {
-    educationLevel: "Graduate",
-    fieldsOfStudy: ["Computer Science", "Data Analytics"],
-    nationality: "United States",
+    educationLevel: "",
+    fieldsOfStudy: [],
+    nationality: "",
   },
   background: {
-    gpa: "3.8",
-    gpaScale: "4.0",
-    experienceLevel: "mid",
-    financialNeed: "no",
-    goals:
-      "Seeking opportunities to lead impactful machine learning projects and expand international academic collaboration.",
+    experienceLevel: "none",
+    financialNeed: "prefer_not",
   },
   skills: {
-    skills: ["Python", "Data Analysis", "UI Design", "Machine Learning"],
-    languages: [
-      { id: "lang-1", language: "English", level: "C2" },
-      { id: "lang-2", language: "Spanish", level: "B1" },
-    ],
+    skills: [],
+    languages: [],
   },
   documents: {
-    resume: {
-      id: "doc-1",
-      slotId: "resume",
-      name: "Resume_Alex_J.pdf",
-      size: "2.4 MB",
-      type: "application/pdf",
-      uploadedAt: "Uploaded Jan 12",
-      status: "uploaded",
-      progress: 100,
-    },
+    resume: null,
     essay: null,
-    transcript: {
-      id: "doc-2",
-      slotId: "transcript",
-      name: "Transcript_Official.png",
-      size: "1.1 MB",
-      type: "image/png",
-      uploadedAt: "Uploaded Dec 05",
-      status: "uploaded",
-      progress: 100,
-    },
+    transcript: null,
     recommendation: null,
     other: null,
   },
@@ -65,25 +41,26 @@ export const INITIAL_PROFILE: UserProfile = {
 
 export function calculateProfileCompletion(profile: UserProfile): number {
   let score = 0;
-  // Education contributes up to 30%
+  // Personal — 20%
+  if (profile.personal.firstName && profile.personal.lastName) score += 5;
+  if (profile.personal.dateOfBirth) score += 5;
+  if (profile.personal.countryOfResidenceId) score += 5;
+  if (profile.personal.gender) score += 5;
+
+  // Education — 30%
   if (profile.education.educationLevel) score += 10;
   if (profile.education.fieldsOfStudy.length > 0) score += 10;
   if (profile.education.nationality) score += 10;
 
-  // Background contributes up to 25%
-  if (profile.background.gpa) score += 10;
-  if (profile.background.experienceLevel) score += 10;
-  if (profile.background.goals) score += 5;
-
-  // Skills contribute up to 25%
+  // Skills — 25%
   if (profile.skills.skills.length > 0) score += 15;
   if (profile.skills.languages.length > 0) score += 10;
 
-  // Documents contribute up to 20%
+  // Documents — 25%
   const uploadedDocs = Object.values(profile.documents).filter(
     (doc): doc is DocumentItem => doc !== null && doc.status === "uploaded"
   );
-  if (uploadedDocs.length > 0) score += 10;
+  if (uploadedDocs.length > 0) score += 15;
   if (uploadedDocs.length > 1) score += 10;
 
   return Math.min(100, score);
@@ -92,6 +69,7 @@ export function calculateProfileCompletion(profile: UserProfile): number {
 interface ProfileContextType {
   profile: UserProfile;
   completionPercentage: number;
+  updatePersonal: (data: PersonalInfoData) => void;
   updateEducation: (data: EducationData) => void;
   updateBackground: (data: BackgroundData) => void;
   updateSkills: (data: SkillsData) => void;
@@ -127,6 +105,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     } catch {
       // ignore
     }
+  };
+
+  const updatePersonal = (data: PersonalInfoData) => {
+    saveProfile({ ...profile, personal: data });
   };
 
   const updateEducation = (data: EducationData) => {
@@ -172,6 +154,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       value={{
         profile,
         completionPercentage,
+        updatePersonal,
         updateEducation,
         updateBackground,
         updateSkills,
@@ -193,6 +176,7 @@ export function useProfile(): ProfileContextType {
     return {
       profile: INITIAL_PROFILE,
       completionPercentage: calculateProfileCompletion(INITIAL_PROFILE),
+      updatePersonal: () => {},
       updateEducation: () => {},
       updateBackground: () => {},
       updateSkills: () => {},
