@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Step4Documents, type Step4DocumentsState, type DocumentSlotKey } from "@/src/feature/onboarding/components/Step4Documents";
 import { useProfile } from "@/src/feature/profile/context/ProfileContext";
@@ -17,6 +17,22 @@ const INITIAL_STATE: Step4DocumentsState = {
   other: IDLE_SLOT,
 };
 
+function guessSlot(typeNameEn: string): DocumentSlotKey {
+  const n = typeNameEn.toLowerCase();
+  if (n.includes("resume") || n.includes("cv")) return "resume";
+  if (n.includes("essay")) return "essay";
+  if (n.includes("transcript")) return "transcript";
+  if (n.includes("recommendation") || n.includes("letter")) return "recommendation";
+  return "other";
+}
+
+function fmtSize(bytes?: number): string {
+  if (!bytes) return "";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 function mapGpaScale(scale: string): string {
   if (scale === "4.0") return "OUT_OF_4";
   if (scale === "percent") return "PERCENTAGE";
@@ -28,8 +44,26 @@ export default function Step4Page() {
   const { profile } = useProfile();
   const [state, setState] = useState<Step4DocumentsState>(INITIAL_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [docsLoading, setDocsLoading] = useState(true);
 
   const { data: documentTypes = [], isLoading: loadingDocTypes } = useDocumentTypes();
+
+  useEffect(() => {
+    profileService.listDocuments().then((docs) => {
+      if (docs.length) {
+        const next = { ...INITIAL_STATE };
+        docs.forEach((doc) => {
+          const slot = guessSlot(doc.documentType?.nameEn ?? "");
+          next[slot] = {
+            status: "uploaded",
+            progress: 100,
+            doc: { apiId: doc.id, slotKey: slot, name: doc.fileName ?? "Document", size: fmtSize(doc.fileSize), type: doc.mimeType ?? "" },
+          };
+        });
+        setState(next);
+      }
+    }).catch(() => {}).finally(() => setDocsLoading(false));
+  }, []);
 
   const handleUpload = async (_slotKey: DocumentSlotKey, file: File, documentTypeId: string): Promise<string> => {
     const doc = await profileService.uploadDocument(documentTypeId, file);
@@ -124,6 +158,7 @@ export default function Step4Page() {
       referenceData={{ documentTypes, isLoading: loadingDocTypes }}
       onUpload={handleUpload}
       onDeleteDoc={handleDeleteDoc}
+      docsLoading={docsLoading}
     />
   );
 }
