@@ -98,6 +98,15 @@ export function useCountriesSearch(search: string) {
   });
 }
 
+export function useMajorsByCategory(categoryId: string, enabled = true) {
+  return useQuery({
+    queryKey: ["reference", "majors", "category", categoryId],
+    queryFn: () => referenceService.getMajorsByCategory(categoryId),
+    staleTime: STALE_FOREVER,
+    enabled: enabled && Boolean(categoryId),
+  });
+}
+
 export function useMajorsSearch(search: string) {
   return useQuery({
     queryKey: ["reference", "majors", "search", search],

@@ -31,6 +31,8 @@ export const referenceService = {
     apiClient.get<RefMajorCategory[]>("/reference/major-categories"),
   getMajors: (search?: string) =>
     apiClient.get<RefMajor[]>(search ? `/reference/majors?search=${encodeURIComponent(search)}` : "/reference/majors"),
+  getMajorsByCategory: (categoryId: string) =>
+    apiClient.get<RefMajor[]>(`/reference/majors?categoryId=${encodeURIComponent(categoryId)}&limit=100`),
   getInstitutions: (search?: string) =>
     apiClient.get<RefInstitution[]>(search ? `/reference/institutions?search=${encodeURIComponent(search)}` : "/reference/institutions"),
   getLanguages: (search?: string) =>

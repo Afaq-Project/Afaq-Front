@@ -55,6 +55,7 @@ export interface LanguageItem {
 
 export interface SkillsData {
   skills: string[];
+  skillIds?: string[];
   languages: LanguageItem[];
 }
 
