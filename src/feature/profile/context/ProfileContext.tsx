@@ -21,7 +21,6 @@ export const INITIAL_PROFILE: UserProfile = {
   education: {
     educationLevel: "",
     fieldsOfStudy: [],
-    nationality: "",
   },
   preferences: {
     targetFields: [],
@@ -31,10 +30,7 @@ export const INITIAL_PROFILE: UserProfile = {
     targetInstitutions: [],
     targetInstitutionIds: [],
   },
-  background: {
-    experienceLevel: "none",
-    financialNeed: "prefer_not",
-  },
+  background: {},
   skills: {
     skills: [],
     languages: [],
@@ -59,7 +55,7 @@ export function calculateProfileCompletion(profile: UserProfile): number {
   // Education — 30%
   if (profile.education.educationLevel) score += 10;
   if (profile.education.fieldsOfStudy.length > 0) score += 10;
-  if (profile.education.nationality) score += 10;
+  if (profile.personal.nationalityId) score += 10;
 
   // Skills — 25%
   if (profile.skills.skills.length > 0) score += 15;

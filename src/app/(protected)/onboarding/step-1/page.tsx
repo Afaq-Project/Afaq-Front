@@ -15,6 +15,8 @@ export default function Step1Page() {
     lastName: profile.personal?.lastName ?? "",
     dateOfBirth: profile.personal?.dateOfBirth ?? "",
     gender: profile.personal?.gender ?? "",
+    nationality: profile.personal?.nationality ?? "",
+    nationalityId: profile.personal?.nationalityId ?? "",
     maritalStatus: profile.personal?.maritalStatus ?? "",
     maritalStatusId: profile.personal?.maritalStatusId ?? "",
     countryOfResidence: profile.personal?.countryOfResidence ?? "",

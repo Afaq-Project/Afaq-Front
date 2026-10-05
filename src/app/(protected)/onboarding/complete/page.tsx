@@ -10,7 +10,7 @@ export default function CompletePage() {
   // Dynamic progress score
   const calculateScore = (): number => {
     let score = 40; // Base score for completing Step 1
-    if (profile.background.bio || profile.background.experienceLevel !== "none") score += 15;
+    if (profile.education.educationLevel && profile.education.fieldsOfStudy.length > 0) score += 15;
     if (profile.skills.skills.length > 0) score += 15;
     if (profile.skills.languages.length > 0) score += 10;
     const hasDocs = Object.values(profile.documents).some(

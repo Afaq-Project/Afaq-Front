@@ -108,23 +108,17 @@ function SearchDropdown<T extends { id: string; name: string }>({
 // ─── Main component ───────────────────────────────────────────────────────────
 export function Step1Education({ data, onChange, onNext, referenceData }: Step1EducationProps) {
   const [levelOpen, setLevelOpen] = useState(false);
-  const [nationalityOpen, setNationalityOpen] = useState(false);
   const [institutionOpen, setInstitutionOpen] = useState(false);
 
-  const [countrySearch, setCountrySearch] = useState("");
   const [majorSearch, setMajorSearch] = useState("");
   const [institutionSearch, setInstitutionSearch] = useState("");
 
   const levelRef = useRef<HTMLDivElement>(null);
-  const nationalityRef = useRef<HTMLDivElement>(null);
   const institutionRef = useRef<HTMLDivElement>(null);
 
-  const debouncedCountrySearch = useDebounce(countrySearch, 300);
   const debouncedMajorSearch = useDebounce(majorSearch, 300);
   const debouncedInstitutionSearch = useDebounce(institutionSearch, 300);
 
-  const { data: rawCountries = [], isFetching: countriesFetching } = useCountriesSearch(debouncedCountrySearch);
-  const countries = rawCountries.map((c) => ({ id: c.id, name: c.nationalityNameEn ?? c.nameEn }));
   const { data: rawMajors = [], isFetching: majorsFetching } = useMajorsSearch(debouncedMajorSearch);
   const majors = rawMajors.map((m) => ({ id: m.id, name: m.nameEn }));
   const { data: rawInstitutions = [], isFetching: institutionsFetching } = useInstitutionsSearch(debouncedInstitutionSearch);
@@ -133,7 +127,6 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
   useEffect(() => {
     function onOutside(e: MouseEvent) {
       if (levelRef.current && !levelRef.current.contains(e.target as Node)) setLevelOpen(false);
-      if (nationalityRef.current && !nationalityRef.current.contains(e.target as Node)) setNationalityOpen(false);
       if (institutionRef.current && !institutionRef.current.contains(e.target as Node)) setInstitutionOpen(false);
     }
     document.addEventListener("mousedown", onOutside);
@@ -180,7 +173,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
     if (scale !== data.gpaScale) onChange({ ...data, gpaScale: scale, gpa: "" });
   };
 
-  const isComplete = Boolean(data.educationLevel) && data.fieldsOfStudy.length > 0 && Boolean(data.nationality);
+  const isComplete = Boolean(data.educationLevel) && data.fieldsOfStudy.length > 0;
 
   return (
     <div className="flex flex-col flex-grow">
@@ -191,27 +184,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
 
         {/* ── Section: Identity & Level ── */}
         <section className="flex flex-col gap-5">
-          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Basic Info</h2>
-
-          {/* Nationality */}
-          <SearchDropdown
-            label="Nationality"
-            required
-            selected={data.nationality}
-            icon="public"
-            items={countries}
-            isFetching={countriesFetching}
-            searchValue={countrySearch}
-            onSearchChange={setCountrySearch}
-            onSelect={(c) => {
-              onChange({ ...data, nationality: c.name, nationalityId: c.id });
-              setNationalityOpen(false);
-              setCountrySearch("");
-            }}
-            open={nationalityOpen}
-            onToggle={() => setNationalityOpen((p) => !p)}
-            dropdownRef={nationalityRef}
-          />
+          <h2 className="text-sm font-semibold text-on-surface uppercase tracking-wider">Basic Info</h2>
 
           {/* Education Level */}
           <div className="flex flex-col gap-2 relative" ref={levelRef}>
@@ -248,7 +221,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
 
         {/* ── Section: Institution & Field ── */}
         <section className="flex flex-col gap-5">
-          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Institution & Field of Study</h2>
+          <h2 className="text-sm font-semibold text-on-surface uppercase tracking-wider">Institution & Field of Study</h2>
 
           {/* Institution */}
           <SearchDropdown
@@ -346,7 +319,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
 
         {/* ── Section: GPA ── */}
         <section className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-on-surface uppercase tracking-wider">
             GPA / Grade <span className="text-xs font-normal normal-case text-outline">(optional)</span>
           </h2>
 
@@ -383,7 +356,7 @@ export function Step1Education({ data, onChange, onNext, referenceData }: Step1E
 
         {/* ── Section: Study Period ── */}
         <section className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-on-surface uppercase tracking-wider">
             Study Period <span className="text-xs font-normal normal-case text-outline">(optional)</span>
           </h2>
 

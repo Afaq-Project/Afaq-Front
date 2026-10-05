@@ -275,13 +275,14 @@ export function Step3SkillsLanguage({ data, onChange, onNext, onBack, onSkip, re
         </div>
 
         {/* Skills & Interests */}
-        <section className="bg-surface-container-low rounded-xl p-5 flex flex-col gap-5 border border-outline-variant shadow-xs">
+        <section className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-base font-semibold text-on-surface">Skills &amp; Interests</h2>
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-on-surface uppercase tracking-wider"><span className="inline-block w-1 h-4 bg-primary rounded-sm" />Skills &amp; Interests</h2>
             <span className={`text-sm font-medium ${maxReached ? "text-warning font-bold" : "text-on-surface-variant"}`}>
               {data.skills.length} of 20 selected
             </span>
           </div>
+          <div className="bg-surface-container-low rounded-xl p-5 flex flex-col gap-5 border border-outline-variant shadow-xs">
 
           {/* Selected skills */}
           <div className="min-h-11 p-2.5 bg-surface-container/60 rounded-lg border border-outline-variant/60">
@@ -371,12 +372,13 @@ export function Step3SkillsLanguage({ data, onChange, onNext, onBack, onSkip, re
               )}
             </div>
           )}
+          </div>
         </section>
 
         {/* Language Proficiency */}
         <section className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-on-surface">Language Proficiency</h2>
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-on-surface uppercase tracking-wider"><span className="inline-block w-1 h-4 bg-primary rounded-sm" />Language Proficiency</h2>
             <span className={`text-sm font-medium ${data.languages.length >= 5 ? "text-warning font-bold" : "text-on-surface-variant"}`}>
               {data.languages.length} of 5 languages
             </span>

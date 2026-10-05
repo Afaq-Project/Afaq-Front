@@ -14,10 +14,8 @@ export default function Step2Page() {
   const [education, setEducation] = useState<EducationData>({
     educationLevel: profile.education.educationLevel || "",
     fieldsOfStudy: profile.education.fieldsOfStudy || [],
-    nationality: profile.education.nationality || "",
     educationLevelId: profile.education.educationLevelId,
     fieldIds: profile.education.fieldIds,
-    nationalityId: profile.education.nationalityId,
     institutionName: profile.education.institutionName,
     institutionId: profile.education.institutionId,
     gpa: profile.education.gpa,

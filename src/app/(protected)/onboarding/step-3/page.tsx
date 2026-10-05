@@ -13,6 +13,7 @@ export default function Step3Page() {
 
   const [skills, setSkills] = useState<SkillsData>({
     skills: profile.skills.skills || [],
+    skillIds: profile.skills.skillIds,
     languages: profile.skills.languages.length > 0 ? profile.skills.languages : [],
   });
 

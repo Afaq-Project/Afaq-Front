@@ -295,7 +295,7 @@ export function Step4Documents({
           {/* Uploaded list */}
           {uploadedDocs.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-on-background border-b border-surface-variant pb-2">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-on-surface uppercase tracking-wider"><span className="inline-block w-1 h-4 bg-primary rounded-sm" />
                 Uploaded Files ({uploadedDocs.length})
               </h3>
               {uploadedDocs.map((slot) => {

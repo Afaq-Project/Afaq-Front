@@ -7,6 +7,8 @@ export interface PersonalInfoData {
   lastName?: string;
   dateOfBirth?: string;
   gender?: string;
+  nationality?: string;
+  nationalityId?: string;
   maritalStatus?: string;
   maritalStatusId?: string;
   countryOfResidence?: string;
@@ -18,8 +20,6 @@ export interface PersonalInfoData {
 export interface EducationData {
   educationLevel: string;
   educationLevelId?: string;
-  nationality: string;
-  nationalityId?: string;
   fieldsOfStudy: string[];
   fieldIds?: string[];
   institutionName?: string;
@@ -32,14 +32,9 @@ export interface EducationData {
   isCurrent?: boolean;
 }
 
-export type ExperienceLevel = "none" | "entry" | "mid" | "senior";
-export type FinancialNeed = "yes" | "no" | "prefer_not";
-
 export interface BackgroundData {
   phone?: string;
   bio?: string;
-  experienceLevel: ExperienceLevel;
-  financialNeed: FinancialNeed;
 }
 
 export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2" | "Native";

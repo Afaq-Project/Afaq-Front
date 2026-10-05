@@ -503,7 +503,7 @@ export function Step2Education({
         ),
       });
     } else {
-      if (educationData.fieldsOfStudy.length >= 5) return;
+      if (educationData.fieldsOfStudy.length >= 2) return;
       onEducationChange({
         ...educationData,
         fieldsOfStudy: [...educationData.fieldsOfStudy, field.name],
@@ -620,48 +620,42 @@ export function Step2Education({
     <div className="flex flex-col flex-grow">
       <main className="flex flex-col flex-grow gap-10 mx-auto px-6 pt-8 pb-24 w-full max-w-3xl">
         <h1 className="font-semibold text-on-surface text-2xl md:text-3xl tracking-tight">
-          Tell us about your education
+          Education
         </h1>
 
         {/* ════ Section 1: Your Education ════ */}
         <div className="flex flex-col gap-8">
-          <div className="flex items-center gap-3">
-            <div className="flex justify-center items-center bg-primary rounded-full w-7 h-7 font-bold text-on-primary text-xs shrink-0">
-              1
-            </div>
-            <h2 className="font-semibold text-on-surface text-base">
-              Your Education
-            </h2>
-          </div>
+          <h2 className="flex items-center gap-2 font-semibold text-on-surface text-sm uppercase tracking-wider">
+            <span className="inline-block bg-primary rounded-sm w-1 h-4" />
+            Your Education
+          </h2>
 
-          {/* Education Level */}
-          <InlineSearch<{ id: string; name: string }>
-            label="Education Level"
-            required
-            selectedName={educationData.educationLevel || undefined}
-            placeholder="Select highest level achieved"
-            items={educationLevels}
-            onSearch={() => {}}
-            onSelect={(level) =>
-              onEducationChange({
-                ...educationData,
-                educationLevel: level.name,
-                educationLevelId: level.id,
-              })
-            }
-            onClear={() =>
-              onEducationChange({
-                ...educationData,
-                educationLevel: "",
-                educationLevelId: "",
-              })
-            }
-            filterLocally
-            minSearchLength={0}
-          />
-
+          {/* Row 1: Education Level | Institution */}
           <div className="items-start gap-6 grid grid-cols-1 sm:grid-cols-2">
-            {/* Institution */}
+            <InlineSearch<{ id: string; name: string }>
+              label="Education Level"
+              required
+              selectedName={educationData.educationLevel || undefined}
+              placeholder="Select highest level achieved"
+              items={educationLevels}
+              onSearch={() => {}}
+              onSelect={(level) =>
+                onEducationChange({
+                  ...educationData,
+                  educationLevel: level.name,
+                  educationLevelId: level.id,
+                })
+              }
+              onClear={() =>
+                onEducationChange({
+                  ...educationData,
+                  educationLevel: "",
+                  educationLevelId: "",
+                })
+              }
+              filterLocally
+              minSearchLength={0}
+            />
             <InlineSearch<{ id: string; name: string }>
               label="Institution"
               hint="optional"
@@ -686,7 +680,10 @@ export function Step2Education({
               }
               minSearchLength={2}
             />
+          </div>
 
+          {/* Row 2: Field of Study | GPA */}
+          <div className="items-start gap-6 grid grid-cols-1 sm:grid-cols-2">
             {/* Fields of Study */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-end">
@@ -694,9 +691,9 @@ export function Step2Education({
                   Field of Study <span className="text-error">*</span>
                 </label>
                 <span
-                  className={`text-sm font-medium ${educationData.fieldsOfStudy.length >= 5 ? "text-warning font-semibold" : "text-on-surface-variant"}`}
+                  className={`text-sm font-medium ${educationData.fieldsOfStudy.length >= 2 ? "text-warning font-semibold" : "text-on-surface-variant"}`}
                 >
-                  {educationData.fieldsOfStudy.length} of 5
+                  {educationData.fieldsOfStudy.length} of 2
                 </span>
               </div>
 
@@ -746,7 +743,7 @@ export function Step2Education({
                         );
                         const isDisabled =
                           !isSelected &&
-                          educationData.fieldsOfStudy.length >= 5;
+                          educationData.fieldsOfStudy.length >= 2;
                         return (
                           <label
                             key={major.id}
@@ -807,18 +804,14 @@ export function Step2Education({
                 </div>
               )}
             </div>
-          </div>
-          {/* end 2-col grid */}
 
-          {/* GPA */}
-          <section className="flex flex-col gap-3">
-            <h3 className="font-semibold text-on-surface-variant text-sm uppercase tracking-wider">
-              GPA / Grade{" "}
-              <span className="text-outline font-normal text-xs normal-case">
-                (optional)
-              </span>
-            </h3>
-            <div className="flex sm:flex-row flex-col gap-3">
+            {/* GPA */}
+            <div className="flex flex-col gap-3">
+              <label className="font-medium text-on-surface text-sm">
+                GPA / Grade{" "}
+                <span className="text-outline font-normal text-xs">(optional)</span>
+              </label>
+              <div className="flex sm:flex-row flex-col gap-3">
               <div className="flex-grow">
                 {educationData.gpaScale === "letter" ? (
                   <input
@@ -884,16 +877,15 @@ export function Step2Education({
                 ))}
               </div>
             </div>
-          </section>
+            </div>
+          </div>
 
           {/* Study Period */}
-          <section className="flex flex-col gap-3">
-            <h3 className="font-semibold text-on-surface-variant text-sm uppercase tracking-wider">
+          <div className="flex flex-col gap-3">
+            <label className="font-medium text-on-surface text-sm">
               Study Period{" "}
-              <span className="text-outline font-normal text-xs normal-case">
-                (optional)
-              </span>
-            </h3>
+              <span className="text-outline font-normal text-xs">(optional)</span>
+            </label>
             <label className="flex items-center gap-3 w-fit cursor-pointer">
               <div
                 onClick={() =>
@@ -959,19 +951,15 @@ export function Step2Education({
                 />
               </div>
             </div>
-          </section>
+          </div>
         </div>
 
         {/* ════ Section 2: What You're Looking For ════ */}
         <div className="flex flex-col gap-8">
-          <div className="flex items-center gap-3">
-            <div className="flex justify-center items-center bg-primary rounded-full w-7 h-7 font-bold text-on-primary text-xs shrink-0">
-              2
-            </div>
-            <h2 className="font-semibold text-on-surface text-base">
-              What You&apos;re Looking For
-            </h2>
-          </div>
+          <h2 className="flex items-center gap-2 font-semibold text-on-surface text-sm uppercase tracking-wider">
+            <span className="inline-block bg-primary rounded-sm w-1 h-4" />
+            What You&apos;re Looking For
+          </h2>
 
           <div className="items-start gap-6 grid grid-cols-1 sm:grid-cols-2">
             {/* Target Degree Level */}

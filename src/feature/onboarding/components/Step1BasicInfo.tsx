@@ -167,11 +167,15 @@ function InlineSearch<T extends { id: string; name: string }>({
 // ─── Main component ───────────────────────────────────────────────────────────
 export function Step1BasicInfo({ data, onChange, onNext, onSkip }: Props) {
   const [countryQuery, setCountryQuery] = useState("");
+  const [nationalityQuery, setNationalityQuery] = useState("");
   const debouncedCountryQuery = useDebounce(countryQuery, 300);
+  const debouncedNationalityQuery = useDebounce(nationalityQuery, 300);
 
   const { data: maritalStatuses = [] } = useMaritalStatuses();
   const { data: rawCountries = [], isFetching: countriesFetching } = useCountriesSearch(debouncedCountryQuery);
   const countries = rawCountries.map((c) => ({ id: c.id, name: c.nameEn }));
+  const { data: rawNationalities = [], isFetching: nationalitiesFetching } = useCountriesSearch(debouncedNationalityQuery);
+  const nationalities = rawNationalities.map((c) => ({ id: c.id, name: c.nationalityNameEn ?? c.nameEn }));
   const { data: rawCities = [], isLoading: loadingCities } = useCitiesForCountry(
     data.countryOfResidenceId ?? ""
   );
@@ -186,7 +190,7 @@ export function Step1BasicInfo({ data, onChange, onNext, onSkip }: Props) {
 
         {/* ── Name ── */}
         <section className="flex flex-col gap-5">
-          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Name</h2>
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-on-surface uppercase tracking-wider"><span className="inline-block w-1 h-4 bg-primary rounded-sm" />Name</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-on-surface">First Name</label>
@@ -213,7 +217,7 @@ export function Step1BasicInfo({ data, onChange, onNext, onSkip }: Props) {
 
         {/* ── Location ── */}
         <section className="flex flex-col gap-5">
-          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Current Location</h2>
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-on-surface uppercase tracking-wider"><span className="inline-block w-1 h-4 bg-primary rounded-sm" />Current Location</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InlineSearch<{ id: string; name: string }>
@@ -249,15 +253,28 @@ export function Step1BasicInfo({ data, onChange, onNext, onSkip }: Props) {
 
         {/* ── Personal Details ── */}
         <section className="flex flex-col gap-5">
-          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">Personal Details</h2>
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-on-surface uppercase tracking-wider"><span className="inline-block w-1 h-4 bg-primary rounded-sm" />Personal Details</h2>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-on-surface">Date of Birth</label>
-            <input
-              type="date"
-              value={data.dateOfBirth ?? ""}
-              onChange={(e) => onChange({ ...data, dateOfBirth: e.target.value })}
-              className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-on-surface">Date of Birth</label>
+              <input
+                type="date"
+                value={data.dateOfBirth ?? ""}
+                onChange={(e) => onChange({ ...data, dateOfBirth: e.target.value })}
+                className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
+              />
+            </div>
+
+            <InlineSearch<{ id: string; name: string }>
+              label="Nationality"
+              selectedName={data.nationality}
+              placeholder="Search nationality…"
+              items={nationalities}
+              isFetching={nationalitiesFetching || nationalityQuery !== debouncedNationalityQuery}
+              onSearch={setNationalityQuery}
+              onSelect={(n) => onChange({ ...data, nationality: n.name, nationalityId: n.id })}
+              onClear={() => onChange({ ...data, nationality: "", nationalityId: "" })}
             />
           </div>
 

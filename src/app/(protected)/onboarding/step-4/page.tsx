@@ -55,10 +55,8 @@ export default function Step4Page() {
         ...(personal.maritalStatusId && { maritalStatusId: personal.maritalStatusId }),
         ...(personal.countryOfResidenceId && { countryOfResidenceId: personal.countryOfResidenceId }),
         ...(personal.currentCityId && { currentCityId: personal.currentCityId }),
-        ...(education.nationalityId && { nationalityId: education.nationalityId }),
+        ...(personal.nationalityId && { nationalityId: personal.nationalityId }),
         ...(education.educationLevelId && { educationLevelId: education.educationLevelId }),
-        ...(background.phone && { phone: background.phone }),
-        ...(background.bio && { bio: background.bio }),
         ...(experienceIds.length > 0 && { experiences: experienceIds }),
       });
 
