@@ -320,7 +320,7 @@ export function Step1BasicInfo({ data, onChange, onNext, onSkip }: Props) {
         <button
           type="button"
           onClick={onSkip}
-          className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors px-4 py-2 rounded-md"
+          className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors px-4 py-3 md:py-2 rounded-md"
         >
           Skip for now
         </button>

@@ -279,7 +279,7 @@ export function Step4Documents({
                 const isPdf = sf.mimeType.includes("pdf");
                 const offset = CIRCUMFERENCE - (sf.progress / 100) * CIRCUMFERENCE;
                 return (
-                  <div key={sf.id} className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant shadow-xs">
+                  <div key={sf.id} className="flex flex-wrap items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-outline-variant shadow-xs">
                     {/* File icon + progress circle */}
                     <div className="relative shrink-0 w-12 h-12 flex items-center justify-center">
                       <span
@@ -326,14 +326,14 @@ export function Step4Documents({
 
                     {/* Type select + Add */}
                     {sf.status === "needs_type" && (
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-2 w-full sm:w-auto">
                         <select
                           value={sf.selectedSlot}
                           onChange={(e) => {
                             const slot = e.target.value as DocumentSlotKey | "";
                             setStaged((prev) => prev.map((f) => f.id === sf.id ? { ...f, selectedSlot: slot } : f));
                           }}
-                          className="text-sm border border-outline-variant rounded-lg px-3 py-2 bg-white text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 cursor-pointer"
+                          className="flex-1 sm:flex-none text-sm border border-outline-variant rounded-lg px-3 py-2.5 bg-white text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 cursor-pointer"
                         >
                           <option value="">Select type…</option>
                           {SLOTS.map((s) => (
@@ -486,7 +486,7 @@ export function Step4Documents({
 
       {/* Bottom nav */}
       <footer className="sticky bottom-0 z-30 w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/80 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] px-6 py-4 mt-auto flex items-center justify-between">
-        <button type="button" onClick={onBack} className="text-sm font-medium text-on-surface-variant hover:text-on-surface px-4 py-2 rounded-md hover:bg-surface-container-high transition-colors flex items-center gap-2 cursor-pointer">
+        <button type="button" onClick={onBack} className="text-sm font-medium text-on-surface-variant hover:text-on-surface px-4 py-3 md:py-2 rounded-md hover:bg-surface-container-high transition-colors flex items-center gap-2 cursor-pointer">
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
           Back
         </button>

@@ -449,7 +449,7 @@ export function Step3SkillsLanguage({ data, onChange, onNext, onBack, onSkip, re
       </main>
 
       <nav className="sticky bottom-0 z-30 w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/80 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] px-6 py-4 mt-auto flex justify-between items-center">
-        <button type="button" onClick={onBack} className="flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface px-4 py-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer">
+        <button type="button" onClick={onBack} className="flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface px-4 py-3 md:py-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer">
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
           Back
         </button>

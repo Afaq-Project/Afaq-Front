@@ -1160,7 +1160,7 @@ export function Step2Education({
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-2 px-4 py-2 rounded-md font-medium text-on-surface-variant hover:text-on-surface text-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-3 md:py-2 rounded-md font-medium text-on-surface-variant hover:text-on-surface text-sm transition-colors"
         >
           <span className="text-[18px] material-symbols-outlined">
             arrow_back
