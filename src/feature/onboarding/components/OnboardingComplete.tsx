@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -31,15 +32,16 @@ export function OnboardingComplete({
   return (
     <main className="flex-grow flex items-center justify-center px-4 md:px-6 py-12">
       <div className="max-w-md w-full flex flex-col items-center text-center space-y-6">
-        {/* Success Icon */}
-        <div className="w-24 h-24 rounded-full bg-primary-container flex items-center justify-center mb-2 animate-bounce">
-          <span
-            className="material-symbols-outlined text-on-primary-container text-5xl"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            check_circle
-          </span>
-        </div>
+        {/* Success illustration */}
+        <Image
+          src="/onboarding/complete.svg"
+          alt=""
+          width={200}
+          height={200}
+          className="object-contain"
+          aria-hidden="true"
+          priority
+        />
 
         {/* Header */}
         <h1 className="text-2xl md:text-3xl lg:text-[34px] font-semibold text-on-surface tracking-tight">

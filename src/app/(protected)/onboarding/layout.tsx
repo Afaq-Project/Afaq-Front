@@ -96,7 +96,7 @@ export default function OnboardingLayout({ children }: { children: ReactNode }) 
 
             <div className="mt-auto pt-6 flex justify-center">
               <Image
-                src="/Globalization-pana.png"
+                src={`/onboarding/step-${currentStep}.svg`}
                 alt=""
                 width={200}
                 height={160}
