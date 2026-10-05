@@ -30,6 +30,15 @@ export function useCreateEducation() {
   });
 }
 
+export function useUpdateEducation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<CreateEducationPayload> }) =>
+      profileService.updateEducation(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: PROFILE_QUERY_KEY }),
+  });
+}
+
 export function useDeleteEducation() {
   const qc = useQueryClient();
   return useMutation({

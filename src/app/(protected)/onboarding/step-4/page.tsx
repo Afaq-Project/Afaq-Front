@@ -53,11 +53,11 @@ export default function Step4Page() {
       if (docs.length) {
         const next = { ...INITIAL_STATE };
         docs.forEach((doc) => {
-          const slot = guessSlot(doc.documentType?.nameEn ?? "");
+          const slot = guessSlot(doc.displayName ?? "");
           next[slot] = {
             status: "uploaded",
             progress: 100,
-            doc: { apiId: doc.id, slotKey: slot, name: doc.fileName ?? "Document", size: fmtSize(doc.fileSize), type: doc.mimeType ?? "" },
+            doc: { apiId: doc.id, slotKey: slot, name: doc.displayName ?? "Document", size: fmtSize(doc.sizeBytes), type: doc.mimeType ?? "" },
           };
         });
         setState(next);

@@ -79,73 +79,73 @@ export interface RefMaritalStatus {
 }
 
 // Profile API shapes returned by /profile/* endpoints
-export interface ApiNamedRef {
-  id: string;
-  name: string;
-}
+// All fields are flat — no nested name objects, only IDs for references.
 
-export interface ApiPersonalInfo {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  dateOfBirth?: string;
-  gender?: string;
-  phone?: string;
-  bio?: string;
-  profilePhotoUrl?: string;
-  nationality?: ApiNamedRef;
-  countryOfResidence?: ApiNamedRef;
-  currentCity?: ApiNamedRef;
-  educationLevel?: ApiNamedRef;
-  maritalStatus?: ApiNamedRef;
+export interface ApiProfile {
+  userId: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  dateOfBirth?: string | null;
+  phone?: string | null;
+  profilePhotoUrl?: string | null;
+  completionPct: number;
+  email?: string | null;
+  gender?: string | null;
+  bio?: string | null;
+  maritalStatusId?: string | null;
+  nationalityId?: string | null;
+  countryOfResidenceId?: string | null;
+  currentCityId?: string | null;
+  educationLevelId?: string | null;
+  isMatchable?: boolean;
   experiences?: string[];
+  languages: ApiLanguageEntry[];
+  educations: ApiEducation[];
+  documents: ApiDocument[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ApiEducation {
   id: string;
-  institution?: ApiNamedRef;
-  major?: ApiNamedRef;
-  minorMajor?: ApiNamedRef;
-  educationLevel?: ApiNamedRef;
-  startDate?: string;
-  endDate?: string;
+  userId?: string;
+  educationLevelId?: string | null;
+  institutionId?: string | null;
+  majorId?: string | null;
+  minorMajorId?: string | null;
+  gpaRaw?: number | null;
+  gpaScale?: string | null;
   isCurrent?: boolean;
-  gpaRaw?: number;
-  gpaScale?: string;
-  expectedGraduationDate?: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  expectedGraduationDate?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ApiLanguageEntry {
-  id: string;
-  language: ApiNamedRef;
-  proficiencyLevel: ApiNamedRef;
+  userId: string;
+  languageId: string;
+  proficiencyLevelId: string;
   isNative: boolean;
 }
 
 export interface ApiDocument {
   id: string;
-  documentType?: ApiNamedRef;
-  fileName?: string;
-  fileSize?: number;
+  userId?: string;
+  displayName?: string;
+  storagePath?: string;
   mimeType?: string;
-  uploadedAt?: string;
-  fileUrl?: string;
+  sizeBytes?: number;
+  documentTypeId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ApiPreferences {
-  targetDegrees?: ApiNamedRef[];
-  targetMajors?: ApiNamedRef[];
-  targetInstitutions?: ApiNamedRef[];
-}
-
-export interface ApiProfile {
-  id?: string;
-  personal?: ApiPersonalInfo;
-  educations?: ApiEducation[];
-  languages?: ApiLanguageEntry[];
-  documents?: ApiDocument[];
-  preferences?: ApiPreferences;
-  completionPct?: number;
+  targetDegrees?: { userId: string; educationLevelId: string }[];
+  targetMajors?: { userId: string; majorId: string }[];
+  targetInstitutions?: { userId: string; institutionId: string }[];
 }
 
 // Request shapes for mutations
