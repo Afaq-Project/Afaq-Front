@@ -42,8 +42,8 @@ export default function OnboardingLayout({ children }: { children: ReactNode }) 
     <ProfileProvider>
       {/* ── Desktop: centered card with gradient bg ── */}
       <div
-        className="hidden md:flex h-screen overflow-hidden items-center justify-center"
-        style={{ background: "linear-gradient(135deg, #97c459 0%, #c0dd97 50%, #eaf3de 100%)" }}
+        className="hidden md:flex h-screen overflow-hidden items-center justify-center bg-cover bg-center"
+        style={{ backgroundImage: "url('/onboarding-bg.jpg')" }}
       >
         <div
           className="flex w-full max-w-5xl shadow-2xl mx-4 rounded-2xl overflow-hidden bg-white"
