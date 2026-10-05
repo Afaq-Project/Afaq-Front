@@ -172,7 +172,6 @@ function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxProps) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export function Step3SkillsLanguage({ data, onChange, onNext, onBack, onSkip, referenceData }: Step3SkillsLanguageProps) {
-  const [customSkillInput, setCustomSkillInput] = useState("");
   const [skillSearch, setSkillSearch] = useState("");
 
   const { data: rawCategories = [], isLoading: categoriesLoading } = useMajorCategories();
@@ -238,14 +237,6 @@ export function Step3SkillsLanguage({ data, onChange, onNext, onBack, onSkip, re
     });
   };
 
-  const handleAddCustomSkill = () => {
-    const trimmed = customSkillInput.trim();
-    if (!trimmed || maxReached || data.skills.includes(trimmed)) return;
-    const ids = data.skillIds ?? [];
-    onChange({ ...data, skills: [...data.skills, trimmed], skillIds: [...ids, ""] });
-    setCustomSkillInput("");
-  };
-
   const handleLanguageChange = (id: string, field: "language" | "level", value: string, apiId?: string) => {
     const updated = data.languages.map((item) => {
       if (item.id !== id) return item;
@@ -290,29 +281,6 @@ export function Step3SkillsLanguage({ data, onChange, onNext, onBack, onSkip, re
             <span className={`text-sm font-medium ${maxReached ? "text-warning font-bold" : "text-on-surface-variant"}`}>
               {data.skills.length} of 20 selected
             </span>
-          </div>
-
-          {/* Custom skill add */}
-          <div className="flex gap-2">
-            <div className="relative flex-grow">
-              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">add</span>
-              <input
-                type="text"
-                value={customSkillInput}
-                onChange={(e) => setCustomSkillInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddCustomSkill(); } }}
-                placeholder="Add a custom skill…"
-                className="w-full pl-11 pr-4 py-3 bg-surface-container-low rounded-md text-sm border border-outline-variant focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 placeholder:text-on-surface-variant transition-colors"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={handleAddCustomSkill}
-              disabled={!customSkillInput.trim() || maxReached}
-              className="px-5 py-3 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-            >
-              Add
-            </button>
           </div>
 
           {/* Selected skills */}

@@ -45,7 +45,8 @@ export default function Step4Page() {
     try {
       const { education, background, skills, personal } = profile;
 
-      // 1. Update personal info — Step 1 personal fields + Step 2 nationality/education level
+      // 1. Update personal info — Step 1 personal fields + Step 2 nationality/education level + Step 3 skills
+      const experienceIds = (skills.skillIds ?? []).filter(Boolean);
       await profileService.updatePersonal({
         ...(personal.firstName && { firstName: personal.firstName }),
         ...(personal.lastName && { lastName: personal.lastName }),
@@ -58,6 +59,7 @@ export default function Step4Page() {
         ...(education.educationLevelId && { educationLevelId: education.educationLevelId }),
         ...(background.phone && { phone: background.phone }),
         ...(background.bio && { bio: background.bio }),
+        ...(experienceIds.length > 0 && { experiences: experienceIds }),
       });
 
       // 2. Create education record
