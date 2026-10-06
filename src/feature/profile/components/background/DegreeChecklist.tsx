@@ -1,5 +1,6 @@
 "use client";
 
+import { Check } from "lucide-react";
 import { useEducationLevels } from "@/src/shared/lib/api/hooks/useReferenceData";
 
 interface DegreeChecklistProps {
@@ -7,7 +8,7 @@ interface DegreeChecklistProps {
   onChange: (ids: string[]) => void;
 }
 
-/** Toggleable chips for the (short) list of education levels. */
+/** Toggleable chips for the short list of education levels. Selection shows a check, not just color. */
 export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps) {
   const { data: levels = [], isLoading } = useEducationLevels();
 
@@ -15,12 +16,12 @@ export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps)
     onChange(selectedIds.includes(id) ? selectedIds.filter((s) => s !== id) : [...selectedIds, id]);
 
   return (
-    <fieldset className="flex flex-col gap-2">
-      <legend className="font-medium text-neutral-800 text-xs mb-2">
-        Target Degrees <span className="text-red-500">*</span>
-      </legend>
+    <fieldset>
+      <legend className="mb-2 text-caption text-neutral-800">Target degrees</legend>
       {isLoading ? (
-        <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" role="status" />
+        <p className="text-small text-neutral-600" role="status">
+          Loading degrees…
+        </p>
       ) : (
         <div className="flex flex-wrap gap-2">
           {levels.map((level) => {
@@ -31,13 +32,13 @@ export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps)
                 type="button"
                 onClick={() => toggle(level.id)}
                 aria-pressed={selected}
-                className={`px-3.5 py-1.5 rounded-full text-sm font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
+                className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 text-caption transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 md:min-h-9 ${
                   selected
-                    ? "bg-primary text-white"
-                    : "border border-neutral-200 text-neutral-700 hover:border-primary"
+                    ? "border-primary-100 bg-primary-50 text-primary-800"
+                    : "border-neutral-200 bg-white text-neutral-800 hover:border-neutral-400"
                 }`}
               >
-                {selected && <span className="material-symbols-outlined text-[16px]">check</span>}
+                {selected && <Check size={16} strokeWidth={1.75} aria-hidden="true" />}
                 {level.nameEn}
               </button>
             );
