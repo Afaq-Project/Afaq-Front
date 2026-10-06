@@ -6,14 +6,6 @@ import { referenceService } from "../referenceService";
 // Reference data almost never changes — cache indefinitely in the session.
 const STALE_FOREVER = Infinity;
 
-export function useCountries() {
-  return useQuery({
-    queryKey: ["reference", "countries"],
-    queryFn: () => referenceService.getCountries(),
-    staleTime: STALE_FOREVER,
-  });
-}
-
 export function useEducationLevels() {
   return useQuery({
     queryKey: ["reference", "education-levels"],
@@ -26,22 +18,6 @@ export function useMajorCategories() {
   return useQuery({
     queryKey: ["reference", "major-categories"],
     queryFn: referenceService.getMajorCategories,
-    staleTime: STALE_FOREVER,
-  });
-}
-
-export function useMajors() {
-  return useQuery({
-    queryKey: ["reference", "majors"],
-    queryFn: () => referenceService.getMajors(),
-    staleTime: STALE_FOREVER,
-  });
-}
-
-export function useLanguages() {
-  return useQuery({
-    queryKey: ["reference", "languages"],
-    queryFn: () => referenceService.getLanguages(),
     staleTime: STALE_FOREVER,
   });
 }
@@ -62,28 +38,11 @@ export function useDocumentTypes() {
   });
 }
 
-export function useInstitutions() {
-  return useQuery({
-    queryKey: ["reference", "institutions"],
-    queryFn: () => referenceService.getInstitutions(),
-    staleTime: STALE_FOREVER,
-  });
-}
-
 export function useMaritalStatuses() {
   return useQuery({
     queryKey: ["reference", "marital-statuses"],
     queryFn: referenceService.getMaritalStatuses,
     staleTime: STALE_FOREVER,
-  });
-}
-
-export function useCitiesForCountry(countryId: string) {
-  return useQuery({
-    queryKey: ["reference", "cities", countryId],
-    queryFn: () => referenceService.getCities(countryId),
-    staleTime: 5 * 60 * 1000,
-    enabled: Boolean(countryId),
   });
 }
 
