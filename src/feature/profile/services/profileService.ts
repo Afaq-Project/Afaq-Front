@@ -53,6 +53,7 @@ export const profileService = {
     formData.append("file", file);
     return apiClient.post<ApiDocument>("/profile/documents", formData, {
       headers: { "Content-Type": "multipart/form-data" },
+      timeout: 120_000, // files up to 5 MB can take a while on slow connections
     });
   },
 

@@ -50,6 +50,8 @@ interface UnwrappingAxiosInstance extends Omit<
 // below; only the exported `apiClient` is cast to the unwrapped-response type.
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
+  // Without a timeout a hung request keeps the UI loading forever.
+  timeout: 20_000,
   headers: {
     "Content-Type": "application/json",
   },
