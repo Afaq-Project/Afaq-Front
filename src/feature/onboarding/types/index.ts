@@ -6,8 +6,8 @@ export interface Option {
   name: string;
 }
 
-/** Values accepted by the API's `gpaScale`. The legacy values are still used by the current step pages. */
-export type GpaScale = "OUT_OF_4" | "OUT_OF_5" | "OUT_OF_100" | LegacyGpaScale;
+/** Values accepted by the API's `gpaScale`. */
+export type GpaScale = "OUT_OF_4" | "OUT_OF_5" | "OUT_OF_100";
 
 export interface PersonalInfoData {
   firstName?: string;
@@ -74,44 +74,4 @@ export interface OnboardingDraft {
   education: EducationData;
   preferences: PreferencesData;
   skills: SkillsData;
-}
-
-// ─── Legacy types still used by the current step pages; removed once they are replaced ───
-export type LegacyGpaScale = "4.0" | "percent" | "letter";
-
-export type EducationLevel = "High School" | "Undergraduate" | "Graduate" | "PhD" | "";
-
-export interface BackgroundData {
-  phone?: string;
-  bio?: string;
-}
-
-export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2" | "Native";
-
-export type DocumentSlotId = "resume" | "essay" | "transcript" | "recommendation" | "other";
-
-export interface DocumentItem {
-  id: string;
-  slotId: DocumentSlotId;
-  name: string;
-  size: string;
-  type: string;
-  uploadedAt: string;
-  status: "idle" | "uploading" | "uploaded" | "error";
-  progress: number;
-  errorMessage?: string;
-}
-
-export type DocumentsData = Record<DocumentSlotId, DocumentItem | null>;
-
-export interface UserProfile {
-  name: string;
-  email: string;
-  avatarUrl: string;
-  personal: PersonalInfoData;
-  education: EducationData;
-  preferences: PreferencesData;
-  background: BackgroundData;
-  skills: SkillsData;
-  documents: DocumentsData;
 }

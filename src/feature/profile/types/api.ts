@@ -184,10 +184,3 @@ export interface AddLanguagePayload {
   proficiencyLevelId: string;
   isNative?: boolean;
 }
-
-export interface UpdatePreferencesPayload {
-  targetDegreeIds?: string[];
-  targetMajorIds?: string[];
-  targetInstitutionIds?: string[];
-  targetCountryIds?: string[];
-}

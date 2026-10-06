@@ -1,10 +1,5 @@
-"use client";
-
-import React from "react";
-import { OnboardingComplete } from "@/src/feature/onboarding/components/OnboardingComplete";
-import { useProfileQuery } from "@/src/feature/profile/hooks/useProfileQuery";
+import { CompletionStep } from "@/src/feature/onboarding/components/complete/CompletionStep";
 
 export default function CompletePage() {
-  const { data: profile } = useProfileQuery();
-  return <OnboardingComplete completionPercentage={profile?.completionPct ?? 0} />;
+  return <CompletionStep />;
 }
