@@ -3,7 +3,7 @@ import { applyPreferenceChanges, preferenceIdsFromApi } from "@/src/feature/prof
 import { profileService } from "@/src/feature/profile/services/profileService";
 import type { CreateEducationPayload, UpdatePersonalPayload } from "@/src/feature/profile/types/api";
 import type { PersonalInfoData, EducationData, PreferencesData, SkillsData } from "../types";
-import { DEFAULT_GPA_SCALE } from "./gpaScales";
+import { DEFAULT_GPA_SCALE } from "@/src/shared/lib/education";
 import { validId } from "./ids";
 
 // Each step is saved when the user leaves it. `prev` is what onboarding last saved (the draft),

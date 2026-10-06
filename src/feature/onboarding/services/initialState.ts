@@ -1,5 +1,5 @@
 import type { EducationData, OnboardingDraft, PersonalInfoData, PreferencesData, SkillsData } from "../types";
-import { normalizeGpaScale } from "./gpaScales";
+import { normalizeGpaScale } from "@/src/shared/lib/education";
 import { validId } from "./ids";
 
 // Builds each step's starting form state from the saved draft, fixing up values that older

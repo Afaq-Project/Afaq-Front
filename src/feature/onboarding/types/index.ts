@@ -1,13 +1,13 @@
+import type { GpaScale } from "@/src/shared/lib/education";
+
 export * from "./documents";
+export type { GpaScale };
 
 /** A selectable reference item (country, major, institution…) as the step forms use it. */
 export interface Option {
   id: string;
   name: string;
 }
-
-/** Values accepted by the API's `gpaScale`. */
-export type GpaScale = "OUT_OF_4" | "OUT_OF_5" | "OUT_OF_100";
 
 export interface PersonalInfoData {
   firstName?: string;

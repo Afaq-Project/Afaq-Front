@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DEFAULT_GPA_SCALE, getGpaScale } from "@/src/feature/onboarding/services/gpaScales";
+import { DEFAULT_GPA_SCALE, getGpaScale } from "@/src/shared/lib/education";
 import type { GpaScale } from "@/src/feature/onboarding/types";
 import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
 import { useEducationLevels } from "@/src/shared/lib/api/hooks/useReferenceData";

@@ -1,4 +1,4 @@
-import { GPA_SCALES, getGpaScale } from "../../services/gpaScales";
+import { GPA_SCALES, getGpaScale } from "@/src/shared/lib/education";
 import type { GpaScale } from "../../types";
 import { FieldLabel } from "@/src/shared/ui/FieldLabel";
 

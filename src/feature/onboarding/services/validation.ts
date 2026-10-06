@@ -1,6 +1,6 @@
 import type { EducationData, PersonalInfoData, PreferencesData } from "../types";
 import { isHighSchoolLevel } from "./educationLevel";
-import { getGpaScale } from "./gpaScales";
+import { getGpaScale, isEndBeforeStart, isGpaOutOfRange } from "@/src/shared/lib/education";
 
 /** Today as YYYY-MM-DD in the user's local time zone. */
 export function todayIso(): string {
@@ -30,12 +30,9 @@ export function validateEducationStep(education: EducationData, preferences: Pre
   const isHighSchool = isHighSchoolLevel(education.educationLevel);
 
   const gpaScale = getGpaScale(education.gpaScale);
-  const gpaValue = education.gpa ? Number(education.gpa) : undefined;
-  const gpaInvalid =
-    gpaValue !== undefined && (Number.isNaN(gpaValue) || gpaValue < 0 || gpaValue > gpaScale.max);
-
+  const gpaInvalid = isGpaOutOfRange(education.gpa, education.gpaScale);
   const periodEnd = education.isCurrent ? education.expectedGraduationDate : education.endDate;
-  const periodInvalid = Boolean(education.startDate && periodEnd && periodEnd < education.startDate);
+  const periodInvalid = isEndBeforeStart(education.startDate, periodEnd);
 
   const isComplete =
     Boolean(education.educationLevelId) &&
