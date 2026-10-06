@@ -8,6 +8,7 @@ import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import { useSaveLanguages, type LanguageDraft } from "../../hooks/useSaveLanguages";
 import { AddLanguageForm } from "./AddLanguageForm";
 import { LanguageRow } from "./LanguageRow";
+import { savedThen } from "../common/saved";
 
 interface LanguagesEditorProps {
   languages: LanguageDraft[];
@@ -22,7 +23,7 @@ export function LanguagesEditor({ languages, names, onDone }: LanguagesEditorPro
   const [adding, setAdding] = useState(languages.length === 0);
 
   const handleSave = async () => {
-    if (await save(languages, pending)) onDone();
+    if (await save(languages, pending)) savedThen("Languages saved", onDone)();
   };
 
   return (

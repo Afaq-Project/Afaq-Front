@@ -21,6 +21,7 @@ import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import { educationFormFrom, educationPayloadFrom, type EducationForm } from "../../services/payloads";
 import type { ApiEducation } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
+import { savedThen } from "../common/saved";
 
 const GPA_SCALE_OPTIONS = [
   { value: "OUT_OF_4", label: "Out of 4.0" },
@@ -62,8 +63,8 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
 
   const handleSave = () => {
     const payload = educationPayloadFrom(form);
-    if (education) updateMut.mutate({ id: education.id, data: payload }, { onSuccess: onDone });
-    else createMut.mutate(payload, { onSuccess: onDone });
+    if (education) updateMut.mutate({ id: education.id, data: payload }, { onSuccess: savedThen("Education record saved", onDone) });
+    else createMut.mutate(payload, { onSuccess: savedThen("Education record added", onDone) });
   };
 
   const saveMut = education ? updateMut : createMut;
@@ -178,7 +179,7 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
           variant="destructive"
           className="mt-5"
           disabled={deleteMut.isPending}
-          onClick={() => deleteMut.mutate(education.id, { onSuccess: onDone })}
+          onClick={() => deleteMut.mutate(education.id, { onSuccess: savedThen("Education record deleted", onDone) })}
         >
           <Trash2 size={16} strokeWidth={1.75} aria-hidden="true" />
           Delete this record

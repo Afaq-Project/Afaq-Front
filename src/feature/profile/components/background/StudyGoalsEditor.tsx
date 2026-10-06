@@ -14,6 +14,7 @@ import { preferenceIdsFromApi } from "../../services/preferences";
 import type { ApiPreferences } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
 import { DegreeChecklist } from "./DegreeChecklist";
+import { savedThen } from "../common/saved";
 
 const MAX_TARGETS = 5;
 
@@ -46,7 +47,7 @@ export function StudyGoalsEditor({ preferences, names, onDone }: StudyGoalsEdito
       title="Study goals"
       isEditing
       onCancel={onDone}
-      onSave={() => updateMut.mutate({ current, next }, { onSuccess: onDone })}
+      onSave={() => updateMut.mutate({ current, next }, { onSuccess: savedThen("Study goals saved", onDone) })}
       isSaving={updateMut.isPending}
       saveDisabled={!isValid}
       error={

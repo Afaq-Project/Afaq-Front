@@ -15,6 +15,7 @@ import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import { nonEmptyFields } from "../../services/payloads";
 import type { ApiProfile } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
+import { savedThen } from "../common/saved";
 
 const GENDER_OPTIONS = [
   { value: "", label: "Select gender" },
@@ -69,7 +70,7 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
       title="Background"
       isEditing
       onCancel={onDone}
-      onSave={() => updateMut.mutate(nonEmptyFields(form), { onSuccess: onDone })}
+      onSave={() => updateMut.mutate(nonEmptyFields(form), { onSuccess: savedThen("Background saved", onDone) })}
       isSaving={updateMut.isPending}
       error={updateMut.isError ? getErrorMessage(updateMut.error) : null}
     >

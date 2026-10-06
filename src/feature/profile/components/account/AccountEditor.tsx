@@ -10,6 +10,7 @@ import { useUpdatePersonal } from "../../hooks/useProfileQuery";
 import { nonEmptyFields } from "../../services/payloads";
 import type { ApiProfile } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
+import { savedThen } from "../common/saved";
 
 interface AccountEditorProps {
   profile?: ApiProfile;
@@ -32,7 +33,7 @@ export function AccountEditor({ profile, email, onDone }: AccountEditorProps) {
       title="Account details"
       isEditing
       onCancel={onDone}
-      onSave={() => updateMut.mutate(nonEmptyFields(form), { onSuccess: onDone })}
+      onSave={() => updateMut.mutate(nonEmptyFields(form), { onSuccess: savedThen("Account details saved", onDone) })}
       isSaving={updateMut.isPending}
       error={updateMut.isError ? getErrorMessage(updateMut.error) : null}
     >

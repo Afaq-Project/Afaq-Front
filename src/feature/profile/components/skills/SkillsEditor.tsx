@@ -8,6 +8,7 @@ import { SectionCard } from "@/src/shared/ui/SectionCard";
 import { useUpdatePersonal } from "../../hooks/useProfileQuery";
 import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import { formatReferenceName } from "../../services/format";
+import { savedThen } from "../common/saved";
 
 interface SkillsEditorProps {
   experiences: string[];
@@ -30,7 +31,7 @@ export function SkillsEditor({ experiences, names, onDone }: SkillsEditorProps) 
       description={`${selected.length} of ${MAX_SKILLS} selected`}
       isEditing
       onCancel={onDone}
-      onSave={() => updateMut.mutate({ experiences: ids }, { onSuccess: onDone })}
+      onSave={() => updateMut.mutate({ experiences: ids }, { onSuccess: savedThen("Skills saved", onDone) })}
       isSaving={updateMut.isPending}
       saveDisabled={unchanged}
       error={updateMut.isError ? getErrorMessage(updateMut.error) : null}

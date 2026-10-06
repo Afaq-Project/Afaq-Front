@@ -8,6 +8,7 @@ import { EditActions } from "@/src/shared/ui/EditActions";
 import Select from "@/src/shared/ui/Select";
 import { useUpdatePersonal } from "../../hooks/useProfileQuery";
 import { FIELD_IDS } from "../common/fieldIds";
+import { savedThen } from "../common/saved";
 
 interface CurrentLevelFormProps {
   levelId?: string | null;
@@ -32,7 +33,7 @@ export function CurrentLevelForm({ levelId, onDone }: CurrentLevelFormProps) {
       />
       <EditActions
         onCancel={onDone}
-        onSave={() => updateMut.mutate({ educationLevelId: value }, { onSuccess: onDone })}
+        onSave={() => updateMut.mutate({ educationLevelId: value }, { onSuccess: savedThen("Education level saved", onDone) })}
         isSaving={updateMut.isPending}
         saveDisabled={!value || value === levelId}
         error={updateMut.isError ? getErrorMessage(updateMut.error) : null}
