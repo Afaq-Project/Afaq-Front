@@ -16,6 +16,15 @@ export function formatGpa(raw?: number | null, scale?: string | null) {
   return scale ? `${raw} ${scale.replace("OUT_OF_", "/ ")}` : `${raw}`;
 }
 
+/** Some reference names arrive in ALL CAPS with a trailing period ("AGRICULTURAL SCIENCES."). */
+export function formatReferenceName(name: string) {
+  const trimmed = name.replace(/\.$/, "");
+  return trimmed === trimmed.toUpperCase() ? trimmed.charAt(0) + trimmed.slice(1).toLowerCase() : trimmed;
+}
+
+/** Shown for institutions, which can't be looked up by ID yet (see useReferenceNames). */
+export const UNRESOLVED_INSTITUTION_NAME = "Name not available yet";
+
 export function fullName(firstName?: string | null, lastName?: string | null) {
   return `${firstName ?? ""} ${lastName ?? ""}`.trim();
 }
