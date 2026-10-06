@@ -2,6 +2,7 @@
 
 import { useEffect, type ReactNode } from "react";
 import { X } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 interface ModalProps {
   open: boolean;
@@ -37,7 +38,8 @@ export default function Modal({ open, onClose, title, children, className = "" }
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`relative flex flex-col bg-white shadow-card rounded-lg w-full max-w-lg max-h-[90vh] ${className}`}
+        // twMerge lets `className` override the defaults, e.g. a wider max-w.
+        className={twMerge("relative flex flex-col bg-white shadow-card rounded-lg w-full max-w-lg max-h-[90vh]", className)}
       >
         <div className="flex flex-shrink-0 justify-between items-center px-5 py-4 border-neutral-100 border-b">
           <h2 className="text-h3">{title}</h2>
