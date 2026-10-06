@@ -1,6 +1,6 @@
 "use client";
 
-import { useCitiesForCountry } from "@/src/shared/lib/api/hooks/useReferenceData";
+import { useAllCitiesForCountry } from "@/src/shared/lib/api/hooks/useReferenceData";
 import { InlineSearch } from "@/src/shared/ui/InlineSearch";
 import { useCountryOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import type { Option, PersonalInfoData } from "../../types";
@@ -13,7 +13,7 @@ interface LocationSectionProps {
 
 export function LocationSection({ data, onChange }: LocationSectionProps) {
   const countries = useCountryOptions();
-  const { data: rawCities = [], isLoading: loadingCities } = useCitiesForCountry(
+  const { data: rawCities = [], isLoading: loadingCities } = useAllCitiesForCountry(
     data.countryOfResidenceId ?? "",
   );
   const cities: Option[] = rawCities.map((c) => ({ id: c.id, name: c.nameEn }));
