@@ -1,4 +1,5 @@
 import apiClient from "./axios-client";
+import { fetchAllPages } from "./fetchAllPages";
 import type {
   RefCountry,
   RefCity,
@@ -45,4 +46,11 @@ export const referenceService = {
     apiClient.get<RefStandardizedTest[]>("/reference/standardized-tests"),
   getSpecialStatuses: () =>
     apiClient.get<RefSpecialStatus[]>("/reference/special-statuses"),
+
+  // Complete lists, for turning stored IDs into names. There is no lookup-by-ID endpoint and
+  // the plain list calls above only return the first page.
+  getAllCountries: () => fetchAllPages<RefCountry>("/reference/countries"),
+  getAllCitiesForCountry: (countryId: string) =>
+    fetchAllPages<RefCity>("/reference/cities", { countryId }),
+  getAllMajors: () => fetchAllPages<RefMajor>("/reference/majors"),
 };
