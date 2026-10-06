@@ -44,7 +44,7 @@ export function SectionCard({
   children,
 }: SectionCardProps) {
   return (
-    <div className="group/card rounded-lg border border-neutral-100 bg-white p-4 md:p-5">
+    <div className="rounded-lg border border-neutral-100 bg-white p-4 md:p-5">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">

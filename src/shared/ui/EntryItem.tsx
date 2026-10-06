@@ -19,7 +19,7 @@ interface EntryItemProps {
 /** A list entry: 40px icon tile, title with meta lines, an optional trailing metric and details. */
 export function EntryItem({ icon: Icon, title, titleAddon, children, metric, details, actions }: EntryItemProps) {
   return (
-    <div className="group/entry flex gap-4">
+    <div className="flex gap-4">
       <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-50 text-primary-800">
         <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
       </div>

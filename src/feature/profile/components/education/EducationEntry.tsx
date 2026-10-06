@@ -42,7 +42,7 @@ export function EducationEntry({ education, names, onEdit }: EducationEntryProps
           </div>
         )
       }
-      actions={onEdit && <EditButton onClick={onEdit} label="Edit this education record" revealOn="entry" />}
+      actions={onEdit && <EditButton onClick={onEdit} label="Edit this education record" />}
       details={
         <dl className="flex flex-wrap gap-x-8 gap-y-2">
           <div className="min-w-0">
