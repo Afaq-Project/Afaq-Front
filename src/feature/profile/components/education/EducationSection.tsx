@@ -1,50 +1,98 @@
 "use client";
 
-import { useDeleteEducation } from "../../hooks/useProfileQuery";
+import { AddValueButton } from "@/src/shared/ui/AddValueButton";
+import Badge from "@/src/shared/ui/Badge";
+import { ChipList } from "@/src/shared/ui/ChipList";
+import { Field, FieldGrid } from "@/src/shared/ui/FieldGrid";
+import { SectionCard } from "@/src/shared/ui/SectionCard";
 import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import type { ApiEducation } from "../../types/api";
-import { EmptyState } from "../common/EmptyState";
-import { Field } from "../common/Field";
-import { ProfileSection } from "../common/ProfileSection";
-import { EducationRecordCard } from "./EducationRecordCard";
+import { editHandler, type EditingState } from "../common/editing";
+import { REQUIRED_FOR_MATCHING } from "../common/fieldIds";
+import { ProfilePageSection } from "../common/ProfilePageSection";
+import { CurrentLevelForm } from "./CurrentLevelForm";
+import { EducationEntry } from "./EducationEntry";
+import { EducationRecordForm } from "./EducationRecordForm";
+
+const LEVEL = "education-level";
+const NEW_RECORD = "education:new";
+const recordKey = (id: string) => `education:${id}`;
 
 interface EducationSectionProps {
-  currentLevelId?: string | null;
+  levelId?: string | null;
   educations: ApiEducation[];
   names: ReferenceNames;
-  onAdd: () => void;
-  onEdit: (education: ApiEducation) => void;
+  edit: EditingState;
 }
 
-export function EducationSection({ currentLevelId, educations, names, onAdd, onEdit }: EducationSectionProps) {
-  const deleteEducation = useDeleteEducation();
+/** One card: a summary row (level and fields of study), then each degree as an entry. */
+export function EducationSection({ levelId, educations, names, edit }: EducationSectionProps) {
+  // Field of study is shown once here (from each record's major), not repeated per entry.
+  const fieldsOfStudy = [...new Set(educations.map((e) => e.majorId).filter(Boolean) as string[])].map((id) => ({
+    key: id,
+    label: names.major(id) ?? "",
+  }));
+  const addRecord = editHandler(edit, NEW_RECORD);
 
   return (
-    <ProfileSection icon="school" title="Education" onAdd={onAdd}>
-      <div className="mb-6">
-        <Field label="Current Education Level" value={names.educationLevel(currentLevelId)} />
-      </div>
-
-      {educations.length === 0 ? (
-        <EmptyState
-          message="No education records yet."
-          actionLabel="Add your first education record"
-          onAction={onAdd}
-        />
-      ) : (
-        <div className="flex flex-col gap-6">
-          {educations.map((education) => (
-            <EducationRecordCard
-              key={education.id}
-              education={education}
-              names={names}
-              onEdit={() => onEdit(education)}
-              onDelete={() => deleteEducation.mutate(education.id)}
-              deleting={deleteEducation.isPending}
+    <ProfilePageSection id="education" title="Education">
+      <SectionCard
+        title="Education"
+        titleAddon={<Badge tone="gray">Used for matching</Badge>}
+        onEdit={editHandler(edit, LEVEL)}
+      >
+        {edit.editing === LEVEL ? (
+          <CurrentLevelForm levelId={levelId} onDone={edit.stop} />
+        ) : (
+          <FieldGrid>
+            <Field
+              label="Education level"
+              info={REQUIRED_FOR_MATCHING}
+              value={names.educationLevel(levelId)}
             />
-          ))}
+            <Field
+              label="Field of study"
+              info={REQUIRED_FOR_MATCHING}
+              value={fieldsOfStudy.length > 0 ? <ChipList items={fieldsOfStudy} /> : undefined}
+            />
+          </FieldGrid>
+        )}
+
+        <hr className="my-5 border-neutral-100" />
+
+        <div className="flex flex-col gap-6">
+          {educations.map((education) =>
+            edit.editing === recordKey(education.id) ? (
+              <EducationRecordForm
+                key={education.id}
+                education={education}
+                names={names}
+                onDone={edit.stop}
+              />
+            ) : (
+              <EducationEntry
+                key={education.id}
+                education={education}
+                names={names}
+                onEdit={editHandler(edit, recordKey(education.id))}
+              />
+            ),
+          )}
+
+          {edit.editing === NEW_RECORD ? (
+            <EducationRecordForm education={null} names={names} onDone={edit.stop} />
+          ) : (
+            addRecord && (
+              <div>
+                <AddValueButton
+                  label={educations.length === 0 ? "Add your first education record" : "Add another education record"}
+                  onClick={addRecord}
+                />
+              </div>
+            )
+          )}
         </div>
-      )}
-    </ProfileSection>
+      </SectionCard>
+    </ProfilePageSection>
   );
 }
