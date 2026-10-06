@@ -1,4 +1,5 @@
 import { isAxiosError } from "axios";
+import { applyPreferenceChanges, preferenceIdsFromApi } from "@/src/feature/profile/services/preferences";
 import { profileService } from "@/src/feature/profile/services/profileService";
 import type { CreateEducationPayload, UpdatePersonalPayload } from "@/src/feature/profile/types/api";
 import type { PersonalInfoData, EducationData, PreferencesData, SkillsData } from "../types";
@@ -131,33 +132,9 @@ export async function savePreferences(prev: PreferencesData, next: PreferencesDa
   const after = preferenceIds(next);
   if (sameJson(before, after)) return false;
 
-  const server = await profileService.getPreferences();
-  const degrees = diffIds(
-    before.degrees,
-    after.degrees,
-    (server.targetDegrees ?? []).map((d) => d.educationLevelId),
-  );
-  const majors = diffIds(
-    before.majors,
-    after.majors,
-    (server.targetMajors ?? []).map((m) => m.majorId),
-  );
-  const institutions = diffIds(
-    before.institutions,
-    after.institutions,
-    (server.targetInstitutions ?? []).map((i) => i.institutionId),
-  );
-
-  const requests = [
-    ...degrees.toRemove.map(profileService.removeTargetDegree),
-    ...degrees.toAdd.map(profileService.addTargetDegree),
-    ...majors.toRemove.map(profileService.removeTargetMajor),
-    ...majors.toAdd.map(profileService.addTargetMajor),
-    ...institutions.toRemove.map(profileService.removeTargetInstitution),
-    ...institutions.toAdd.map(profileService.addTargetInstitution),
-  ];
-  await Promise.all(requests);
-  return requests.length > 0;
+  // Only remove what onboarding itself saved before (`before`), never preferences added elsewhere.
+  const server = preferenceIdsFromApi(await profileService.getPreferences());
+  return (await applyPreferenceChanges(server, before, after)) > 0;
 }
 
 // ─── Step 3 ───────────────────────────────────────────────────────────────────

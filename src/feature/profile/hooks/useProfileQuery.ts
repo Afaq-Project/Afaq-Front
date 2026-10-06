@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { applyPreferenceChanges, type PreferenceIds } from "../services/preferences";
 import { profileService } from "../services/profileService";
 import type { UpdatePersonalPayload, CreateEducationPayload, AddLanguagePayload } from "../types/api";
 
@@ -19,6 +20,20 @@ export function usePreferencesQuery() {
     queryKey: ["profile", "preferences"],
     queryFn: profileService.getPreferences,
     staleTime: 1000 * 60 * 5,
+  });
+}
+
+/**
+ * Saves target preferences as a whole: adds what's new and removes what was taken out.
+ * `current` is what the server has now (from usePreferencesQuery).
+ */
+export function useUpdatePreferences() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ current, next }: { current: PreferenceIds; next: PreferenceIds }) =>
+      applyPreferenceChanges(current, current, next),
+    // Preferences count toward profile completion, so refresh both.
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["profile"] }),
   });
 }
 
