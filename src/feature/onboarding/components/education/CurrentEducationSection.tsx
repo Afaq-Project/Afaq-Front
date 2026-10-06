@@ -1,7 +1,7 @@
 "use client";
 
 import { InlineSearch } from "@/src/shared/ui/InlineSearch";
-import { useInstitutionOptions } from "../../hooks/useReferenceOptions";
+import { useInstitutionOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { fromOptions, toOptions } from "../../services/selection";
 import type { EducationData, GpaScale, Option } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";

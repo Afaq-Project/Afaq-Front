@@ -1,7 +1,7 @@
 "use client";
 
 import { CollapsibleTagList } from "@/src/shared/ui/CollapsibleTagList";
-import { useMajorOptions } from "../../hooks/useReferenceOptions";
+import { useMajorOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { useSkillCategories } from "../../hooks/useSkillCategories";
 import { fromOptions, toOptions } from "../../services/selection";
 import type { Option } from "../../types";

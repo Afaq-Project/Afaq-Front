@@ -2,7 +2,7 @@
 
 import { InlineSearch } from "@/src/shared/ui/InlineSearch";
 import { TagSearch } from "@/src/shared/ui/TagSearch";
-import { useCountryOptions, useInstitutionOptions } from "../../hooks/useReferenceOptions";
+import { useCountryOptions, useInstitutionOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { fromOptions, toOptions } from "../../services/selection";
 import type { Option, PreferencesData } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";

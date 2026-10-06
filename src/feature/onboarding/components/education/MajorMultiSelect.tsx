@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
-import { useMajorOptions } from "../../hooks/useReferenceOptions";
+import { useMajorOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import type { Option } from "../../types";
 import { FieldLabel } from "../common/FieldLabel";
 
