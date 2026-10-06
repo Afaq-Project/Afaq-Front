@@ -7,6 +7,7 @@ import { formatEnum } from "../../services/format";
 import type { ApiProfile } from "../../types/api";
 import { formatBirthDate } from "../common/displayFormat";
 import { REQUIRED_FOR_MATCHING } from "../common/fieldIds";
+import { isLoadingName, withNameSkeleton } from "../common/nameSkeleton";
 import { AboutYouBlock } from "./AboutYouBlock";
 import { BackgroundEditor } from "./BackgroundEditor";
 
@@ -23,15 +24,16 @@ export function BackgroundCard({ profile, names, isEditing, onEdit, onDone }: Ba
   if (isEditing) return <BackgroundEditor profile={profile} names={names} onDone={onDone} />;
 
   // "{city}, {country}", or whichever of the two is set.
-  const location = [names.city(profile?.currentCityId), names.country(profile?.countryOfResidenceId)]
-    .filter(Boolean)
-    .join(", ");
+  const locationParts = [names.city(profile?.currentCityId), names.country(profile?.countryOfResidenceId)];
+  const location = locationParts.some(isLoadingName)
+    ? withNameSkeleton(locationParts.find(isLoadingName), "w-40")
+    : locationParts.filter(Boolean).join(", ");
 
   return (
     <SectionCard title="Background" titleAddon={<Badge tone="gray">Used for matching</Badge>} onEdit={onEdit}>
       {/* Used for matching */}
       <dl>
-        <Field label="Nationality" info={REQUIRED_FOR_MATCHING} icon={Flag} value={names.nationality(profile?.nationalityId)} />
+        <Field label="Nationality" info={REQUIRED_FOR_MATCHING} icon={Flag} value={withNameSkeleton(names.nationality(profile?.nationalityId))} />
       </dl>
 
       <hr className="my-5 border-neutral-100" />
@@ -41,7 +43,7 @@ export function BackgroundCard({ profile, names, isEditing, onEdit, onDone }: Ba
         <Field label="Location" icon={MapPin} value={location} />
         <Field label="Date of birth" value={formatBirthDate(profile?.dateOfBirth)} />
         <Field label="Gender" value={formatEnum(profile?.gender)} />
-        <Field label="Marital status" value={names.maritalStatus(profile?.maritalStatusId)} />
+        <Field label="Marital status" value={withNameSkeleton(names.maritalStatus(profile?.maritalStatusId))} />
       </FieldGrid>
 
       <hr className="my-5 border-neutral-100" />

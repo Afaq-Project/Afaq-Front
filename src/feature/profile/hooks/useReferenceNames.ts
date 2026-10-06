@@ -21,6 +21,9 @@ export interface NameResolver {
   exact: (id?: string | null) => string | undefined;
 }
 
+/** Display placeholder while a name list is still loading; UI can swap it for a skeleton. */
+export const LOADING_NAME = "Loading…";
+
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function toMap<T extends { id: string }>(items: T[], name: (item: T) => string) {
@@ -31,7 +34,7 @@ function resolverFor(map: Map<string, string>, isLoading: boolean): NameResolver
   const exact = (id?: string | null) => (id ? map.get(id) : undefined);
   const display = (id?: string | null) => {
     if (!id) return undefined;
-    return exact(id) ?? (isLoading ? "Loading…" : "Unknown");
+    return exact(id) ?? (isLoading ? LOADING_NAME : "Unknown");
   };
   return Object.assign(display, { exact });
 }

@@ -1,8 +1,10 @@
 import { X } from "lucide-react";
 import Badge from "@/src/shared/ui/Badge";
 import { ProficiencyBadge } from "@/src/shared/ui/ProficiencyBadge";
+import { Skeleton } from "@/src/shared/ui/Skeleton";
 import type { LanguageDraft } from "../../hooks/useSaveLanguages";
 import type { ReferenceNames } from "../../hooks/useReferenceNames";
+import { isLoadingName, withNameSkeleton } from "../common/nameSkeleton";
 
 interface LanguageRowProps {
   language: LanguageDraft;
@@ -12,15 +14,17 @@ interface LanguageRowProps {
 }
 
 export function LanguageRow({ language, names, onRemove }: LanguageRowProps) {
-  const name = names.language(language.languageId) ?? "Language";
+  const resolvedName = names.language(language.languageId);
+  // Plain-text name for labels (the visible name may be a skeleton while loading).
+  const name = isLoadingName(resolvedName) ? "language" : resolvedName ?? "Language";
   const level = names.proficiencyLevel(language.proficiencyLevelId);
   // Only add a "Native" badge when the level itself doesn't already say so.
-  const showNative = language.isNative && !/native/i.test(level ?? "");
+  const showNative = language.isNative && !isLoadingName(level) && !/native/i.test(level ?? "");
 
   return (
     <li className="flex min-h-11 items-center gap-3 py-2">
-      <span className="flex-1 text-body text-neutral-900">{name}</span>
-      {level && <ProficiencyBadge label={level} />}
+      <span className="flex-1 text-body text-neutral-900">{withNameSkeleton(resolvedName) ?? name}</span>
+      {isLoadingName(level) ? <Skeleton className="h-6 w-24 rounded-full" /> : level && <ProficiencyBadge label={level} />}
       {showNative && <Badge tone="gray">Native</Badge>}
       {onRemove && (
         <button

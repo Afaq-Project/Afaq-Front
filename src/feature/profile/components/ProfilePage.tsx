@@ -13,6 +13,7 @@ import type { EditingState } from "./common/editing";
 import { EducationSection } from "./education/EducationSection";
 import type { MatchFactor, NextStep } from "./header/completion";
 import { ProfileHeader } from "./header/ProfileHeader";
+import { ProfilePageSkeleton } from "./skeletons/ProfilePageSkeleton";
 import { SkillsLanguagesSection } from "./skills/SkillsLanguagesSection";
 
 // Same order as the onboarding wizard.
@@ -40,6 +41,9 @@ export function ProfilePage() {
   const [editing, setEditing] = useState<string | null>(null);
   const edit: EditingState = { editing, start: setEditing, stop: () => setEditing(null) };
 
+  // The nav observes the sections when it mounts, so it only renders once they exist.
+  if (isLoading) return <ProfilePageSkeleton />;
+
   const name = fullName(profile?.firstName, profile?.lastName) || fullName(user?.firstName, user?.lastName) || "Your profile";
 
   return (
@@ -58,28 +62,20 @@ export function ProfilePage() {
         <AnchorNav items={SECTIONS} label="Profile sections" />
 
         <div className="flex min-w-0 flex-1 flex-col gap-8">
-          {isLoading ? (
-            <p role="status" className="rounded-lg border border-neutral-100 bg-white p-5 text-body text-neutral-600">
-              Loading your profile…
-            </p>
-          ) : (
-            <>
-              <EducationSection
-                levelId={profile?.educationLevelId}
-                educations={profile?.educations ?? []}
-                names={names}
-                edit={edit}
-              />
-              <BackgroundGoalsSection profile={profile} preferences={preferences} names={names} edit={edit} />
-              <SkillsLanguagesSection
-                experiences={profile?.experiences ?? []}
-                languages={profile?.languages ?? []}
-                names={names}
-                edit={edit}
-              />
-              <AccountSection profile={profile} accountEmail={user?.email} edit={edit} />
-            </>
-          )}
+          <EducationSection
+            levelId={profile?.educationLevelId}
+            educations={profile?.educations ?? []}
+            names={names}
+            edit={edit}
+          />
+          <BackgroundGoalsSection profile={profile} preferences={preferences} names={names} edit={edit} />
+          <SkillsLanguagesSection
+            experiences={profile?.experiences ?? []}
+            languages={profile?.languages ?? []}
+            names={names}
+            edit={edit}
+          />
+          <AccountSection profile={profile} accountEmail={user?.email} edit={edit} />
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { SectionCard } from "@/src/shared/ui/SectionCard";
 import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import { useSkillGroups } from "../../hooks/useSkillGroups";
 import { LabeledGroup } from "../common/LabeledGroup";
+import { isLoadingName } from "../common/nameSkeleton";
 import { SkillsEditor } from "./SkillsEditor";
 
 interface SkillsCardProps {
@@ -18,15 +19,17 @@ interface SkillsCardProps {
 
 export function SkillsCard({ experiences, names, isEditing, onEdit, onDone }: SkillsCardProps) {
   const groups = useSkillGroups(experiences, names);
+  // Grouping needs the major list too, so show placeholders until it has loaded.
+  const loading = experiences.some((value) => isLoadingName(names.skill(value)));
 
   if (isEditing) return <SkillsEditor experiences={experiences} names={names} onDone={onDone} />;
 
   return (
     <SectionCard title="Skills" onEdit={onEdit}>
       {experiences.length === 0 ? (
-        <EmptyState
-          message="Skills help us find opportunities that fit what you're good at."
-        />
+        <EmptyState message="Skills help us find opportunities that fit what you're good at." />
+      ) : loading ? (
+        <ChipList items={experiences.map((value) => ({ key: value, label: value }))} loading />
       ) : (
         <div className="flex flex-col gap-4">
           {groups.map(({ category, skills }) => (

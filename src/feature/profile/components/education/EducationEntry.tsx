@@ -6,6 +6,7 @@ import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import { formatGpa, UNRESOLVED_INSTITUTION_NAME } from "../../services/format";
 import type { ApiEducation } from "../../types/api";
 import { formatDateRange } from "../common/displayFormat";
+import { withNameSkeleton } from "../common/nameSkeleton";
 
 interface EducationEntryProps {
   education: ApiEducation;
@@ -30,7 +31,7 @@ export function EducationEntry({ education, names, onEdit }: EducationEntryProps
   return (
     <EntryItem
       icon={GraduationCap}
-      title={names.educationLevel(education.educationLevelId) ?? "Education"}
+      title={names.educationLevel.exact(education.educationLevelId) ?? "Education"}
       titleAddon={education.isCurrent ? <Badge tone="blue">Currently enrolled</Badge> : undefined}
       metric={
         gpa && (
@@ -46,7 +47,7 @@ export function EducationEntry({ education, names, onEdit }: EducationEntryProps
         <dl className="flex flex-wrap gap-x-8 gap-y-2">
           <div className="min-w-0">
             <dt className="text-caption text-neutral-600">Minor</dt>
-            <dd className="text-body text-neutral-900">{minor ?? <span className="text-neutral-400">Not added yet</span>}</dd>
+            <dd className="text-body text-neutral-900">{minor ? withNameSkeleton(minor) : <span className="text-neutral-400">Not added yet</span>}</dd>
           </div>
         </dl>
       }

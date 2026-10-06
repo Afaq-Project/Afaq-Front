@@ -9,6 +9,7 @@ import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import type { ApiEducation } from "../../types/api";
 import { editHandler, type EditingState } from "../common/editing";
 import { REQUIRED_FOR_MATCHING } from "../common/fieldIds";
+import { isLoadingName, withNameSkeleton } from "../common/nameSkeleton";
 import { ProfilePageSection } from "../common/ProfilePageSection";
 import { CurrentLevelForm } from "./CurrentLevelForm";
 import { EducationEntry } from "./EducationEntry";
@@ -48,12 +49,16 @@ export function EducationSection({ levelId, educations, names, edit }: Education
             <Field
               label="Education level"
               info={REQUIRED_FOR_MATCHING}
-              value={names.educationLevel(levelId)}
+              value={withNameSkeleton(names.educationLevel(levelId))}
             />
             <Field
               label="Field of study"
               info={REQUIRED_FOR_MATCHING}
-              value={fieldsOfStudy.length > 0 ? <ChipList items={fieldsOfStudy} /> : undefined}
+              value={
+                fieldsOfStudy.length > 0 ? (
+                  <ChipList items={fieldsOfStudy} loading={fieldsOfStudy.some((f) => isLoadingName(f.label))} />
+                ) : undefined
+              }
             />
           </FieldGrid>
         )}
