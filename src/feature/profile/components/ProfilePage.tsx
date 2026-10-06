@@ -7,6 +7,8 @@ import { useReferenceNames } from "../hooks/useReferenceNames";
 import { fullName } from "../services/format";
 import type { ApiEducation } from "../types/api";
 import { AddLanguageModal } from "./background/AddLanguageModal";
+import { EditSkillsModal } from "./background/EditSkillsModal";
+import { EditStudyGoalsModal } from "./background/EditStudyGoalsModal";
 import { LanguagesSection } from "./background/LanguagesSection";
 import { SkillsSection } from "./background/SkillsSection";
 import { StudyGoalsSection } from "./background/StudyGoalsSection";
@@ -22,6 +24,8 @@ type OpenModal =
   | { type: "personal" }
   | { type: "education"; education: ApiEducation | null }
   | { type: "language" }
+  | { type: "skills" }
+  | { type: "goals" }
   | null;
 
 export function ProfilePage() {
@@ -47,6 +51,12 @@ export function ProfilePage() {
           names={names}
           onClose={closeModal}
         />
+      )}
+      {modal?.type === "skills" && (
+        <EditSkillsModal experiences={profile?.experiences ?? []} names={names} onClose={closeModal} />
+      )}
+      {modal?.type === "goals" && (
+        <EditStudyGoalsModal preferences={preferences} names={names} onClose={closeModal} />
       )}
       {modal?.type === "language" && (
         <AddLanguageModal existingLanguageIds={languages.map((l) => l.languageId)} onClose={closeModal} />
@@ -83,13 +93,21 @@ export function ProfilePage() {
 
               {activeTab === "background" && (
                 <div className="flex flex-col gap-5">
-                  <SkillsSection experiences={profile?.experiences ?? []} names={names} />
+                  <SkillsSection
+                    experiences={profile?.experiences ?? []}
+                    names={names}
+                    onEdit={() => setModal({ type: "skills" })}
+                  />
                   <LanguagesSection
                     languages={languages}
                     names={names}
                     onAdd={() => setModal({ type: "language" })}
                   />
-                  <StudyGoalsSection preferences={preferences} names={names} />
+                  <StudyGoalsSection
+                    preferences={preferences}
+                    names={names}
+                    onEdit={() => setModal({ type: "goals" })}
+                  />
                 </div>
               )}
 

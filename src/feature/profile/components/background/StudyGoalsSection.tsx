@@ -6,10 +6,11 @@ import { SubHeading, TagList } from "../common/TagList";
 interface StudyGoalsSectionProps {
   preferences?: ApiPreferences;
   names: ReferenceNames;
+  onEdit: () => void;
 }
 
-/** Target degrees, majors and institutions (read-only here). */
-export function StudyGoalsSection({ preferences, names }: StudyGoalsSectionProps) {
+/** Target degrees, majors and institutions. */
+export function StudyGoalsSection({ preferences, names, onEdit }: StudyGoalsSectionProps) {
   const degrees = (preferences?.targetDegrees ?? []).map((d) => names.educationLevel(d.educationLevelId) ?? "");
   const majors = (preferences?.targetMajors ?? []).map((m) => names.major(m.majorId) ?? "");
   // Institution names can't be looked up by ID yet (see useReferenceNames).
@@ -18,7 +19,7 @@ export function StudyGoalsSection({ preferences, names }: StudyGoalsSectionProps
   );
 
   return (
-    <ProfileSection icon="flag" title="Study Goals">
+    <ProfileSection icon="flag" title="Study Goals" onEdit={onEdit}>
       <div className="flex flex-col gap-5">
         <div>
           <SubHeading>Target Degrees</SubHeading>
