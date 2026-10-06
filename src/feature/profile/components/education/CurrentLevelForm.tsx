@@ -26,7 +26,7 @@ export function CurrentLevelForm({ levelId, onDone }: CurrentLevelFormProps) {
     <div className="max-w-sm">
       <Select
         id={FIELD_IDS.educationLevel}
-        label="Education level"
+        label="Current education level"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: l.nameEn }))]}

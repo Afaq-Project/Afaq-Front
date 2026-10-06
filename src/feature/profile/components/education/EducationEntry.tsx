@@ -15,7 +15,7 @@ interface EducationEntryProps {
   onEdit?: () => void;
 }
 
-/** One degree: icon tile, degree name, institution, date range, and the GPA as a metric. */
+/** One degree: icon tile, degree name, institution, date range, GPA as a metric, then field of study and minor. */
 export function EducationEntry({ education, names, onEdit }: EducationEntryProps) {
   const institution =
     names.institution.exact(education.institutionId) ??
@@ -26,6 +26,7 @@ export function EducationEntry({ education, names, onEdit }: EducationEntryProps
     education.isCurrent && !education.expectedGraduationDate,
   );
   const gpa = formatGpa(education.gpaRaw, education.gpaScale);
+  const major = names.major(education.majorId);
   const minor = names.major(education.minorMajorId);
 
   return (
@@ -45,6 +46,10 @@ export function EducationEntry({ education, names, onEdit }: EducationEntryProps
       actions={onEdit && <EditButton onClick={onEdit} label="Edit this education record" />}
       details={
         <dl className="flex flex-wrap gap-x-8 gap-y-2">
+          <div className="min-w-0">
+            <dt className="text-caption text-neutral-600">Field of study</dt>
+            <dd className="text-body text-neutral-900">{major ? withNameSkeleton(major) : <span className="text-neutral-400">Not added yet</span>}</dd>
+          </div>
           <div className="min-w-0">
             <dt className="text-caption text-neutral-600">Minor</dt>
             <dd className="text-body text-neutral-900">{minor ? withNameSkeleton(minor) : <span className="text-neutral-400">Not added yet</span>}</dd>

@@ -2,14 +2,13 @@
 
 import { AddValueButton } from "@/src/shared/ui/AddValueButton";
 import Badge from "@/src/shared/ui/Badge";
-import { ChipList } from "@/src/shared/ui/ChipList";
 import { Field, FieldGrid } from "@/src/shared/ui/FieldGrid";
 import { SectionCard } from "@/src/shared/ui/SectionCard";
 import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import type { ApiEducation } from "../../types/api";
 import { editHandler, type EditingState } from "../common/editing";
 import { REQUIRED_FOR_MATCHING } from "../common/fieldIds";
-import { isLoadingName, withNameSkeleton } from "../common/nameSkeleton";
+import { withNameSkeleton } from "../common/nameSkeleton";
 import { ProfilePageSection } from "../common/ProfilePageSection";
 import { CurrentLevelForm } from "./CurrentLevelForm";
 import { EducationEntry } from "./EducationEntry";
@@ -26,13 +25,11 @@ interface EducationSectionProps {
   edit: EditingState;
 }
 
-/** One card: a summary row (level and fields of study), then each degree as an entry. */
+/**
+ * One card: the profile's current education level (what the card's Edit changes), then each
+ * degree as an entry with its own Edit — field of study lives on the entry it belongs to.
+ */
 export function EducationSection({ levelId, educations, names, edit }: EducationSectionProps) {
-  // Field of study is shown once here (from each record's major), not repeated per entry.
-  const fieldsOfStudy = [...new Set(educations.map((e) => e.majorId).filter(Boolean) as string[])].map((id) => ({
-    key: id,
-    label: names.major(id) ?? "",
-  }));
   const addRecord = editHandler(edit, NEW_RECORD);
 
   return (
@@ -47,18 +44,9 @@ export function EducationSection({ levelId, educations, names, edit }: Education
         ) : (
           <FieldGrid>
             <Field
-              label="Education level"
+              label="Current education level"
               info={REQUIRED_FOR_MATCHING}
               value={withNameSkeleton(names.educationLevel(levelId))}
-            />
-            <Field
-              label="Field of study"
-              info={REQUIRED_FOR_MATCHING}
-              value={
-                fieldsOfStudy.length > 0 ? (
-                  <ChipList items={fieldsOfStudy} loading={fieldsOfStudy.some((f) => isLoadingName(f.label))} />
-                ) : undefined
-              }
             />
           </FieldGrid>
         )}
