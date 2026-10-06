@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { Skeleton } from "./Skeleton";
 
 export interface ChipItem {
   key: string;
@@ -12,10 +13,24 @@ interface ChipListProps {
   onRemove?: (key: string) => void;
   /** Shown when there are no items. */
   emptyText?: string;
+  /** Shows placeholder pills while the labels load. */
+  loading?: boolean;
 }
 
 /** Outlined pills (white, 1px neutral-200 border, radius-full, caption); removable in edit mode. */
-export function ChipList({ items, editable = false, onRemove, emptyText }: ChipListProps) {
+export function ChipList({ items, editable = false, onRemove, emptyText, loading = false }: ChipListProps) {
+  if (loading) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {/* One placeholder per item, capped so long lists don't flash a wall of pills. */}
+        {Array.from({ length: Math.min(Math.max(items.length, 1), 4) }, (_, i) => (
+          <Skeleton key={i} className="h-6 w-24 rounded-full" />
+        ))}
+        <span className="sr-only">Loading</span>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return emptyText ? <p className="text-small text-neutral-600">{emptyText}</p> : null;
   }
