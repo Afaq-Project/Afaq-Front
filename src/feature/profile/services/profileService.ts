@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import apiClient from "@/src/shared/lib/api/axios-client";
 import type {
   ApiProfile,
@@ -67,4 +68,31 @@ export const profileService = {
 
   updatePreferences: (data: UpdatePreferencesPayload) =>
     apiClient.patch<ApiPreferences>("/profile/preferences", data),
+
+  // Preferences
+  // A user who hasn't set any preferences may get a 404 — that just means "none yet".
+  getPreferences: () =>
+    apiClient.get<ApiPreferences>("/profile/preferences").catch((error: unknown) => {
+      if (isAxiosError(error) && error.response?.status === 404) return {} as ApiPreferences;
+      throw error;
+    }),
+
+  // Preferences are managed one item at a time — there is no bulk update endpoint.
+  addTargetDegree: (educationLevelId: string) =>
+    apiClient.post("/profile/preferences/degrees", { educationLevelId }),
+
+  removeTargetDegree: (educationLevelId: string) =>
+    apiClient.delete(`/profile/preferences/degrees/${educationLevelId}`),
+
+  addTargetMajor: (majorId: string) =>
+    apiClient.post("/profile/preferences/majors", { majorId }),
+
+  removeTargetMajor: (majorId: string) =>
+    apiClient.delete(`/profile/preferences/majors/${majorId}`),
+
+  addTargetInstitution: (institutionId: string) =>
+    apiClient.post("/profile/preferences/institutions", { institutionId }),
+
+  removeTargetInstitution: (institutionId: string) =>
+    apiClient.delete(`/profile/preferences/institutions/${institutionId}`),
 };

@@ -14,6 +14,14 @@ export function useProfileQuery() {
   });
 }
 
+export function usePreferencesQuery() {
+  return useQuery({
+    queryKey: ["profile", "preferences"],
+    queryFn: profileService.getPreferences,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
 export function useUpdatePersonal() {
   const qc = useQueryClient();
   return useMutation({
