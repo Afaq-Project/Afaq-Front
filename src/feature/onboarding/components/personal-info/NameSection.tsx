@@ -1,5 +1,5 @@
 import type { PersonalInfoData } from "../../types";
-import { FieldLabel } from "../common/FieldLabel";
+import { FieldLabel } from "@/src/shared/ui/FieldLabel";
 import { INPUT_CLASS } from "../common/formStyles";
 import { StepSectionHeading } from "../common/StepSectionHeading";
 

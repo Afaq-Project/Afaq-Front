@@ -1,6 +1,6 @@
 import { GPA_SCALES, getGpaScale } from "../../services/gpaScales";
 import type { GpaScale } from "../../types";
-import { FieldLabel } from "../common/FieldLabel";
+import { FieldLabel } from "@/src/shared/ui/FieldLabel";
 
 interface GpaFieldProps {
   gpa?: string;

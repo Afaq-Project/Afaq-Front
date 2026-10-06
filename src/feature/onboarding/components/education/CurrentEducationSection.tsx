@@ -6,7 +6,7 @@ import { fromOptions, toOptions } from "../../services/selection";
 import type { EducationData, GpaScale, Option } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";
 import { GpaField } from "./GpaField";
-import { MajorMultiSelect } from "./MajorMultiSelect";
+import { MajorMultiSelect } from "@/src/shared/ui/pickers/MajorMultiSelect";
 import { StudyPeriodField } from "./StudyPeriodField";
 
 interface CurrentEducationSectionProps {

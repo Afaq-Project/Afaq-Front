@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useMajorsByCategory } from "@/src/shared/lib/api/hooks/useReferenceData";
-import type { Option } from "../../types";
+import type { ReferenceOption as Option } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { SkillChip } from "./SkillChip";
 
 interface SkillCategoryPanelProps {

@@ -4,7 +4,7 @@ import { useMaritalStatuses } from "@/src/shared/lib/api/hooks/useReferenceData"
 import { InlineSearch } from "@/src/shared/ui/InlineSearch";
 import { useCountryOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import type { Option, PersonalInfoData } from "../../types";
-import { FieldLabel } from "../common/FieldLabel";
+import { FieldLabel } from "@/src/shared/ui/FieldLabel";
 import { INPUT_CLASS } from "../common/formStyles";
 import { StepSectionHeading } from "../common/StepSectionHeading";
 

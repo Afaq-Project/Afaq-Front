@@ -2,9 +2,7 @@
 
 import { fromOptions, toOptions } from "../../services/selection";
 import { StepSectionHeading } from "../common/StepSectionHeading";
-import { SkillPicker } from "./SkillPicker";
-
-export const MAX_SKILLS = 20;
+import { MAX_SKILLS, SkillPicker } from "@/src/shared/ui/pickers/SkillPicker";
 
 interface SkillsSectionProps {
   skills: string[];

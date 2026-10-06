@@ -2,8 +2,8 @@
 
 import { useMemo } from "react";
 import { useQueries } from "@tanstack/react-query";
-import { useMajorCategories } from "@/src/shared/lib/api/hooks/useReferenceData";
-import { referenceService } from "@/src/shared/lib/api/referenceService";
+import { useMajorCategories } from "./useReferenceData";
+import { referenceService } from "../referenceService";
 
 /**
  * Major categories that actually contain majors. Every category's majors are fetched up front

@@ -2,10 +2,13 @@
 
 import { useMajorOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { CollapsibleTagList } from "@/src/shared/ui/CollapsibleTagList";
-import { useSkillCategories } from "../../hooks/useSkillCategories";
-import type { Option } from "../../types";
+import { useSkillCategories } from "@/src/shared/lib/api/hooks/useSkillCategories";
+import type { ReferenceOption as Option } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { SkillCategoryPanel } from "./SkillCategoryPanel";
 import { SkillChip } from "./SkillChip";
+
+/** Most skills a profile can hold. */
+export const MAX_SKILLS = 20;
 
 interface SkillPickerProps {
   selected: Option[];

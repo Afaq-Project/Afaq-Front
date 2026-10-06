@@ -3,8 +3,8 @@
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { useMajorOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
-import type { Option } from "../../types";
-import { FieldLabel } from "../common/FieldLabel";
+import type { ReferenceOption as Option } from "@/src/shared/lib/api/hooks/useReferenceOptions";
+import { FieldLabel } from "../FieldLabel";
 
 interface MajorMultiSelectProps {
   label: string;

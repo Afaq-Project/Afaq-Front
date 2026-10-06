@@ -1,5 +1,5 @@
 import type { EducationData } from "../../types";
-import { FieldLabel } from "../common/FieldLabel";
+import { FieldLabel } from "@/src/shared/ui/FieldLabel";
 
 const DATE_INPUT_CLASS =
   "bg-white px-4 py-3 border rounded-lg border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/40 w-full text-on-surface text-sm transition-all";

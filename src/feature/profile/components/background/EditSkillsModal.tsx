@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MAX_SKILLS } from "@/src/feature/onboarding/components/skills/SkillsSection";
-import { SkillPicker } from "@/src/feature/onboarding/components/skills/SkillPicker";
+import { MAX_SKILLS, SkillPicker } from "@/src/shared/ui/pickers/SkillPicker";
 import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
 import type { ReferenceOption } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import Modal from "@/src/shared/ui/Modal";

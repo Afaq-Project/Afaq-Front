@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MajorMultiSelect } from "@/src/feature/onboarding/components/education/MajorMultiSelect";
+import { MajorMultiSelect } from "@/src/shared/ui/pickers/MajorMultiSelect";
 import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
 import { useInstitutionOptions, type ReferenceOption } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import Modal from "@/src/shared/ui/Modal";

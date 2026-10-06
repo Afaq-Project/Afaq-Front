@@ -6,7 +6,7 @@ import { useCountryOptions, useInstitutionOptions } from "@/src/shared/lib/api/h
 import { fromOptions, toOptions } from "../../services/selection";
 import type { Option, PreferencesData } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";
-import { MajorMultiSelect } from "./MajorMultiSelect";
+import { MajorMultiSelect } from "@/src/shared/ui/pickers/MajorMultiSelect";
 
 const MAX_TARGETS = 5;
 
