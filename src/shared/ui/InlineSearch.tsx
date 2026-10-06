@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useId } from "react";
 
 export interface InlineSearchProps<T extends { id: string; name: string }> {
   label: string;
@@ -16,6 +16,8 @@ export interface InlineSearchProps<T extends { id: string; name: string }> {
   filterLocally?: boolean;
   minSearchLength?: number;
   required?: boolean;
+  /** Input id; generated when omitted. Links the label and lets callers focus the field. */
+  id?: string;
 }
 
 export function InlineSearch<T extends { id: string; name: string }>({
@@ -32,7 +34,10 @@ export function InlineSearch<T extends { id: string; name: string }>({
   filterLocally = false,
   minSearchLength = 1,
   required,
+  id,
 }: InlineSearchProps<T>) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
   const [inputValue, setInputValue] = useState(selectedName ?? "");
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,7 +72,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
 
   return (
     <div className="flex flex-col gap-2 relative" ref={containerRef}>
-      <label className="text-sm font-medium text-on-surface">
+      <label htmlFor={inputId} className="text-sm font-medium text-on-surface">
         {label}
         {required && <span className="text-error ml-0.5">*</span>}
         {hint && <span className="text-xs font-normal text-outline ml-1">({hint})</span>}
@@ -77,6 +82,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
           search
         </span>
         <input
+          id={inputId}
           type="text"
           value={inputValue}
           onChange={(e) => {
