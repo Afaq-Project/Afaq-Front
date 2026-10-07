@@ -44,9 +44,13 @@ export function InlineSearch<T extends { id: string; name: string }>({
   const onSearchRef = useRef(onSearch);
   useEffect(() => { onSearchRef.current = onSearch; });
 
-  useEffect(() => {
+  // When the selection changes from outside (picked, cleared, form reset), show its name.
+  // Adjusted during render rather than in an effect, so there's no extra render pass.
+  const [prevSelectedName, setPrevSelectedName] = useState(selectedName);
+  if (selectedName !== prevSelectedName) {
+    setPrevSelectedName(selectedName);
     setInputValue(selectedName ?? "");
-  }, [selectedName]);
+  }
 
   useEffect(() => {
     function handler(e: MouseEvent) {
