@@ -4,18 +4,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import Button from "@/src/shared/ui/Button";
 import Input from "@/src/shared/ui/Input";
 import PasswordInput from "@/src/shared/ui/PasswordInput";
-import Link from "next/link";
-import FormHeader from "./FormHeader";
-import SocialAuth from "./SocialAuth";
+import AuthForm from "./AuthForm";
+import TextLink from "./TextLink";
+import { PRIVACY_HREF, TERMS_HREF } from "./authLinks";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
 import {
   registerSchema,
   type RegisterFormValues,
 } from "@/src/shared/lib/validation/auth-schemas";
+
 
 export default function SignupForm() {
   const { register: registerUser } = useAuth();
@@ -41,87 +41,69 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex flex-1 justify-center items-center bg-white px-4 py-16">
-      <div className="w-full max-w-md">
-        <FormHeader />
-        <form
-          className="flex flex-col gap-4 mt-8"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-        >
-          {formError && (
-            <p className="bg-danger-50 px-3 py-2 rounded-sm text-danger-800 text-sm">
-              {formError}
-            </p>
-          )}
-
-          <div className="gap-4 grid grid-cols-2">
-            <Input
-              id="firstName"
-              type="text"
-              label="First Name"
-              placeholder="John"
-              error={errors.firstName?.message}
-              {...register("firstName")}
-            />
-            <Input
-              id="lastName"
-              type="text"
-              label="Last Name"
-              placeholder="Doe"
-              error={errors.lastName?.message}
-              {...register("lastName")}
-            />
-          </div>
-
-          <Input
-            id="email"
-            type="email"
-            label="Email Address"
-            placeholder="name@company.com"
-            error={errors.email?.message}
-            {...register("email")}
-          />
-
-          <div className="flex flex-col gap-1.5">
-            <PasswordInput
-              id="password"
-              label="Password"
-              error={errors.password?.message}
-              {...register("password")}
-            />
-            <p className="text-neutral-400 text-xs">
-              Must be at least 8 characters, with a letter and a number
-            </p>
-          </div>
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="mt-2 w-full h-12 font-semibold text-base"
-          >
-            {isSubmitting ? "Creating account..." : "Create Account"}
-          </Button>
-        </form>
-
-        <div className="flex items-center gap-3 my-6">
-          <div className="flex-1 border-neutral-200 border-t" />
-          <span className="text-neutral-400 text-xs">Or register via</span>
-          <div className="flex-1 border-neutral-200 border-t" />
-        </div>
-
-        <SocialAuth />
-
-        <p className="mt-6 text-neutral-600 text-sm text-center">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-medium text-primary-600 hover:underline"
-          >
-            Login
-          </Link>
-        </p>
+    <AuthForm
+      title="Sign up"
+      subtitle="Create your account to start finding opportunities."
+      onSubmit={handleSubmit(onSubmit)}
+      beforeSubmit={
+        <>
+          By creating an account, you agree to our{" "}
+          <TextLink href={TERMS_HREF} inline>
+            Terms
+          </TextLink>{" "}
+          and{" "}
+          <TextLink href={PRIVACY_HREF} inline>
+            Privacy policy
+          </TextLink>
+        </>
+      }
+      submitLabel="Create account"
+      submittingLabel="Creating account…"
+      isSubmitting={isSubmitting}
+      errorId="signup-error"
+      error={formError}
+      switchPrompt="Already have an account?"
+      switchLabel="Log in"
+      switchHref="/login"
+    >
+      <div className="gap-4 grid grid-cols-2">
+        <Input
+          id="firstName"
+          type="text"
+          label="First name"
+          autoComplete="given-name"
+          placeholder="John"
+          error={errors.firstName?.message}
+          {...register("firstName")}
+        />
+        <Input
+          id="lastName"
+          type="text"
+          label="Last name"
+          autoComplete="family-name"
+          placeholder="Doe"
+          error={errors.lastName?.message}
+          {...register("lastName")}
+        />
       </div>
-    </div>
+
+      <Input
+        id="email"
+        type="email"
+        label="Email"
+        autoComplete="email"
+        placeholder="name@example.com"
+        error={errors.email?.message}
+        {...register("email")}
+      />
+
+      <PasswordInput
+        id="password"
+        label="Password"
+        autoComplete="new-password"
+        error={errors.password?.message}
+        {...register("password")}
+      />
+    </AuthForm>
   );
 }
