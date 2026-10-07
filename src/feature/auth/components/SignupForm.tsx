@@ -58,7 +58,7 @@ export default function SignupForm() {
         </>
       }
       submitLabel="Create account"
-      submittingLabel="Creating account…"
+      submittingLabel="Creating account"
       isSubmitting={isSubmitting}
       errorId="signup-error"
       error={formError}

@@ -1,4 +1,5 @@
 import type { FormEventHandler, ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 import Button from "@/src/shared/ui/Button";
 import InlineAlert from "@/src/shared/ui/InlineAlert";
 import SocialAuthButtons from "./SocialAuthButtons";
@@ -15,6 +16,7 @@ interface AuthFormProps {
   /** Optional line directly above the submit button (e.g. consent). */
   beforeSubmit?: ReactNode;
   submitLabel: string;
+  /** Shown next to a spinner while submitting, e.g. "Signing in". */
   submittingLabel: string;
   isSubmitting: boolean;
   /** Form-level error; rendered under the submit button and linked via aria-describedby. */
@@ -68,7 +70,15 @@ export default function AuthForm({
           <p className="text-neutral-600 text-small">{beforeSubmit}</p>
         )}
 
-        <Button type="submit" disabled={isSubmitting} className="rounded-md! w-full">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+          className="rounded-md! w-full"
+        >
+          {isSubmitting && (
+            <Loader2 size={16} strokeWidth={2} aria-hidden="true" className="animate-spin" />
+          )}
           {isSubmitting ? submittingLabel : submitLabel}
         </Button>
 

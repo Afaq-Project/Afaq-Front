@@ -64,7 +64,7 @@ export default function LoginForm({ sessionExpired = false }: LoginFormProps) {
       }
       onSubmit={handleSubmit(onSubmit)}
       submitLabel="Sign in"
-      submittingLabel="Signing in…"
+      submittingLabel="Signing in"
       isSubmitting={isSubmitting}
       errorId="login-error"
       error={
