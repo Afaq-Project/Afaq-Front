@@ -63,7 +63,7 @@ export default function SignupForm() {
       errorId="signup-error"
       error={formError}
       switchPrompt="Already have an account?"
-      switchLabel="Log in"
+      switchLabel="Sign in"
       switchHref="/login"
     >
       <div className="gap-4 grid grid-cols-2">

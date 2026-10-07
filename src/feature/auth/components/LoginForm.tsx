@@ -55,16 +55,16 @@ export default function LoginForm({ sessionExpired = false }: LoginFormProps) {
 
   return (
     <AuthForm
-      title="Log in"
-      subtitle="Welcome back. Log in to see your matches."
+      title="Sign in"
+      subtitle="Welcome back. Sign in to see your matches."
       notice={
         sessionExpired
-          ? "Your session expired. Log back in. Your draft is saved."
+          ? "Your session expired. Sign back in. Your draft is saved."
           : undefined
       }
       onSubmit={handleSubmit(onSubmit)}
-      submitLabel="Log in"
-      submittingLabel="Logging in…"
+      submitLabel="Sign in"
+      submittingLabel="Signing in…"
       isSubmitting={isSubmitting}
       errorId="login-error"
       error={
