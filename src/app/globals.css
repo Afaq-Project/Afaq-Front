@@ -162,6 +162,28 @@ input:autofill {
   background-color: var(--color-white);
 }
 
+/*
+ * Motion: one-shot entrance animations (no looping).
+ * `both` fill keeps a delayed element hidden until its turn in a stagger.
+ */
+@theme {
+  --animate-auth-card: auth-fade-in 200ms ease-out both;
+  --animate-auth-row: auth-rise 350ms ease-out both;
+
+  @keyframes auth-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes auth-rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+}
+
 /* Short viewports (e.g. 1366×768 laptops): tighten vertical spacing so the auth card fits without scrolling. */
 @custom-variant short (@media (min-width: 768px) and (max-height: 760px));
 
