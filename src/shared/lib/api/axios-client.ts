@@ -1,4 +1,5 @@
 import axios, {
+  isAxiosError,
   type AxiosError,
   type AxiosInstance,
   type AxiosRequestConfig,
@@ -81,24 +82,53 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-// Concurrent 401s must trigger a single refresh call, not one per request.
-let refreshPromise: Promise<string | null> | null = null;
+/**
+ * Same-origin client for the auth BFF routes (src/app/api/auth). They hold the refresh token
+ * in an httpOnly cookie, which the browser attaches automatically. Responses keep the full
+ * ApiEnvelope; errors are the backend's, relayed unchanged.
+ */
+export const authBffClient = axios.create({
+  baseURL: "/api/auth",
+  timeout: 20_000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-async function refreshTokens(): Promise<string | null> {
-  const refreshToken = tokenStorage.getRefreshToken();
-  if (!refreshToken) return null;
-
+async function requestAccessToken(): Promise<string> {
+  // Sessions from before the cookie still have their refresh token in localStorage; send it
+  // once so the BFF can move it into the cookie.
+  const legacyRefreshToken = tokenStorage.getLegacyRefreshToken();
   try {
-    const response = await axios.post<
-      ApiEnvelope<{ accessToken: string; refreshToken: string }>
-    >(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, { refreshToken });
-    const { accessToken, refreshToken: newRefreshToken } = response.data.data;
-    // Refresh tokens rotate on every call - both must be overwritten, not just the access token.
-    tokenStorage.setTokens(accessToken, newRefreshToken);
+    const response = await authBffClient.post<ApiEnvelope<{ accessToken: string }>>(
+      "/refresh",
+      legacyRefreshToken ? { refreshToken: legacyRefreshToken } : undefined,
+    );
+    const { accessToken } = response.data.data;
+    tokenStorage.setAccessToken(accessToken);
+    tokenStorage.clearLegacyTokens();
     return accessToken;
-  } catch {
-    return null;
+  } catch (error) {
+    // A rejected legacy token is dead too; a network error leaves it for the next try.
+    if (isAxiosError(error) && [401, 403].includes(error.response?.status ?? 0)) {
+      tokenStorage.clearLegacyTokens();
+    }
+    throw error;
   }
+}
+
+// Concurrent callers (page-load hydrate, parallel 401s) share one refresh call. If the
+// backend rotates refresh tokens, two calls would spend the same token and end the session.
+let refreshPromise: Promise<string> | null = null;
+
+/** Gets a new access token via the refresh cookie. Rejects with the axios error on failure. */
+export function refreshAccessToken(): Promise<string> {
+  if (!refreshPromise) {
+    refreshPromise = requestAccessToken().finally(() => {
+      refreshPromise = null;
+    });
+  }
+  return refreshPromise;
 }
 
 function redirectToLogin() {
@@ -130,13 +160,7 @@ instance.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
-      if (!refreshPromise) {
-        refreshPromise = refreshTokens().finally(() => {
-          refreshPromise = null;
-        });
-      }
-
-      const newAccessToken = await refreshPromise;
+      const newAccessToken = await refreshAccessToken().catch(() => null);
 
       if (newAccessToken) {
         originalRequest.headers.set(

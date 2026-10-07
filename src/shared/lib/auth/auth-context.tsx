@@ -11,7 +11,11 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
-import apiClient from "@/src/shared/lib/api/axios-client";
+import apiClient, {
+  authBffClient,
+  refreshAccessToken,
+  type ApiEnvelope,
+} from "@/src/shared/lib/api/axios-client";
 import { tokenStorage } from "@/src/shared/lib/auth/token-storage";
 
 export interface AuthUserProfile {
@@ -32,15 +36,10 @@ export interface AuthUser {
   roles: string[];
 }
 
+/** The BFF keeps the refresh token in an httpOnly cookie and only returns these. */
 interface LoginResponse {
   accessToken: string;
-  refreshToken: string;
   user: AuthUser;
-}
-
-interface RefreshResponse {
-  accessToken: string;
-  refreshToken: string;
 }
 
 export interface RegisterPayload {
@@ -62,18 +61,6 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-/** True when the token is a JWT that stays valid for at least another 30 seconds. */
-function isAccessTokenUsable(token: string | null): boolean {
-  if (!token) return false;
-  try {
-    const payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-    const { exp } = JSON.parse(atob(payload)) as { exp?: number };
-    return typeof exp === "number" && exp * 1000 - Date.now() > 30_000;
-  } catch {
-    return false;
-  }
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,12 +70,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function hydrate() {
-      const refreshToken = tokenStorage.getRefreshToken();
-      if (!refreshToken) {
-        setIsLoading(false);
-        return;
-      }
-
       // Render right away with the last known user instead of waiting on the network;
       // it is still re-validated against /auth/me below.
       const cachedUser = tokenStorage.getCachedUser<AuthUser>();
@@ -98,14 +79,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        // Only refresh up front when the stored access token is missing or about to expire —
-        // an extra round trip on every page load otherwise. A token that turns out to be
-        // rejected is still refreshed by the axios 401 interceptor.
-        if (!isAccessTokenUsable(tokenStorage.getAccessToken())) {
-          const { accessToken, refreshToken: newRefreshToken } =
-            await apiClient.post<RefreshResponse>("/auth/refresh", { refreshToken });
-          tokenStorage.setTokens(accessToken, newRefreshToken);
-        }
+        // The access token only lives in memory, so each page load gets a new one from the
+        // httpOnly refresh cookie. No cookie (signed out) comes back as a fast 401.
+        await refreshAccessToken();
 
         // Re-fetch rather than trusting the cached user, since it may be stale.
         const freshUser = await apiClient.get<AuthUser>("/auth/me");
@@ -133,12 +109,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const { accessToken, refreshToken, user: loggedInUser } = await apiClient.post<LoginResponse>(
-      "/auth/login",
-      { email, password },
-    );
+    const response = await authBffClient.post<ApiEnvelope<LoginResponse>>("/login", {
+      email,
+      password,
+    });
+    const { accessToken, user: loggedInUser } = response.data.data;
     loggedInRef.current = true;
-    tokenStorage.setTokens(accessToken, refreshToken);
+    tokenStorage.clearLegacyTokens();
+    tokenStorage.setAccessToken(accessToken);
     tokenStorage.setCachedUser(loggedInUser);
     setUser(loggedInUser);
     return loggedInUser;
@@ -155,7 +133,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await apiClient.post("/auth/logout");
+      // Goes through the BFF so it can clear the httpOnly refresh cookie.
+      const accessToken = tokenStorage.getAccessToken();
+      await authBffClient.post("/logout", undefined, {
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      });
     } catch {
       // Best-effort: local state is cleared regardless of the call's outcome.
     }
