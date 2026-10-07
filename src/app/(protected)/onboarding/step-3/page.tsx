@@ -1,46 +1,5 @@
-"use client";
-
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Step3SkillsLanguage } from "@/src/feature/onboarding/components/Step3SkillsLanguage";
-import { useProfile } from "@/src/feature/profile/context/ProfileContext";
-import type { SkillsData } from "@/src/feature/onboarding/types";
+import { SkillsStep } from "@/src/feature/onboarding/components/skills/SkillsStep";
 
 export default function Step3Page() {
-  const router = useRouter();
-  const { profile, updateSkills } = useProfile();
-
-  const [skills, setSkills] = useState<SkillsData>({
-    skills: profile.skills.skills || ["Python", "Data Analysis"],
-    languages:
-      profile.skills.languages.length > 0
-        ? profile.skills.languages
-        : [
-            { id: "lang-1", language: "English", level: "C2 Proficient" },
-          ],
-  });
-
-  const handleNext = () => {
-    updateSkills(skills);
-    router.push("/onboarding/step-4");
-  };
-
-  const handleBack = () => {
-    router.push("/onboarding/step-2");
-  };
-
-  const handleSkip = () => {
-    updateSkills(skills);
-    router.push("/onboarding/step-4");
-  };
-
-  return (
-    <Step3SkillsLanguage
-      data={skills}
-      onChange={setSkills}
-      onNext={handleNext}
-      onBack={handleBack}
-      onSkip={handleSkip}
-    />
-  );
+  return <SkillsStep />;
 }

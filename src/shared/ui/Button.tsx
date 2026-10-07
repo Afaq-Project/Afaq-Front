@@ -1,6 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 
-type ButtonVariant =
+export type ButtonVariant =
   | "primary"
   | "secondary"
   | "ghost"
@@ -22,6 +22,15 @@ const variants: Record<ButtonVariant, string> = {
   accent: "bg-primary-900 text-white hover:bg-primary-800",
 };
 
+/** Button styling, exported so other elements (e.g. links) can look like buttons. */
+export function buttonClasses(variant: ButtonVariant = "primary", className = "") {
+  return `inline-flex items-center justify-center gap-2 h-11 md:h-10 px-4
+        rounded-sm text-sm font-medium transition-colors
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2
+        disabled:opacity-50 disabled:pointer-events-none
+        ${variants[variant]} ${className}`;
+}
+
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { variant = "primary", className = "", children, ...props },
   ref,
@@ -29,11 +38,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   return (
     <button
       ref={ref}
-      className={`inline-flex items-center justify-center gap-2 h-11 md:h-10 px-4
-        rounded-sm text-sm font-medium transition-colors
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2
-        disabled:opacity-50 disabled:pointer-events-none
-        ${variants[variant]} ${className}`}
+      className={buttonClasses(variant, className)}
       {...props}
     >
       {children}

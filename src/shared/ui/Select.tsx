@@ -26,7 +26,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
         <select
           ref={ref}
           id={id}
-          className={`h-10 w-full appearance-none rounded-sm border border-neutral-200 bg-white pl-3 pr-9 text-sm text-neutral-900
+          className={`h-11 md:h-10 w-full appearance-none rounded-sm border border-neutral-200 bg-white pl-3 pr-9 text-sm text-neutral-900
             focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
             disabled:opacity-50 disabled:pointer-events-none
             ${className}`}

@@ -6,6 +6,22 @@ import axios, {
 } from "axios";
 import { tokenStorage } from "../auth/token-storage";
 
+declare module "axios" {
+  interface AxiosRequestConfig {
+    /** Resolve with the full ApiEnvelope instead of just its `data`. */
+    rawEnvelope?: boolean;
+  }
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
 export interface ApiEnvelope<T> {
   success: boolean;
   status: number;
@@ -50,6 +66,8 @@ interface UnwrappingAxiosInstance extends Omit<
 // below; only the exported `apiClient` is cast to the unwrapped-response type.
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
+  // Without a timeout a hung request keeps the UI loading forever.
+  timeout: 20_000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -99,7 +117,8 @@ function isAuthEndpoint(url?: string): boolean {
 }
 
 instance.interceptors.response.use(
-  (response) => response.data.data,
+  // `rawEnvelope` keeps the whole envelope, for callers that need `meta` (e.g. pagination).
+  (response) => (response.config.rawEnvelope ? response.data : response.data.data),
   async (error: AxiosError) => {
     const originalRequest = error.config as RetriableRequestConfig | undefined;
 
