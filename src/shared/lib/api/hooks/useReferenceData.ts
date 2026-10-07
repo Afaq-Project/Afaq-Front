@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { referenceService } from "../referenceService";
+import { cachedInStorage } from "../storageCache";
 
 // Reference data almost never changes — cache indefinitely in the session.
 const STALE_FOREVER = Infinity;
@@ -47,13 +48,15 @@ export function useMaritalStatuses() {
 }
 
 // Complete lists for ID → name lookups. They take several requests, so they are opt-in
-// (`enabled`) and kept for the whole session.
+// (`enabled`), kept for the whole session, and stored for a day so reloads and new tabs
+// don't page through them again.
 const KEEP_FOR_SESSION = { staleTime: STALE_FOREVER, gcTime: STALE_FOREVER };
+const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export function useAllCountries(enabled = true) {
   return useQuery({
     queryKey: ["reference", "countries", "all"],
-    queryFn: referenceService.getAllCountries,
+    queryFn: cachedInStorage("countries", ONE_DAY, referenceService.getAllCountries),
     enabled,
     ...KEEP_FOR_SESSION,
   });
@@ -62,7 +65,7 @@ export function useAllCountries(enabled = true) {
 export function useAllCitiesForCountry(countryId: string) {
   return useQuery({
     queryKey: ["reference", "cities", "all", countryId],
-    queryFn: () => referenceService.getAllCitiesForCountry(countryId),
+    queryFn: cachedInStorage(`cities:${countryId}`, ONE_DAY, () => referenceService.getAllCitiesForCountry(countryId)),
     enabled: Boolean(countryId),
     ...KEEP_FOR_SESSION,
   });
@@ -71,7 +74,7 @@ export function useAllCitiesForCountry(countryId: string) {
 export function useAllMajors(enabled = true) {
   return useQuery({
     queryKey: ["reference", "majors", "all"],
-    queryFn: referenceService.getAllMajors,
+    queryFn: cachedInStorage("majors", ONE_DAY, referenceService.getAllMajors),
     enabled,
     ...KEEP_FOR_SESSION,
   });
