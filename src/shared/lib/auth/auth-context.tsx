@@ -39,7 +39,8 @@ export interface AuthUser {
 /** The BFF keeps the refresh token in an httpOnly cookie and only returns these. */
 interface LoginResponse {
   accessToken: string;
-  user: AuthUser;
+  /** Not every backend version includes the user; it's fetched from /auth/me when missing. */
+  user?: AuthUser;
 }
 
 export interface RegisterPayload {
@@ -113,10 +114,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password,
     });
-    const { accessToken, user: loggedInUser } = response.data.data;
-    loggedInRef.current = true;
+    const { accessToken, user: returnedUser } = response.data.data;
     tokenStorage.clearLegacyTokens();
     tokenStorage.setAccessToken(accessToken);
+
+    let loggedInUser: AuthUser;
+    try {
+      loggedInUser = returnedUser ?? (await apiClient.get<AuthUser>("/auth/me"));
+    } catch (error) {
+      tokenStorage.clearTokens();
+      throw error;
+    }
+
+    loggedInRef.current = true;
     tokenStorage.setCachedUser(loggedInUser);
     setUser(loggedInUser);
     return loggedInUser;
