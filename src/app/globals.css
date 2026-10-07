@@ -78,6 +78,12 @@
   /* ---- Typography ---- */
   --font-sans: var(--font-ibm-plex-sans);
 
+  /* Hero — large marketing headline (auth visual panel). Scales 44px → 48px. */
+  --text-hero: clamp(44px, 3.4vw, 48px);
+  --text-hero--line-height: 1.15;
+  --text-hero--font-weight: 600;
+  --text-hero--letter-spacing: -0.015em;
+
   --text-display: 34px;
   --text-display--line-height: 42px;
   --text-display--font-weight: 600;
@@ -137,6 +143,23 @@ body {
     sans-serif;
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
+}
+
+/*
+ * Browser autofill paints its own (yellow/blue) background. Delaying the
+ * background transition keeps inputs white without overriding box-shadow,
+ * which the focus ring relies on.
+ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-neutral-900);
+  caret-color: var(--color-neutral-900);
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+input:autofill {
+  background-color: var(--color-white);
 }
 
 /* Thin scrollbar with a black thumb and no visible track. */
