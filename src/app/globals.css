@@ -162,6 +162,9 @@ input:autofill {
   background-color: var(--color-white);
 }
 
+/* Short viewports (e.g. 1366×768 laptops): tighten vertical spacing so the auth card fits without scrolling. */
+@custom-variant short (@media (min-width: 768px) and (max-height: 760px));
+
 /* Thin scrollbar with a black thumb and no visible track. */
 .scrollbar-minimal {
   scrollbar-width: thin;
