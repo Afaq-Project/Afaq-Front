@@ -1,7 +1,3 @@
-"use client";
-
-import { PolarAngleAxis, RadialBar, RadialBarChart } from "recharts";
-
 interface CompletionDonutProps {
   /** 0–100 */
   percent: number;
@@ -9,36 +5,35 @@ interface CompletionDonutProps {
   size?: number;
 }
 
+const STROKE = 6;
+
 /**
- * Small completion donut: green-600 fill on a neutral-100 track, rounded ends, with the
- * percentage as centered text. Decorative to screen readers — the caller labels it.
+ * Small completion donut: primary-600 arc on a neutral-100 track, rounded ends, with the
+ * percentage as centered text. Plain SVG. Decorative to screen readers — the caller labels it.
  */
 export function CompletionDonut({ percent, size = 60 }: CompletionDonutProps) {
   const value = Math.min(100, Math.max(0, Math.round(percent)));
+  const radius = (size - STROKE) / 2;
+  const circumference = 2 * Math.PI * radius;
 
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }} aria-hidden="true">
-      <RadialBarChart
-        width={size}
-        height={size}
-        cx="50%"
-        cy="50%"
-        innerRadius="76%"
-        outerRadius="100%"
-        barSize={6}
-        data={[{ value }]}
-        startAngle={90}
-        endAngle={-270}
-      >
-        <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-        <RadialBar
-          dataKey="value"
-          cornerRadius={6}
-          fill="var(--color-primary-600)"
-          background={{ className: "fill-neutral-100" }}
-          animationDuration={400}
-        />
-      </RadialBarChart>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" strokeWidth={STROKE} className="stroke-neutral-100" />
+        {value > 0 && (
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            strokeWidth={STROKE}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={circumference * (1 - value / 100)}
+            className="stroke-primary-600 transition-[stroke-dashoffset] duration-400 motion-reduce:transition-none"
+          />
+        )}
+      </svg>
       <span className="absolute inset-0 flex items-center justify-center text-caption text-neutral-900">{value}%</span>
     </div>
   );
