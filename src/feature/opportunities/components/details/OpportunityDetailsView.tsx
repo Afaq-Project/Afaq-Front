@@ -12,6 +12,12 @@ import { DetailsHeader } from "./DetailsHeader";
 import { AboutSection, DocumentsSection, EligibilitySection, SourceLine } from "./MainSections";
 import { ActionsCard, AskAiCard, MatchCard, UpdateStatusMenu, type TrackingState } from "./SideCards";
 
+const AI_QUESTIONS = [
+  "Am I eligible for this?",
+  "What should my personal statement focus on?",
+  "Review my essay for this application",
+];
+
 /**
  * Opportunity details. Desktop: the header (with key facts), then the main column (about,
  * eligibility, documents, AI questions, source) beside a sticky side column with only the
@@ -73,7 +79,11 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
           <AboutSection description={opportunity.description} />
           <EligibilitySection criteria={opportunity.eligibility} />
           <DocumentsSection documents={opportunity.requiredDocuments} />
-          <AskAiCard opportunityId={opportunity.id} />
+          <AskAiCard
+            title="Questions about this opportunity?"
+            questions={AI_QUESTIONS}
+            hrefFor={(q) => `/ai?opportunity=${encodeURIComponent(opportunity.id)}&q=${encodeURIComponent(q)}`}
+          />
           <SourceLine sourceUrl={opportunity.sourceUrl} lastCheckedAt={opportunity.lastCheckedAt} />
         </div>
 
