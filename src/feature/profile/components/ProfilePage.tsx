@@ -6,12 +6,13 @@ import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { AnchorNav, type AnchorNavItem } from "@/src/shared/ui/AnchorNav";
 import { usePreferencesQuery, useProfileQuery } from "../hooks/useProfileQuery";
 import { useCurrentUserName } from "../hooks/useCurrentUserName";
+import { useProfileCompletion } from "../hooks/useProfileCompletion";
 import { useReferenceNames } from "../hooks/useReferenceNames";
 import { AccountSection } from "./account/AccountSection";
 import { BackgroundGoalsSection } from "./background/BackgroundGoalsSection";
 import type { EditingState } from "./common/editing";
 import { EducationSection } from "./education/EducationSection";
-import type { MatchFactor, NextStep } from "./header/completion";
+import { PROFILE_NEXT_STEP, type MatchFactor } from "./header/completion";
 import { ProfileHeader } from "./header/ProfileHeader";
 import { ProfilePageSkeleton } from "./skeletons/ProfilePageSkeleton";
 import { SkillsLanguagesSection } from "./skills/SkillsLanguagesSection";
@@ -24,17 +25,16 @@ const SECTIONS: AnchorNavItem[] = [
   { id: "account", label: "Account", icon: UserRound },
 ];
 
-// TODO: provide the next step (e.g. { label: "Add your GPA", impact: "Counts for 20% of your
-// match score", href: "#education" }) and the five match factors with their filled / missing
-// state once the API reports what's missing and how each factor is weighted. Until then the
-// header shows the percentage only, without a breakdown.
-const NEXT_STEP: NextStep | undefined = undefined;
+// TODO: provide the five match factors with their filled / missing state once the API reports
+// how each factor is weighted. Until then the header shows the percentage only, without a
+// breakdown. The next step lives in PROFILE_NEXT_STEP, shared with the dashboard.
 const MATCH_FACTORS: MatchFactor[] = [];
 
 export function ProfilePage() {
   const { user } = useAuth();
   const { data: profile, isLoading } = useProfileQuery();
   const { name: currentName, email } = useCurrentUserName();
+  const completionPct = useProfileCompletion();
   const { data: preferences } = usePreferencesQuery();
   const names = useReferenceNames(profile, preferences);
 
@@ -53,9 +53,9 @@ export function ProfilePage() {
         name={name}
         email={email}
         photoUrl={profile?.profilePhotoUrl}
-        completionPct={profile?.completionPct ?? user?.userProfile?.completionPct ?? 0}
+        completionPct={completionPct}
         isMatchable={profile?.isMatchable}
-        nextStep={NEXT_STEP}
+        nextStep={PROFILE_NEXT_STEP}
         matchFactors={MATCH_FACTORS}
       />
 

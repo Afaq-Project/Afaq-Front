@@ -15,3 +15,8 @@ export interface MatchFactor {
   /** Anchor of the field to jump to. */
   href: string;
 }
+
+// TODO: provide the next step (e.g. { label: "Add your GPA", impact: "Counts for 20% of your
+// match score", href: "#education" }) once the API reports what's missing and how each field is
+// weighted. Shared by the profile header and the dashboard so they always suggest the same thing.
+export const PROFILE_NEXT_STEP: NextStep | undefined = undefined;
