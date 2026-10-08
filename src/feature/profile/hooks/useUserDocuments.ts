@@ -35,14 +35,20 @@ export function useUserDocuments() {
   const types = useDocumentTypes();
 
   const byCategory = new Map<DocumentCategory, ApiDocument>();
+  /** Every document with its category (undefined when its type names none). */
+  const all: { document: ApiDocument; category?: DocumentCategory }[] = [];
   let typed = false;
   if (documents.data && types.data) {
     const typeNames = new Map(types.data.map((type) => [type.id, type.nameEn]));
     for (const doc of documents.data) {
-      if (!doc.documentTypeId) continue;
+      if (!doc.documentTypeId) {
+        all.push({ document: doc });
+        continue;
+      }
       typed = true;
       const typeName = typeNames.get(doc.documentTypeId);
       const category = typeName ? categoryForTypeName(typeName) : undefined;
+      all.push({ document: doc, category });
       if (category && !byCategory.has(category)) byCategory.set(category, doc);
     }
   }
@@ -53,5 +59,6 @@ export function useUserDocuments() {
     isLoading: documents.isPending || types.isPending,
     typed,
     byCategory,
+    documents: all,
   };
 }
