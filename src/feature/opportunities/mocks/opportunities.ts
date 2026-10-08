@@ -190,7 +190,7 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
 // Top matches surfaced on the dashboard preview (FR-3.5/3.6).
 export const RECOMMENDED_OPPORTUNITIES: OpportunitySummary[] = [...OPPORTUNITIES]
   .sort((a, b) => b.matchScore - a.matchScore)
-  .slice(0, 2);
+  .slice(0, 4);
 
 // Extra fields shown on the opportunity details page, keyed by id. Kept
 // separate from OPPORTUNITIES so the summary catalog stays the single
