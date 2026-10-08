@@ -31,3 +31,10 @@ export const MATCH_TIER_TEXT: Record<MatchTier, string> = {
   possible: "text-warning-600",
   low: "text-neutral-600",
 };
+
+/** Arc color for a match donut. */
+export const MATCH_TIER_STROKE: Record<MatchTier, string> = {
+  strong: "stroke-success-600",
+  possible: "stroke-warning-600",
+  low: "stroke-neutral-400",
+};

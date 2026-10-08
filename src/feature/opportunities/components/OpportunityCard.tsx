@@ -13,15 +13,9 @@ import { countryName } from "@/src/shared/lib/countries";
 import { FlagTile } from "./FlagTile";
 import MatchBadge from "./MatchBadge";
 import { MatchWhyPopover } from "./MatchWhyPopover";
-import type { FundingStatus, OpportunitySummary } from "../types/opportunity";
+import type { OpportunitySummary } from "../types/opportunity";
+import { FUNDING_LABEL } from "./labels";
 import { formatDaysLeft } from "../services/utils";
-
-const FUNDING_LABEL: Record<FundingStatus, string> = {
-  "Fully Funded": "Fully funded",
-  "Partially Funded": "Partially funded",
-  Paid: "Paid",
-  Unpaid: "Unpaid",
-};
 
 const MAX_CHIPS = 3;
 
