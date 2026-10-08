@@ -7,11 +7,12 @@ import type { UpdatePersonalPayload, CreateEducationPayload, AddLanguagePayload 
 
 export const PROFILE_QUERY_KEY = ["profile", "me"];
 
-export function useProfileQuery() {
+export function useProfileQuery({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: PROFILE_QUERY_KEY,
     queryFn: profileService.getProfile,
     staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled,
   });
 }
 
