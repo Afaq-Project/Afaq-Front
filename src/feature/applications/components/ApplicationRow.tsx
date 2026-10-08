@@ -1,16 +1,10 @@
 import Link from "next/link";
-import { ArrowRight, PartyPopper } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import Badge from "@/src/shared/ui/Badge";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { ApplicationSummary } from "../types/application";
-import {
-  ACTION_TONE,
-  STATUS_BADGE_TINT,
-  STATUS_LABEL,
-  STATUS_TONE,
-  TONE_BUTTON_CLASSES,
-} from "../types/status";
+import { STATUS_ACTION_CLASSES, STATUS_LABEL } from "../types/status";
 import {
   formatDeadline,
   getApplicationAction,
@@ -41,13 +35,7 @@ export function ApplicationRow({
         {formatDeadline(application.daysLeft)}
       </td>
       <td className="px-5 py-4">
-        <Badge
-          tone={STATUS_TONE[application.status]}
-          className={STATUS_BADGE_TINT[STATUS_TONE[application.status]]}
-        >
-          {application.status === "accepted" && (
-            <PartyPopper size={12} strokeWidth={2} className="mr-1" />
-          )}
+        <Badge status={application.status}>
           {STATUS_LABEL[application.status]}
         </Badge>
       </td>
@@ -56,7 +44,7 @@ export function ApplicationRow({
           href={`/applications/${application.id}`}
           className={cn(
             "inline-flex items-center gap-1.5 px-3.5 py-2 rounded-sm font-medium text-caption sm:text-small transition-colors",
-            TONE_BUTTON_CLASSES[ACTION_TONE[application.status]],
+            STATUS_ACTION_CLASSES[application.status],
           )}
         >
           {action.label}

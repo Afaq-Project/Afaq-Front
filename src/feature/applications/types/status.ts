@@ -1,4 +1,4 @@
-import type { Tone } from "@/src/shared/ui/Badge";
+import { STATUS_COLORS } from "@/src/shared/lib/status-colors";
 
 export type ApplicationStatus =
   | "not_started"
@@ -31,44 +31,14 @@ export const STATUS_PROGRESS: Record<ApplicationStatus, number> = {
   rejected: 100,
 };
 
-export const STATUS_TONE: Record<ApplicationStatus, Tone> = {
-  not_started: "gray",
-  in_progress: "blue",
-  submitted: "green",
-  accepted: "teal",
-  rejected: "red",
-};
-
-// Action-button tone per status — distinct from STATUS_TONE (the badge
-// color) so "Start now" can read as a primary call-to-action rather than
-// the badge's neutral "not started" gray.
-export const ACTION_TONE: Record<ApplicationStatus, Tone> = {
-  not_started: "green",
-  in_progress: "blue",
-  submitted: "green",
-  accepted: "teal",
-  rejected: "red",
-};
-
-// A touch bolder than Badge's default pale tone, for the status column
-// specifically — the semantic colors have no stop between 50 and 400, so
-// blue/amber/teal/red borrow 400 at reduced opacity; green has a real 100
-// stop to reach for instead.
-export const STATUS_BADGE_TINT: Partial<Record<Tone, string>> = {
-  blue: "bg-info-400/25",
-  green: "bg-primary-100",
-  amber: "bg-warning-400/25",
-  teal: "bg-success-400/25",
-  red: "bg-danger-400/25",
-};
-
-export const TONE_BUTTON_CLASSES: Record<Tone, string> = {
-  gray: "bg-neutral-100 hover:opacity-80 text-neutral-800",
-  blue: "bg-info-50 hover:opacity-80 text-info-800",
-  green: "bg-primary-50 hover:opacity-80 text-primary-800",
-  amber: "bg-warning-50 hover:opacity-80 text-warning-800",
-  teal: "bg-success-50 hover:opacity-80 text-success-800",
-  red: "bg-danger-50 hover:opacity-80 text-danger-800",
+// Action-button colors per status: the status's own chip colors, except "not started", whose
+// "Start now" reads as a green call to action rather than the neutral badge gray.
+export const STATUS_ACTION_CLASSES: Record<ApplicationStatus, string> = {
+  not_started: "bg-primary-50 hover:opacity-80 text-primary-800",
+  in_progress: `${STATUS_COLORS.in_progress.chip} hover:opacity-80`,
+  submitted: `${STATUS_COLORS.submitted.chip} hover:opacity-80`,
+  accepted: `${STATUS_COLORS.accepted.chip} hover:opacity-80`,
+  rejected: `${STATUS_COLORS.rejected.chip} hover:opacity-80`,
 };
 
 export type DeadlineTone = "danger" | "warning" | "info";
