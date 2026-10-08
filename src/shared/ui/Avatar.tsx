@@ -1,4 +1,5 @@
 import { cn } from "@/src/feature/dashboard/services/utils";
+import { getInitials } from "@/src/shared/lib/initials";
 
 export function Avatar({
   name,
@@ -7,12 +8,7 @@ export function Avatar({
   name: string;
   className?: string;
 }) {
-  const initials = name
-    .split(" ")
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const initials = getInitials(name);
 
   return (
     <div
