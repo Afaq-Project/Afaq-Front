@@ -273,7 +273,7 @@ export function AskAiCard({
       <ul className={cn("gap-2 grid grid-cols-1 mt-4", layout === "row" && "lg:grid-cols-3")}>
         {questions.map((question) => (
           <li key={question} className="flex">
-            {/* TODO: the AI assistant doesn't read its context or `q` yet, so it opens without them. */}
+            {/* The assistant opens the chat for this context and prefills the question. */}
             <Link
               href={hrefFor(question)}
               className="flex items-center bg-white px-4 py-2 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-full min-h-11 md:min-h-10 font-medium text-primary-600 text-sm text-left transition-colors"
