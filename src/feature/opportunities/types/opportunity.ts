@@ -16,7 +16,6 @@ export interface OpportunitySummary {
   daysLeft: number;
   location: string;
   fieldOfStudy: string;
-  imageUrl: string;
   /** Organization offering it. Optional: the UI omits it when absent. */
   provider?: string;
   /** Provider logo; the card falls back to the provider's initial. */
@@ -41,22 +40,38 @@ export interface OpportunitySummary {
 export type MatchFactorKey = "fieldOfStudy" | "skills" | "gpa" | "language" | "experience";
 export type MatchFit = "strong" | "partial" | "missing";
 
-export interface MatchBreakdownItem {
-  label: string;
-  score: number;
+/** How the user's profile fits one eligibility criterion. */
+export type EligibilityFit = "met" | "not_met" | "unknown";
+
+export interface EligibilityCriterion {
+  text: string;
+  /** Absent when we have no read on it: the UI then makes no claim either way. */
+  userFit?: EligibilityFit;
+}
+
+/** Profile document categories (the onboarding upload slots). */
+export type DocumentCategory = "resume" | "essay" | "transcript" | "recommendation" | "other";
+
+export interface RequiredDocument {
+  name: string;
+  /** The profile category it corresponds to; absent when no category fits (e.g. passport). */
+  category?: DocumentCategory;
 }
 
 export interface OpportunityDetail extends OpportunitySummary {
   provider: string;
   keywords: string[];
-  /** Absolute deadline, ISO date string (e.g. "2026-09-17"). */
+  /** Absolute deadline, ISO date (e.g. "2026-10-20"). The countdown is computed from this. */
   deadlineDate: string;
   fundingStatus: FundingStatus;
   officialLink: string;
-  eligibility: string[];
-  requiredDocuments: string[];
-  /** Additional photos shown on the details page, if any. */
-  gallery: string[];
-  /** Sub-scores that average to matchScore. */
-  matchBreakdown: MatchBreakdownItem[];
+  eligibility: EligibilityCriterion[];
+  requiredDocuments: RequiredDocument[];
+  /** Provider's own website; the header links to it when present. */
+  providerUrl?: string;
+  /** Real header image from the official source; the header shows a pattern without it. */
+  headerImageUrl?: string;
+  /** Where the listing was scraped from, and when it was last checked (ISO date). */
+  sourceUrl?: string;
+  lastCheckedAt?: string;
 }
