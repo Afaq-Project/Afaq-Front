@@ -36,27 +36,34 @@ export function NotificationsDropdown({ className }: { className?: string }) {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        aria-label="Notifications"
+        aria-label={
+          unreadCount > 0
+            ? `Notifications, ${unreadCount} unread`
+            : "Notifications"
+        }
         aria-haspopup="true"
         aria-expanded={isOpen}
-        title="Notifications"
         className={cn(
-          "relative flex justify-center items-center shadow-card rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-11 h-11 transition-colors",
+          "relative inline-flex justify-center items-center rounded-md size-10 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 transition-colors after:absolute after:-inset-0.5 after:content-['']",
           isActive
-            ? "bg-neutral-900 text-white"
-            : "bg-neutral-900  text-neutral-400 hover:bg-primary-50 hover:text-primary-800",
+            ? "text-primary-600"
+            : "text-neutral-600 hover:text-neutral-900",
         )}
       >
-        <Bell size={20} strokeWidth={1.75} />
+        <Bell size={20} strokeWidth={1.75} aria-hidden="true" />
         {unreadCount > 0 && (
-          <span className="-top-1 -right-1 absolute flex justify-center items-center bg-danger-600 shadow-sm px-1 border-2 border-white rounded-full min-w-4.5 h-4.5 font-semibold text-[10px] text-white leading-none">
+          <span
+            aria-hidden="true"
+            className="top-1 right-1 absolute flex justify-center items-center bg-danger-600 px-1 border-2 border-white rounded-full min-w-4 h-4 font-semibold text-[10px] text-white leading-none"
+          >
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="top-full right-0 z-50 absolute bg-white shadow-card mt-2 border border-neutral-200 rounded-lg w-80 sm:w-96 overflow-hidden">
+        // Below 640px the bell isn't at the screen edge, so the panel spans the viewport instead.
+        <div className="top-16 sm:top-full right-4 sm:right-0 left-4 sm:left-auto z-50 fixed sm:absolute bg-white shadow-sm sm:mt-2 border border-neutral-100 rounded-lg sm:w-96 overflow-hidden">
           <div className="flex justify-between items-center px-4 py-3 border-neutral-100 border-b">
             <p className="font-semibold text-neutral-900 text-small">
               Notifications

@@ -6,12 +6,9 @@ import { ProgressBar } from "@/src/shared/ui/ProgressBar";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import type { ApplicationDetail } from "../types/detail";
 import {
-  ACTION_TONE,
-  STATUS_BADGE_TINT,
+  STATUS_ACTION_CLASSES,
   STATUS_DETAIL_MESSAGE,
   STATUS_STAGE_INDEX,
-  STATUS_TONE,
-  TONE_BUTTON_CLASSES,
 } from "../types/status";
 import { getApplicationAction } from "../services/utils";
 import { ApplicationStageTracker } from "./ApplicationStageTracker";
@@ -24,7 +21,6 @@ export function ApplicationOverviewCard({
   application: ApplicationDetail;
 }) {
   const Icon = application.type === "Scholarship" ? GraduationCap : Briefcase;
-  const tone = STATUS_TONE[application.status];
   const action = getApplicationAction(application.status);
   const showAction = CONTINUABLE_STATUSES.has(application.status);
 
@@ -43,7 +39,7 @@ export function ApplicationOverviewCard({
           </div>
         </div>
 
-        <Badge tone={tone} className={cn("shrink-0", STATUS_BADGE_TINT[tone])}>
+        <Badge status={application.status} className="shrink-0">
           {STATUS_DETAIL_MESSAGE[application.status]}
         </Badge>
       </div>
@@ -82,7 +78,7 @@ export function ApplicationOverviewCard({
             type="button"
             className={cn(
               "inline-flex justify-center items-center gap-1.5 px-4 rounded-sm w-fit h-10 font-medium text-small transition-colors shrink-0",
-              TONE_BUTTON_CLASSES[ACTION_TONE[application.status]],
+              STATUS_ACTION_CLASSES[application.status],
             )}
           >
             {action.label}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, type ReactNode } from "react";
+import { cn } from "@/src/feature/dashboard/services/utils";
 import { useClickOutside } from "../hooks/useClickOutside";
 
 interface PopoverProps {
@@ -14,14 +15,29 @@ interface PopoverProps {
   }) => ReactNode;
   /** Accessible name of the panel. */
   label: string;
+  /** Which edge of the trigger the panel lines up with. */
+  align?: "start" | "end";
+  /** Opens below the trigger by default; "top" for triggers near the bottom of the screen. */
+  side?: "top" | "bottom";
+  /** Extra classes for the panel, e.g. a width. */
+  panelClassName?: string;
   children: ReactNode;
 }
 
 /**
  * A floating panel anchored below its trigger (shadow-sm, radius-lg). Closes on outside
- * click and Escape, returning focus to the page.
+ * click, and on Escape, which also returns focus to the trigger.
  */
-export function Popover({ open, onOpenChange, trigger, label, children }: PopoverProps) {
+export function Popover({
+  open,
+  onOpenChange,
+  trigger,
+  label,
+  align = "end",
+  side = "bottom",
+  panelClassName = "",
+  children,
+}: PopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
   const panelId = useId();
   useClickOutside(ref, () => onOpenChange(false));
@@ -29,11 +45,13 @@ export function Popover({ open, onOpenChange, trigger, label, children }: Popove
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onOpenChange(false);
+      if (event.key !== "Escape") return;
+      onOpenChange(false);
+      ref.current?.querySelector<HTMLElement>(`[aria-controls="${CSS.escape(panelId)}"]`)?.focus();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onOpenChange]);
+  }, [open, onOpenChange, panelId]);
 
   return (
     <div ref={ref} className="relative">
@@ -43,7 +61,13 @@ export function Popover({ open, onOpenChange, trigger, label, children }: Popove
           id={panelId}
           role="dialog"
           aria-label={label}
-          className="absolute right-0 top-full z-20 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-neutral-100 bg-white p-4 shadow-sm"
+          // cn() so panelClassName can override the defaults (e.g. width or padding).
+          className={cn(
+            "absolute z-20 w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-neutral-100 bg-white p-4 shadow-sm",
+            align === "start" ? "left-0" : "right-0",
+            side === "top" ? "bottom-full mb-2" : "top-full mt-2",
+            panelClassName,
+          )}
         >
           {children}
         </div>

@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 
 import { MetricTile } from "@/src/feature/dashboard/components/MetricTile";
+import { STATUS_COLORS } from "@/src/shared/lib/status-colors";
 import { APPLICATIONS } from "../mocks/applications";
 import { getApplicationsSummary } from "../services/utils";
 
@@ -24,7 +25,7 @@ export function ApplicationStatCards() {
         icon={CheckCircle2}
         label="Submitted"
         value={summary.submitted}
-        tone="blue"
+        className={STATUS_COLORS.submitted.tile}
       />
       <MetricTile
         icon={CalendarClock}
@@ -36,7 +37,7 @@ export function ApplicationStatCards() {
         icon={PartyPopper}
         label="Accepted"
         value={summary.accepted}
-        tone="teal"
+        className={STATUS_COLORS.accepted.tile}
       />
     </div>
   );

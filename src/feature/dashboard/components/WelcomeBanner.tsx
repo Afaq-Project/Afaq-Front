@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
-import { useAuth } from "@/src/shared/lib/auth/auth-context";
+import { useCurrentUserName } from "@/src/feature/profile/hooks/useCurrentUserName";
 
 export function WelcomeBanner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { firstName } = useCurrentUserName();
 
   const [visible, setVisible] = useState(
     () => searchParams.get("welcome") === "1",
@@ -28,7 +28,7 @@ export function WelcomeBanner() {
   return (
     <div className="flex justify-between items-center gap-3 bg-primary-50 px-4 py-3 border border-primary-200 rounded-lg">
       <p className="text-primary-800 text-sm">
-        Welcome{user?.firstName ? `, ${user.firstName}` : ""} - your account is
+        Welcome{firstName ? `, ${firstName}` : ""} - your account is
         ready.
       </p>
       <button

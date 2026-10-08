@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Info, Sparkles } from "lucide-react";
 
+import { cn } from "@/src/feature/dashboard/services/utils";
+import { SHELL_FILL_HEIGHT } from "@/src/feature/layout/components/shell-config";
 import Card from "@/src/shared/ui/Card";
 import { CONVERSATIONS, CREDIT_USAGE } from "../mocks/conversations";
 import { buildAssistantReply, formatMessageTime } from "../services/utils";
@@ -88,7 +90,7 @@ export function AiAssistantView() {
   }
 
   return (
-    <div className="flex flex-col gap-4 md:h-full">
+    <div className={cn("flex flex-col gap-4", SHELL_FILL_HEIGHT)}>
       <div className="flex items-center gap-2 bg-warning-50 px-4 py-2.5 rounded-md text-warning-800 text-caption shrink-0">
         <Info size={14} strokeWidth={1.75} className="shrink-0" />
         These instructions do not guarantee a scholarship.

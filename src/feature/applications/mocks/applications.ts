@@ -11,7 +11,7 @@ export const APPLICATIONS: ApplicationSummary[] = [
   },
   {
     id: "2",
-    title: "Frontier Research Fellowship",
+    title: "Frontier Research Scholarship",
     provider: "Meridian Institute",
     type: "Scholarship",
     status: "not_started",
@@ -59,7 +59,7 @@ export const APPLICATIONS: ApplicationSummary[] = [
   // },
   {
     id: "8",
-    title: "Renewable Energy Research Fellowship",
+    title: "Renewable Energy Research Scholarship",
     provider: "Gulf Renewable Energy Council",
     type: "Scholarship",
     status: "not_started",
@@ -67,7 +67,7 @@ export const APPLICATIONS: ApplicationSummary[] = [
   },
   {
     id: "9",
-    title: "Applied AI Fellowship",
+    title: "Applied AI Scholarship",
     provider: "Applied AI Collective",
     type: "Scholarship",
     status: "in_progress",

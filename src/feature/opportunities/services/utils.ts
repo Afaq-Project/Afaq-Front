@@ -1,26 +1,8 @@
 import { OPPORTUNITY_DETAILS } from "../mocks/opportunities";
-import { FundingStatus, OpportunityDetail } from "../types/opportunity";
-
-export const FUNDING_TONE: Record<
-  FundingStatus,
-  "green" | "amber" | "blue" | "gray"
-> = {
-  "Fully Funded": "green",
-  "Partially Funded": "amber",
-  Paid: "blue",
-  Unpaid: "gray",
-};
+import { OpportunityDetail } from "../types/opportunity";
 
 export function getOpportunityById(id: string): OpportunityDetail | undefined {
   return OPPORTUNITY_DETAILS.find((opportunity) => opportunity.id === id);
-}
-
-export function formatDeadlineDate(isoDate: string): string {
-  return new Date(isoDate).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 }
 
 export function formatDaysLeft(daysLeft: number): string {
@@ -37,12 +19,6 @@ export function getMatchTier(percent: number): MatchTier {
   if (percent >= 40) return "possible";
   return "low";
 }
-
-export const MATCH_BADGE_CLASSES: Record<MatchTier, string> = {
-  strong: "bg-primary-400",
-  possible: "bg-warning-400",
-  low: "bg-neutral-400",
-};
 
 export const MATCH_TIER_LABEL: Record<MatchTier, string> = {
   strong: "Strong match with your profile",
