@@ -1,7 +1,8 @@
 import { isoDateFromToday } from "@/src/shared/lib/deadline";
+import { OPPORTUNITIES } from "@/src/feature/opportunities/mocks/opportunities";
 import { ApplicationSummary } from "../types/application";
 
-export const APPLICATIONS: ApplicationSummary[] = [
+const ENTRIES: ApplicationSummary[] = [
   {
     id: "1",
     title: "Global Excellence Scholarship",
@@ -120,3 +121,9 @@ export const APPLICATIONS: ApplicationSummary[] = [
   //   daysLeft: 0,
   // },
 ];
+
+/** A linked application takes its deadline from the opportunity, so every page agrees. */
+export const APPLICATIONS: ApplicationSummary[] = ENTRIES.map((application) => {
+  const opportunity = OPPORTUNITIES.find((o) => o.id === application.opportunityId);
+  return opportunity ? { ...application, daysLeft: opportunity.daysLeft } : application;
+});

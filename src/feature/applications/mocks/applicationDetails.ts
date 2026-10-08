@@ -1,110 +1,86 @@
+import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { APPLICATIONS } from "./applications";
 import type { ApplicationSummary } from "../types/application";
-import type {
-  ApplicationActivityItem,
-  ApplicationDetail,
-  ApplicationDocument,
-} from "../types/detail";
-import type { ApplicationStatus } from "../types/status";
-import { STATUS_PROGRESS } from "../types/status";
+import type { ApplicationActivityItem, ApplicationDetail, ApplicationDocument } from "../types/detail";
 
-const PROGRAM_BY_TYPE: Record<ApplicationSummary["type"], string> = {
-  Scholarship: "Scholarship Program",
-  Internship: "Internship Program",
+const TRANSCRIPT: ApplicationDocument = {
+  id: "transcript",
+  name: "Academic_Transcript.pdf",
+  fileType: "PDF",
+  size: "2.4 MB",
+  category: "transcript",
+};
+const STATEMENT: ApplicationDocument = {
+  id: "sop",
+  name: "Statement_of_Purpose.docx",
+  fileType: "DOCX",
+  size: "1.1 MB",
+  category: "essay",
+};
+const ENGLISH: ApplicationDocument = {
+  id: "english",
+  name: "IELTS_Certificate.pdf",
+  fileType: "PDF",
+  size: "850 KB",
+  category: "other",
 };
 
-const DOCUMENTS: ApplicationDocument[] = [
-  {
-    id: "transcript",
-    name: "Academic Transcript",
-    fileType: "PDF",
-    size: "2.4 MB",
-    tone: "red",
-  },
-  {
-    id: "sop",
-    name: "Statement of Purpose",
-    fileType: "DOCX",
-    size: "1.1 MB",
-    tone: "teal",
-  },
-  {
-    id: "english",
-    name: "English Proficiency Certificate",
-    fileType: "PDF",
-    size: "850 KB",
-    tone: "blue",
-  },
-];
-
-function buildActivity(status: ApplicationStatus): ApplicationActivityItem[] {
-  const created: ApplicationActivityItem = {
-    id: "created",
-    label: "Application created",
-    timestamp: "3 weeks ago",
-  };
-  const sopUpdated: ApplicationActivityItem = {
-    id: "sop",
-    label: "Statement of Purpose updated",
-    timestamp: "Yesterday, 4:15 PM",
-  };
-  const submitted: ApplicationActivityItem = {
-    id: "submitted",
-    label: "Final files submitted successfully",
-    timestamp: "Today, 10:30 AM",
-  };
-  const underReview: ApplicationActivityItem = {
-    id: "review",
-    label: "Application moved to under review",
-    timestamp: "1 week ago",
-  };
-  const accepted: ApplicationActivityItem = {
-    id: "result",
-    label: "Congratulations — you were accepted",
-    timestamp: "2 days ago",
-  };
-  const rejected: ApplicationActivityItem = {
-    id: "result",
-    label: "Application was not successful this time",
-    timestamp: "2 days ago",
-  };
-
-  switch (status) {
+/** Linked documents grow as an application moves along. */
+function documentsFor(application: ApplicationSummary): ApplicationDocument[] {
+  switch (application.status) {
     case "not_started":
-      return [created];
+      return [];
     case "in_progress":
-      return [sopUpdated, created];
-    case "submitted":
-      return [submitted, sopUpdated, created];
-    case "in_review":
-      return [underReview, { ...submitted, timestamp: "2 weeks ago" }, sopUpdated, created];
-    case "accepted":
-      return [
-        accepted,
-        underReview,
-        { ...submitted, timestamp: "3 weeks ago" },
-        created,
-      ];
-    case "rejected":
-      return [
-        rejected,
-        underReview,
-        { ...submitted, timestamp: "3 weeks ago" },
-        created,
-      ];
+      return [TRANSCRIPT, ENGLISH];
+    default:
+      return [TRANSCRIPT, STATEMENT, ENGLISH];
   }
 }
 
-export const APPLICATION_DETAILS: ApplicationDetail[] = APPLICATIONS.map(
-  (application) => ({
-    ...application,
-    program: PROGRAM_BY_TYPE[application.type],
-    term: "Fall 2024",
-    progress: STATUS_PROGRESS[application.status],
-    updatedAgo: "2 hours ago",
-    officialSiteUrl: "#",
-    supportEmail: "support@afaq.app",
-    documents: DOCUMENTS,
-    activity: buildActivity(application.status),
-  }),
-);
+/** A plausible history for the application's status, newest first, dated relative to today. */
+function activityFor(application: ApplicationSummary): ApplicationActivityItem[] {
+  const items: ApplicationActivityItem[] = [
+    { id: "tracked", kind: "status", status: "not_started", label: "Started tracking", at: isoDateFromToday(-21) },
+  ];
+  const { status } = application;
+  if (status !== "not_started") {
+    items.unshift(
+      { id: "progress", kind: "status", status: "in_progress", label: "Moved to In progress", at: isoDateFromToday(-14) },
+      { id: "doc-transcript", kind: "document", label: "Linked Academic_Transcript.pdf", at: isoDateFromToday(-12) },
+      { id: "reminder-14", kind: "reminder", label: "Deadline reminder sent", at: isoDateFromToday(-9) },
+    );
+    items.sort((a, b) => b.at.localeCompare(a.at));
+  }
+  if (status === "submitted" || status === "in_review" || status === "accepted" || status === "rejected") {
+    items.unshift({
+      id: "submitted",
+      kind: "status",
+      status: "submitted",
+      label: "Moved to Submitted",
+      at: application.submittedAt ?? isoDateFromToday(-6),
+    });
+  }
+  if (status === "in_review" || status === "accepted" || status === "rejected") {
+    items.unshift({ id: "review", kind: "status", status: "in_review", label: "Moved to In review", at: isoDateFromToday(-3) });
+  }
+  if (status === "accepted" || status === "rejected") {
+    items.unshift({
+      id: "decision",
+      kind: "status",
+      status,
+      label: status === "accepted" ? "Decision: accepted" : "Decision: not selected",
+      at: application.decidedAt ?? isoDateFromToday(-1),
+    });
+  }
+  return items;
+}
+
+export const APPLICATION_DETAILS: ApplicationDetail[] = APPLICATIONS.map((application) => ({
+  ...application,
+  // TODO: the API should send the deadline date; here it follows the (opportunity-synced) daysLeft.
+  deadlineDate: isoDateFromToday(application.daysLeft),
+  documents: documentsFor(application),
+  activity: activityFor(application),
+  reminderDays: [14, 7, 3, 1],
+  notes: application.id === "3" ? "Asked Dr. Haddad for a recommendation on Monday." : undefined,
+}));

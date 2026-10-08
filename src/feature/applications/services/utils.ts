@@ -17,26 +17,6 @@ export function formatDeadline(daysLeft: number): string {
   return `Ends in ${daysLeft} days`;
 }
 
-export interface ApplicationAction {
-  label: string;
-}
-
-export const APPLICATION_ACTIONS: Record<ApplicationStatus, ApplicationAction> =
-  {
-    not_started: { label: "Start now" },
-    in_progress: { label: "Complete application" },
-    submitted: { label: "Details" },
-    in_review: { label: "Details" },
-    rejected: { label: "Details" },
-    accepted: { label: "See results" },
-  };
-
-export function getApplicationAction(
-  status: ApplicationStatus,
-): ApplicationAction {
-  return APPLICATION_ACTIONS[status];
-}
-
 const ACTIVE_STATUSES: ApplicationStatus[] = ["not_started", "in_progress"];
 
 export const isActive = (application: ApplicationSummary) => ACTIVE_STATUSES.includes(application.status);
