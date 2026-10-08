@@ -1,62 +1,79 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-import Button from "@/src/shared/ui/Button";
+import { useMemo } from "react";
 import { OPPORTUNITIES } from "@/src/feature/opportunities/mocks/opportunities";
-import { DiscoverFilters } from "./DiscoverFilters";
-import { OpportunityGrid } from "./OpportunityGrid";
-import { DEFAULT_FILTERS } from "../types/filters";
-import { filterOpportunities } from "../services/utils";
+import { useDiscoverQuery } from "../hooks/useDiscoverQuery";
+import { useMatchingReadiness } from "../hooks/useMatchingReadiness";
+import { DEFAULT_QUERY, REMOTE_LOCATION, type SortOrder } from "../types/filters";
+import {
+  distinct,
+  filterOpportunities,
+  listable,
+  sortOpportunities,
+  toSearchParams,
+} from "../services/utils";
+import { DiscoverControls } from "./DiscoverControls";
+import { NoResultsState, ProfileIncompleteState, RelaxedResultsBanner } from "./DiscoverStates";
+import { OpportunityGrid, OpportunityGridSkeleton } from "./OpportunityGrid";
+import { SortSelect } from "./SortSelect";
 
-const PAGE_SIZE = 6;
+const CATALOG = listable(OPPORTUNITIES);
+const LOCATION_OPTIONS = [REMOTE_LOCATION, ...distinct(CATALOG.map((o) => o.location))];
+const FIELD_OPTIONS = distinct(CATALOG.map((o) => o.fieldOfStudy));
 
+// TODO: enable "Newest" once opportunities carry a published date.
+const NEWEST_AVAILABLE = false;
+
+/** Discover: the controls card, a result count with sort, and the results or the right empty state. */
 export function DiscoverExplorer() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const { query, update } = useDiscoverQuery();
+  const readiness = useMatchingReadiness();
+  // A shared "newest" link still sorts by best match until that sort exists.
+  const sort: SortOrder = query.sort === "newest" && !NEWEST_AVAILABLE ? "match" : query.sort;
 
-  const locations = useMemo(
-    () => Array.from(new Set(OPPORTUNITIES.map((o) => o.location))).sort(),
-    [],
+  const results = useMemo(
+    () => sortOpportunities(filterOpportunities(CATALOG, query), sort),
+    [query, sort],
   );
-  const fieldsOfStudy = useMemo(
-    () => Array.from(new Set(OPPORTUNITIES.map((o) => o.fieldOfStudy))).sort(),
-    [],
-  );
+  // TODO: the matching API should say when it relaxed the hard filters; for now it's inferred
+  // from the mock's meetsRequirements flags.
+  const relaxed = results.length > 0 && results.every((o) => o.meetsRequirements === false);
 
-  const filtered = useMemo(
-    () => filterOpportunities(OPPORTUNITIES, filters),
-    [filters],
-  );
-
-  const visible = filtered.slice(0, visibleCount);
-  const hasMore = visibleCount < filtered.length;
-
-  function handleFiltersChange(next: typeof filters) {
-    setFilters(next);
-    setVisibleCount(PAGE_SIZE);
-  }
+  const clearAll = () => update({ ...DEFAULT_QUERY, sort: query.sort });
 
   return (
     <div className="flex flex-col gap-4">
-      <DiscoverFilters
-        filters={filters}
-        locations={locations}
-        fieldsOfStudy={fieldsOfStudy}
-        onChange={handleFiltersChange}
+      <DiscoverControls
+        query={query}
+        update={update}
+        locationOptions={LOCATION_OPTIONS}
+        fieldOptions={FIELD_OPTIONS}
+        resultCount={results.length}
+        disabled={readiness.isLoading || readiness.missing !== null}
       />
 
-      <OpportunityGrid opportunities={visible} />
+      {readiness.isLoading ? (
+        <OpportunityGridSkeleton />
+      ) : readiness.missing ? (
+        <ProfileIncompleteState missing={readiness.missing} />
+      ) : (
+        <>
+          <div className="flex justify-between items-center gap-3">
+            <p aria-live="polite" className="text-neutral-600 text-small">
+              {results.length} {results.length === 1 ? "opportunity" : "opportunities"}
+            </p>
+            <SortSelect value={sort} onChange={(next) => update({ sort: next })} newestAvailable={NEWEST_AVAILABLE} />
+          </div>
 
-      {hasMore && (
-        <div className="flex justify-center mt-2">
-          <Button
-            variant="secondary"
-            onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-          >
-            Load more opportunities
-          </Button>
-        </div>
+          {results.length === 0 ? (
+            <NoResultsState onClearAll={clearAll} />
+          ) : (
+            <>
+              {relaxed && <RelaxedResultsBanner />}
+              <OpportunityGrid key={toSearchParams({ ...query, sort }).toString()} opportunities={results} />
+            </>
+          )}
+        </>
       )}
     </div>
   );

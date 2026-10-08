@@ -1,15 +1,17 @@
-import PageHeader from "@/src/shared/ui/PageHeader";
+import { Suspense } from "react";
+import { PageGreeting } from "@/src/feature/dashboard/components/PageGreeting";
 import { DiscoverExplorer } from "@/src/feature/discover/components/DiscoverExplorer";
+import { OpportunityGridSkeleton } from "@/src/feature/discover/components/OpportunityGrid";
 
 export default function DiscoverPage() {
   return (
-    <div className="flex flex-col gap-4">
-      <PageHeader
-        title="Discover opportunities"
-        description="Search and filter scholarships, internships, and fellowships matched to your profile."
-      />
+    <div className="flex flex-col gap-6">
+      <PageGreeting title="Discover opportunities">Scholarships and internships matched to your profile.</PageGreeting>
 
-      <DiscoverExplorer />
+      {/* The explorer reads its state from the URL (useSearchParams), which needs a Suspense boundary. */}
+      <Suspense fallback={<OpportunityGridSkeleton />}>
+        <DiscoverExplorer />
+      </Suspense>
     </div>
   );
 }
