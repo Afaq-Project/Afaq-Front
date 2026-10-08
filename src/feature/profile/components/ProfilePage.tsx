@@ -5,8 +5,8 @@ import { GraduationCap, Languages, Target, UserRound } from "lucide-react";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { AnchorNav, type AnchorNavItem } from "@/src/shared/ui/AnchorNav";
 import { usePreferencesQuery, useProfileQuery } from "../hooks/useProfileQuery";
+import { useCurrentUserName } from "../hooks/useCurrentUserName";
 import { useReferenceNames } from "../hooks/useReferenceNames";
-import { fullName } from "../services/format";
 import { AccountSection } from "./account/AccountSection";
 import { BackgroundGoalsSection } from "./background/BackgroundGoalsSection";
 import type { EditingState } from "./common/editing";
@@ -34,6 +34,7 @@ const MATCH_FACTORS: MatchFactor[] = [];
 export function ProfilePage() {
   const { user } = useAuth();
   const { data: profile, isLoading } = useProfileQuery();
+  const { name: currentName, email } = useCurrentUserName();
   const { data: preferences } = usePreferencesQuery();
   const names = useReferenceNames(profile, preferences);
 
@@ -44,13 +45,13 @@ export function ProfilePage() {
   // The nav observes the sections when it mounts, so it only renders once they exist.
   if (isLoading) return <ProfilePageSkeleton />;
 
-  const name = fullName(profile?.firstName, profile?.lastName) || fullName(user?.firstName, user?.lastName) || "Your profile";
+  const name = currentName || "Your profile";
 
   return (
     <div className="flex flex-col gap-6">
       <ProfileHeader
         name={name}
-        email={profile?.email ?? user?.email ?? ""}
+        email={email}
         photoUrl={profile?.profilePhotoUrl}
         completionPct={profile?.completionPct ?? user?.userProfile?.completionPct ?? 0}
         isMatchable={profile?.isMatchable}

@@ -1,5 +1,6 @@
 import { Camera } from "lucide-react";
 import Badge from "@/src/shared/ui/Badge";
+import { getInitials } from "@/src/shared/lib/initials";
 import type { MatchFactor, NextStep } from "./completion";
 import { ProfileCompletion } from "./ProfileCompletion";
 
@@ -11,16 +12,6 @@ interface ProfileHeaderProps {
   isMatchable?: boolean;
   nextStep?: NextStep;
   matchFactors?: MatchFactor[];
-}
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
 }
 
 /**
@@ -49,7 +40,7 @@ export function ProfileHeader({
                 <img src={photoUrl} alt="" className="h-full w-full object-cover" />
               ) : (
                 <span className="flex h-full w-full items-center justify-center text-h3 text-primary-800" aria-hidden="true">
-                  {initials(name) || "?"}
+                  {getInitials(name) || "?"}
                 </span>
               )}
             </div>
