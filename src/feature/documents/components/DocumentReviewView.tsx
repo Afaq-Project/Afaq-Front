@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Sparkles } from "lucide-react";
 
+import { cn } from "@/src/feature/dashboard/services/utils";
+import { SHELL_FILL_HEIGHT } from "@/src/feature/layout/components/shell-config";
 import { CATEGORY_META } from "../services/utils";
 import { buildAssistantReply, generateMockReview } from "../services/review";
 import { REVIEW_QUOTA } from "../mocks/documentDetails";
@@ -92,7 +94,7 @@ export function DocumentReviewView({ document }: { document: DocumentDetail }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 md:h-full">
+    <div className={cn("flex flex-col gap-4", SHELL_FILL_HEIGHT)}>
       <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center gap-2 shrink-0">
         <Link
           href="/documents"
