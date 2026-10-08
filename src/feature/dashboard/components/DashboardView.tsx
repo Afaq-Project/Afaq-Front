@@ -8,7 +8,6 @@ import { APPLICATIONS } from "@/src/feature/applications/mocks/applications";
 import type { ApplicationStatus } from "@/src/feature/applications/types/status";
 import { OpportunityCard } from "@/src/feature/opportunities/components/OpportunityCard";
 import { OPPORTUNITIES, RECOMMENDED_OPPORTUNITIES } from "@/src/feature/opportunities/mocks/opportunities";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { PROFILE_NEXT_STEP, type NextStep } from "@/src/feature/profile/components/header/completion";
 import { useCurrentUserName } from "@/src/feature/profile/hooks/useCurrentUserName";
 import { useProfileCompletion } from "@/src/feature/profile/hooks/useProfileCompletion";
@@ -85,10 +84,6 @@ export function DashboardView() {
   const needsAttention = upcoming.filter((a) => a.daysLeft <= 2);
   const deadlineSummary = summarizeDeadlines(upcoming.map((a) => a.daysLeft));
 
-  const matches = RECOMMENDED_OPPORTUNITIES.map((opportunity) => ({
-    opportunity,
-    provider: getOpportunityById(opportunity.id)?.provider,
-  }));
 
   const greeting = greetingFor(hour);
   const deadlines = <DeadlineList applications={upcoming} />;
@@ -158,8 +153,8 @@ export function DashboardView() {
               </Link>
             </div>
             <div className="gap-4 md:gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
-              {matches.map(({ opportunity, provider }) => (
-                <OpportunityCard key={opportunity.id} opportunity={opportunity} provider={provider} />
+              {RECOMMENDED_OPPORTUNITIES.map((opportunity) => (
+                <OpportunityCard key={opportunity.id} opportunity={opportunity} />
               ))}
             </div>
           </section>

@@ -24,3 +24,10 @@ export const MATCH_TIER_FILL: Record<MatchTier, string> = {
   possible: "bg-warning-400",
   low: "bg-neutral-200",
 };
+
+/** Text color for a match percentage shown on its own (no tinted background). */
+export const MATCH_TIER_TEXT: Record<MatchTier, string> = {
+  strong: "text-success-600",
+  possible: "text-warning-600",
+  low: "text-neutral-600",
+};
