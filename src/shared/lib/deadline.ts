@@ -29,3 +29,22 @@ export const DEADLINE_URGENCY_DOT: Record<DeadlineUrgency, string> = {
   soon: "bg-neutral-900",
   later: "border-[1.5px] border-neutral-400 bg-white",
 };
+
+/** Whole days from `now` to an ISO date (YYYY-MM-DD), comparing local calendar days. Negative once passed. */
+export function daysUntil(isoDate: string, now: Date) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const deadline = new Date(year, month - 1, day);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((deadline.getTime() - today.getTime()) / 86_400_000);
+}
+
+/** "Tue, Oct 20, 2026" for an ISO date (YYYY-MM-DD), read as a local calendar day. */
+export function formatDeadlineDay(isoDate: string) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}

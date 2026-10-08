@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, type ReactNode } from "react";
+import { cn } from "@/src/feature/dashboard/services/utils";
 import { useClickOutside } from "../hooks/useClickOutside";
 
 interface PopoverProps {
@@ -16,6 +17,8 @@ interface PopoverProps {
   label: string;
   /** Which edge of the trigger the panel lines up with. */
   align?: "start" | "end";
+  /** Opens below the trigger by default; "top" for triggers near the bottom of the screen. */
+  side?: "top" | "bottom";
   /** Extra classes for the panel, e.g. a width. */
   panelClassName?: string;
   children: ReactNode;
@@ -31,6 +34,7 @@ export function Popover({
   trigger,
   label,
   align = "end",
+  side = "bottom",
   panelClassName = "",
   children,
 }: PopoverProps) {
@@ -57,7 +61,13 @@ export function Popover({
           id={panelId}
           role="dialog"
           aria-label={label}
-          className={`absolute ${align === "start" ? "left-0" : "right-0"} top-full z-20 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-neutral-100 bg-white p-4 shadow-sm ${panelClassName}`}
+          // cn() so panelClassName can override the defaults (e.g. width or padding).
+          className={cn(
+            "absolute z-20 w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-neutral-100 bg-white p-4 shadow-sm",
+            align === "start" ? "left-0" : "right-0",
+            side === "top" ? "bottom-full mb-2" : "top-full mt-2",
+            panelClassName,
+          )}
         >
           {children}
         </div>
