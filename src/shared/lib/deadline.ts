@@ -48,3 +48,11 @@ export function formatDeadlineDay(isoDate: string) {
     year: "numeric",
   });
 }
+
+/** ISO date (YYYY-MM-DD) `days` from today in local time (negative for the past). For mocks. */
+export function isoDateFromToday(days: number) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}

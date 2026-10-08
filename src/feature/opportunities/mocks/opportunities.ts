@@ -1,3 +1,4 @@
+import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { OpportunityDetail, OpportunitySummary } from "../types/opportunity";
 
 // Full opportunity catalog, browsed on the Discover page (FR-3.x) and
@@ -86,7 +87,7 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
   },
   {
     id: "o6",
-    title: "Women in STEM Grant",
+    title: "Women in STEM Scholarship",
     description:
       "Grant supporting women pursuing graduate studies in STEM fields.",
     type: "Scholarship",
@@ -257,13 +258,6 @@ export const RECOMMENDED_OPPORTUNITIES: OpportunitySummary[] = OPPORTUNITIES.fil
 // deadlineDate is derived from each summary's daysLeft (below), so it isn't listed per entry.
 type DetailExtras = Omit<OpportunityDetail, keyof OpportunitySummary | "deadlineDate">;
 
-/** ISO date (YYYY-MM-DD) `days` from today, in local time, so mock deadlines never go stale. */
-function isoDateFromToday(days: number) {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
 
 const DETAIL_EXTRAS: Record<string, DetailExtras> = {
   o1: {
