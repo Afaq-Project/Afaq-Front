@@ -1,3 +1,4 @@
+import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { ApplicationSummary } from "../types/application";
 
 export const APPLICATIONS: ApplicationSummary[] = [
@@ -8,6 +9,7 @@ export const APPLICATIONS: ApplicationSummary[] = [
     type: "Scholarship",
     status: "not_started",
     daysLeft: 15,
+    updatedAt: isoDateFromToday(-3),
   },
   {
     id: "2",
@@ -16,6 +18,8 @@ export const APPLICATIONS: ApplicationSummary[] = [
     type: "Scholarship",
     status: "not_started",
     daysLeft: 23,
+    opportunityId: "o5",
+    updatedAt: isoDateFromToday(-10),
   },
   {
     id: "3",
@@ -24,6 +28,8 @@ export const APPLICATIONS: ApplicationSummary[] = [
     type: "Internship",
     status: "in_progress",
     daysLeft: 7,
+    opportunityId: "o2",
+    updatedAt: isoDateFromToday(-1),
   },
   {
     id: "4",
@@ -32,14 +38,19 @@ export const APPLICATIONS: ApplicationSummary[] = [
     type: "Internship",
     status: "in_progress",
     daysLeft: 10,
+    opportunityId: "o4",
+    updatedAt: isoDateFromToday(-2),
   },
   {
     id: "5",
-    title: "Women in STEM Grant",
+    title: "Women in STEM Scholarship",
     provider: "Beacon Trust",
     type: "Scholarship",
     status: "submitted",
     daysLeft: 4,
+    opportunityId: "o6",
+    submittedAt: isoDateFromToday(-6),
+    updatedAt: isoDateFromToday(-6),
   },
   {
     id: "6",
@@ -48,6 +59,10 @@ export const APPLICATIONS: ApplicationSummary[] = [
     type: "Scholarship",
     status: "accepted",
     daysLeft: 0,
+    opportunityId: "o3",
+    submittedAt: isoDateFromToday(-30),
+    decidedAt: isoDateFromToday(-5),
+    updatedAt: isoDateFromToday(-5),
   },
   // {
   //   id: "7",
@@ -64,6 +79,8 @@ export const APPLICATIONS: ApplicationSummary[] = [
     type: "Scholarship",
     status: "not_started",
     daysLeft: 40,
+    opportunityId: "o10",
+    updatedAt: isoDateFromToday(-14),
   },
   {
     id: "9",
@@ -72,14 +89,19 @@ export const APPLICATIONS: ApplicationSummary[] = [
     type: "Scholarship",
     status: "in_progress",
     daysLeft: 15,
+    opportunityId: "o13",
+    updatedAt: isoDateFromToday(-4),
   },
   {
     id: "10",
     title: "Public Policy Internship",
     provider: "Regional Policy Institute",
     type: "Internship",
-    status: "submitted",
+    status: "in_review",
     daysLeft: 6,
+    opportunityId: "o14",
+    submittedAt: isoDateFromToday(-12),
+    updatedAt: isoDateFromToday(-2),
   },
   // {
   //   id: "11",

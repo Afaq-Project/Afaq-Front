@@ -76,6 +76,8 @@ function buildActivity(status: ApplicationStatus): ApplicationActivityItem[] {
       return [sopUpdated, created];
     case "submitted":
       return [submitted, sopUpdated, created];
+    case "in_review":
+      return [underReview, { ...submitted, timestamp: "2 weeks ago" }, sopUpdated, created];
     case "accepted":
       return [
         accepted,

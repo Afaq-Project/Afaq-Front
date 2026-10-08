@@ -1,29 +1,27 @@
+import { Suspense } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
-
-import PageHeader from "@/src/shared/ui/PageHeader";
-import { ApplicationStatCards } from "@/src/feature/applications/components/ApplicationStatCards";
-import { ApplicationsExplorer } from "@/src/feature/applications/components/ApplicationsExplorer";
+import { Compass } from "lucide-react";
+import { ApplicationsSkeleton } from "@/src/feature/applications/components/ApplicationsList";
+import { ApplicationsView } from "@/src/feature/applications/components/ApplicationsView";
+import { PageGreeting } from "@/src/feature/dashboard/components/PageGreeting";
+import { buttonClasses } from "@/src/shared/ui/Button";
 
 export default function ApplicationsPage() {
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader
-        title="Applications"
-        description="Track the status of every opportunity you've applied to."
-        action={
-          <Link
-            href="/applications/new"
-            className="inline-flex justify-center items-center gap-2 bg-primary-600 hover:bg-primary-800 px-4 rounded-sm w-fit h-10 font-medium text-white text-sm transition-colors"
-          >
-            <Plus size={16} strokeWidth={2} />
-            New Application
-          </Link>
-        }
-      />
+      <div className="flex sm:flex-row flex-col sm:justify-between sm:items-start gap-4">
+        <PageGreeting title="Your applications">Track every opportunity from start to decision.</PageGreeting>
+        {/* The page's only primary action. (It replaces "New Application", which linked to a missing /applications/new.) */}
+        <Link href="/discover" className={buttonClasses("primary", "shrink-0 self-start")}>
+          <Compass size={16} strokeWidth={1.75} aria-hidden="true" />
+          Find opportunities
+        </Link>
+      </div>
 
-      <ApplicationStatCards />
-      <ApplicationsExplorer />
+      {/* The view reads its state from the URL (useSearchParams), which needs a Suspense boundary. */}
+      <Suspense fallback={<ApplicationsSkeleton />}>
+        <ApplicationsView />
+      </Suspense>
     </div>
   );
 }
