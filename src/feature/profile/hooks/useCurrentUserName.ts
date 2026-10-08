@@ -18,10 +18,13 @@ export function useCurrentUserName() {
     fullName(profile?.firstName, profile?.lastName) ||
     fullName(user?.firstName, user?.lastName);
 
+  const email = profile?.email ?? user?.email ?? "";
+
   return {
     name,
     firstName: profile?.firstName || user?.firstName || "",
-    initials: getInitials(name),
-    email: profile?.email ?? user?.email ?? "",
+    // No name: the email's first letter. Neither: empty, and callers show a person icon.
+    initials: getInitials(name) || email.trim().charAt(0).toUpperCase(),
+    email,
   };
 }
