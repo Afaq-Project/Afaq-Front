@@ -12,9 +12,14 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 98,
     daysLeft: 12,
     location: "Doha, Qatar",
+    countryCode: "qa",
     fieldOfStudy: "Engineering",
     imageUrl:
       "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80&auto=format&fit=crop",
+    provider: "Qatar Foundation",
+    fundingStatus: "Fully Funded",
+    level: "Bachelor's",
+    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "strong", language: "strong", experience: "strong" },
   },
   {
     id: "o2",
@@ -25,9 +30,14 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 82,
     daysLeft: 5,
     location: "Riyadh, Saudi Arabia",
+    countryCode: "sa",
     fieldOfStudy: "Design",
     imageUrl:
       "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop",
+    provider: "Northwind Labs",
+    fundingStatus: "Paid",
+    level: "Bachelor's",
+    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "partial" },
   },
   {
     id: "o3",
@@ -38,9 +48,14 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 89,
     daysLeft: 30,
     location: "Dubai, UAE",
+    countryCode: "ae",
     fieldOfStudy: "Business",
     imageUrl:
       "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80&auto=format&fit=crop",
+    provider: "Arab Youth Empowerment Initiative",
+    fundingStatus: "Fully Funded",
+    level: "Bachelor's",
+    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "strong", language: "partial", experience: "strong" },
   },
   {
     id: "o4",
@@ -51,22 +66,33 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 91,
     daysLeft: 18,
     location: "Cairo, Egypt",
+    countryCode: "eg",
     fieldOfStudy: "Computer Science",
     imageUrl:
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format&fit=crop",
+    provider: "Arcline Analytics",
+    fundingStatus: "Paid",
+    level: "Bachelor's",
+    isRemote: true,
+    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "strong" },
   },
   {
     id: "o5",
-    title: "Frontier Research Fellowship",
+    title: "Frontier Research Scholarship",
     description:
-      "Fully funded fellowship for early-career researchers in applied physics.",
-    type: "Fellowship",
+      "Fully funded scholarship for early-career researchers in applied physics.",
+    type: "Scholarship",
     matchScore: 76,
     daysLeft: 45,
     location: "Amman, Jordan",
+    countryCode: "jo",
     fieldOfStudy: "Physics",
     imageUrl:
       "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80&auto=format&fit=crop",
+    provider: "Meridian Institute",
+    fundingStatus: "Fully Funded",
+    level: "Master's",
+    matchFactors: { fieldOfStudy: "strong", skills: "partial", gpa: "strong", language: "partial", experience: "partial" },
   },
   {
     id: "o6",
@@ -77,22 +103,32 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 68,
     daysLeft: 3,
     location: "Beirut, Lebanon",
+    countryCode: "lb",
     fieldOfStudy: "Computer Science",
     imageUrl:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80&auto=format&fit=crop",
+    provider: "Beacon Trust",
+    fundingStatus: "Partially Funded",
+    level: "Bachelor's",
+    matchFactors: { fieldOfStudy: "strong", skills: "partial", gpa: "partial", language: "partial", experience: "missing" },
   },
   {
     id: "o7",
-    title: "Global Health Fellowship",
+    title: "Global Health Scholarship",
     description:
-      "Fellowship placing graduates with NGOs tackling public health challenges.",
-    type: "Fellowship",
+      "Scholarship placing graduates with NGOs tackling public health challenges.",
+    type: "Scholarship",
     matchScore: 64,
     daysLeft: 60,
     location: "Amman, Jordan",
+    countryCode: "jo",
     fieldOfStudy: "Medicine",
     imageUrl:
       "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&auto=format&fit=crop",
+    provider: "WHO Regional Office",
+    fundingStatus: "Fully Funded",
+    level: "Master's",
+    matchFactors: { fieldOfStudy: "partial", skills: "partial", gpa: "strong", language: "partial", experience: "missing" },
   },
   {
     id: "o8",
@@ -103,9 +139,13 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 71,
     daysLeft: 21,
     location: "Doha, Qatar",
+    countryCode: "qa",
     fieldOfStudy: "Business",
     imageUrl:
       "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&auto=format&fit=crop",
+    provider: "Growth Loop Agency",
+    fundingStatus: "Paid",
+    isRemote: true,
   },
   {
     id: "o9",
@@ -116,22 +156,33 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 58,
     daysLeft: 75,
     location: "Cairo, Egypt",
+    countryCode: "eg",
     fieldOfStudy: "Law",
     imageUrl:
       "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80&auto=format&fit=crop",
+    provider: "Levant Legal Foundation",
+    fundingStatus: "Partially Funded",
+    level: "Bachelor's",
+    matchFactors: { fieldOfStudy: "partial", skills: "missing", gpa: "partial", language: "strong", experience: "missing" },
+    meetsRequirements: false,
   },
   {
     id: "o10",
-    title: "Renewable Energy Research Fellowship",
+    title: "Renewable Energy Research Scholarship",
     description:
       "Fund graduate research into solar and wind energy systems for the region.",
-    type: "Fellowship",
+    type: "Scholarship",
     matchScore: 85,
     daysLeft: 40,
     location: "Riyadh, Saudi Arabia",
+    countryCode: "sa",
     fieldOfStudy: "Engineering",
     imageUrl:
       "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80&auto=format&fit=crop",
+    provider: "Gulf Renewable Energy Council",
+    fundingStatus: "Fully Funded",
+    level: "Master's",
+    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "partial" },
   },
   {
     id: "o11",
@@ -142,9 +193,13 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 60,
     daysLeft: 9,
     location: "Beirut, Lebanon",
+    countryCode: "lb",
     fieldOfStudy: "Arts",
     imageUrl:
       "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80&auto=format&fit=crop",
+    provider: "Studio Nawafir",
+    fundingStatus: "Unpaid",
+    matchFactors: { fieldOfStudy: "partial", skills: "partial", gpa: "partial", language: "strong", experience: "missing" },
   },
   {
     id: "o12",
@@ -155,22 +210,32 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 94,
     daysLeft: 27,
     location: "Dubai, UAE",
+    countryCode: "ae",
     fieldOfStudy: "Engineering",
     imageUrl:
       "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80&auto=format&fit=crop",
+    provider: "Emirates Engineering Trust",
+    fundingStatus: "Fully Funded",
+    level: "Bachelor's",
+    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "strong", language: "strong", experience: "partial" },
   },
   {
     id: "o13",
-    title: "Applied AI Fellowship",
+    title: "Applied AI Scholarship",
     description:
-      "Twelve-month fellowship building applied machine learning products with mentors.",
-    type: "Fellowship",
+      "Twelve-month scholarship building applied machine learning products with mentors.",
+    type: "Scholarship",
     matchScore: 88,
     daysLeft: 15,
     location: "Cairo, Egypt",
+    countryCode: "eg",
     fieldOfStudy: "Computer Science",
     imageUrl:
       "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&q=80&auto=format&fit=crop",
+    provider: "Applied AI Collective",
+    fundingStatus: "Fully Funded",
+    level: "PhD",
+    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "strong" },
   },
   {
     id: "o14",
@@ -181,14 +246,38 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     matchScore: 55,
     daysLeft: 34,
     location: "Amman, Jordan",
+    countryCode: "jo",
     fieldOfStudy: "Business",
     imageUrl:
       "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80&auto=format&fit=crop",
+    provider: "Regional Policy Institute",
+    fundingStatus: "Paid",
+    isRemote: true,
+    meetsRequirements: false,
+  },
+  {
+    id: "o15",
+    title: "Gulf Women in Tech Scholarship",
+    description:
+      "Partial tuition support for women studying computer science at a Gulf university.",
+    type: "Scholarship",
+    matchScore: 73,
+    // Closed four days ago: Discover still lists recently closed ones, dimmed.
+    daysLeft: -4,
+    location: "Manama, Bahrain",
+    countryCode: "bh",
+    fieldOfStudy: "Computer Science",
+    imageUrl:
+      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80&auto=format&fit=crop",
+    provider: "Gulf Tech Foundation",
+    fundingStatus: "Partially Funded",
+    level: "Bachelor's",
+    matchFactors: { fieldOfStudy: "strong", skills: "partial", gpa: "strong", language: "strong", experience: "missing" },
   },
 ];
 
-// Top matches surfaced on the dashboard preview (FR-3.5/3.6).
-export const RECOMMENDED_OPPORTUNITIES: OpportunitySummary[] = [...OPPORTUNITIES]
+// Highest matches that are still open, for the dashboard.
+export const RECOMMENDED_OPPORTUNITIES: OpportunitySummary[] = OPPORTUNITIES.filter((o) => o.daysLeft >= 0)
   .sort((a, b) => b.matchScore - a.matchScore)
   .slice(0, 4);
 
@@ -199,10 +288,8 @@ type DetailExtras = Omit<OpportunityDetail, keyof OpportunitySummary>;
 
 const DETAIL_EXTRAS: Record<string, DetailExtras> = {
   o1: {
-    provider: "Qatar Foundation",
     keywords: ["STEM", "Undergraduate", "Full Tuition", "Qatar"],
     deadlineDate: "2026-09-17",
-    fundingStatus: "Fully Funded",
     officialLink: "https://example.com/opportunities/o1/apply",
     matchBreakdown: [
       { label: "Field of study", score: 99 },
@@ -228,10 +315,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o2: {
-    provider: "Northwind Labs",
     keywords: ["UX/UI", "Consumer Product", "Design Systems"],
     deadlineDate: "2026-09-10",
-    fundingStatus: "Paid",
     officialLink: "https://example.com/opportunities/o2/apply",
     matchBreakdown: [
       { label: "Field of study", score: 85 },
@@ -248,10 +333,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     gallery: [],
   },
   o3: {
-    provider: "Arab Youth Empowerment Initiative",
     keywords: ["Leadership", "Social Impact", "MENA"],
     deadlineDate: "2026-10-05",
-    fundingStatus: "Fully Funded",
     officialLink: "https://example.com/opportunities/o3/apply",
     matchBreakdown: [
       { label: "Field of study", score: 92 },
@@ -275,10 +358,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o4: {
-    provider: "Arcline Analytics",
     keywords: ["Machine Learning", "Data Pipelines", "Python"],
     deadlineDate: "2026-09-23",
-    fundingStatus: "Paid",
     officialLink: "https://example.com/opportunities/o4/apply",
     matchBreakdown: [
       { label: "Field of study", score: 95 },
@@ -298,10 +379,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o5: {
-    provider: "Meridian Institute",
     keywords: ["Applied Physics", "Research", "Fully Funded"],
     deadlineDate: "2026-10-20",
-    fundingStatus: "Fully Funded",
     officialLink: "https://example.com/opportunities/o5/apply",
     matchBreakdown: [
       { label: "Field of study", score: 80 },
@@ -312,7 +391,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     eligibility: [
       "PhD or equivalent research experience in Physics",
       "Published or in-progress research relevant to applied physics",
-      "Available to relocate to Amman for the fellowship term",
+      "Available to relocate to Amman for the scholarship term",
     ],
     requiredDocuments: [
       "CV / resume",
@@ -326,10 +405,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o6: {
-    provider: "Beacon Trust",
     keywords: ["STEM", "Women in Tech", "Graduate Studies"],
     deadlineDate: "2026-09-08",
-    fundingStatus: "Partially Funded",
     officialLink: "https://example.com/opportunities/o6/apply",
     matchBreakdown: [
       { label: "Field of study", score: 72 },
@@ -350,10 +427,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     gallery: [],
   },
   o7: {
-    provider: "WHO Regional Office",
     keywords: ["Public Health", "NGO", "Global Health"],
     deadlineDate: "2026-11-04",
-    fundingStatus: "Fully Funded",
     officialLink: "https://example.com/opportunities/o7/apply",
     matchBreakdown: [
       { label: "Field of study", score: 68 },
@@ -374,10 +449,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     gallery: [],
   },
   o8: {
-    provider: "Growth Loop Agency",
     keywords: ["Marketing", "Analytics", "Growth"],
     deadlineDate: "2026-09-26",
-    fundingStatus: "Paid",
     officialLink: "https://example.com/opportunities/o8/apply",
     matchBreakdown: [
       { label: "Field of study", score: 75 },
@@ -394,10 +467,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     gallery: [],
   },
   o9: {
-    provider: "Levant Legal Foundation",
     keywords: ["Law", "Public Policy", "MENA"],
     deadlineDate: "2026-11-19",
-    fundingStatus: "Partially Funded",
     officialLink: "https://example.com/opportunities/o9/apply",
     matchBreakdown: [
       { label: "Field of study", score: 62 },
@@ -418,10 +489,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     gallery: [],
   },
   o10: {
-    provider: "Gulf Renewable Energy Council",
     keywords: ["Renewable Energy", "Clean Tech", "Graduate Research"],
     deadlineDate: "2026-10-15",
-    fundingStatus: "Fully Funded",
     officialLink: "https://example.com/opportunities/o10/apply",
     matchBreakdown: [
       { label: "Field of study", score: 88 },
@@ -432,7 +501,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     eligibility: [
       "Graduate student or researcher in Engineering or Energy Sciences",
       "Research focus on solar, wind, or related renewable systems",
-      "Available for the full fellowship duration",
+      "Available for the full scholarship duration",
     ],
     requiredDocuments: [
       "CV / resume",
@@ -446,10 +515,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o11: {
-    provider: "Studio Nawafir",
     keywords: ["Branding", "Film & Print", "Creative"],
     deadlineDate: "2026-09-14",
-    fundingStatus: "Unpaid",
     officialLink: "https://example.com/opportunities/o11/apply",
     matchBreakdown: [
       { label: "Field of study", score: 65 },
@@ -466,10 +533,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     gallery: [],
   },
   o12: {
-    provider: "Emirates Engineering Trust",
     keywords: ["Engineering", "Full Tuition", "Merit-Based"],
     deadlineDate: "2026-10-02",
-    fundingStatus: "Fully Funded",
     officialLink: "https://example.com/opportunities/o12/apply",
     matchBreakdown: [
       { label: "Field of study", score: 96 },
@@ -493,10 +558,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o13: {
-    provider: "Applied AI Collective",
     keywords: ["Machine Learning", "Applied AI", "Mentorship"],
     deadlineDate: "2026-09-20",
-    fundingStatus: "Fully Funded",
     officialLink: "https://example.com/opportunities/o13/apply",
     matchBreakdown: [
       { label: "Field of study", score: 92 },
@@ -517,10 +580,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     gallery: [],
   },
   o14: {
-    provider: "Regional Policy Institute",
     keywords: ["Public Policy", "Research Briefs", "Government"],
     deadlineDate: "2026-10-09",
-    fundingStatus: "Paid",
     officialLink: "https://example.com/opportunities/o14/apply",
     matchBreakdown: [
       { label: "Field of study", score: 60 },
@@ -536,13 +597,30 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     requiredDocuments: ["CV / resume", "Cover letter"],
     gallery: [],
   },
+  o15: {
+    keywords: ["Women in STEM", "Computer Science", "Partial Tuition"],
+    deadlineDate: "2026-10-04",
+    officialLink: "https://example.com/opportunities/o15/apply",
+    matchBreakdown: [
+      { label: "Field of study", score: 90 },
+      { label: "Academic profile", score: 78 },
+      { label: "Eligibility", score: 70 },
+      { label: "Location fit", score: 55 },
+    ],
+    eligibility: [
+      "Women enrolled in a computer science or related bachelor's program",
+      "Studying at a university in a Gulf Cooperation Council country",
+    ],
+    requiredDocuments: ["Academic transcripts", "Personal statement"],
+    gallery: [],
+  },
 };
 
-// Full opportunity detail records, browsed on the opportunity details page
-// (Discover → [id]).
-export const OPPORTUNITY_DETAILS: OpportunityDetail[] = OPPORTUNITIES.map(
-  (opportunity) => ({
-    ...opportunity,
-    ...DETAIL_EXTRAS[opportunity.id],
-  }),
-);
+// Provider and funding moved onto the summaries (the cards show them); details still require both.
+export const OPPORTUNITY_DETAILS: OpportunityDetail[] = OPPORTUNITIES.map((opportunity) => {
+  const { provider, fundingStatus } = opportunity;
+  if (!provider || !fundingStatus) {
+    throw new Error(`Mock opportunity ${opportunity.id} needs a provider and a funding status`);
+  }
+  return { ...opportunity, provider, fundingStatus, ...DETAIL_EXTRAS[opportunity.id] };
+});
