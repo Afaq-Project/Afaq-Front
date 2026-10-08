@@ -17,3 +17,10 @@ export const MATCH_TIER_BADGE_CLASSES: Record<MatchTier, string> = {
   possible: "bg-warning-50 text-warning-800",
   low: "bg-neutral-50 text-neutral-800",
 };
+
+/** Solid fills for match-tier bars and legend dots. */
+export const MATCH_TIER_FILL: Record<MatchTier, string> = {
+  strong: "bg-success-600",
+  possible: "bg-warning-400",
+  low: "bg-neutral-200",
+};
