@@ -128,12 +128,12 @@ export function DashboardView() {
       {/* items-start: each column is as tall as its own cards, so nothing stretches to match the other side. */}
       <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2 min-w-0">
-          {/* TODO: pass "in_review" once applications report it; the status model has no such value yet, so it shows 0. */}
           <PipelineCard
             counts={{
               not_started: countBy("not_started"),
               in_progress: countBy("in_progress"),
               submitted: countBy("submitted"),
+              in_review: countBy("in_review"),
               accepted: countBy("accepted"),
               rejected: countBy("rejected"),
             }}

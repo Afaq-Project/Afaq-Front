@@ -6,6 +6,7 @@ import { Bookmark, ChevronDown, ExternalLink, Share2, Sparkles } from "lucide-re
 import { CARD_CLASS, GHOST_LINK_CLASS } from "@/src/feature/dashboard/components/styles";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { getMatchTier, MATCH_TIER_STROKE, MATCH_TIER_TEXT } from "@/src/feature/dashboard/types/status";
+import { APPLICATION_STATUSES, STATUS_LABEL, STATUS_STAGE_INDEX } from "@/src/feature/applications/types/status";
 import { formatDeadlineDay } from "@/src/shared/lib/deadline";
 import { notify } from "@/src/shared/lib/notify";
 import type { ApplicationStatusKey } from "@/src/shared/lib/status-colors";
@@ -18,25 +19,7 @@ import { MATCH_TIER_LABEL } from "../../services/utils";
 import type { OpportunityDetail } from "../../types/opportunity";
 import { FIT_LABEL, FIT_TEXT, FitIcon, MATCH_FACTORS } from "../matchFactors";
 
-export const STATUS_LABEL: Record<ApplicationStatusKey, string> = {
-  not_started: "Not started",
-  in_progress: "In progress",
-  submitted: "Submitted",
-  in_review: "In review",
-  accepted: "Accepted",
-  rejected: "Rejected",
-};
-
-const STATUS_STEP: Record<ApplicationStatusKey, number> = {
-  not_started: 0,
-  in_progress: 1,
-  submitted: 2,
-  in_review: 3,
-  accepted: 4,
-  rejected: 4,
-};
-
-const STATUSES = Object.keys(STATUS_LABEL) as ApplicationStatusKey[];
+const STATUSES = APPLICATION_STATUSES;
 
 /** "Update status" button with a quick-pick list of statuses. */
 export function UpdateStatusMenu({
@@ -185,7 +168,7 @@ export function ActionsCard({
           <h2 className="text-h3 text-neutral-900">Your application</h2>
           <Badge status={tracking.status}>{STATUS_LABEL[tracking.status]}</Badge>
         </div>
-        <StatusTimeline currentStep={STATUS_STEP[tracking.status]} />
+        <StatusTimeline currentStep={STATUS_STAGE_INDEX[tracking.status]} />
         <UpdateStatusMenu status={tracking.status} onChange={tracking.onStatusChange} />
         <ApplyLink href={opportunity.officialLink} disabled={closed} />
         {secondaryRow}
