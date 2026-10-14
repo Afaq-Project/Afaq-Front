@@ -59,8 +59,13 @@ export const profileService = {
 
   listDocuments: () => apiClient.get<ApiDocument[]>("/profile/documents"),
 
-  getDocumentDownloadUrl: (id: string) =>
-    apiClient.get<{ url: string }>(`/profile/documents/${id}/download`),
+  /** A short-lived URL for the file. The API returns it relative to the API host. */
+  getDocumentDownloadUrl: async (id: string) => {
+    const { signedUrl, expiresIn } = await apiClient.get<{ signedUrl: string; expiresIn: number }>(
+      `/profile/documents/${id}/download`,
+    );
+    return { url: new URL(signedUrl, process.env.NEXT_PUBLIC_API_URL).toString(), expiresIn };
+  },
 
   deleteDocument: (id: string) =>
     apiClient.delete(`/profile/documents/${id}`),

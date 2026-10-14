@@ -6,6 +6,7 @@ import { Bookmark, ChevronDown, ExternalLink, Share2, Sparkles } from "lucide-re
 import { CARD_CLASS, GHOST_LINK_CLASS } from "@/src/feature/dashboard/components/styles";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { getMatchTier, MATCH_TIER_STROKE, MATCH_TIER_TEXT } from "@/src/feature/dashboard/types/status";
+import { APPLICATION_STATUSES, STATUS_LABEL, STATUS_STAGE_INDEX } from "@/src/feature/applications/types/status";
 import { formatDeadlineDay } from "@/src/shared/lib/deadline";
 import { notify } from "@/src/shared/lib/notify";
 import type { ApplicationStatusKey } from "@/src/shared/lib/status-colors";
@@ -18,25 +19,7 @@ import { MATCH_TIER_LABEL } from "../../services/utils";
 import type { OpportunityDetail } from "../../types/opportunity";
 import { FIT_LABEL, FIT_TEXT, FitIcon, MATCH_FACTORS } from "../matchFactors";
 
-export const STATUS_LABEL: Record<ApplicationStatusKey, string> = {
-  not_started: "Not started",
-  in_progress: "In progress",
-  submitted: "Submitted",
-  in_review: "In review",
-  accepted: "Accepted",
-  rejected: "Rejected",
-};
-
-const STATUS_STEP: Record<ApplicationStatusKey, number> = {
-  not_started: 0,
-  in_progress: 1,
-  submitted: 2,
-  in_review: 3,
-  accepted: 4,
-  rejected: 4,
-};
-
-const STATUSES = Object.keys(STATUS_LABEL) as ApplicationStatusKey[];
+const STATUSES = APPLICATION_STATUSES;
 
 /** "Update status" button with a quick-pick list of statuses. */
 export function UpdateStatusMenu({
@@ -185,7 +168,7 @@ export function ActionsCard({
           <h2 className="text-h3 text-neutral-900">Your application</h2>
           <Badge status={tracking.status}>{STATUS_LABEL[tracking.status]}</Badge>
         </div>
-        <StatusTimeline currentStep={STATUS_STEP[tracking.status]} />
+        <StatusTimeline currentStep={STATUS_STAGE_INDEX[tracking.status]} />
         <UpdateStatusMenu status={tracking.status} onChange={tracking.onStatusChange} />
         <ApplyLink href={opportunity.officialLink} disabled={closed} />
         {secondaryRow}
@@ -264,26 +247,35 @@ export function MatchCard({ opportunity }: { opportunity: OpportunityDetail }) {
   );
 }
 
-const AI_QUESTIONS = [
-  "Am I eligible for this?",
-  "What should my personal statement focus on?",
-  "Review my essay for this application",
-];
-
-/** Suggested questions that open the AI assistant about this opportunity (3 across from 1024px). */
-export function AskAiCard({ opportunityId }: { opportunityId: string }) {
+/**
+ * Suggested questions that open the AI assistant with some context: a white card with a
+ * sparkle title, the questions as buttons (3 across from 1024px when `layout="row"`, stacked
+ * otherwise) and a disclaimer. Shared by the opportunity and application details pages.
+ */
+export function AskAiCard({
+  title,
+  questions,
+  hrefFor,
+  layout = "row",
+}: {
+  title: string;
+  questions: string[];
+  /** Where a question goes: the assistant with the context and the question prefilled. */
+  hrefFor: (question: string) => string;
+  layout?: "row" | "stack";
+}) {
   return (
     <section aria-labelledby="ask-ai-heading" className={CARD_CLASS}>
       <h2 id="ask-ai-heading" className="flex items-center gap-2 text-h3 text-neutral-900">
         <Sparkles size={18} strokeWidth={1.75} aria-hidden="true" className="text-primary-600" />
-        Questions about this opportunity?
+        {title}
       </h2>
-      <ul className="gap-2 grid grid-cols-1 lg:grid-cols-3 mt-4">
-        {AI_QUESTIONS.map((question) => (
+      <ul className={cn("gap-2 grid grid-cols-1 mt-4", layout === "row" && "lg:grid-cols-3")}>
+        {questions.map((question) => (
           <li key={question} className="flex">
-            {/* TODO: the AI assistant doesn't read `opportunity` or `q` yet, so it opens without the context or the question. */}
+            {/* The assistant opens the chat for this context and prefills the question. */}
             <Link
-              href={`/ai?opportunity=${encodeURIComponent(opportunityId)}&q=${encodeURIComponent(question)}`}
+              href={hrefFor(question)}
               className="flex items-center bg-white px-4 py-2 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-full min-h-11 md:min-h-10 font-medium text-primary-600 text-sm text-left transition-colors"
             >
               {question}

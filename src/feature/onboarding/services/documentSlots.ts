@@ -34,7 +34,7 @@ export function slotLabel(key: DocumentSlotKey): string {
   return DOCUMENT_SLOTS.find((s) => s.key === key)?.label ?? key;
 }
 
-/** The API document type that matches a slot, falling back to the first type. */
+/** The API document type whose name matches the slot, or undefined. Never falls back to another type. */
 export function findDocumentTypeId(
   slotKey: DocumentSlotKey,
   documentTypes: RefDocumentType[],
@@ -43,7 +43,7 @@ export function findDocumentTypeId(
   const match = documentTypes.find((dt) =>
     keywords.some((kw) => dt.nameEn.toLowerCase().includes(kw)),
   );
-  return match?.id ?? documentTypes[0]?.id;
+  return match?.id;
 }
 
 /** The slot a document type belongs to, by its English name. */

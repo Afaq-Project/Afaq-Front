@@ -1,13 +1,15 @@
 import type { ReactNode } from "react";
-import { CircleAlert, Info } from "lucide-react";
+import { CircleAlert, CircleCheck, Info } from "lucide-react";
 
-type InlineAlertVariant = "info" | "error";
+type InlineAlertVariant = "info" | "success" | "error";
 
 interface InlineAlertProps {
   variant?: InlineAlertVariant;
   id?: string;
   className?: string;
   children: ReactNode;
+  /** Buttons or links shown after the message (beside it from 640px, below it on smaller screens). */
+  action?: ReactNode;
 }
 
 const variants: Record<
@@ -15,6 +17,7 @@ const variants: Record<
   { classes: string; Icon: typeof Info; role: "status" | "alert" }
 > = {
   info: { classes: "bg-info-50 text-info-800", Icon: Info, role: "status" },
+  success: { classes: "bg-primary-50 text-primary-800", Icon: CircleCheck, role: "status" },
   error: {
     classes: "bg-danger-50 text-danger-800",
     Icon: CircleAlert,
@@ -28,6 +31,7 @@ export default function InlineAlert({
   id,
   className = "",
   children,
+  action,
 }: InlineAlertProps) {
   const { classes, Icon, role } = variants[variant];
 
@@ -43,7 +47,14 @@ export default function InlineAlert({
         className="mt-px shrink-0"
         aria-hidden="true"
       />
-      <div>{children}</div>
+      {action ? (
+        <div className="flex sm:flex-row flex-col flex-1 sm:justify-between sm:items-center gap-2">
+          <div>{children}</div>
+          <div className="flex flex-wrap items-center gap-2 sm:-my-1 shrink-0">{action}</div>
+        </div>
+      ) : (
+        <div>{children}</div>
+      )}
     </div>
   );
 }

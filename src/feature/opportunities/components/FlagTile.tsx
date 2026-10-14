@@ -7,6 +7,7 @@ import { cn } from "@/src/feature/dashboard/services/utils";
 // The 1px border keeps mostly-white flags (Qatar, Lebanon, Japan) distinct.
 const TILE_BASE = "flex justify-center items-center border border-neutral-100 overflow-hidden shrink-0";
 const SIZES = {
+  sm: { tile: "rounded-[4px] w-6 h-4.5", width: 24, height: 18, icon: 11 },
   md: { tile: "rounded-[6px] w-10 h-7.5", width: 40, height: 30, icon: 16 },
   lg: { tile: "rounded-[8px] w-14 h-10.5", width: 56, height: 42, icon: 22 },
 };
@@ -26,7 +27,7 @@ export function FlagTile({
   countryCode?: string;
   countryName?: string;
   remote: boolean;
-  /** md: 40×30 (cards). lg: 56×42 (details header). */
+  /** sm: 24×18 (inline stacks). md: 40×30 (cards). lg: 56×42 (details header). */
   size?: keyof typeof SIZES;
   className?: string;
 }) {

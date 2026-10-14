@@ -1,18 +1,15 @@
 import { ApplicationSummary } from "../types/application";
 import type { ApplicationDetail } from "../types/detail";
+import { ApplicationStatus } from "../types/status";
 import {
-  ApplicationStatus,
-  DEADLINE_TONE_TEXT,
-  DeadlineTone,
-} from "../types/status";
-import { ApplicationFilterState } from "../types/filters";
+  DEFAULT_APPLICATIONS_QUERY,
+  STATUS_TABS,
+  TYPE_OPTIONS,
+  type ApplicationsQuery,
+  type StatusTab,
+  type TypeFilter,
+} from "../types/filters";
 import { APPLICATION_DETAILS } from "../mocks/applicationDetails";
-
-export function getDeadlineTone(daysLeft: number): DeadlineTone {
-  if (daysLeft <= 7) return "danger";
-  if (daysLeft <= 14) return "warning";
-  return "info";
-}
 
 export function formatDeadline(daysLeft: number): string {
   if (daysLeft <= 0) return "Ends today";
@@ -20,82 +17,57 @@ export function formatDeadline(daysLeft: number): string {
   return `Ends in ${daysLeft} days`;
 }
 
-const RESOLVED_STATUSES: ApplicationStatus[] = ["accepted", "rejected"];
+const ACTIVE_STATUSES: ApplicationStatus[] = ["not_started", "in_progress"];
 
-/** "Ends today" always reads as urgent, even for a resolved application —
- * everything else on a resolved row falls back to neutral since its
- * deadline no longer carries urgency. */
-export function getDeadlineTextClass(application: ApplicationSummary): string {
-  if (application.daysLeft <= 0) {
-    return `${DEADLINE_TONE_TEXT.danger} underline`;
-  }
+export const isActive = (application: ApplicationSummary) => ACTIVE_STATUSES.includes(application.status);
 
-  if (RESOLVED_STATUSES.includes(application.status)) {
-    return "text-neutral-600";
-  }
-
-  return DEADLINE_TONE_TEXT[getDeadlineTone(application.daysLeft)];
+/** Search (title or provider) and type; the status tab is applied separately so tabs can count. */
+export function filterApplications(applications: ApplicationSummary[], query: ApplicationsQuery) {
+  const search = query.q.trim().toLowerCase();
+  return applications.filter(
+    (a) =>
+      (search === "" || a.title.toLowerCase().includes(search) || a.provider.toLowerCase().includes(search)) &&
+      (query.type === "all" || a.type.toLowerCase() === query.type),
+  );
 }
 
-export interface ApplicationAction {
-  label: string;
+export function inTab(application: ApplicationSummary, tab: StatusTab) {
+  if (tab === "all") return true;
+  return STATUS_TABS.find((t) => t.value === tab)?.statuses.includes(application.status) ?? false;
 }
 
-export const APPLICATION_ACTIONS: Record<ApplicationStatus, ApplicationAction> =
-  {
-    not_started: { label: "Start now" },
-    in_progress: { label: "Complete application" },
-    submitted: { label: "Details" },
-    rejected: { label: "Details" },
-    accepted: { label: "See results" },
-  };
-
-export function getApplicationAction(
-  status: ApplicationStatus,
-): ApplicationAction {
-  return APPLICATION_ACTIONS[status];
-}
-
-export interface ApplicationsSummary {
-  total: number;
-  submitted: number;
-  upcomingDeadlines: number;
-  accepted: number;
-}
-
-export function getApplicationsSummary(
-  applications: ApplicationSummary[],
-): ApplicationsSummary {
-  return {
-    total: applications.length,
-    submitted: applications.filter((a) => a.status === "submitted").length,
-    upcomingDeadlines: applications.filter(
-      (a) => !RESOLVED_STATUSES.includes(a.status) && a.daysLeft <= 7,
-    ).length,
-    accepted: applications.filter((a) => a.status === "accepted").length,
-  };
-}
-
-export function filterApplications(
-  applications: ApplicationSummary[],
-  filters: ApplicationFilterState,
-): ApplicationSummary[] {
-  const search = filters.search.trim().toLowerCase();
-
-  return applications.filter((application) => {
-    const matchesSearch =
-      search.length === 0 ||
-      application.title.toLowerCase().includes(search) ||
-      application.provider.toLowerCase().includes(search);
-
-    const matchesStatus =
-      filters.status === "all" || application.status === filters.status;
-
-    const matchesType =
-      filters.type === "all" || application.type === filters.type;
-
-    return matchesSearch && matchesStatus && matchesType;
+/**
+ * Active applications first, soonest deadline first (FR-5.4); then submitted, in review and
+ * decided ones, most recently updated first.
+ */
+export function sortApplications(applications: ApplicationSummary[]) {
+  return [...applications].sort((a, b) => {
+    const activeA = isActive(a);
+    const activeB = isActive(b);
+    if (activeA !== activeB) return activeA ? -1 : 1;
+    if (activeA) return a.daysLeft - b.daysLeft;
+    return (b.updatedAt ?? "").localeCompare(a.updatedAt ?? "");
   });
+}
+
+const oneOf = <T extends string>(value: string | null, options: { value: T }[], fallback: T): T =>
+  options.some((option) => option.value === value) ? (value as T) : fallback;
+
+export function parseApplicationsQuery(params: URLSearchParams): ApplicationsQuery {
+  return {
+    tab: oneOf<StatusTab>(params.get("status"), STATUS_TABS, DEFAULT_APPLICATIONS_QUERY.tab),
+    q: params.get("q") ?? "",
+    type: oneOf<TypeFilter>(params.get("type"), TYPE_OPTIONS, DEFAULT_APPLICATIONS_QUERY.type),
+  };
+}
+
+/** Only non-default values, so a plain /applications stays clean. */
+export function applicationsQueryToParams(query: ApplicationsQuery) {
+  const params = new URLSearchParams();
+  if (query.tab !== "all") params.set("status", query.tab);
+  if (query.q.trim()) params.set("q", query.q.trim());
+  if (query.type !== "all") params.set("type", query.type);
+  return params;
 }
 
 export function getApplicationDetail(id: string): ApplicationDetail | undefined {

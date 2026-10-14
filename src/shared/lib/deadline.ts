@@ -48,3 +48,27 @@ export function formatDeadlineDay(isoDate: string) {
     year: "numeric",
   });
 }
+
+/** ISO date (YYYY-MM-DD) `days` from today in local time (negative for the past). For mocks. */
+export function isoDateFromToday(days: number) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/** "today", "yesterday", "3 days ago", "2 weeks ago" for an ISO date (YYYY-MM-DD), relative to `now`. */
+export function relativeDay(isoDate: string, now: Date) {
+  const days = daysUntil(isoDate, now);
+  const format = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  if (Math.abs(days) < 7) return format.format(days, "day");
+  if (Math.abs(days) < 30) return format.format(Math.round(days / 7), "week");
+  if (Math.abs(days) < 365) return format.format(Math.round(days / 30), "month");
+  return format.format(Math.round(days / 365), "year");
+}
+
+/** "Thu, Oct 15" for an ISO date (YYYY-MM-DD), read as a local calendar day. */
+export function formatShortDay(isoDate: string) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+}

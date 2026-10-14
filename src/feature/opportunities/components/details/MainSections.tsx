@@ -92,8 +92,8 @@ export function EligibilitySection({ criteria }: { criteria: EligibilityCriterio
 
 /**
  * Required documents with the user's upload state. Every row shows one: "Uploaded · filename"
- * when the user has a document of the same explicit category, otherwise "Not uploaded yet" with
- * an Add link, including documents no profile category covers (e.g. passport). While loading,
+ * when the user has a document of the same document type, otherwise "Not uploaded yet" with
+ * an Add link, including documents with no type to match on. While loading,
  * or if the user's documents can't be fetched, rows say so instead of claiming either way.
  */
 export function DocumentsSection({ documents }: { documents: OpportunityDetail["requiredDocuments"] }) {
@@ -101,7 +101,7 @@ export function DocumentsSection({ documents }: { documents: OpportunityDetail["
   // TODO: if the user's documents carry no type at all, nothing can be matched, so every row
   // shows "Not uploaded yet" until uploads are typed.
   const matchFor = (doc: OpportunityDetail["requiredDocuments"][number]) =>
-    userDocs.available && userDocs.typed && doc.category ? userDocs.byCategory.get(doc.category) : undefined;
+    userDocs.available && userDocs.typed && doc.type ? userDocs.byType.get(doc.type) : undefined;
   const ready = documents.filter((doc) => matchFor(doc) !== undefined).length;
 
   return (

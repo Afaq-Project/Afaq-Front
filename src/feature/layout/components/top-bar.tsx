@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FolderOpen } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { NotificationsDropdown } from "@/src/feature/notifications/components/NotificationsDropdown";
 import {
   HOME_HREF,
+  ICON_BUTTON_CLASS,
   NAV_ITEMS,
   SHOW_GLOBAL_SEARCH,
   isNavActive,
@@ -15,7 +17,7 @@ import {
 import { TopBarSearch } from "./top-bar-search";
 import { UserMenu } from "./user-menu";
 
-/** Sticky white bar: logo, text nav (tablet and up), then search, bell and the user menu. */
+/** Sticky white bar: logo, text nav (tablet and up), then search, your documents (students), bell and the user menu. */
 export function TopBar({ variant }: { variant: ShellVariant }) {
   const pathname = usePathname();
 
@@ -79,6 +81,20 @@ export function TopBar({ variant }: { variant: ShellVariant }) {
 
         <div className="flex items-center gap-1 md:gap-2 ml-auto">
           {SHOW_GLOBAL_SEARCH && <TopBarSearch />}
+          {variant === "user" && (
+            <Link
+              href="/documents"
+              aria-label="Your documents"
+              title="Your documents"
+              aria-current={isNavActive(pathname, "/documents") ? "page" : undefined}
+              className={cn(
+                ICON_BUTTON_CLASS,
+                isNavActive(pathname, "/documents") && "text-primary-600 hover:text-primary-600",
+              )}
+            >
+              <FolderOpen size={20} strokeWidth={1.75} aria-hidden="true" />
+            </Link>
+          )}
           <NotificationsDropdown />
           <UserMenu variant={variant} />
         </div>

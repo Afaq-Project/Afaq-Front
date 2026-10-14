@@ -89,62 +89,36 @@ export function useDocumentUploads(documentTypes: RefDocumentType[], typesLoadin
     }
   };
 
-  /** Uploads a dropped file; the user picks its slot once the upload finishes. */
-  const stageFile = async (file: File) => {
+  /**
+   * Holds a dropped file until the user picks its slot, then uploads it under that slot's type.
+   * (Uploading first would have to guess a type, and there's no endpoint to change it later.)
+   */
+  const stageFile = (file: File) => {
     if (file.size > MAX_FILE_SIZE) return;
-    // There is no endpoint to change a document's type later, so staged files are stored
-    // under the first document type whatever slot the user then picks.
-    const defaultTypeId = documentTypes[0]?.id ?? "";
-    const stageId = `staged-${Date.now()}`;
-
     setStaged((prev) => [
       ...prev,
       {
-        id: stageId,
+        id: `staged-${Date.now()}`,
         name: file.name,
         size: formatFileSize(file.size),
         mimeType: file.type,
-        status: "uploading",
+        status: "needs_type",
         progress: 0,
         selectedSlot: "",
+        file,
       },
     ]);
-    const tick = setInterval(() => {
-      setStaged((prev) =>
-        prev.map((f) =>
-          f.id === stageId && f.status === "uploading"
-            ? { ...f, progress: nextSimulatedProgress(f.progress) }
-            : f,
-        ),
-      );
-    }, SIMULATED_PROGRESS_INTERVAL_MS);
-
-    try {
-      const doc = await profileService.uploadDocument(defaultTypeId, file);
-      setStaged((prev) =>
-        prev.map((f) => (f.id === stageId ? { ...f, status: "needs_type", progress: 100, apiId: doc.id } : f)),
-      );
-    } catch {
-      setStaged((prev) => prev.filter((f) => f.id !== stageId));
-    } finally {
-      clearInterval(tick);
-    }
   };
 
   const selectStagedSlot = (stageId: string, slot: DocumentSlotKey | "") =>
     setStaged((prev) => prev.map((f) => (f.id === stageId ? { ...f, selectedSlot: slot } : f)));
 
-  /** Moves an uploaded staged file into the slot the user picked. */
+  /** Uploads a staged file into the slot the user picked, under that slot's document type. */
   const confirmStaged = (stageId: string) => {
     const file = staged.find((f) => f.id === stageId);
-    if (!file?.apiId || !file.selectedSlot) return;
-    const slot = file.selectedSlot;
-    setSlot(slot, {
-      status: "uploaded",
-      progress: 100,
-      doc: { apiId: file.apiId, slotKey: slot, name: file.name, size: file.size, type: file.mimeType },
-    });
+    if (!file?.selectedSlot) return;
     setStaged((prev) => prev.filter((f) => f.id !== stageId));
+    uploadToSlot(file.selectedSlot, file.file);
   };
 
   const removeFromSlot = async (slotKey: DocumentSlotKey) => {
