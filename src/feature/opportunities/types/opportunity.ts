@@ -1,3 +1,5 @@
+import type { DocumentTypeKey } from "@/src/shared/lib/document-types";
+
 // v1 covers scholarships and internships only.
 export type OpportunityType = "Scholarship" | "Internship";
 
@@ -49,13 +51,10 @@ export interface EligibilityCriterion {
   userFit?: EligibilityFit;
 }
 
-/** Profile document categories (the onboarding upload slots). */
-export type DocumentCategory = "resume" | "essay" | "transcript" | "recommendation" | "other";
-
 export interface RequiredDocument {
   name: string;
-  /** The profile category it corresponds to; absent when no category fits (e.g. passport). */
-  category?: DocumentCategory;
+  /** Its document type (DOCUMENT_TYPES); absent when none fits, and then it can't be matched. */
+  type?: DocumentTypeKey;
 }
 
 export interface OpportunityDetail extends OpportunitySummary {

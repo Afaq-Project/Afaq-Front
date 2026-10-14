@@ -8,21 +8,21 @@ const TRANSCRIPT: ApplicationDocument = {
   name: "Academic_Transcript.pdf",
   fileType: "PDF",
   size: "2.4 MB",
-  category: "transcript",
+  type: "transcript",
 };
 const STATEMENT: ApplicationDocument = {
   id: "sop",
   name: "Statement_of_Purpose.docx",
   fileType: "DOCX",
   size: "1.1 MB",
-  category: "essay",
+  type: "essay",
 };
 const ENGLISH: ApplicationDocument = {
   id: "english",
   name: "IELTS_Certificate.pdf",
   fileType: "PDF",
   size: "850 KB",
-  category: "other",
+  type: "language",
 };
 
 /** Linked documents grow as an application moves along. */

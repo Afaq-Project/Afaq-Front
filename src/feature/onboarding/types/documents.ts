@@ -30,8 +30,10 @@ export interface StagedFile {
   name: string;
   size: string;
   mimeType: string;
-  status: "uploading" | "needs_type";
+  /** Dropped files wait for a type; they upload only once one is picked. */
+  status: "needs_type";
   progress: number;
-  apiId?: string;
   selectedSlot: DocumentSlotKey | "";
+  /** The dropped file, held until its slot is confirmed. */
+  file: File;
 }

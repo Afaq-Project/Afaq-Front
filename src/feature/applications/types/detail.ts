@@ -1,4 +1,4 @@
-import type { DocumentCategory } from "@/src/feature/opportunities/types/opportunity";
+import type { DocumentTypeKey } from "@/src/shared/lib/document-types";
 import type { ApplicationSummary } from "./application";
 import type { ApplicationStatus } from "./status";
 
@@ -8,8 +8,8 @@ export interface ApplicationDocument {
   /** e.g. "PDF", "DOCX". */
   fileType: string;
   size: string;
-  /** Explicit document type; a required document only counts as linked when this matches. */
-  category?: DocumentCategory;
+  /** Its document type; a required document only counts as linked when this matches. */
+  type?: DocumentTypeKey;
 }
 
 export type ActivityKind = "status" | "document" | "reminder";

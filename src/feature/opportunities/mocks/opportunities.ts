@@ -273,10 +273,10 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Open to applicants from any nationality", userFit: "met" },
     ],
     requiredDocuments: [
-      { name: "Academic transcripts", category: "transcript" },
-      { name: "Personal statement", category: "essay" },
-      { name: "Two letters of recommendation", category: "recommendation" },
-      { name: "Passport copy" },
+      { name: "Academic transcripts", type: "transcript" },
+      { name: "Personal statement", type: "essay" },
+      { name: "Two letters of recommendation", type: "recommendation" },
+      { name: "Passport copy", type: "id" },
     ],
   },
   o2: {
@@ -291,7 +291,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Available for a 3-month on-site placement", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Portfolio" },
       { name: "Cover letter" },
     ],
@@ -308,9 +308,9 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Fluent in English and Arabic", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "Academic transcripts", category: "transcript" },
-      { name: "Personal statement", category: "essay" },
-      { name: "Two letters of recommendation", category: "recommendation" },
+      { name: "Academic transcripts", type: "transcript" },
+      { name: "Personal statement", type: "essay" },
+      { name: "Two letters of recommendation", type: "recommendation" },
     ],
   },
   o4: {
@@ -325,7 +325,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Available for a 10-week summer placement", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Cover letter" },
       { name: "Portfolio" },
     ],
@@ -342,10 +342,10 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Available to relocate to Amman for the scholarship term", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Research proposal" },
-      { name: "Two letters of recommendation", category: "recommendation" },
-      { name: "Academic transcripts", category: "transcript" },
+      { name: "Two letters of recommendation", type: "recommendation" },
+      { name: "Academic transcripts", type: "transcript" },
     ],
   },
   o6: {
@@ -360,9 +360,9 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Demonstrated financial need", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "Academic transcripts", category: "transcript" },
-      { name: "Personal statement", category: "essay" },
-      { name: "Two letters of recommendation", category: "recommendation" },
+      { name: "Academic transcripts", type: "transcript" },
+      { name: "Personal statement", type: "essay" },
+      { name: "Two letters of recommendation", type: "recommendation" },
     ],
   },
   o7: {
@@ -377,9 +377,9 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Prior volunteer or NGO experience preferred", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Research proposal" },
-      { name: "Two letters of recommendation", category: "recommendation" },
+      { name: "Two letters of recommendation", type: "recommendation" },
     ],
   },
   o8: {
@@ -394,7 +394,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Available for a 6-month placement" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Cover letter" },
     ],
   },
@@ -410,9 +410,9 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Strong academic record in prior legal studies", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "Academic transcripts", category: "transcript" },
-      { name: "Personal statement", category: "essay" },
-      { name: "Two letters of recommendation", category: "recommendation" },
+      { name: "Academic transcripts", type: "transcript" },
+      { name: "Personal statement", type: "essay" },
+      { name: "Two letters of recommendation", type: "recommendation" },
     ],
   },
   o10: {
@@ -427,10 +427,10 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Available for the full scholarship duration", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Research proposal" },
-      { name: "Two letters of recommendation", category: "recommendation" },
-      { name: "Academic transcripts", category: "transcript" },
+      { name: "Two letters of recommendation", type: "recommendation" },
+      { name: "Academic transcripts", type: "transcript" },
     ],
   },
   o11: {
@@ -442,7 +442,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Based in or able to relocate to Beirut" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Portfolio" },
       { name: "Cover letter" },
     ],
@@ -459,9 +459,9 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Demonstrated financial need or merit qualification", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "Academic transcripts", category: "transcript" },
-      { name: "Personal statement", category: "essay" },
-      { name: "Two letters of recommendation", category: "recommendation" },
+      { name: "Academic transcripts", type: "transcript" },
+      { name: "Personal statement", type: "essay" },
+      { name: "Two letters of recommendation", type: "recommendation" },
     ],
   },
   o13: {
@@ -476,9 +476,9 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Available for the full 12-month term", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Research proposal" },
-      { name: "Two letters of recommendation", category: "recommendation" },
+      { name: "Two letters of recommendation", type: "recommendation" },
     ],
   },
   o14: {
@@ -490,7 +490,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Available for a 6-month placement", userFit: "unknown" },
     ],
     requiredDocuments: [
-      { name: "CV / resume", category: "resume" },
+      { name: "CV / resume", type: "cv" },
       { name: "Cover letter" },
     ],
   },
@@ -505,8 +505,8 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
       { text: "Studying at a university in a Gulf Cooperation Council country", userFit: "met" },
     ],
     requiredDocuments: [
-      { name: "Academic transcripts", category: "transcript" },
-      { name: "Personal statement", category: "essay" },
+      { name: "Academic transcripts", type: "transcript" },
+      { name: "Personal statement", type: "essay" },
     ],
   },
 };
