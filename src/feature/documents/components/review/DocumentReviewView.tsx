@@ -3,12 +3,14 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Download, MessageSquare } from "lucide-react";
+import { ArrowLeft, Download, FileText, MessageSquare } from "lucide-react";
 import { FlagTile } from "@/src/feature/opportunities/components/FlagTile";
 import { countryName } from "@/src/shared/lib/countries";
 import { isReviewable, reviewNoun } from "@/src/shared/lib/document-types";
 import { notify } from "@/src/shared/lib/notify";
 import { buttonClasses } from "@/src/shared/ui/Button";
+import { EmptyState } from "@/src/shared/ui/EmptyState";
+import { ErrorState } from "@/src/shared/ui/ErrorState";
 import { Skeleton } from "@/src/shared/ui/Skeleton";
 import { REVIEW_QUOTA } from "../../mocks/reviews";
 import { REVIEWS_UNLIMITED, reviewPath, quotaLeft, seedReviews, toggleSuggestion } from "../../services/reviewStore";
@@ -24,8 +26,6 @@ import { NextReviewCard, UsedForCard, YourFileCard } from "./ReviewSidePanel";
 
 const BACK_LINK_CLASS =
   "inline-flex items-center gap-1.5 rounded-sm w-fit min-h-11 md:min-h-0 text-neutral-600 hover:text-neutral-900 text-small transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
-const STATE_CARD_CLASS =
-  "flex flex-col items-center gap-2 bg-white mx-auto px-6 py-12 border border-neutral-100 rounded-lg w-full text-center";
 
 /** Back to where the user came from: the AI assistant, an application, or (by default) the list. */
 function backLink(from: string | null) {
@@ -68,11 +68,28 @@ function DetailSkeleton() {
     <div role="status" className="flex flex-col gap-6">
       <span className="sr-only">Loading review</span>
       <Skeleton className="w-40 h-4" />
-      <div className="flex flex-col gap-2">
-        <Skeleton className="w-72 max-w-full h-7" />
-        <Skeleton className="w-96 max-w-full h-4" />
+      <div aria-hidden="true" className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
+        <div className="flex sm:flex-row flex-col sm:justify-between gap-4 lg:col-span-3">
+          <div className="flex flex-col gap-2">
+            <Skeleton className="w-72 max-w-full h-7" />
+            <Skeleton className="w-56 max-w-full h-4" />
+          </div>
+          <Skeleton className="w-40 h-10" />
+        </div>
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <Skeleton className="rounded-lg w-full h-36" />
+          <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
+            <Skeleton className="rounded-lg h-40" />
+            <Skeleton className="rounded-lg h-40" />
+          </div>
+          <Skeleton className="rounded-lg w-full h-56" />
+        </div>
+        <div className="flex flex-col gap-4">
+          <Skeleton className="rounded-lg h-36" />
+          <Skeleton className="rounded-lg h-32" />
+          <Skeleton className="rounded-lg h-36" />
+        </div>
       </div>
-      <Skeleton className="rounded-lg w-full max-w-[800px] h-72" />
     </div>
   );
 }
@@ -120,26 +137,23 @@ export function DocumentReviewView({ id }: { id: string }) {
   if (!reviews.loaded || (!item && userDocs.isLoading) || notReviewable) return <DetailSkeleton />;
 
   if (!item && userDocs.isError) {
-    return (
-      <div className={STATE_CARD_CLASS}>
-        <h1 className="text-h3 text-neutral-900">We couldn&apos;t load this document</h1>
-        <p className="text-body text-neutral-600">Check your connection and try again.</p>
-        <button type="button" onClick={userDocs.refetch} className={buttonClasses("secondary", "mt-3")}>
-          Try again
-        </button>
-      </div>
-    );
+    return <ErrorState titleAs="h1" title="We couldn't load this document" onRetry={userDocs.refetch} />;
   }
 
   if (!item) {
     return (
-      <div className={STATE_CARD_CLASS}>
-        <h1 className="text-h3 text-neutral-900">We couldn&apos;t find this document</h1>
-        <p className="text-body text-neutral-600">It may have been deleted or replaced.</p>
-        <Link href="/documents" className={buttonClasses("secondary", "mt-3")}>
-          Back to your documents
-        </Link>
-      </div>
+      <EmptyState
+        variant="page"
+        titleAs="h1"
+        icon={FileText}
+        title="We couldn't find this document"
+        message="It may have been deleted or replaced."
+        action={
+          <Link href="/documents" className={buttonClasses("secondary")}>
+            Back to your documents
+          </Link>
+        }
+      />
     );
   }
 

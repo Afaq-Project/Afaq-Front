@@ -9,6 +9,7 @@ import { getDeadlineUrgency } from "@/src/shared/lib/deadline";
 import { documentType, type DocumentTypeKey } from "@/src/shared/lib/document-types";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import { Popover } from "@/src/shared/ui/Popover";
+import { Skeleton } from "@/src/shared/ui/Skeleton";
 import type { TrackedApplication } from "../../types/document";
 
 interface MissingGroup {
@@ -170,5 +171,26 @@ export function NeededSection({
         })}
       </ul>
     </section>
+  );
+}
+
+/** Loading placeholder shaped like the needed-documents heading and card grid. */
+export function NeededSectionSkeleton() {
+  return (
+    <div aria-hidden="true" className="flex flex-col gap-4">
+      <Skeleton className="w-64 h-6" />
+      <div className="gap-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+        {Array.from({ length: 4 }, (_, index) => (
+          <div key={index} className="flex flex-col gap-3 bg-white p-4 border border-neutral-100 rounded-md">
+            <div className="flex items-center gap-2.5">
+              <Skeleton className="rounded-sm size-8" />
+              <Skeleton className="w-32 h-4" />
+            </div>
+            <Skeleton className="w-44 h-3.5" />
+            <Skeleton className="w-full h-9" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

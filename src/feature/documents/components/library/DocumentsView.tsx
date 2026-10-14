@@ -8,13 +8,16 @@ import { DOCUMENT_TYPES, isReviewable, type DocumentTypeKey } from "@/src/shared
 import { notify } from "@/src/shared/lib/notify";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import { CountTabs } from "@/src/shared/ui/CountTabs";
+import { EmptyState } from "@/src/shared/ui/EmptyState";
+import { ErrorState } from "@/src/shared/ui/ErrorState";
+import { Skeleton } from "@/src/shared/ui/Skeleton";
 import InlineAlert from "@/src/shared/ui/InlineAlert";
 import { documentEdits } from "../../services/documentEditsStore";
 import { reviewPath } from "../../services/reviewStore";
 import { DocumentRows, DocumentRowsSkeleton } from "./DocumentRows";
 import { ACTIVE_APPLICATIONS, TRACKED_APPLICATIONS, typeLabel } from "../../services/utils";
 import type { DocumentItem } from "../../types/document";
-import { NeededSection } from "./NeededSection";
+import { NeededSection, NeededSectionSkeleton } from "./NeededSection";
 import { UploadDialog, type UploadPreset } from "./UploadDialog";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
 import { useDocumentItems } from "../../hooks/useDocumentItems";
@@ -24,8 +27,6 @@ type SortOrder = "recent" | "name" | "type";
 /** A reviewable document that just got a new file, offered for review. */
 type ReviewPrompt = { itemId: string; reason: "replaced" | "needed" };
 
-const STATE_CARD_CLASS =
-  "flex flex-col items-center gap-2 bg-white mx-auto px-6 py-12 border border-neutral-100 rounded-lg w-full text-center";
 
 /**
  * "Your documents": what active applications still need, then every uploaded document (type
@@ -98,31 +99,38 @@ export function DocumentsView() {
 
   let body: React.ReactNode;
   if (userDocs.isLoading) {
-    body = <DocumentRowsSkeleton />;
-  } else if (userDocs.isError) {
+    // The controls row, then rows (the needed-documents skeleton sits above, see below).
     body = (
-      <div className={STATE_CARD_CLASS}>
-        <h2 className="text-h3 text-neutral-900">We couldn&apos;t load your documents</h2>
-        <p className="text-body text-neutral-600">Check your connection and try again.</p>
-        <button type="button" onClick={userDocs.refetch} className={buttonClasses("secondary", "mt-3")}>
-          Try again
-        </button>
+      <div className="flex flex-col gap-4">
+        <div aria-hidden="true" className="flex lg:flex-row flex-col lg:items-center gap-3 lg:gap-6">
+          <div className="flex flex-1 gap-6 pb-3 border-neutral-100 border-b">
+            <Skeleton className="w-14 h-5" />
+            <Skeleton className="w-24 h-5" />
+            <Skeleton className="w-24 h-5" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="flex-1 lg:flex-none lg:w-[280px] h-10" />
+            <Skeleton className="w-44 h-10" />
+          </div>
+        </div>
+        <DocumentRowsSkeleton />
       </div>
     );
+  } else if (userDocs.isError) {
+    body = <ErrorState title="We couldn't load your documents" onRetry={userDocs.refetch} />;
   } else if (items.length === 0) {
     body = (
-      <div className={STATE_CARD_CLASS}>
-        <span aria-hidden="true" className="flex justify-center items-center bg-neutral-50 mb-2 rounded-md size-12 text-neutral-600">
-          <FileText size={22} strokeWidth={1.75} />
-        </span>
-        <h2 className="text-h2 text-neutral-900">Upload your first document</h2>
-        <p className="max-w-md text-body text-neutral-600">
-          Add your CV, transcript, or certificates once and reuse them for every application.
-        </p>
-        <button type="button" onClick={() => openUpload()} className={buttonClasses("primary", "mt-3")}>
-          Upload document
-        </button>
-      </div>
+      <EmptyState
+        variant="page"
+        icon={FileText}
+        title="Upload your first document"
+        message="Add your CV, transcript, or certificates once and reuse them for every application."
+        action={
+          <button type="button" onClick={() => openUpload()} className={buttonClasses("primary")}>
+            Upload document
+          </button>
+        }
+      />
     );
   } else {
     body = (
@@ -161,19 +169,23 @@ export function DocumentsView() {
         </div>
 
         {visible.length === 0 ? (
-          <div className={STATE_CARD_CLASS}>
-            <h2 className="text-h3 text-neutral-900">No documents match</h2>
-            <button
-              type="button"
-              onClick={() => {
-                setTab("all");
-                setSearch("");
-              }}
-              className="rounded-sm min-h-11 font-medium text-neutral-600 text-small hover:text-neutral-900 hover:underline focus-visible:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
-            >
-              Clear filters
-            </button>
-          </div>
+          <EmptyState
+            variant="page"
+            title="No documents match"
+            message="Try another type or search term."
+            action={
+              <button
+                type="button"
+                onClick={() => {
+                  setTab("all");
+                  setSearch("");
+                }}
+                className={buttonClasses("secondary")}
+              >
+                Clear filters
+              </button>
+            }
+          />
         ) : (
           <DocumentRows
             items={visible}
@@ -189,6 +201,7 @@ export function DocumentsView() {
   return (
     <div className="flex flex-col gap-6">
       {header}
+      {userDocs.isLoading && <NeededSectionSkeleton />}
       {userDocs.available && (
         <NeededSection
           applications={ACTIVE_APPLICATIONS}
