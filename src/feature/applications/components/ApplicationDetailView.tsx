@@ -90,7 +90,7 @@ export function ApplicationDetailView({ application }: { application: Applicatio
             updatedAt={updatedAt}
             now={now}
           />
-          <ApplicationDocumentsCard required={opportunity?.requiredDocuments} linked={documents} onLink={linkDocument} />
+          <ApplicationDocumentsCard applicationId={application.id} required={opportunity?.requiredDocuments} linked={documents} onLink={linkDocument} />
           {/* Below 1024px the AI card comes right after documents. */}
           <div className="lg:hidden">{ai}</div>
         </div>

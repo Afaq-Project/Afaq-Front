@@ -5,22 +5,16 @@ import Link from "next/link";
 import { Check, Download, FileText } from "lucide-react";
 import { CARD_CLASS } from "@/src/feature/dashboard/components/styles";
 import { cn } from "@/src/feature/dashboard/services/utils";
+import { reviewPath, useReviews } from "@/src/feature/documents/services/reviewStore";
 import { formatFileSize } from "@/src/feature/onboarding/services/documentSlots";
 import type { RequiredDocument } from "@/src/feature/opportunities/types/opportunity";
 import { useUserDocuments } from "@/src/feature/profile/hooks/useUserDocuments";
+import { documentType, isReviewable } from "@/src/shared/lib/document-types";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import Modal from "@/src/shared/ui/Modal";
 import type { ApplicationDocument } from "../../types/detail";
 
 const SMALL_BUTTON = "h-9 md:h-9 px-3 text-small";
-
-const CATEGORY_LABEL: Record<NonNullable<ApplicationDocument["category"]>, string> = {
-  resume: "Resume",
-  essay: "Essay",
-  transcript: "Transcript",
-  recommendation: "Recommendation",
-  other: "Other",
-};
 
 function fileTypeOf(name?: string, mimeType?: string) {
   const extension = name?.split(".").pop();
@@ -29,7 +23,26 @@ function fileTypeOf(name?: string, mimeType?: string) {
   return "File";
 }
 
-function FileRow({ document }: { document: ApplicationDocument }) {
+/** A reviewed essay, CV or recommendation letter: "Reviewed {date}" with "Open review" (its review page, back to this application). */
+function ReviewLine({ document, applicationId }: { document: ApplicationDocument; applicationId: string }) {
+  const review = useReviews().reviews[document.id];
+  if (!isReviewable(document.type) || !review) return null;
+  return (
+    <p className="flex flex-wrap items-center gap-x-2 text-caption">
+      <span className="text-neutral-800">
+        Reviewed {new Date(review.reviewedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+      </span>
+      <Link
+        href={reviewPath(document.id, { application: applicationId })}
+        className="inline-flex items-center rounded-sm min-h-11 md:min-h-0 font-medium text-primary-600 hover:text-primary-800 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+      >
+        Open review
+      </Link>
+    </p>
+  );
+}
+
+function FileRow({ document, applicationId }: { document: ApplicationDocument; applicationId: string }) {
   return (
     <div className="flex items-center gap-3 min-w-0">
       <div className="flex-1 min-w-0">
@@ -37,6 +50,7 @@ function FileRow({ document }: { document: ApplicationDocument }) {
         <p className="text-caption text-neutral-600">
           {document.fileType} · {document.size}
         </p>
+        <ReviewLine document={document} applicationId={applicationId} />
       </div>
       {/* TODO: downloads need a document URL from the API. */}
       <button
@@ -86,7 +100,7 @@ function LinkDocumentDialog({
         <p className="text-neutral-600 text-small">You haven&apos;t uploaded any documents yet.</p>
       ) : (
         <ul ref={listRef} className="flex flex-col gap-1">
-          {userDocs.documents.map(({ document, category }) => {
+          {userDocs.documents.map(({ document, type }) => {
             const linked = linkedIds.has(document.id);
             const name = document.displayName ?? "Untitled document";
             return (
@@ -100,7 +114,7 @@ function LinkDocumentDialog({
                       name,
                       fileType: fileTypeOf(document.displayName, document.mimeType),
                       size: formatFileSize(document.sizeBytes) || "—",
-                      category,
+                      type,
                     })
                   }
                   className="flex items-center gap-3 hover:bg-neutral-50 disabled:hover:bg-transparent px-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 w-full min-h-12 text-left disabled:cursor-default"
@@ -110,7 +124,7 @@ function LinkDocumentDialog({
                   </span>
                   <span className="flex-1 min-w-0">
                     <span className="block text-neutral-900 text-small truncate">{name}</span>
-                    <span className="block text-caption text-neutral-600">{category ? CATEGORY_LABEL[category] : "No type"}</span>
+                    <span className="block text-caption text-neutral-600">{type ? documentType(type).label : "No type"}</span>
                   </span>
                   {linked && <span className="text-caption text-neutral-600">Linked</span>}
                 </button>
@@ -135,10 +149,12 @@ function LinkDocumentDialog({
  * just the linked list.
  */
 export function ApplicationDocumentsCard({
+  applicationId,
   required,
   linked,
   onLink,
 }: {
+  applicationId: string;
   required?: RequiredDocument[];
   linked: ApplicationDocument[];
   onLink: (document: ApplicationDocument) => void;
@@ -157,7 +173,7 @@ export function ApplicationDocumentsCard({
 
   const requirements = required ?? [];
   const matchFor = (requirement: RequiredDocument) =>
-    requirement.category ? linked.find((doc) => doc.category === requirement.category) : undefined;
+    requirement.type ? linked.find((doc) => doc.type === requirement.type) : undefined;
   const matchedIds = new Set(requirements.map((r) => matchFor(r)?.id).filter((id): id is string => Boolean(id)));
   const others = linked.filter((doc) => !matchedIds.has(doc.id));
   const linkedCount = requirements.filter((r) => matchFor(r)).length;
@@ -194,7 +210,7 @@ export function ApplicationDocumentsCard({
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-body text-neutral-900">{requirement.name}</p>
-                    {match ? <FileRow document={match} /> : <p className="text-neutral-600 text-small">Not linked yet</p>}
+                    {match ? <FileRow document={match} applicationId={applicationId} /> : <p className="text-neutral-600 text-small">Not linked yet</p>}
                   </div>
                   {!match && (
                     <button
@@ -226,7 +242,7 @@ export function ApplicationDocumentsCard({
                     <FileText size={16} strokeWidth={1.75} />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <FileRow document={doc} />
+                    <FileRow document={doc} applicationId={applicationId} />
                   </div>
                 </li>
               ))}
