@@ -3,7 +3,6 @@ import {
   ClipboardList,
   Compass,
   CreditCard,
-  FolderOpen,
   Gauge,
   House,
   Settings,
@@ -82,7 +81,6 @@ export const NAV_ITEMS: Record<ShellVariant, NavItem[]> = {
 export const MENU_ITEMS: Record<ShellVariant, MenuItem[]> = {
   user: [
     { href: "/profile", label: "Your profile", icon: CircleUserRound },
-    { href: "/documents", label: "Your documents", icon: FolderOpen },
     { href: "/billing", label: "Subscription", icon: CreditCard },
     { href: "/settings", label: "Settings", icon: Settings },
   ],
