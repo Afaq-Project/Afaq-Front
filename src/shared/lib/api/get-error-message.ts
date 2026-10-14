@@ -13,12 +13,22 @@ interface ApiErrorEnvelope {
   errors?: ApiFieldError[] | null;
 }
 
+const TIMEOUT_MESSAGE = "The server is taking too long to respond. Please try again.";
+const NETWORK_MESSAGE = "Couldn't reach the server. Check your connection and try again.";
+
 export function getErrorMessage(
   error: unknown,
   fallback = "Something went wrong. Please try again.",
 ): string {
   if (isAxiosError<ApiErrorEnvelope>(error)) {
-    const data = error.response?.data;
+    // No response at all: the request timed out or never reached the server.
+    if (!error.response) {
+      return error.code === "ECONNABORTED" || error.code === "ETIMEDOUT"
+        ? TIMEOUT_MESSAGE
+        : NETWORK_MESSAGE;
+    }
+    // A non-JSON body (e.g. an HTML error page) arrives as a string.
+    const data = typeof error.response.data === "object" ? error.response.data : undefined;
     const errors = data?.errors;
     const fieldMessages = Array.isArray(errors)
       ? errors.map((e) => e.message).filter(Boolean)
