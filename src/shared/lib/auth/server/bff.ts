@@ -8,6 +8,8 @@ const REFRESH_COOKIE = "afaq_refresh_token";
 const REFRESH_COOKIE_PATH = "/api/auth";
 // Used when the refresh token isn't a JWT with an `exp` claim.
 const FALLBACK_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
+// Keep below authBffClient's timeout (src/shared/lib/api/axios-client.ts) so the browser waits
+// for this route's reply.
 const BACKEND_TIMEOUT_MS = 20_000;
 // Replies from a proxy in front of the backend (e.g. Railway's "Application failed to
 // respond") rather than from the backend itself, so they're treated as unreachable.

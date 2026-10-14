@@ -89,7 +89,10 @@ instance.interceptors.request.use((config) => {
  */
 export const authBffClient = axios.create({
   baseURL: "/api/auth",
-  timeout: 20_000,
+  // Longer than the BFF's own 20s wait on the backend (src/shared/lib/auth/server/bff.ts), so a
+  // slow backend comes back as the BFF's "couldn't reach the server" reply instead of a client
+  // timeout with no response.
+  timeout: 30_000,
   headers: {
     "Content-Type": "application/json",
   },
