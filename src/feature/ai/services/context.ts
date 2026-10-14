@@ -1,9 +1,10 @@
 import { getApplicationDetail } from "@/src/feature/applications/services/utils";
 import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { reviewPath } from "@/src/feature/documents/services/reviewStore";
 import type { Conversation } from "../types/chat";
 
 export interface ChatContext {
-  kind: "opportunity" | "application" | "general";
+  kind: "opportunity" | "application" | "document" | "general";
   /** Groups chats in the list: the opportunity or application id, or "general". */
   key: string;
   title: string;
@@ -19,8 +20,24 @@ export interface ChatContext {
 
 const GENERAL: ChatContext = { kind: "general", key: "general", title: "General guidance" };
 
-/** What a chat is about, resolved from its opportunity or application link. */
-export function contextFor(conversation: Pick<Conversation, "opportunityId" | "applicationId">): ChatContext {
+/**
+ * What a chat is about, resolved from its essay document, application or opportunity link.
+ * `documentName` looks up an essay document's name.
+ */
+export function contextFor(
+  conversation: Pick<Conversation, "opportunityId" | "applicationId" | "documentId">,
+  documentName?: (id: string) => string | undefined,
+): ChatContext {
+  if (conversation.documentId) {
+    return {
+      kind: "document",
+      key: `document:${conversation.documentId}`,
+      title: documentName?.(conversation.documentId) ?? "Your document",
+      provider: "AI review",
+      href: reviewPath(conversation.documentId, "ai"),
+      linkLabel: "Open full review",
+    };
+  }
   if (conversation.applicationId) {
     const application = getApplicationDetail(conversation.applicationId);
     if (application) {

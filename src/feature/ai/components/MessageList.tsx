@@ -1,8 +1,10 @@
 "use client";
 
 import { Fragment, useEffect, useRef } from "react";
+import Link from "next/link";
 import { AlertTriangle, Check, Copy, Sparkles } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
+import { reviewPath } from "@/src/feature/documents/services/reviewStore";
 import { notify } from "@/src/shared/lib/notify";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import type { ChatMessage, EssayReview } from "../types/chat";
@@ -59,9 +61,14 @@ export function EssayReviewCard({ review }: { review: EssayReview }) {
           </div>
         ))}
       </div>
-      <p className="mt-4 pt-3 border-neutral-100 border-t text-caption text-neutral-600">
-        AI feedback can miss context. Use it as a starting point, not a final verdict.
-      </p>
+      <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center gap-2 mt-4 pt-3 border-neutral-100 border-t">
+        <p className="text-caption text-neutral-600">AI feedback can miss context. Use it as a starting point, not a final verdict.</p>
+        {review.documentId && (
+          <Link href={reviewPath(review.documentId, "ai")} className={buttonClasses("secondary", "shrink-0 px-3 h-9 md:h-8 text-small")}>
+            Open full review
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

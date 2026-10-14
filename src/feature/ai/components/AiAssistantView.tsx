@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { PLANS } from "@/src/feature/billing/mocks/plans";
-import { REVIEW_QUOTA } from "@/src/feature/documents/mocks/documentDetails";
-import { generateMockReview } from "@/src/feature/documents/services/review";
+import { useDocumentItems } from "@/src/feature/documents/hooks/useDocumentItems";
+import { isReviewable, reviewNoun } from "@/src/shared/lib/document-types";
+import { REVIEW_QUOTA } from "@/src/feature/documents/mocks/reviews";
+import { reviewPath, startReview } from "@/src/feature/documents/services/reviewStore";
 import { AiUsageCard } from "@/src/shared/ui/AiUsageCard";
 import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { CONVERSATIONS, CREDIT_USAGE } from "../mocks/conversations";
@@ -18,13 +20,14 @@ import { ContextHeader } from "./ContextHeader";
 import { EmptyChat } from "./EmptyChat";
 import { EssayReviewDialog, type EssaySubmission } from "./EssayReviewDialog";
 import { MessageList } from "./MessageList";
+import { YourReviews } from "./YourReviews";
 
 const REPLY_DELAY_MS = 900;
 
 // TODO: the plan should come from the user's subscription; this reads the billing mock.
 const IS_PREMIUM = (PLANS.find((plan) => plan.isCurrent)?.price ?? 0) > 0;
 
-function newConversation(context: { opportunityId?: string; applicationId?: string } = {}): Conversation {
+function newConversation(context: { opportunityId?: string; applicationId?: string; documentId?: string } = {}): Conversation {
   return {
     id: `conv-${Date.now()}`,
     title: "New chat",
@@ -38,16 +41,23 @@ function newConversation(context: { opportunityId?: string; applicationId?: stri
 const nowIso = () => new Date().toISOString();
 
 /**
- * Opens the chat for ?opportunity= / ?application= (an existing one about it, or a new one),
- * and prefills ?q= into the input. Falls back to the most recent chat.
+ * Opens the chat for ?document= (an essay's review), ?application= or ?opportunity= (an
+ * existing one about it, or a new one), and prefills ?q= into the input. Falls back to the most
+ * recent chat.
+ * TODO: afaq-ai needs to receive the document context (the essay and its review) with each message.
  */
 function initialState(params: URLSearchParams) {
   const opportunityId = params.get("opportunity") ?? undefined;
   const applicationId = params.get("application") ?? undefined;
+  const documentId = params.get("document") ?? undefined;
   let conversations = CONVERSATIONS;
   let activeId = CONVERSATIONS[0]?.id;
 
-  if (opportunityId || applicationId) {
+  if (documentId) {
+    const created = newConversation({ documentId });
+    conversations = [created, ...CONVERSATIONS];
+    activeId = created.id;
+  } else if (opportunityId || applicationId) {
     const existing = CONVERSATIONS.find((c) =>
       applicationId ? c.applicationId === applicationId : c.opportunityId === opportunityId && !c.applicationId,
     );
@@ -77,7 +87,12 @@ export function AiAssistantView() {
   const [activeId, setActiveId] = useState(initial.activeId);
   const [draft, setDraft] = useState(initial.draft);
   const [creditsUsed, setCreditsUsed] = useState(CREDIT_USAGE.used);
-  const [reviewsUsed, setReviewsUsed] = useState(REVIEW_QUOTA.used);
+  const { items: documents, reviews } = useDocumentItems();
+  const reviewsUsed = reviews.used;
+  const reviewable = documents.filter((item) => isReviewable(item.type));
+  const documentName = (id: string) =>
+    documents.find((item) => item.id === id)?.name ?? reviews.reviews[id]?.essayName;
+  const router = useRouter();
   const [isReplying, setIsReplying] = useState(false);
   const [failedChat, setFailedChat] = useState<{ id: string; text: string } | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -87,7 +102,7 @@ export function AiAssistantView() {
   const drawerRef = useRef<HTMLDivElement>(null);
 
   const active = conversations.find((c) => c.id === activeId) ?? conversations[0];
-  const context = contextFor(active);
+  const context = contextFor(active, documentName);
   const limitReached = creditsUsed >= CREDIT_USAGE.limit;
 
   const updateChat = (id: string, update: (c: Conversation) => Conversation) =>
@@ -152,7 +167,6 @@ export function AiAssistantView() {
   };
   const submitReview = (essay: EssaySubmission) => {
     setReviewOpen(false);
-    setReviewsUsed((used) => used + 1);
     const chatId = active.id;
     append(chatId, {
       id: `u-${Date.now()}`,
@@ -162,25 +176,34 @@ export function AiAssistantView() {
       at: nowIso(),
     });
     setIsReplying(true);
-    // TODO: reuses the Documents page's mock review; swap for the real essay-review call.
-    setTimeout(() => {
-      const review = generateMockReview();
-      append(chatId, {
-        id: `a-${Date.now()}`,
-        role: "assistant",
-        text: "",
-        timestamp: formatMessageTime(),
-        at: nowIso(),
-        review: {
-          essayName: essay.essayName,
-          purpose: essay.purpose,
-          strengths: review.strengths,
-          weaknesses: review.improvements,
-          suggestions: review.suggestions,
-        },
-      });
-      setIsReplying(false);
-    }, REPLY_DELAY_MS);
+    // TODO: the review is mocked (see reviewStore) and works from the name only; send the
+    // essay text once there's a real essay-review call.
+    startReview({
+      essayName: essay.essayName,
+      documentId: essay.documentId,
+      type: documents.find((item) => item.id === essay.documentId)?.type,
+      purpose: essay.purpose,
+      onReady: (review) => {
+        // Keep the feedback in the chat too; an uploaded document then opens on its review page.
+        append(chatId, {
+          id: `a-${Date.now()}`,
+          role: "assistant",
+          text: "",
+          timestamp: formatMessageTime(),
+          at: nowIso(),
+          review: {
+            essayName: review.essayName,
+            documentId: review.documentId,
+            purpose: review.purpose,
+            strengths: review.strengths,
+            weaknesses: review.weaknesses,
+            suggestions: review.suggestions,
+          },
+        });
+        setIsReplying(false);
+        if (review.documentId) router.push(reviewPath(review.documentId, "ai"));
+      },
+    });
   };
 
   const openDrawer = () => {
@@ -223,6 +246,13 @@ export function AiAssistantView() {
       onNewChat={startNewChat}
       now={now}
       footer={usage}
+      documentName={documentName}
+      afterChats={
+        <YourReviews
+          reviews={Object.values(reviews.reviews)}
+          nameFor={(review) => (review.documentId && documentName(review.documentId)) || review.essayName}
+        />
+      }
     />
   );
 
@@ -284,8 +314,16 @@ export function AiAssistantView() {
         open={reviewOpen}
         onClose={closeReview}
         defaultPurpose={context.kind === "general" ? undefined : context.title}
+        choices={reviewable.map((item) => ({
+          id: item.id,
+          name: item.name,
+          detail: `${item.format} · ${item.size}`,
+          hasReview: Boolean(reviews.reviews[item.id]),
+          noun: reviewNoun(item.type),
+        }))}
         used={reviewsUsed}
         limit={REVIEW_QUOTA.limit}
+        unlimited={IS_PREMIUM}
         resetsOn={CREDIT_USAGE.resetsOn}
         onSubmit={submitReview}
       />

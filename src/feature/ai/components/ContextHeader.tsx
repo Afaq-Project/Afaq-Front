@@ -76,7 +76,9 @@ export function ContextHeader({ context, onOpenChats }: { context: ChatContext; 
         <Info size={14} strokeWidth={1.75} aria-hidden="true" className="shrink-0" />
         {general
           ? "Answers use your profile."
-          : `Answers use your profile and this ${context.kind === "application" ? "application" : "opportunity"}'s details.`}
+          : context.kind === "document"
+            ? "Answers use your profile and this document's review."
+            : `Answers use your profile and this ${context.kind === "application" ? "application" : "opportunity"}'s details.`}
       </p>
     </div>
   );

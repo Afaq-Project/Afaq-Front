@@ -1,6 +1,8 @@
 export interface EssayReview {
   /** What the user called the essay, or its file name. */
   essayName: string;
+  /** The reviewed essay document; absent for pasted essays (which have no review page). */
+  documentId?: string;
   /** What the essay is for, e.g. an opportunity title. */
   purpose?: string;
   strengths: string[];
@@ -30,6 +32,8 @@ export interface Conversation {
   /** The opportunity or application the chat is about; absent for general guidance. */
   opportunityId?: string;
   applicationId?: string;
+  /** An essay document whose review the chat follows up on. */
+  documentId?: string;
   /** Last activity (ISO), for "2 days ago" in the chat list. */
   updatedAt?: string;
 }

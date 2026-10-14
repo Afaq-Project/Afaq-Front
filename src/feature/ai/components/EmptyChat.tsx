@@ -10,6 +10,14 @@ const GENERAL_SUGGESTIONS = [
 
 function suggestionsFor(context: ChatContext) {
   if (context.kind === "general") return GENERAL_SUGGESTIONS;
+  if (context.kind === "document") {
+    return [
+      "Which suggestion should I work on first?",
+      "What's the biggest thing to fix?",
+      "Explain the weaknesses you found",
+      "How do I make it stand out?",
+    ];
+  }
   return [
     `Am I eligible for ${context.title}?`,
     "Help me start my personal statement",
