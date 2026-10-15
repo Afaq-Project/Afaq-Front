@@ -141,9 +141,18 @@ function redirectToLogin() {
 }
 
 // Auth endpoints return their own 401s (wrong password, unverified email, expired
-// refresh token) that callers need to see as-is - they must never trigger the
-// access-token refresh/redirect flow below, which is only for authenticated requests.
-const AUTH_ENDPOINTS = ["/auth/login", "/auth/register", "/auth/refresh"];
+// refresh token, invalid reset link) that callers need to see as-is - they must never
+// trigger the access-token refresh/redirect flow below, which is only for authenticated
+// requests. (/auth/change-password is authenticated, so it isn't listed.)
+const AUTH_ENDPOINTS = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/refresh",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+  "/auth/verify-email",
+  "/auth/resend-verification",
+];
 
 function isAuthEndpoint(url?: string): boolean {
   return Boolean(url && AUTH_ENDPOINTS.some((endpoint) => url.includes(endpoint)));
