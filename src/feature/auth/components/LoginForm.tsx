@@ -16,7 +16,6 @@ import {
   type LoginFormValues,
 } from "@/src/shared/lib/validation/auth-schemas";
 
-// TODO: no /forgot-password route exists yet.
 const FORGOT_PASSWORD_HREF = "/forgot-password";
 
 // Sentinel for a rejected email/password pair, so the alert can render a link.
@@ -24,9 +23,11 @@ const INVALID_CREDENTIALS = "invalid-credentials";
 
 interface LoginFormProps {
   sessionExpired?: boolean;
+  /** Just came from a successful password reset. */
+  passwordReset?: boolean;
 }
 
-export default function LoginForm({ sessionExpired = false }: LoginFormProps) {
+export default function LoginForm({ sessionExpired = false, passwordReset = false }: LoginFormProps) {
   const { login, isAdmin } = useAuth();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -58,9 +59,11 @@ export default function LoginForm({ sessionExpired = false }: LoginFormProps) {
       title="Sign in"
       subtitle="Welcome back. Sign in to see your matches."
       notice={
-        sessionExpired
-          ? "Your session expired. Sign back in. Your draft is saved."
-          : undefined
+        passwordReset
+          ? "Your password was reset. Sign in with your new password."
+          : sessionExpired
+            ? "Your session expired. Sign back in. Your draft is saved."
+            : undefined
       }
       onSubmit={handleSubmit(onSubmit)}
       submitLabel="Sign in"
