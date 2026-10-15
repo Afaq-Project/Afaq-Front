@@ -21,6 +21,19 @@ const FORGOT_PASSWORD_HREF = "/forgot-password";
 // Sentinel for a rejected email/password pair, so the alert can render a link.
 const INVALID_CREDENTIALS = "invalid-credentials";
 
+/**
+ * A wrong email/password pair: a 401 with AUTH_INVALID_CREDENTIALS (or no code at all). Other
+ * 401s, e.g. an unverified or inactive account, show the API's own message instead of
+ * "don't match".
+ */
+function isInvalidCredentials(error: unknown) {
+  if (!isAxiosError<{ errors?: { code?: string }[] | null }>(error) || error.response?.status !== 401) {
+    return false;
+  }
+  const code = error.response.data?.errors?.[0]?.code;
+  return !code || code === "AUTH_INVALID_CREDENTIALS";
+}
+
 interface LoginFormProps {
   sessionExpired?: boolean;
   /** Just came from a successful password reset. */
@@ -46,11 +59,7 @@ export default function LoginForm({ sessionExpired = false, passwordReset = fals
       await login(values.email, values.password);
       router.push(isAdmin ? "/admin/dashboard" : "/dashboard");
     } catch (error) {
-      setFormError(
-        isAxiosError(error) && error.response?.status === 401
-          ? INVALID_CREDENTIALS
-          : getErrorMessage(error),
-      );
+      setFormError(isInvalidCredentials(error) ? INVALID_CREDENTIALS : getErrorMessage(error));
     }
   };
 
