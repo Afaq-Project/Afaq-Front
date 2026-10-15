@@ -2,6 +2,7 @@
 
 import { useState, type KeyboardEvent, type ReactNode } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { useForm, useWatch, type UseFormRegisterReturn } from "react-hook-form";
 import Button from "@/src/shared/ui/Button";
 import InlineAlert from "@/src/shared/ui/InlineAlert";
@@ -99,10 +100,10 @@ export function ChangePasswordForm({ onSaved, onCancel }: FormProps) {
   });
   const newPassword = useWatch({ control, name: "newPassword" });
 
-  const onSubmit = async ({ currentPassword, newPassword }: ChangePasswordFormValues) => {
+  const onSubmit = async (values: ChangePasswordFormValues) => {
     setSubmitError(null);
     try {
-      await changePassword({ currentPassword, newPassword });
+      await changePassword(values);
       onSaved();
     } catch (error) {
       setSubmitError(getErrorMessage(error));
@@ -163,7 +164,7 @@ export function SetPasswordForm({ onSaved, onCancel }: FormProps) {
       await setPassword({ newPassword });
       onSaved();
     } catch (error) {
-      setSubmitError(getErrorMessage(error));
+      setSubmitError(error instanceof Error && !isAxiosError(error) ? error.message : getErrorMessage(error));
     }
   };
 

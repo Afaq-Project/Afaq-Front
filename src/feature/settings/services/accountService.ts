@@ -1,7 +1,9 @@
+import apiClient from "@/src/shared/lib/api/axios-client";
+
 /**
- * Account actions for the Settings page. None of these has a backend call yet: the client has
- * no password-change, OAuth, export or deletion endpoints. Each one is stubbed here (a short
- * delay, then success) so the UI flows are complete and the swap is one file.
+ * Account actions for the Settings page. Password change calls the API; the rest have no
+ * endpoint yet and are stubbed here (a short delay, then success) so the UI flows are complete
+ * and each swap is one function.
  */
 
 // TODO: replace with the real support address or a contact route; carried over from the old "Need help?" card.
@@ -28,14 +30,27 @@ export const INITIAL_LOGIN_METHODS: LoginMethods = { hasPassword: true, provider
 /** Stand-in for a request: resolves with what would have been sent, after a short delay. */
 const stub = <T,>(payload: T) => new Promise<T>((resolve) => setTimeout(() => resolve(payload), 600));
 
-// TODO: POST the current and new password once a change-password endpoint exists.
-export async function changePassword(values: { currentPassword: string; newPassword: string }) {
-  await stub(values);
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 }
 
-// TODO: set a first password for OAuth-only accounts once the endpoint exists.
+/**
+ * A wrong current password is rejected by the API and shown in the form. A 401 here first goes
+ * through the client's refresh-and-retry, so an expired access token still works.
+ */
+export async function changePassword(payload: ChangePasswordPayload) {
+  await apiClient.post("/auth/change-password", payload);
+}
+
+/**
+ * TODO: the API has no "set a first password" endpoint for OAuth-only accounts. Unreachable for
+ * now (every account has a password), and it fails rather than pretend to succeed.
+ */
 export async function setPassword(values: { newPassword: string }) {
   await stub(values);
+  throw new Error("Setting a password isn't available yet.");
 }
 
 // TODO: start the provider's OAuth flow (redirect) once it exists; for now this only flips local state.
