@@ -23,23 +23,31 @@ export function AiUsageCard({
   rows,
   resetsOn,
   premium = false,
+  showUpgrade = true,
+  headingLevel = "h2",
   className,
 }: {
   rows: UsageRow[];
   /** ISO date (YYYY-MM-DD). */
   resetsOn?: string;
   premium?: boolean;
+  /** Off where the page already has its own upgrade button. */
+  showUpgrade?: boolean;
+  /** "h3" when the card sits under a section heading. */
+  headingLevel?: "h2" | "h3";
   className?: string;
 }) {
+  const Heading = headingLevel;
+
   if (premium) {
     return <p className={cn("text-caption text-neutral-600", className)}>Unlimited AI guidance with Premium</p>;
   }
 
   return (
     <section aria-labelledby="ai-usage-heading" className={cn("flex flex-col gap-3", className)}>
-      <h2 id="ai-usage-heading" className="font-medium text-neutral-900 text-small">
+      <Heading id="ai-usage-heading" className="font-medium text-neutral-900 text-small">
         Your AI usage this month
-      </h2>
+      </Heading>
       {rows.map((row) => {
         const atLimit = row.used >= row.limit;
         const percent = Math.min(100, Math.round((row.used / row.limit) * 100));
@@ -59,12 +67,14 @@ export function AiUsageCard({
       })}
       <div className="flex justify-between items-center gap-2">
         {resetsOn && <p className="text-caption text-neutral-600">Resets {formatDeadlineDay(resetsOn)}</p>}
-        <Link
-          href="/billing"
-          className="rounded-sm min-h-11 md:min-h-0 inline-flex items-center font-medium text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
-        >
-          Upgrade to Premium
-        </Link>
+        {showUpgrade && (
+          <Link
+            href="/billing"
+            className="rounded-sm min-h-11 md:min-h-0 inline-flex items-center font-medium text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+          >
+            Upgrade to Premium
+          </Link>
+        )}
       </div>
     </section>
   );
