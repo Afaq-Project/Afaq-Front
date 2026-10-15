@@ -70,6 +70,9 @@
   --color-purple-800: #3c3489;
   --color-purple-900: #26215c;
 
+  /* ---- Third-party brand colors — only on that brand's own logo ---- */
+  --color-brand-linkedin: #0a66c2;
+
   /* ---- Surface & Onboarding Tokens ---- */
   --color-surface-container-lowest: #ffffff;
   --color-surface-container-low: #f8faf8;
