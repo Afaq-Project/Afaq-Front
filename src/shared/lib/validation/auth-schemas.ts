@@ -50,10 +50,3 @@ export const setPasswordSchema = z
   .refine((values) => values.newPassword === values.confirmPassword, PASSWORD_MISMATCH);
 
 export type SetPasswordFormValues = z.infer<typeof setPasswordSchema>;
-
-export const updatePasswordSchema = z.object({
-  currentPassword: z.string().min(1, "Current password is required"),
-  newPassword: passwordSchema,
-});
-
-export type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
