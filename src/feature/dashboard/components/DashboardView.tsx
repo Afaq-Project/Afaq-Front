@@ -138,6 +138,7 @@ export function DashboardView() {
               rejected: countBy("rejected"),
             }}
             closingDaysLeft={upcoming.filter((a) => a.daysLeft <= 7).map((a) => a.daysLeft)}
+            attentionVisible={needsAttention.length > 0}
           />
 
           {/* Below 1024px deadlines follow the applications card; on desktop they're in the right column. */}
