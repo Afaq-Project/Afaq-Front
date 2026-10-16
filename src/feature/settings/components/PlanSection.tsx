@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CREDIT_USAGE } from "@/src/feature/ai/mocks/conversations";
-import { PLANS } from "@/src/feature/billing/mocks/plans";
+import { IS_PREMIUM, PERIOD_END } from "@/src/feature/billing/mocks/subscription";
 import { REVIEW_QUOTA } from "@/src/feature/documents/mocks/reviews";
 import { useReviews } from "@/src/feature/documents/services/reviewStore";
 import { AiUsageCard } from "@/src/shared/ui/AiUsageCard";
@@ -15,11 +15,10 @@ import { SettingsBlock, SettingsRow, SettingsSection } from "./SettingsSection";
 // TODO: read the plan, usage and renewal date from the subscription API once it exists. Until
 // then this matches the AI assistant: the plan comes from the billing mock, chat usage from the
 // AI mock, and essay reviews from the local review store.
-const IS_PREMIUM = (PLANS.find((plan) => plan.isCurrent)?.price ?? 0) > 0;
 
 export function PlanSection() {
   const reviews = useReviews();
-  // Quotas reset, and Premium renews, on the 1st of the month: always a future date.
+  // Quotas reset on the 1st of the month: always a future date.
   const [nextCycle] = useState(() => firstOfNextMonth());
 
   const planLabel = (
@@ -37,7 +36,7 @@ export function PlanSection() {
           help={
             <>
               <p>Unlimited AI guidance and priority deadline alerts</p>
-              <p>Renews {formatDeadlineDay(nextCycle)}</p>
+              <p>Renews {formatDeadlineDay(PERIOD_END)}</p>
             </>
           }
         >

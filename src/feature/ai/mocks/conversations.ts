@@ -1,3 +1,4 @@
+import { FREE_LIMITS } from "@/src/feature/billing/config/plans";
 import { firstOfNextMonth, isoDateFromToday } from "@/src/shared/lib/deadline";
 import type { Conversation, CreditUsage } from "../types/chat";
 
@@ -99,4 +100,4 @@ export const CONVERSATIONS: Conversation[] = [
   },
 ];
 
-export const CREDIT_USAGE: CreditUsage = { used: 5, limit: 20, resetsOn: firstOfNextMonth() };
+export const CREDIT_USAGE: CreditUsage = { used: 5, limit: FREE_LIMITS.chatMessages, resetsOn: firstOfNextMonth() };
