@@ -74,7 +74,13 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.request.use((config) => {
+instance.interceptors.request.use(async (config) => {
+  // On page load the app renders from the cached user while hydrate is still fetching the
+  // access token. Wait for that instead of sending the request without one, which would come
+  // back 401 and be sent a second time below.
+  if (!tokenStorage.getAccessToken() && refreshPromise) {
+    await refreshPromise.catch(() => undefined);
+  }
   const accessToken = tokenStorage.getAccessToken();
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
