@@ -86,6 +86,15 @@
   --color-on-primary-container: #173404;
   --color-error: #a32d2d;
 
+  /* ---- Landing page ----
+   * Same palette as above (green = primary, teal = success, amber = warning, blue = info,
+   * red = danger). Off-white is the alternating section background.
+   */
+  --color-offwhite: #faf9f5;
+
+  /* 1440px instead of Tailwind's 1536px (375 base, 768 md, 1024 lg, 1280 xl, 1440 2xl). */
+  --breakpoint-2xl: 90rem;
+
   /* ---- Typography ---- */
   --font-sans: var(--font-ibm-plex-sans);
 
@@ -216,4 +225,86 @@ input:autofill {
 .scrollbar-minimal::-webkit-scrollbar-thumb {
   background-color: var(--color-neutral-900);
   border-radius: 9999px;
+}
+
+/*
+ * Landing page (public marketing site). Scoped to `.landing` so the app keeps its own
+ * font and type scale. English only for now; layouts use logical properties so a
+ * right-to-left version needs no rework. --leading-scale multiplies every landing
+ * line-height (an Arabic version would set it to 1.2).
+ */
+.landing {
+  /* 56px below 1024px, 64px from 1024px. Also the scroll margin for anchor jumps. */
+  --landing-header-height: 56px;
+  --leading-scale: 1;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: calc(24px * var(--leading-scale));
+
+  @media (width >= 64rem) {
+    --landing-header-height: 64px;
+  }
+}
+
+/* Smooth anchor scrolling on the landing page only, and only when motion is welcome. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.landing) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Landing type scale. Mobile sizes first; display and h2 step up at 768px. */
+@utility text-landing-display {
+  font-size: 34px;
+  line-height: calc(42px * var(--leading-scale, 1));
+  font-weight: 600;
+
+  @media (width >= 48rem) {
+    font-size: 48px;
+    line-height: calc(56px * var(--leading-scale, 1));
+  }
+}
+
+@utility text-landing-h2 {
+  font-size: 28px;
+  line-height: calc(36px * var(--leading-scale, 1));
+  font-weight: 600;
+
+  @media (width >= 48rem) {
+    font-size: 36px;
+    line-height: calc(44px * var(--leading-scale, 1));
+  }
+}
+
+@utility text-landing-h3 {
+  font-size: 20px;
+  line-height: calc(28px * var(--leading-scale, 1));
+  font-weight: 600;
+}
+
+@utility text-landing-body-lg {
+  font-size: 18px;
+  line-height: calc(28px * var(--leading-scale, 1));
+}
+
+@utility text-landing-body {
+  font-size: 16px;
+  line-height: calc(24px * var(--leading-scale, 1));
+}
+
+@utility text-landing-small {
+  font-size: 14px;
+  line-height: calc(20px * var(--leading-scale, 1));
+}
+
+@utility text-landing-caption {
+  font-size: 12px;
+  line-height: calc(16px * var(--leading-scale, 1));
+}
+
+/* Directional icons (arrows, chevrons) point the other way in right-to-left layouts. */
+@utility flip-rtl {
+  &:where([dir="rtl"], [dir="rtl"] *) {
+    transform: scaleX(-1);
+  }
 }
