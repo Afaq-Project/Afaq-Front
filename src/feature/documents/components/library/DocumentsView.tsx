@@ -214,7 +214,9 @@ export function DocumentsView() {
   return (
     <div className="flex flex-col gap-6">
       {header}
-      {userDocs.isLoading && <NeededSectionSkeleton />}
+      {/* Only when the section will show: with no requirements to check it renders nothing. */}
+      {userDocs.isLoading &&
+        ACTIVE_APPLICATIONS.some((a) => (a.opportunity?.requiredDocuments.length ?? 0) > 0) && <NeededSectionSkeleton />}
       {userDocs.available && (
         <NeededSection
           applications={ACTIVE_APPLICATIONS}
