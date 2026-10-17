@@ -16,17 +16,31 @@ import {
   type LoginFormValues,
 } from "@/src/shared/lib/validation/auth-schemas";
 
-// TODO: no /forgot-password route exists yet.
 const FORGOT_PASSWORD_HREF = "/forgot-password";
 
 // Sentinel for a rejected email/password pair, so the alert can render a link.
 const INVALID_CREDENTIALS = "invalid-credentials";
 
-interface LoginFormProps {
-  sessionExpired?: boolean;
+/**
+ * A wrong email/password pair: a 401 with AUTH_INVALID_CREDENTIALS (or no code at all). Other
+ * 401s, e.g. an unverified or inactive account, show the API's own message instead of
+ * "don't match".
+ */
+function isInvalidCredentials(error: unknown) {
+  if (!isAxiosError<{ errors?: { code?: string }[] | null }>(error) || error.response?.status !== 401) {
+    return false;
+  }
+  const code = error.response.data?.errors?.[0]?.code;
+  return !code || code === "AUTH_INVALID_CREDENTIALS";
 }
 
-export default function LoginForm({ sessionExpired = false }: LoginFormProps) {
+interface LoginFormProps {
+  sessionExpired?: boolean;
+  /** Just came from a successful password reset. */
+  passwordReset?: boolean;
+}
+
+export default function LoginForm({ sessionExpired = false, passwordReset = false }: LoginFormProps) {
   const { login, isAdmin } = useAuth();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -45,11 +59,7 @@ export default function LoginForm({ sessionExpired = false }: LoginFormProps) {
       await login(values.email, values.password);
       router.push(isAdmin ? "/admin/dashboard" : "/dashboard");
     } catch (error) {
-      setFormError(
-        isAxiosError(error) && error.response?.status === 401
-          ? INVALID_CREDENTIALS
-          : getErrorMessage(error),
-      );
+      setFormError(isInvalidCredentials(error) ? INVALID_CREDENTIALS : getErrorMessage(error));
     }
   };
 
@@ -58,9 +68,11 @@ export default function LoginForm({ sessionExpired = false }: LoginFormProps) {
       title="Sign in"
       subtitle="Welcome back. Sign in to see your matches."
       notice={
-        sessionExpired
-          ? "Your session expired. Sign back in. Your draft is saved."
-          : undefined
+        passwordReset
+          ? "Your password was reset. Sign in with your new password."
+          : sessionExpired
+            ? "Your session expired. Sign back in. Your draft is saved."
+            : undefined
       }
       onSubmit={handleSubmit(onSubmit)}
       submitLabel="Sign in"

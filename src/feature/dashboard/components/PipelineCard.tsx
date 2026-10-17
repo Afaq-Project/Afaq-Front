@@ -3,7 +3,6 @@
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Clock } from "lucide-react";
-import { DEADLINE_URGENCY_TEXT, getDeadlineUrgency } from "@/src/shared/lib/deadline";
 import { STATUS_COLORS, type ApplicationStatusKey } from "@/src/shared/lib/status-colors";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import { cn } from "../services/utils";
@@ -31,6 +30,11 @@ interface PipelineCardProps {
   counts: Partial<Record<PipelineStage, number>>;
   /** Days left for each not started / in progress application that closes within 7 days. */
   closingDaysLeft: number[];
+  /**
+   * The attention strip is showing the urgent ones above, so the closing-soon line is plain text
+   * rather than a second alert.
+   */
+  attentionVisible?: boolean;
 }
 
 const plural = (count: number) => (count === 1 ? "application" : "applications");
@@ -48,7 +52,7 @@ function Dot({ className, hollow }: { className: string; hollow: boolean }) {
  * Applications by stage: a segmented bar over five linked stage columns, plus one line about
  * what to do next. Hovering or focusing a column highlights its segment(s) in the bar.
  */
-export function PipelineCard({ counts, closingDaysLeft: closing }: PipelineCardProps) {
+export function PipelineCard({ counts, closingDaysLeft: closing, attentionVisible = false }: PipelineCardProps) {
   const count = (stage: PipelineStage) => counts[stage] ?? 0;
   const total = BAR_ORDER.reduce((sum, stage) => sum + count(stage), 0);
   const [active, setActive] = useState<Column | null>(null);
@@ -65,7 +69,6 @@ export function PipelineCard({ counts, closingDaysLeft: closing }: PipelineCardP
 
   const unfinished = count("not_started") + count("in_progress");
   const waiting = count("submitted") + count("in_review");
-  const urgentCallout = closing.some((days) => getDeadlineUrgency(days) === "urgent");
 
   return (
     <section aria-labelledby="pipeline-heading" className={CARD_CLASS}>
@@ -175,15 +178,14 @@ export function PipelineCard({ counts, closingDaysLeft: closing }: PipelineCardP
             })}
           </ul>
 
-          {closing.length > 0 ? (
-            // Red when something closes within 2 days, otherwise the amber callout (warning-100 isn't a token, so the border is the 400 stop at low opacity).
-            <div
-              className={cn(
-                "flex sm:flex-row flex-col sm:items-center gap-3 mt-5 px-4 py-3 border rounded-md",
-                urgentCallout ? "bg-danger-50 border-danger-400/30" : "bg-warning-50 border-warning-400/30",
-              )}
-            >
-              <p className={cn("flex flex-1 items-start gap-2 text-body", urgentCallout ? DEADLINE_URGENCY_TEXT.urgent : "text-neutral-800")}>
+          {closing.length > 0 && attentionVisible ? (
+            <p className="mt-5 text-neutral-600 text-small">
+              {unfinished} not finished · {closing.length} {closing.length === 1 ? "closes" : "close"} this week
+            </p>
+          ) : closing.length > 0 ? (
+            // Amber, never red: urgent deadlines have the attention strip (warning-100 isn't a token, so the border is the 400 stop at low opacity).
+            <div className="flex sm:flex-row flex-col sm:items-center gap-3 bg-warning-50 mt-5 px-4 py-3 border border-warning-400/30 rounded-md">
+              <p className="flex flex-1 items-start gap-2 text-body text-warning-800">
                 <Clock size={20} strokeWidth={1.75} aria-hidden="true" className="mt-px shrink-0" />
                 {unfinished} not finished, and {closing.length} {closing.length === 1 ? "closes" : "close"} this week.
               </p>

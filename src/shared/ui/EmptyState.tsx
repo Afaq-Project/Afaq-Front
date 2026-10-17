@@ -7,7 +7,8 @@ export const STATE_CARD_CLASS =
 
 interface EmptyStateProps {
   /** An invitation, not an apology: "Add your first skill to improve your matches." */
-  message: string;
+  /** Optional only for the page variant, e.g. a title-only "No unread notifications". */
+  message?: string;
   /** The verb-first call to action (usually a secondary Button or a Link). */
   action?: ReactNode;
   /**
@@ -33,7 +34,7 @@ export function EmptyState({ message, action, variant = "inline", title, icon: I
           </span>
         )}
         {title && <Title className="text-h2 text-neutral-900">{title}</Title>}
-        <p className="max-w-md text-body text-neutral-600">{message}</p>
+        {message && <p className="max-w-md text-body text-neutral-600">{message}</p>}
         {action && <div className="mt-3">{action}</div>}
       </div>
     );

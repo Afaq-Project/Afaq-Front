@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import type { NextStep } from "@/src/feature/profile/components/header/completion";
 import Badge from "@/src/shared/ui/Badge";
 import { CompletionDonut } from "@/src/shared/ui/CompletionDonut";
+import { Skeleton } from "@/src/shared/ui/Skeleton";
 import { cn } from "../services/utils";
 import { CARD_CLASS, GHOST_LINK_CLASS } from "./styles";
 
@@ -142,6 +143,28 @@ export function ProfileProgressCard({ percent, sections, nextStep, className }: 
           );
         })}
       </ul>
+    </section>
+  );
+}
+
+/** Holds the card's place while the profile loads, so the column doesn't sit empty. */
+export function ProfileProgressCardSkeleton({ className }: { className?: string }) {
+  return (
+    <section role="status" className={cn(CARD_CLASS, "self-start w-full", className)}>
+      <span className="sr-only">Loading profile progress</span>
+      <Skeleton className="w-36 h-5" />
+      <div className="flex items-center gap-4 mt-4">
+        <Skeleton className="rounded-full size-14 shrink-0" />
+        <div className="flex flex-col flex-1 gap-2">
+          <Skeleton className="w-3/4 h-4" />
+          <Skeleton className="w-1/2 h-3.5" />
+        </div>
+      </div>
+      <div className="flex flex-col gap-3 mt-5 pt-4 border-neutral-100 border-t">
+        {Array.from({ length: 4 }, (_, index) => (
+          <Skeleton key={index} className="w-2/3 h-4" />
+        ))}
+      </div>
     </section>
   );
 }
