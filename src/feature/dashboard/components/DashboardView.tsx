@@ -121,6 +121,8 @@ export function DashboardView() {
   const completion = useProfileCompletion();
   // Until the profile loads, completion is the (possibly stale) value from sign-in, so a complete
   // profile would flash the progress card first. Wait for it; on an error the fallback is used.
+  // While waiting, hold the slot only if sign-in says incomplete: a complete profile almost
+  // always ends with no card, so a placeholder there would just vanish.
   const completionKnown = !useProfileQuery().isPending;
   const { user } = useAuth();
   const searchParams = useSearchParams();
@@ -226,7 +228,7 @@ export function DashboardView() {
           {previewSnapshot ? (
             <MatchesSnapshotCard counts={mockMatchCounts()} />
           ) : !completionKnown ? (
-            <ProfileProgressCardSkeleton />
+            completion < 100 && <ProfileProgressCardSkeleton />
           ) : completion >= 100 ? (
             // TODO: render <MatchesSnapshotCard> here once a feed/matching endpoint provides open,
             // feed-visible match counts by tier. Until then a complete profile gets the one-time

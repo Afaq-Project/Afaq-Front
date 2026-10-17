@@ -2,6 +2,9 @@
 // auth BFF routes (src/app/api/auth), so neither can be read from localStorage by injected script.
 // Last known user, so the app can render before /auth/me answers. Always re-validated.
 const CACHED_USER_KEY = "levora_cached_user";
+// Last completion % the profile reported. The cached user's copy only changes on /auth/me, so it
+// lags behind profile edits.
+const CACHED_COMPLETION_KEY = "levora_cached_completion";
 // Where tokens were stored before the cookie. Read once to migrate the session, then removed.
 const LEGACY_ACCESS_TOKEN_KEY = "levora_access_token";
 const LEGACY_REFRESH_TOKEN_KEY = "levora_refresh_token";
@@ -48,11 +51,32 @@ export const tokenStorage = {
     localStorage.setItem(CACHED_USER_KEY, JSON.stringify(user));
   },
 
+  getCachedCompletion(userId: string): number | null {
+    if (!isBrowser()) return null;
+    try {
+      const raw = localStorage.getItem(CACHED_COMPLETION_KEY);
+      const cached = raw ? (JSON.parse(raw) as { userId: string; pct: number }) : null;
+      return cached?.userId === userId ? cached.pct : null;
+    } catch {
+      return null;
+    }
+  },
+
+  setCachedCompletion(userId: string, pct: number): void {
+    if (!isBrowser()) return;
+    try {
+      localStorage.setItem(CACHED_COMPLETION_KEY, JSON.stringify({ userId, pct }));
+    } catch {
+      // Storage blocked: the auth user's value is the fallback.
+    }
+  },
+
   /** Ends the local session: the in-memory token, the cached user and any legacy tokens. */
   clearTokens(): void {
     accessToken = null;
     if (!isBrowser()) return;
     localStorage.removeItem(CACHED_USER_KEY);
+    localStorage.removeItem(CACHED_COMPLETION_KEY);
     tokenStorage.clearLegacyTokens();
   },
 };
