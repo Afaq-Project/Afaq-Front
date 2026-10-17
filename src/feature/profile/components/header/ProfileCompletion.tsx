@@ -17,16 +17,20 @@ interface ProfileCompletionProps {
 
 /**
  * Donut (which already shows the percentage) plus the next step; a breakdown popover when
- * factors are available; a teal "Profile complete" chip at 100%.
+ * factors are available; at 100%, a teal "Profile complete" chip in place of the next step.
  */
 export function ProfileCompletion({ percent, nextStep, factors = [] }: ProfileCompletionProps) {
   const [open, setOpen] = useState(false);
   const value = Math.min(100, Math.max(0, Math.round(percent)));
   const label = `Profile ${value}% complete`;
 
-  if (value >= 100) return <Badge tone="teal">Profile complete</Badge>;
-
-  const prompt = nextStep && <NextStepPrompt title={nextStep.label} linkLabel={nextStep.impact} href={nextStep.href} />;
+  // At 100% there's no next step left, so the chip takes its place beside the full ring.
+  const prompt =
+    value >= 100 ? (
+      <Badge tone="teal">Profile complete</Badge>
+    ) : (
+      nextStep && <NextStepPrompt title={nextStep.label} linkLabel={nextStep.impact} href={nextStep.href} />
+    );
 
   if (factors.length === 0) {
     return (
