@@ -7,10 +7,17 @@ import { CalendarDays } from "lucide-react";
 import { APPLICATIONS } from "@/src/feature/applications/mocks/applications";
 import type { ApplicationStatus } from "@/src/feature/applications/types/status";
 import { OpportunityCard } from "@/src/feature/opportunities/components/OpportunityCard";
-import { OPPORTUNITIES, RECOMMENDED_OPPORTUNITIES } from "@/src/feature/opportunities/mocks/opportunities";
-import { PROFILE_NEXT_STEP, type NextStep } from "@/src/feature/profile/components/header/completion";
+import {
+  OPPORTUNITIES,
+  RECOMMENDED_OPPORTUNITIES,
+} from "@/src/feature/opportunities/mocks/opportunities";
+import {
+  PROFILE_NEXT_STEP,
+  type NextStep,
+} from "@/src/feature/profile/components/header/completion";
 import { useCurrentUserName } from "@/src/feature/profile/hooks/useCurrentUserName";
 import { useProfileCompletion } from "@/src/feature/profile/hooks/useProfileCompletion";
+import { useProfileQuery } from "@/src/feature/profile/hooks/useProfileQuery";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { PROFILE_SECTIONS } from "../mocks/dashboard";
 import { WORKSHOP_PROMO } from "../mocks/promos";
@@ -21,7 +28,11 @@ import { MatchesSnapshotCard } from "./MatchesSnapshotCard";
 import { PageGreeting } from "./PageGreeting";
 import { ProfileCompleteMoment } from "./ProfileCompleteMoment";
 import { PipelineCard } from "./PipelineCard";
-import { ProfileProgressCard, type ProfileSectionStatus } from "./ProfileProgressCard";
+import {
+  ProfileProgressCard,
+  ProfileProgressCardSkeleton,
+  type ProfileSectionStatus,
+} from "./ProfileProgressCard";
 import { PromoCard } from "./PromoCard";
 import { GHOST_LINK_CLASS } from "./styles";
 import { getMatchTier, type MatchTier } from "../types/status";
@@ -30,34 +41,73 @@ import { WelcomeBanner } from "./WelcomeBanner";
 // Deadlines only matter while there's still work to do: submitted and decided ones drop out.
 const ACTIONABLE: ApplicationStatus[] = ["not_started", "in_progress"];
 
-const countBy = (status: ApplicationStatus) => APPLICATIONS.filter((a) => a.status === status).length;
+const countBy = (status: ApplicationStatus) =>
+  APPLICATIONS.filter((a) => a.status === status).length;
 
 // TODO: replace with per-section status from the API, including field counts (`progress`) so
 // unfinished sections can show "{done} of {total}". For now it's the dashboard mock's
 // done/not-done flags, which aren't tied to the completion percentage.
-const sectionComplete = (label: string) => PROFILE_SECTIONS.find((s) => s.label === label)?.complete ?? false;
+const sectionComplete = (label: string) =>
+  PROFILE_SECTIONS.find((s) => s.label === label)?.complete ?? false;
 const PROFILE_CHECKLIST: ProfileSectionStatus[] = [
-  { key: "education", label: "Education", complete: sectionComplete("Education"), href: "/profile#education" },
-  { key: "background", label: "Background & goals", complete: sectionComplete("Background & goals"), href: "/profile#background" },
-  { key: "skills", label: "Skills & languages", complete: sectionComplete("Skills & language"), href: "/profile#skills" },
-  { key: "documents", label: "Documents", complete: sectionComplete("Documents"), href: "/documents" },
+  {
+    key: "education",
+    label: "Education",
+    complete: sectionComplete("Education"),
+    href: "/profile#education",
+  },
+  {
+    key: "background",
+    label: "Background & goals",
+    complete: sectionComplete("Background & goals"),
+    href: "/profile#background",
+  },
+  {
+    key: "skills",
+    label: "Skills & languages",
+    complete: sectionComplete("Skills & language"),
+    href: "/profile#skills",
+  },
+  {
+    key: "documents",
+    label: "Documents",
+    complete: sectionComplete("Documents"),
+    href: "/documents",
+  },
 ];
 
 // Next step for the first unfinished section. The percentages are the match-score weights
 // (Sprint 3: field of study 30%, skills/interests 25%).
 // TODO: copy for education and background & goals needs product review.
 const SECTION_NEXT_STEP: Record<string, NextStep> = {
-  education: { label: "Add your education", impact: "Field of study counts for 30% of your match score.", href: "#education" },
-  background: { label: "Add your background & goals", impact: "Your study goals decide which opportunities you see.", href: "#background" },
-  skills: { label: "Add your skills & languages", impact: "Skills count for 25% of your match score.", href: "#skills" },
-  documents: { label: "Add your documents", impact: "Most applications ask for a resume and transcript.", href: "/documents" },
+  education: {
+    label: "Add your education",
+    impact: "Field of study counts for 30% of your match score.",
+    href: "#education",
+  },
+  background: {
+    label: "Add your background & goals",
+    impact: "Your study goals decide which opportunities you see.",
+    href: "#background",
+  },
+  skills: {
+    label: "Add your skills & languages",
+    impact: "Skills count for 25% of your match score.",
+    href: "#skills",
+  },
+  documents: {
+    label: "Add your documents",
+    impact: "Most applications ask for a resume and transcript.",
+    href: "/documents",
+  },
 };
 
 /** Dev preview only: tier counts from the opportunities mock, counting open ones (daysLeft >= 0). */
 function mockMatchCounts(): Record<MatchTier, number> {
   const counts: Record<MatchTier, number> = { strong: 0, possible: 0, low: 0 };
   for (const opportunity of OPPORTUNITIES) {
-    if (opportunity.daysLeft >= 0) counts[getMatchTier(opportunity.matchScore)] += 1;
+    if (opportunity.daysLeft >= 0)
+      counts[getMatchTier(opportunity.matchScore)] += 1;
   }
   return counts;
 }
@@ -69,21 +119,24 @@ function mockMatchCounts(): Record<MatchTier, number> {
 export function DashboardView() {
   const { firstName } = useCurrentUserName();
   const completion = useProfileCompletion();
+  // Until the profile loads, completion is the (possibly stale) value from sign-in, so a complete
+  // profile would flash the progress card first. Wait for it; on an error the fallback is used.
+  const completionKnown = !useProfileQuery().isPending;
   const { user } = useAuth();
   const searchParams = useSearchParams();
   // NODE_ENV is inlined at build time, so in production this is `false && …` and the preview
   // branch is stripped from the bundle; the query param can't turn it on.
   const previewSnapshot =
-    process.env.NODE_ENV === "development" && searchParams.get("preview") === "matches-snapshot";
+    process.env.NODE_ENV === "development" &&
+    searchParams.get("preview") === "matches-snapshot";
   // Signed-in pages render on the client only (the protected layout waits for auth), so local time is safe here.
   const [hour] = useState(() => new Date().getHours());
 
-  const upcoming = APPLICATIONS.filter((a) => ACTIONABLE.includes(a.status) && a.daysLeft >= 0).sort(
-    (a, b) => a.daysLeft - b.daysLeft,
-  );
+  const upcoming = APPLICATIONS.filter(
+    (a) => ACTIONABLE.includes(a.status) && a.daysLeft >= 0,
+  ).sort((a, b) => a.daysLeft - b.daysLeft);
   const needsAttention = upcoming.filter((a) => a.daysLeft <= 2);
   const deadlineSummary = summarizeDeadlines(upcoming.map((a) => a.daysLeft));
-
 
   const greeting = greetingFor(hour);
   const deadlines = <DeadlineList applications={upcoming} />;
@@ -94,13 +147,15 @@ export function DashboardView() {
 
       {/* Greeting on the left, the promo pushed to the right; stacked below 768px. */}
       <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-6">
-        <PageGreeting title={firstName ? `${greeting}, ${firstName}` : greeting}>
+        <PageGreeting
+          title={firstName ? `${greeting}, ${firstName}` : greeting}
+        >
           {deadlineSummary ?? (
             <>
               No deadlines this week. A good time to explore new matches.{" "}
               <Link
                 href="/discover"
-                className="rounded-sm font-medium text-primary-600 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+                className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 font-medium text-primary-600 hover:text-primary-800"
               >
                 Discover
               </Link>
@@ -137,7 +192,9 @@ export function DashboardView() {
               accepted: countBy("accepted"),
               rejected: countBy("rejected"),
             }}
-            closingDaysLeft={upcoming.filter((a) => a.daysLeft <= 7).map((a) => a.daysLeft)}
+            closingDaysLeft={upcoming
+              .filter((a) => a.daysLeft <= 7)
+              .map((a) => a.daysLeft)}
             attentionVisible={needsAttention.length > 0}
           />
 
@@ -155,7 +212,10 @@ export function DashboardView() {
             </div>
             <div className="gap-4 md:gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
               {RECOMMENDED_OPPORTUNITIES.map((opportunity) => (
-                <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+                <OpportunityCard
+                  key={opportunity.id}
+                  opportunity={opportunity}
+                />
               ))}
             </div>
           </section>
@@ -165,6 +225,8 @@ export function DashboardView() {
           <div className="hidden lg:block">{deadlines}</div>
           {previewSnapshot ? (
             <MatchesSnapshotCard counts={mockMatchCounts()} />
+          ) : !completionKnown ? (
+            <ProfileProgressCardSkeleton />
           ) : completion >= 100 ? (
             // TODO: render <MatchesSnapshotCard> here once a feed/matching endpoint provides open,
             // feed-visible match counts by tier. Until then a complete profile gets the one-time
@@ -174,7 +236,12 @@ export function DashboardView() {
             <ProfileProgressCard
               percent={completion}
               sections={PROFILE_CHECKLIST}
-              nextStep={PROFILE_NEXT_STEP ?? SECTION_NEXT_STEP[PROFILE_CHECKLIST.find((s) => !s.complete)?.key ?? ""]}
+              nextStep={
+                PROFILE_NEXT_STEP ??
+                SECTION_NEXT_STEP[
+                  PROFILE_CHECKLIST.find((s) => !s.complete)?.key ?? ""
+                ]
+              }
             />
           )}
         </div>
