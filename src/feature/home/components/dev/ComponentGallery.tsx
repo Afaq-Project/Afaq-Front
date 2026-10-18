@@ -10,6 +10,7 @@ import { Button, type LandingButtonVariant } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Chip, type ChipTone } from "../ui/Chip";
 import { DeadlineText } from "../ui/DeadlineText";
+import { FactorBar } from "../ui/FactorBar";
 import { FlagTile } from "../ui/FlagTile";
 import { MatchBadge } from "../ui/MatchBadge";
 import { StatusChip } from "../ui/StatusChip";
@@ -25,6 +26,11 @@ const STATUSES: ApplicationStatusKey[] = ["not_started", "in_progress", "submitt
 const FLAGS = ["jo", "sa", "eg", "de", "gb", "jp", "remote"];
 const DEADLINE_DAYS = [0, 1, 2, 5, 14, -1];
 const MATCHES = [86, 70, 55, 40, 22];
+const FACTORS = [
+  { label: "Field of study", score: 30, max: 30 },
+  { label: "Skills and interests", score: 21, max: 25 },
+  { label: "GPA", score: 16, max: 20 },
+];
 
 const COLOR_SCALES: { name: string; swatches: string[] }[] = [
   { name: "Green (primary)", swatches: ["bg-primary-50", "bg-primary-100", "bg-primary-200", "bg-primary-400", "bg-primary-600", "bg-primary-800", "bg-primary-900"] },
@@ -37,7 +43,7 @@ const COLOR_SCALES: { name: string; swatches: string[] }[] = [
 ];
 
 const TYPE_SCALE = [
-  { className: "text-landing-display", name: "Display 48/56 (34/42)" },
+  { className: "text-landing-display", name: "Display 48/56 (40/48, 32/40)" },
   { className: "text-landing-h2", name: "H2 36/44 (28/36)" },
   { className: "text-landing-h3", name: "H3 20/28" },
   { className: "text-landing-body-lg", name: "Body large 18/28" },
@@ -152,6 +158,13 @@ export function ComponentGallery() {
               ))}
             </div>
           </Demo>
+          <Demo title="Factor bar">
+            <div className="flex flex-col gap-2.5 max-w-62">
+              {FACTORS.map((factor) => (
+                <FactorBar key={factor.label} {...factor} />
+              ))}
+            </div>
+          </Demo>
           <Demo title="Status chip">
             <div className="flex flex-wrap gap-2">
               {STATUSES.map((status) => (
@@ -194,11 +207,9 @@ export function ComponentGallery() {
         <SectionHeader title="Same tone, reduced gap" intro="This white section follows another white one, so its top padding drops to 48px." />
       </Section>
 
-      <Section id="horizon" tone="offwhite" className="relative overflow-hidden">
-        <HorizonLines className="absolute inset-0 h-full" lineClassName="stroke-primary-200 opacity-40" />
-        <div className="relative">
-          <SectionHeader title="Horizon lines" intro="Decorative, aria-hidden. Hero and final call to action only." />
-        </div>
+      <Section id="horizon" tone="white" className="relative isolate pb-56 lg:pb-56 overflow-hidden">
+        <HorizonLines variant="arc" className="-z-10 bottom-0 absolute inset-x-0" />
+        <SectionHeader title="Horizon lines" intro="Arc variant, decorative and aria-hidden: six lines (four below 768px) fading from 0.7 to 0.3. Hero and final call to action only." />
       </Section>
     </main>
   );
