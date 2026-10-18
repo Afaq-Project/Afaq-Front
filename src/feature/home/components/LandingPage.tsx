@@ -14,6 +14,7 @@ import { MatchingSection } from "./sections/matching/MatchingSection";
 import { ScholarshipsSection } from "./sections/scholarships/ScholarshipsSection";
 import { TrackingSection } from "./sections/tracking/TrackingSection";
 import { TrustSection } from "./sections/trust/TrustSection";
+import { WhoItsForSection } from "./sections/who-its-for/WhoItsForSection";
 
 /** Sections that are built; the rest render a placeholder. */
 const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: SectionTone }>>> = {
@@ -24,6 +25,7 @@ const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: Section
   "ai-guidance": AiGuidanceSection,
   tracking: TrackingSection,
   scholarships: ScholarshipsSection,
+  "who-its-for": WhoItsForSection,
 };
 
 /** The public landing page: header, every section slot in order, footer. */

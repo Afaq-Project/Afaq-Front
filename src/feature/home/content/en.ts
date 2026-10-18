@@ -289,6 +289,20 @@ export const content = {
     ctaNote: "Get match scores, reminders, and AI guidance for free.",
   },
 
+  whoItsFor: {
+    eyebrow: "Who it's for",
+    title: "Made for people applying from the Arab world to everywhere",
+    intro: "Whether it's your first application abroad or your tenth, Afaq keeps things clear.",
+    /** Icons are set in the component, in this order. */
+    personas: [
+      { title: "Students", description: "Looking for your first scholarship, abroad or at home." },
+      { title: "Recent graduates", description: "Taking the next step toward a master's or a PhD." },
+      { title: "Researchers", description: "Searching for funded research and academic scholarships." },
+      { title: "Young professionals", description: "Building your career with a funded degree." },
+      { title: "Career changers", description: "Finding funded study that helps you move into a new field." },
+    ],
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },
