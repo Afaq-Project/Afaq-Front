@@ -26,6 +26,17 @@ export type TrackingRow = {
   note?: string;
 };
 
+/** A pricing plan. Without `annualPrice`, no annual price is shown. */
+export type PricingPlan = {
+  id: "free" | "premium";
+  label: string;
+  monthlyPrice: number;
+  annualPrice?: number;
+  description: string;
+  features: string[];
+  cta: string;
+};
+
 export const content = {
   meta: {
     title: "Afaq · Find scholarships that fit you",
@@ -301,6 +312,42 @@ export const content = {
       { title: "Young professionals", description: "Building your career with a funded degree." },
       { title: "Career changers", description: "Finding funded study that helps you move into a new field." },
     ],
+  },
+
+  pricing: {
+    eyebrow: "Pricing",
+    title: "Start free. Upgrade when you need more help.",
+    intro: "No card needed to start.",
+    perMonth: "/month",
+    forever: "forever",
+    /** Shown only for plans with an annual price. `{price}` is replaced. */
+    perYear: "or {price} a year",
+    footnote:
+      "Payments are handled securely by Stripe. Cancel anytime. If a renewal fails, you keep Premium until the end of your billing period.",
+    plans: [
+      {
+        id: "free",
+        label: "Free",
+        monthlyPrice: 0,
+        description: "Everything you need to find and track scholarships.",
+        features: [
+          "Personalized matches",
+          "Application tracking with reminders",
+          "20 AI chat messages a month",
+          "3 essay reviews a month",
+        ],
+        cta: "Create your free profile",
+      },
+      {
+        id: "premium",
+        label: "Premium",
+        // TODO: placeholder price; take the real one from the app's plans config.
+        monthlyPrice: 10,
+        description: "For when you're preparing several applications.",
+        features: ["Everything in Free", "Unlimited AI chat", "Unlimited essay reviews", "Priority deadline alerts"],
+        cta: "Start with Premium",
+      },
+    ] as PricingPlan[],
   },
 
   /** Section names, used as the accessible name of each slot and its placeholder label. */
