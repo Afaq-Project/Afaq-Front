@@ -29,5 +29,16 @@ export const SECTION_SLOTS: SectionSlot[] = [
 export const APP_LOGIN_URL = "/login";
 export const APP_SIGNUP_URL = "/register";
 
+/** Support contact and legal pages, linked from the FAQ and the footer. TODO: confirm the real address and URLs. */
+export const SUPPORT_EMAIL = "support@afaq.app";
+export const PRIVACY_URL = "/privacy";
+export const TERMS_URL = "/terms";
+
+/** Social profiles shown in the footer. Only the ones set here are rendered; none set renders nothing. */
+export const SOCIAL_LINKS: { linkedin?: string; instagram?: string } = {
+  // linkedin: "https://www.linkedin.com/company/...",
+  // instagram: "https://www.instagram.com/...",
+};
+
 /** id of the mobile menu panel (the menu button's aria-controls). */
 export const MENU_PANEL_ID = "landing-menu";

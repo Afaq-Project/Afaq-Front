@@ -350,6 +350,58 @@ export const content = {
     ] as PricingPlan[],
   },
 
+  faq: {
+    eyebrow: "FAQ",
+    title: "Questions you might have",
+    intro: "Something else on your mind?",
+    contact: "Contact support",
+    items: [
+      {
+        question: "Does Afaq submit applications for me?",
+        answer:
+          "No. You apply on each scholarship's official website. Afaq helps you find the right ones, prepare, and keep track of every deadline.",
+      },
+      {
+        question: "Where do the scholarships come from?",
+        answer:
+          "We gather them every day from a curated set of trusted sources, and our team reviews each listing before it appears.",
+      },
+      {
+        question: "Which scholarships are included?",
+        answer: "Scholarships open to international applicants worldwide, including remote and online programs.",
+      },
+      {
+        question: "Can Afaq guarantee I'll be accepted?",
+        answer:
+          "No one can. Afaq helps you focus on scholarships that fit you and prepare stronger applications, but the decision is always the provider's.",
+      },
+      {
+        question: "What happens when the AI isn't sure?",
+        answer:
+          "It tells you. If eligibility information isn't reliable, the assistant says so and links you to the official source instead of guessing.",
+      },
+      {
+        question: "What do I need to create a profile?",
+        answer:
+          "Just your education level, field of study, and nationality. You can add GPA, skills, languages, and experience later to sharpen your matches.",
+      },
+      {
+        question: "Is Afaq free?",
+        answer:
+          "Yes. The free plan includes personalized matches, tracking with reminders, and a monthly allowance of AI help. Premium adds unlimited AI chat and essay reviews.",
+      },
+      {
+        question: "Can I use it on my phone?",
+        answer: "Yes. Afaq works in any modern mobile browser, with no app to install.",
+      },
+      {
+        question: "How is my data protected?",
+        answer:
+          "Everything is encrypted in transit, your uploaded documents are encrypted at rest, and only you can see them. You can ask us to export or delete your data at any time.",
+      },
+    ],
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },
