@@ -127,7 +127,7 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     isRemote: false,
     funding: "partial",
     level: "PhD",
-    description: "A yearly grant toward living costs for doctoral students in applied sciences.",
+    description: "A yearly stipend toward living costs for doctoral students in applied sciences.",
     deadline: isoDateFromToday(45),
     location: "Zurich, Switzerland",
     officialUrl: "#",
