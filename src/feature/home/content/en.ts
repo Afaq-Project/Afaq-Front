@@ -423,7 +423,29 @@ export const content = {
     getStarted: { name: "Final call to action" },
   },
 
-  footer: { name: "Footer" },
+  footer: {
+    name: "Footer",
+    navLabel: "Footer",
+    homeLabel: "Afaq home",
+    tagline: "Your horizons, in one place.",
+    groups: {
+      product: {
+        title: "Product",
+        links: [
+          { label: "How it works", href: "#how-it-works" },
+          { label: "Matching", href: "#matching" },
+          { label: "AI guidance", href: "#ai-guidance" },
+          { label: "Pricing", href: "#pricing" },
+        ],
+      },
+      scholarships: { title: "Scholarships", openScholarships: "Open scholarships", signUp: "Create your free profile" },
+      support: { title: "Support", faq: "FAQ", contact: "Contact support", privacy: "Privacy", terms: "Terms" },
+    },
+    social: { linkedin: "Afaq on LinkedIn", instagram: "Afaq on Instagram" },
+    /** `{year}` is replaced with the current year. */
+    copyright: "© {year} Afaq",
+    note: "Applications are submitted on each scholarship's official website.",
+  },
 
   placeholder: {
     note: "Placeholder. This section is built in a later step.",
