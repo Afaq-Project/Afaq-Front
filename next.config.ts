@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      // Country flags (landing FlagTile).
+      { protocol: "https", hostname: "flagcdn.com", pathname: "/w80/**" },
     ],
   },
 };
