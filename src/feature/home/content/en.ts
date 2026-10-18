@@ -101,6 +101,36 @@ export const content = {
     ],
   },
 
+  /** How it works: four steps. Icons are set in the component, in this order. */
+  howItWorks: {
+    eyebrow: "How it works",
+    title: "From your profile to your result, step by step",
+    intro: "Afaq stays with you through the whole journey. You always apply on each scholarship's official website.",
+    /** Visual label above each step; `{number}` is replaced. Hidden from screen readers (the list conveys order). */
+    stepLabel: "Step {number}",
+    steps: [
+      {
+        title: "Create your profile",
+        description:
+          "Start with your education level, field of study, and nationality. Add GPA, skills, languages, and experience whenever you like.",
+      },
+      {
+        title: "Get your matches",
+        description:
+          "See only the scholarships you're eligible for, ranked by how well they fit, with a clear reason for every match.",
+      },
+      {
+        title: "Prepare with AI",
+        description: "Ask about requirements and get honest feedback on your essays and personal statements.",
+      },
+      {
+        title: "Track and apply",
+        description: "Apply on the official site, then track your status and get reminders before every deadline.",
+      },
+    ],
+    cta: "Create your free profile",
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },

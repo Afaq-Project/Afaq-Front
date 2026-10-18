@@ -8,12 +8,14 @@ import { SectionPlaceholder } from "./layout/SectionPlaceholder";
 import type { ComponentType } from "react";
 import type { SectionTone } from "../constants";
 import { HeroSection } from "./sections/hero/HeroSection";
+import { HowItWorksSection } from "./sections/how-it-works/HowItWorksSection";
 import { TrustSection } from "./sections/trust/TrustSection";
 
 /** Sections that are built; the rest render a placeholder. */
 const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: SectionTone }>>> = {
   hero: HeroSection,
   trust: TrustSection,
+  "how-it-works": HowItWorksSection,
 };
 
 /** The public landing page: header, every section slot in order, footer. */
