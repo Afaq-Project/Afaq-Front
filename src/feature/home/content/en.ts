@@ -236,6 +236,43 @@ export const content = {
     },
   },
 
+  tracking: {
+    eyebrow: "Application tracking",
+    title: "One calm list for every application",
+    intro:
+      "Everything sorted by deadline, with simple statuses and reminders by email and in the app, before it's too late.",
+    points: [
+      {
+        title: "Reminders before every deadline",
+        description: "By email and in the app, 14, 7, 3, and 1 day before.",
+        chips: ["14 days", "7 days", "3 days", "1 day"],
+      },
+      {
+        title: "Statuses that make sense",
+        description: "Not started, in progress, submitted, in review, and decision, so you always know where you stand.",
+      },
+      {
+        title: "Upload documents once",
+        description: "Keep your CV, transcript, and certificates in one place and link them to any application.",
+      },
+    ] as FeaturePoint[],
+    /** Static example list. Fictional scholarships. */
+    preview: {
+      label: "Example application list sorted by deadline: four scholarships with their statuses and deadlines, and a reminder that one ends in 2 days.",
+      title: "Your applications",
+      sortNote: "Sorted by deadline",
+      /** `{country}` is replaced. */
+      rowMeta: "Scholarship · {country}",
+      rows: [
+        { title: "Future Leaders Scholarship", country: "Canada", countryCode: "ca", status: "in_progress", daysLeft: 2 },
+        { title: "Global Excellence Scholarship", country: "Germany", countryCode: "de", status: "not_started", daysLeft: 6 },
+        { title: "Water Management Scholarship", country: "Netherlands", countryCode: "nl", status: "submitted", note: "Submitted Mar 14" },
+        { title: "Commonwealth Leaders Scholarship", country: "United Kingdom", countryCode: "gb", status: "in_review", note: "Submitted Feb 28" },
+      ] as TrackingRow[],
+      reminder: { meta: "Reminder · just now", text: "Future Leaders Scholarship ends in 2 days" },
+    },
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },

@@ -11,6 +11,7 @@ import { AiGuidanceSection } from "./sections/ai-guidance/AiGuidanceSection";
 import { HeroSection } from "./sections/hero/HeroSection";
 import { HowItWorksSection } from "./sections/how-it-works/HowItWorksSection";
 import { MatchingSection } from "./sections/matching/MatchingSection";
+import { TrackingSection } from "./sections/tracking/TrackingSection";
 import { TrustSection } from "./sections/trust/TrustSection";
 
 /** Sections that are built; the rest render a placeholder. */
@@ -20,6 +21,7 @@ const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: Section
   "how-it-works": HowItWorksSection,
   matching: MatchingSection,
   "ai-guidance": AiGuidanceSection,
+  tracking: TrackingSection,
 };
 
 /** The public landing page: header, every section slot in order, footer. */
