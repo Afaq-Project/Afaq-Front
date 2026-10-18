@@ -87,6 +87,20 @@ export const content = {
     },
   },
 
+  /** Trust row: eyebrow only (rendered as the section's h2), then four reasons. Icons are set in the component, in this order. */
+  trust: {
+    eyebrow: "What you can count on",
+    items: [
+      { title: "Refreshed every day", description: "New scholarships are gathered daily from trusted sources." },
+      { title: "Reviewed before it's live", description: "Our team checks every listing before you see it." },
+      { title: "No duplicate listings", description: "One scholarship, one listing, even when it appears on several sites." },
+      {
+        title: "AI that admits when it isn't sure",
+        description: "If eligibility details aren't reliable, it says so and links the official source.",
+      },
+    ],
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },

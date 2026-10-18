@@ -5,10 +5,16 @@ import { LandingFooter } from "./layout/LandingFooter";
 import { LandingHeader } from "./layout/LandingHeader";
 import { Section } from "./layout/Section";
 import { SectionPlaceholder } from "./layout/SectionPlaceholder";
+import type { ComponentType } from "react";
+import type { SectionTone } from "../constants";
 import { HeroSection } from "./sections/hero/HeroSection";
+import { TrustSection } from "./sections/trust/TrustSection";
 
 /** Sections that are built; the rest render a placeholder. */
-const SECTIONS: Partial<Record<string, typeof HeroSection>> = { hero: HeroSection };
+const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: SectionTone }>>> = {
+  hero: HeroSection,
+  trust: TrustSection,
+};
 
 /** The public landing page: header, every section slot in order, footer. */
 export function LandingPage() {
