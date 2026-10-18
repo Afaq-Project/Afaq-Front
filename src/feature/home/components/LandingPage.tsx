@@ -5,6 +5,10 @@ import { LandingFooter } from "./layout/LandingFooter";
 import { LandingHeader } from "./layout/LandingHeader";
 import { Section } from "./layout/Section";
 import { SectionPlaceholder } from "./layout/SectionPlaceholder";
+import { HeroSection } from "./sections/hero/HeroSection";
+
+/** Sections that are built; the rest render a placeholder. */
+const SECTIONS: Partial<Record<string, typeof HeroSection>> = { hero: HeroSection };
 
 /** The public landing page: header, every section slot in order, footer. */
 export function LandingPage() {
@@ -21,6 +25,8 @@ export function LandingPage() {
 
       <main id="main" tabIndex={-1} className="flex-1 focus:outline-none scroll-mt-(--landing-header-height)">
         {SECTION_SLOTS.map(({ id, tone, contentKey }) => {
+          const Built = SECTIONS[id];
+          if (Built) return <Built key={id} id={id} tone={tone} />;
           const { name } = content.sections[contentKey];
           return (
             <Section key={id} id={id} tone={tone} aria-label={name}>

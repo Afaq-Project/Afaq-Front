@@ -7,7 +7,9 @@
  */
 
 /** Plural forms by Intl.PluralRules category; `{count}` is replaced with the number. */
-export type PluralForms = Partial<Record<Intl.LDMLPluralRule, string>> & { other: string };
+export type PluralForms = Partial<Record<Intl.LDMLPluralRule, string>> & {
+  other: string;
+};
 
 export const content = {
   meta: {
@@ -38,6 +40,50 @@ export const content = {
       title: "Menu",
       open: "Open menu",
       close: "Close menu",
+    },
+  },
+
+  hero: {
+    /** The page's only H1, in three parts; `highlight` gets the lime underline. */
+    title: {
+      before: "Find ",
+      highlight: "opportunities",
+      after: " that fit you and never miss a deadline",
+    },
+    subtitle:
+      "Afaq gathers scholarships from trusted sources every day, shows you the ones you're eligible for, and helps you prepare each application with honest AI guidance.",
+    primaryCta: "Create your free profile",
+    secondaryCta: "See how it works",
+    /** Centered link at the bottom of the hero (768px and up). */
+    scrollLink: "Browse open scholarships",
+    /** Slideshow photos, in order. */
+    photos: [
+      { alt: "Three graduates in caps and gowns taking a selfie outside a university building" },
+      { alt: "A group of graduates in caps and gowns smiling in front of a university" },
+      { alt: "Graduates throwing their caps in the air outside a university building" },
+    ],
+    /** Decorative example cards. Fictional scholarships. */
+    matchCard: {
+      countryCode: "de",
+      title: "Global Excellence Scholarship",
+      meta: "Master's · Germany",
+      percent: 92,
+      /** Requirements the example profile meets, shown as checked chips. */
+      criteria: ["Field of study", "Skills", "GPA", "English C1", "Experience"],
+    },
+    /** Second example, stacked in front of the first on tablet (768–1023px). Fictional. */
+    matchCardSecondary: {
+      countryCode: "ca",
+      title: "Future Leaders Scholarship",
+      meta: "Bachelor's · Canada",
+      percent: 64,
+      criteria: ["Field of study", "GPA", "English B2"],
+    },
+    reminder: {
+      meta: "Reminder · 2h ago",
+      text: "Future Leaders Scholarship ends in",
+      deadline: "3 days",
+      daysLeft: 3,
     },
   },
 
@@ -79,10 +125,15 @@ export const content = {
     deadline: {
       today: "Ends today",
       tomorrow: "Ends tomorrow",
-      inDays: { one: "Ends in {count} day", other: "Ends in {count} days" } as PluralForms,
+      inDays: {
+        one: "Ends in {count} day",
+        other: "Ends in {count} days",
+      } as PluralForms,
       closed: "Closed",
     },
     remote: "Remote",
+    /** Match factor score; `{score}` and `{max}` are replaced with the numbers. */
+    factorScore: "{score} of {max}",
   },
 };
 
