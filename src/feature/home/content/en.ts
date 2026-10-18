@@ -146,6 +146,47 @@ export const content = {
     cta: "Create your free profile",
   },
 
+  /** Feature sections share one layout: header, three points, and a preview built from real components. */
+  matching: {
+    eyebrow: "How matching works",
+    title: "A match score you can actually understand",
+    intro:
+      "Afaq filters out scholarships you aren't eligible for, then ranks the rest. Every match shows exactly why it fits, and where it doesn't quite.",
+    points: [
+      {
+        title: "Eligibility comes first",
+        description: "Scholarships you can't apply for, because of nationality or study level, never clutter your list.",
+      },
+      {
+        title: "Five factors, clearly weighted",
+        description: "Field of study, skills, GPA, languages, and experience each count for a set share of your score.",
+      },
+      {
+        title: "Honest about gaps",
+        description: "When something doesn't quite fit, you see it, along with a tip on what to do about it.",
+      },
+    ] as FeaturePoint[],
+    /** Static example match. Fictional scholarship. */
+    preview: {
+      label: "Example match: Water Management Scholarship, 89% strong match, with the score broken down by factor and one possible gap.",
+      countryCode: "nl",
+      title: "Water Management Scholarship",
+      meta: "Master's · Netherlands",
+      percent: 89,
+      eligibility: ["Nationality eligible", "Master's level"],
+      breakdownTitle: "How your score adds up",
+      factors: [
+        { label: "Field of study", value: "Environmental engineering", score: 30, max: 30 },
+        { label: "Skills and interests", value: "GIS, data analysis", score: 22, max: 25 },
+        { label: "GPA", value: "3.7 out of 4.0", score: 18, max: 20 },
+        { label: "Languages", value: "English C1", score: 15, max: 15 },
+        { label: "Experience", value: "6 months, 1 year preferred", score: 4, max: 10 },
+      ],
+      gapNote: "Possible gap: they prefer 1 year of experience. Mention your project work in your personal statement.",
+      legend: { strong: "Strong match 70%+", possible: "Possible match 40–69%" },
+    },
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },

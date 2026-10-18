@@ -9,6 +9,7 @@ import type { ComponentType } from "react";
 import type { SectionTone } from "../constants";
 import { HeroSection } from "./sections/hero/HeroSection";
 import { HowItWorksSection } from "./sections/how-it-works/HowItWorksSection";
+import { MatchingSection } from "./sections/matching/MatchingSection";
 import { TrustSection } from "./sections/trust/TrustSection";
 
 /** Sections that are built; the rest render a placeholder. */
@@ -16,6 +17,7 @@ const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: Section
   hero: HeroSection,
   trust: TrustSection,
   "how-it-works": HowItWorksSection,
+  matching: MatchingSection,
 };
 
 /** The public landing page: header, every section slot in order, footer. */
