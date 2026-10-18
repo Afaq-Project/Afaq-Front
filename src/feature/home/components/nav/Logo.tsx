@@ -16,7 +16,7 @@ function LogoMark() {
 export function Logo({ onClick, className }: { onClick?: (event: MouseEvent<HTMLAnchorElement>) => void; className?: string }) {
   return (
     <a
-      href="#top"
+      href="#"
       aria-label={content.nav.homeLabel}
       onClick={onClick}
       className={cn(
