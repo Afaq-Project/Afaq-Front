@@ -273,6 +273,22 @@ export const content = {
     },
   },
 
+  openScholarships: {
+    eyebrow: "Open scholarships",
+    title: "A few scholarships open right now",
+    intro: "Browse what's available today. Create a free profile to see which ones fit you and get reminders before they close.",
+    tabsLabel: "Filter by funding",
+    tabs: { all: "All", full: "Fully funded", partial: "Partially funded" },
+    funding: { full: "Fully funded", partial: "Partially funded" },
+    officialSite: "Official site",
+    /** Screen-reader hint after "Official site". */
+    opensInNewTab: "(opens in a new tab)",
+    seeMatch: "See your match",
+    empty: "No scholarships in this category right now.",
+    cta: "Create your free profile",
+    ctaNote: "Get match scores, reminders, and AI guidance for free.",
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },
