@@ -14,7 +14,11 @@ export type PluralForms = Partial<Record<Intl.LDMLPluralRule, string>> & {
 };
 
 /** A point in a feature section's list; `chips` are optional small tags under the description. */
-export type FeaturePoint = { title: string; description: string; chips?: string[] };
+export type FeaturePoint = {
+  title: string;
+  description: string;
+  chips?: string[];
+};
 
 /** A row in the tracking preview: a deadline (`daysLeft`) or, once submitted, a `note`. */
 export type TrackingRow = {
@@ -84,9 +88,15 @@ export const content = {
     scrollLink: "Browse open scholarships",
     /** Slideshow photos, in order. */
     photos: [
-      { alt: "Three graduates in caps and gowns taking a selfie outside a university building" },
-      { alt: "A group of graduates in caps and gowns smiling in front of a university" },
-      { alt: "Graduates throwing their caps in the air outside a university building" },
+      {
+        alt: "Three graduates in caps and gowns taking a selfie outside a university building",
+      },
+      {
+        alt: "A group of graduates in caps and gowns smiling in front of a university",
+      },
+      {
+        alt: "Graduates throwing their caps in the air outside a university building",
+      },
     ],
     /** Decorative example cards. Fictional scholarships. */
     matchCard: {
@@ -117,12 +127,24 @@ export const content = {
   trust: {
     eyebrow: "What you can count on",
     items: [
-      { title: "Refreshed every day", description: "New scholarships are gathered daily from trusted sources." },
-      { title: "Reviewed before it's live", description: "Our team checks every listing before you see it." },
-      { title: "No duplicate listings", description: "One scholarship, one listing, even when it appears on several sites." },
+      {
+        title: "Refreshed every day",
+        description:
+          "New scholarships are gathered daily from trusted sources.",
+      },
+      {
+        title: "Reviewed before it's live",
+        description: "Our team checks every listing before you see it.",
+      },
+      {
+        title: "No duplicate listings",
+        description:
+          "One scholarship, one listing, even when it appears on several sites.",
+      },
       {
         title: "AI that admits when it isn't sure",
-        description: "If eligibility details aren't reliable, it says so and links the official source.",
+        description:
+          "If eligibility details aren't reliable, it says so and links the official source.",
       },
     ],
   },
@@ -131,7 +153,8 @@ export const content = {
   howItWorks: {
     eyebrow: "How it works",
     title: "From your profile to your result, step by step",
-    intro: "Afaq stays with you through the whole journey. You always apply on each scholarship's official website.",
+    intro:
+      "Afaq stays with you through the whole journey. You always apply on each scholarship's official website.",
     /** Visual label above each step; `{number}` is replaced. Hidden from screen readers (the list conveys order). */
     stepLabel: "Step {number}",
     steps: [
@@ -147,11 +170,13 @@ export const content = {
       },
       {
         title: "Prepare with AI",
-        description: "Ask about requirements and get honest feedback on your essays and personal statements.",
+        description:
+          "Ask about requirements and get honest feedback on your essays and personal statements.",
       },
       {
         title: "Track and apply",
-        description: "Apply on the official site, then track your status and get reminders before every deadline.",
+        description:
+          "Apply on the official site, then track your status and get reminders before every deadline.",
       },
     ],
     cta: "Create your free profile",
@@ -166,20 +191,24 @@ export const content = {
     points: [
       {
         title: "Eligibility comes first",
-        description: "Scholarships you can't apply for, because of nationality or study level, never clutter your list.",
+        description:
+          "Scholarships you can't apply for, because of nationality or study level, never clutter your list.",
       },
       {
         title: "Five factors, clearly weighted",
-        description: "Field of study, skills, GPA, languages, and experience each count for a set share of your score.",
+        description:
+          "Field of study, skills, GPA, languages, and experience each count for a set share of your score.",
       },
       {
         title: "Honest about gaps",
-        description: "When something doesn't quite fit, you see it, along with a tip on what to do about it.",
+        description:
+          "When something doesn't quite fit, you see it, along with a tip on what to do about it.",
       },
     ] as FeaturePoint[],
     /** Static example match. Fictional scholarship. */
     preview: {
-      label: "Example match: Water Management Scholarship, 89% strong match, with the score broken down by factor and one possible gap.",
+      label:
+        "Example match: Water Management Scholarship, 89% strong match, with the score broken down by factor and one possible gap.",
       countryCode: "nl",
       title: "Water Management Scholarship",
       meta: "Master's · Netherlands",
@@ -187,14 +216,33 @@ export const content = {
       eligibility: ["Nationality eligible", "Master's level"],
       breakdownTitle: "How your score adds up",
       factors: [
-        { label: "Field of study", value: "Environmental engineering", score: 30, max: 30 },
-        { label: "Skills and interests", value: "GIS, data analysis", score: 22, max: 25 },
+        {
+          label: "Field of study",
+          value: "Environmental engineering",
+          score: 30,
+          max: 30,
+        },
+        {
+          label: "Skills and interests",
+          value: "GIS, data analysis",
+          score: 22,
+          max: 25,
+        },
         { label: "GPA", value: "3.7 out of 4.0", score: 18, max: 20 },
         { label: "Languages", value: "English C1", score: 15, max: 15 },
-        { label: "Experience", value: "6 months, 1 year preferred", score: 4, max: 10 },
+        {
+          label: "Experience",
+          value: "6 months, 1 year preferred",
+          score: 4,
+          max: 10,
+        },
       ],
-      gapNote: "Possible gap: they prefer 1 year of experience. Mention your project work in your personal statement.",
-      legend: { strong: "Strong match 70%+", possible: "Possible match 40–69%" },
+      gapNote:
+        "Possible gap: they prefer 1 year of experience. Mention your project work in your personal statement.",
+      legend: {
+        strong: "Strong match 70%+",
+        possible: "Possible match 40–69%",
+      },
     },
   },
 
@@ -204,19 +252,26 @@ export const content = {
     intro:
       "Ask about a specific scholarship's requirements and get thoughtful feedback on your essays and personal statements. It helps you prepare. It can't promise a result.",
     points: [
-      { title: "Grounded in your profile", description: "Answers use your profile and the scholarship's details, not generic advice." },
+      {
+        title: "Grounded in your profile",
+        description:
+          "Answers use your profile and the scholarship's details, not generic advice.",
+      },
       {
         title: "Says when it isn't sure",
-        description: "If eligibility information isn't reliable, it tells you and points to the official source.",
+        description:
+          "If eligibility information isn't reliable, it tells you and points to the official source.",
       },
       {
         title: "Feedback on your essays",
-        description: "Get strengths, weaknesses, and suggestions you can work through before you submit.",
+        description:
+          "Get strengths, weaknesses, and suggestions you can work through before you submit.",
       },
     ] as FeaturePoint[],
     /** Static example conversation and essay feedback. Fictional scholarship. */
     preview: {
-      label: "Example AI conversation about the Commonwealth Leaders Scholarship, where the assistant answers from your profile and says when it isn't sure, with a note that essay feedback is ready: 2 strengths, 1 weakness, and 3 suggestions.",
+      label:
+        "Example AI conversation about the Commonwealth Leaders Scholarship, where the assistant answers from your profile and says when it isn't sure, with a note that essay feedback is ready: 2 strengths, 1 weakness, and 3 suggestions.",
       chat: {
         countryCode: "gb",
         title: "Commonwealth Leaders Scholarship",
@@ -260,34 +315,65 @@ export const content = {
       },
       {
         title: "Statuses that make sense",
-        description: "Not started, in progress, submitted, in review, and decision, so you always know where you stand.",
+        description:
+          "Not started, in progress, submitted, in review, and decision, so you always know where you stand.",
       },
       {
         title: "Upload documents once",
-        description: "Keep your CV, transcript, and certificates in one place and link them to any application.",
+        description:
+          "Keep your CV, transcript, and certificates in one place and link them to any application.",
       },
     ] as FeaturePoint[],
     /** Static example list. Fictional scholarships. */
     preview: {
-      label: "Example application list sorted by deadline: four scholarships with their statuses and deadlines, and a reminder that one ends in 2 days.",
+      label:
+        "Example application list sorted by deadline: four scholarships with their statuses and deadlines, and a reminder that one ends in 2 days.",
       title: "Your applications",
       sortNote: "Sorted by deadline",
       /** `{country}` is replaced. */
       rowMeta: "Scholarship · {country}",
       rows: [
-        { title: "Future Leaders Scholarship", country: "Canada", countryCode: "ca", status: "in_progress", daysLeft: 2 },
-        { title: "Global Excellence Scholarship", country: "Germany", countryCode: "de", status: "not_started", daysLeft: 6 },
-        { title: "Water Management Scholarship", country: "Netherlands", countryCode: "nl", status: "submitted", note: "Submitted Mar 14" },
-        { title: "Commonwealth Leaders Scholarship", country: "United Kingdom", countryCode: "gb", status: "in_review", note: "Submitted Feb 28" },
+        {
+          title: "Future Leaders Scholarship",
+          country: "Canada",
+          countryCode: "ca",
+          status: "in_progress",
+          daysLeft: 2,
+        },
+        {
+          title: "Global Excellence Scholarship",
+          country: "Germany",
+          countryCode: "de",
+          status: "not_started",
+          daysLeft: 6,
+        },
+        {
+          title: "Water Management Scholarship",
+          country: "Netherlands",
+          countryCode: "nl",
+          status: "submitted",
+          note: "Submitted Mar 14",
+        },
+        {
+          title: "Commonwealth Leaders Scholarship",
+          country: "United Kingdom",
+          countryCode: "gb",
+          status: "in_review",
+          note: "Submitted Feb 28",
+        },
       ] as TrackingRow[],
-      reminder: { meta: "Reminder · just now", text: "Future Leaders Scholarship ends in 2 days" },
+      reminder: {
+        meta: "Reminder · just now",
+        text: "Future Leaders Scholarship ends in 2 days",
+      },
     },
   },
 
   openScholarships: {
     eyebrow: "Open scholarships",
     title: "A few scholarships open right now",
-    intro: "Browse what's available today. Create a free profile to see which ones fit you and get reminders before they close.",
+    intro:
+      "Browse what's available today. Create a free profile to see which ones fit you and get reminders before they close.",
     tabsLabel: "Filter by funding",
     tabs: { all: "All", full: "Fully funded", partial: "Partially funded" },
     funding: { full: "Fully funded", partial: "Partially funded" },
@@ -303,14 +389,31 @@ export const content = {
   whoItsFor: {
     eyebrow: "Who it's for",
     title: "Made for people applying from the Arab world to everywhere",
-    intro: "Whether it's your first application abroad or your tenth, Afaq keeps things clear.",
+    intro:
+      "Whether it's your first application abroad or your tenth, Afaq keeps things clear.",
     /** Icons are set in the component, in this order. */
     personas: [
-      { title: "Students", description: "Looking for your first scholarship, abroad or at home." },
-      { title: "Recent graduates", description: "Taking the next step toward a master's or a PhD." },
-      { title: "Researchers", description: "Searching for funded research and academic scholarships." },
-      { title: "Young professionals", description: "Building your career with a funded degree." },
-      { title: "Career changers", description: "Finding funded study that helps you move into a new field." },
+      {
+        title: "Students",
+        description: "Looking for your first scholarship, abroad or at home.",
+      },
+      {
+        title: "Recent graduates",
+        description: "Taking the next step toward a master's or a PhD.",
+      },
+      {
+        title: "Researchers",
+        description: "Searching for funded research and academic scholarships.",
+      },
+      {
+        title: "Young professionals",
+        description: "Building your career with a funded degree.",
+      },
+      {
+        title: "Career changers",
+        description:
+          "Finding funded study that helps you move into a new field.",
+      },
     ],
   },
 
@@ -344,7 +447,12 @@ export const content = {
         // TODO: placeholder price; take the real one from the app's plans config.
         monthlyPrice: 10,
         description: "For when you're preparing several applications.",
-        features: ["Everything in Free", "Unlimited AI chat", "Unlimited essay reviews", "Priority deadline alerts"],
+        features: [
+          "Everything in Free",
+          "Unlimited AI chat",
+          "Unlimited essay reviews",
+          "Priority deadline alerts",
+        ],
         cta: "Start with Premium",
       },
     ] as PricingPlan[],
@@ -368,7 +476,8 @@ export const content = {
       },
       {
         question: "Which scholarships are included?",
-        answer: "Scholarships open to international applicants worldwide, including remote and online programs.",
+        answer:
+          "Scholarships open to international applicants worldwide, including remote and online programs.",
       },
       {
         question: "Can Afaq guarantee I'll be accepted?",
@@ -392,7 +501,8 @@ export const content = {
       },
       {
         question: "Can I use it on my phone?",
-        answer: "Yes. Afaq works in any modern mobile browser, with no app to install.",
+        answer:
+          "Yes. Afaq works in any modern mobile browser, with no app to install.",
       },
       {
         question: "How is my data protected?",
@@ -438,8 +548,18 @@ export const content = {
           { label: "Pricing", href: "#pricing" },
         ],
       },
-      scholarships: { title: "Scholarships", openScholarships: "Open scholarships", signUp: "Create your free profile" },
-      support: { title: "Support", faq: "FAQ", contact: "Contact support", privacy: "Privacy", terms: "Terms" },
+      scholarships: {
+        title: "Scholarships",
+        openScholarships: "Open scholarships",
+        signUp: "Create your free profile",
+      },
+      support: {
+        title: "Support",
+        faq: "FAQ",
+        contact: "Contact support",
+        privacy: "Privacy",
+        terms: "Terms",
+      },
     },
     social: { linkedin: "Afaq on LinkedIn", instagram: "Afaq on Instagram" },
     /** `{year}` is replaced with the current year. */

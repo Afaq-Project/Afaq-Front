@@ -9,11 +9,25 @@ import { content } from "../../content/en";
  * the container edge. Never mirrored.
  */
 function LogoMark() {
-  return <Image src="/afaq.png" alt="" width={40} height={40} className="-ms-1.5 size-10 shrink-0" />;
+  return (
+    <Image
+      src="/afaq.png"
+      alt=""
+      width={40}
+      height={40}
+      className="-ms-1.5 size-10 shrink-0"
+    />
+  );
 }
 
 /** Mark + wordmark, linking to the top of the page. */
-export function Logo({ onClick, className }: { onClick?: (event: MouseEvent<HTMLAnchorElement>) => void; className?: string }) {
+export function Logo({
+  onClick,
+  className,
+}: {
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  className?: string;
+}) {
   return (
     <a
       href="#"
@@ -26,7 +40,9 @@ export function Logo({ onClick, className }: { onClick?: (event: MouseEvent<HTML
       )}
     >
       <LogoMark />
-      <span className="font-semibold text-landing-h3 text-neutral-900">{content.nav.brand}</span>
+      <span className="font-semibold text-landing-h3 text-neutral-900">
+        {content.nav.brand}
+      </span>
     </a>
   );
 }
