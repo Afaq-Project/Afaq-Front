@@ -187,6 +187,55 @@ export const content = {
     },
   },
 
+  aiGuidance: {
+    eyebrow: "AI guidance",
+    title: "Help preparing, with honest answers",
+    intro:
+      "Ask about a specific scholarship's requirements and get thoughtful feedback on your essays and personal statements. It helps you prepare. It can't promise a result.",
+    points: [
+      { title: "Grounded in your profile", description: "Answers use your profile and the scholarship's details, not generic advice." },
+      {
+        title: "Says when it isn't sure",
+        description: "If eligibility information isn't reliable, it tells you and points to the official source.",
+      },
+      {
+        title: "Feedback on your essays",
+        description: "Get strengths, weaknesses, and suggestions you can work through before you submit.",
+      },
+    ] as FeaturePoint[],
+    /** Static example conversation and essay feedback. Fictional scholarship. */
+    preview: {
+      label: "Example AI conversation about the Commonwealth Leaders Scholarship, where the assistant answers from your profile and says when it isn't sure, with a note that essay feedback is ready: 2 strengths, 1 weakness, and 3 suggestions.",
+      chat: {
+        countryCode: "gb",
+        title: "Commonwealth Leaders Scholarship",
+        context: "Answers use your profile and this scholarship's details",
+        messages: [
+          { from: "user", text: "I graduated in 2024. Can I still apply?" },
+          {
+            from: "ai",
+            text: "Yes. This scholarship accepts graduates within two years of finishing their degree, and your profile shows 2024. It also asks for a short motivation statement.",
+          },
+          { from: "user", text: "What's the language requirement?" },
+          {
+            from: "ai",
+            text: "I don't have reliable language information for this year, so I won't guess. Please check the official page before you apply.",
+            sourceLink: "Open official source",
+          },
+        ] as { from: "user" | "ai"; text: string; sourceLink?: string }[],
+        disclaimer: "AI guidance can be wrong and doesn't guarantee outcomes.",
+      },
+      /** Small summary card overlapping the chat card. */
+      essay: {
+        title: "Essay feedback ready",
+        meta: "Personal statement · v2",
+        strengths: "2 strengths",
+        weaknesses: "1 weakness",
+        suggestions: "3 suggestions",
+      },
+    },
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },

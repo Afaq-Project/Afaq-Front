@@ -7,6 +7,7 @@ import { Section } from "./layout/Section";
 import { SectionPlaceholder } from "./layout/SectionPlaceholder";
 import type { ComponentType } from "react";
 import type { SectionTone } from "../constants";
+import { AiGuidanceSection } from "./sections/ai-guidance/AiGuidanceSection";
 import { HeroSection } from "./sections/hero/HeroSection";
 import { HowItWorksSection } from "./sections/how-it-works/HowItWorksSection";
 import { MatchingSection } from "./sections/matching/MatchingSection";
@@ -18,6 +19,7 @@ const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: Section
   trust: TrustSection,
   "how-it-works": HowItWorksSection,
   matching: MatchingSection,
+  "ai-guidance": AiGuidanceSection,
 };
 
 /** The public landing page: header, every section slot in order, footer. */
