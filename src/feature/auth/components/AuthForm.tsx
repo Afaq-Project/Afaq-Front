@@ -22,7 +22,10 @@ interface AuthFormProps {
   /** Form-level error; rendered under the submit button and linked via aria-describedby. */
   error?: ReactNode;
   errorId: string;
-  switchPrompt: string;
+  /** Google/LinkedIn buttons; off on the password-reset pages. */
+  showSocial?: boolean;
+  /** Line under the form, e.g. "Don't have an account? Sign up". */
+  switchPrompt?: string;
   switchLabel: string;
   switchHref: string;
 }
@@ -43,6 +46,7 @@ export default function AuthForm({
   isSubmitting,
   error,
   errorId,
+  showSocial = true,
   switchPrompt,
   switchLabel,
   switchHref,
@@ -89,10 +93,11 @@ export default function AuthForm({
         )}
       </form>
 
-      <SocialAuthButtons />
+      {showSocial && <SocialAuthButtons />}
 
       <p className="mt-8 short:mt-4 text-neutral-600 text-small text-center">
-        {switchPrompt} <TextLink href={switchHref}>{switchLabel}</TextLink>
+        {switchPrompt && `${switchPrompt} `}
+        <TextLink href={switchHref}>{switchLabel}</TextLink>
       </p>
     </>
   );

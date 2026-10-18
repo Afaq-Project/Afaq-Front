@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, FileText, Lock, Search, Sparkles, Upload } from "lucide-react";
 import { PageGreeting } from "@/src/feature/dashboard/components/PageGreeting";
@@ -79,6 +79,19 @@ export function DocumentsView() {
     setUpload(preset);
   };
   const restoreFocus = () => returnFocus.current?.focus();
+
+  // Links such as a "document needed" notification open the upload dialog with the type (and
+  // application) chosen: /documents?upload=recommendation&application=2. The params are then
+  // dropped, so a refresh doesn't reopen it.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const type = DOCUMENT_TYPES.find((entry) => entry.key === params.get("upload"))?.key;
+    if (!type) return;
+    const application = params.get("application");
+    window.history.replaceState(null, "", window.location.pathname);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the URL is only readable after mount
+    setUpload({ type, applicationIds: application ? [application] : undefined, fromNeeded: true });
+  }, []);
   const promptItem = prompt ? items.find((item) => item.id === prompt.itemId) : undefined;
 
   const header = (
@@ -201,7 +214,9 @@ export function DocumentsView() {
   return (
     <div className="flex flex-col gap-6">
       {header}
-      {userDocs.isLoading && <NeededSectionSkeleton />}
+      {/* Only when the section will show: with no requirements to check it renders nothing. */}
+      {userDocs.isLoading &&
+        ACTIVE_APPLICATIONS.some((a) => (a.opportunity?.requiredDocuments.length ?? 0) > 0) && <NeededSectionSkeleton />}
       {userDocs.available && (
         <NeededSection
           applications={ACTIVE_APPLICATIONS}

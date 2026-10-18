@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { Agent, fetch as undiciFetch } from "undici";
 
 // Server-only helpers for the auth BFF routes under src/app/api/auth. The refresh token lives
 // in an httpOnly cookie scoped to those routes, so client JavaScript can never read it.
@@ -16,6 +17,11 @@ const BACKEND_TIMEOUT_MS = 20_000;
 const GATEWAY_ERROR_STATUSES = [502, 503, 504];
 
 const BACKEND_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
+
+// Node's fetch gives up on connecting (DNS + TCP + TLS) after 10s regardless of the abort
+// signal, and slow links to the backend can take longer than that. Let the overall
+// BACKEND_TIMEOUT_MS decide instead.
+const backendAgent = new Agent({ connect: { timeout: BACKEND_TIMEOUT_MS } });
 
 /** Same shape as the backend's ApiEnvelope, so client error handling works unchanged. */
 interface Envelope {
@@ -80,12 +86,12 @@ export async function backendPost(
   headers?: Record<string, string>,
 ): Promise<BackendResult | null> {
   try {
-    const response = await fetch(`${BACKEND_URL}${path}`, {
+    const response = await undiciFetch(`${BACKEND_URL}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...headers },
       body: body === undefined ? undefined : JSON.stringify(body),
-      cache: "no-store",
       signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
+      dispatcher: backendAgent,
     });
     if (GATEWAY_ERROR_STATUSES.includes(response.status)) return null;
     const text = await response.text();
@@ -96,7 +102,8 @@ export async function backendPost(
       parsed = { message: text };
     }
     return { status: response.status, body: parsed };
-  } catch {
+  } catch (error) {
+    console.error(`[auth-bff] POST ${path} failed:`, error);
     return null;
   }
 }

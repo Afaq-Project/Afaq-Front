@@ -1,4 +1,5 @@
-import { isoDateFromToday } from "@/src/shared/lib/deadline";
+import { FREE_LIMITS } from "@/src/feature/billing/config/plans";
+import { firstOfNextMonth, isoDateFromToday } from "@/src/shared/lib/deadline";
 import type { Conversation, CreditUsage } from "../types/chat";
 
 /** ISO date-time `days` from today at hh:mm (local). */
@@ -99,4 +100,4 @@ export const CONVERSATIONS: Conversation[] = [
   },
 ];
 
-export const CREDIT_USAGE: CreditUsage = { used: 5, limit: 20, resetsOn: isoDateFromToday(16) };
+export const CREDIT_USAGE: CreditUsage = { used: 5, limit: FREE_LIMITS.chatMessages, resetsOn: firstOfNextMonth() };

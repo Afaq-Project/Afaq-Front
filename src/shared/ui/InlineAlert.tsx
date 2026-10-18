@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { CircleAlert, CircleCheck, Info } from "lucide-react";
+import { CircleAlert, CircleCheck, Info, TriangleAlert } from "lucide-react";
 
-type InlineAlertVariant = "info" | "success" | "error";
+type InlineAlertVariant = "info" | "success" | "warning" | "error";
 
 interface InlineAlertProps {
   variant?: InlineAlertVariant;
@@ -18,6 +18,7 @@ const variants: Record<
 > = {
   info: { classes: "bg-info-50 text-info-800", Icon: Info, role: "status" },
   success: { classes: "bg-primary-50 text-primary-800", Icon: CircleCheck, role: "status" },
+  warning: { classes: "bg-warning-50 text-warning-800", Icon: TriangleAlert, role: "status" },
   error: {
     classes: "bg-danger-50 text-danger-800",
     Icon: CircleAlert,

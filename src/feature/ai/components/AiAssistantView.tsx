@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
-import { PLANS } from "@/src/feature/billing/mocks/plans";
+import { IS_PREMIUM } from "@/src/feature/billing/mocks/subscription";
 import { useDocumentItems } from "@/src/feature/documents/hooks/useDocumentItems";
 import { isReviewable, reviewNoun } from "@/src/shared/lib/document-types";
 import { REVIEW_QUOTA } from "@/src/feature/documents/mocks/reviews";
@@ -23,9 +23,6 @@ import { MessageList } from "./MessageList";
 import { YourReviews } from "./YourReviews";
 
 const REPLY_DELAY_MS = 900;
-
-// TODO: the plan should come from the user's subscription; this reads the billing mock.
-const IS_PREMIUM = (PLANS.find((plan) => plan.isCurrent)?.price ?? 0) > 0;
 
 function newConversation(context: { opportunityId?: string; applicationId?: string; documentId?: string } = {}): Conversation {
   return {

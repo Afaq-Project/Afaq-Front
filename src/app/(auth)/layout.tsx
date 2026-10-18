@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import AuthBackground from "@/src/feature/auth/components/AuthBackground";
 
 /**
- * Shared shell for /login and /register. Living in the route-group layout keeps the
+ * Shared shell for /login, /register and the password-reset pages. Living in the route-group layout keeps the
  * background mounted when switching between the two pages.
  * overflow-x-clip guards against horizontal scroll from any decorative layer.
  */

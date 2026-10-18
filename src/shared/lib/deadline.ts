@@ -72,3 +72,10 @@ export function formatShortDay(isoDate: string) {
   const [year, month, day] = isoDate.split("-").map(Number);
   return new Date(year, month - 1, day).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 }
+
+/** ISO date (YYYY-MM-DD) of the 1st of next month in local time: when monthly quotas reset. Never in the past. */
+export function firstOfNextMonth(now = new Date()) {
+  const date = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}

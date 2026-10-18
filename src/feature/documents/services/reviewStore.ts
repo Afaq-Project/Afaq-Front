@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { PLANS } from "@/src/feature/billing/mocks/plans";
+import { IS_PREMIUM } from "@/src/feature/billing/mocks/subscription";
 import { REVIEW_SEEDS, REVIEW_QUOTA, mockReviewContent } from "../mocks/reviews";
 import type { DocumentTypeKey } from "@/src/shared/lib/document-types";
 import type { ReviewInfo, DocumentReview } from "../types/review";
@@ -15,9 +15,8 @@ import type { ReviewInfo, DocumentReview } from "../types/review";
  * reviews from the server before launch.
  */
 
-// TODO: the plan should come from the user's subscription; this reads the billing mock.
 /** Premium has no monthly review limit. */
-export const REVIEWS_UNLIMITED = (PLANS.find((plan) => plan.isCurrent)?.price ?? 0) > 0;
+export const REVIEWS_UNLIMITED = IS_PREMIUM;
 
 export interface ReviewState {
   /** False until sessionStorage has been read (always false on the server). */

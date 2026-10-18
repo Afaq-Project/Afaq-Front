@@ -9,4 +9,6 @@ export const notify = {
   success: (message: string, description?: string) => toast.success(message, { description }),
   error: (message: string, description?: string) => toast.error(message, { description }),
   info: (message: string, description?: string) => toast.info(message, { description }),
+  /** A toast with one button, e.g. "Notification dismissed" + Undo. */
+  withAction: (message: string, action: { label: string; onClick: () => void }) => toast(message, { action }),
 };

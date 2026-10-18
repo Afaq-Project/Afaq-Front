@@ -174,12 +174,18 @@ export function NeededSection({
   );
 }
 
-/** Loading placeholder shaped like the needed-documents heading and card grid. */
+/**
+ * Loading placeholder: the real heading (its count waits for the user's documents) above a
+ * placeholder card grid.
+ */
 export function NeededSectionSkeleton() {
   return (
-    <div aria-hidden="true" className="flex flex-col gap-4">
-      <Skeleton className="w-64 h-6" />
-      <div className="gap-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+    <section aria-labelledby="needed-heading" aria-busy="true" className="flex flex-col gap-4">
+      <h2 id="needed-heading" className="flex items-center gap-2 text-h2 text-neutral-900">
+        Needed for your applications
+        <Skeleton className="rounded-full w-5 h-5" />
+      </h2>
+      <div aria-hidden="true" className="gap-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }, (_, index) => (
           <div key={index} className="flex flex-col gap-3 bg-white p-4 border border-neutral-100 rounded-md">
             <div className="flex items-center gap-2.5">
@@ -191,6 +197,6 @@ export function NeededSectionSkeleton() {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

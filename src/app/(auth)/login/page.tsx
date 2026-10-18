@@ -3,13 +3,13 @@ import AuthVisualPanel from "@/src/feature/auth/components/AuthVisualPanel";
 import LoginForm from "@/src/feature/auth/components/LoginForm";
 
 interface LoginPageProps {
-  searchParams: Promise<{ session?: string | string[] }>;
+  searchParams: Promise<{ session?: string | string[]; reset?: string | string[] }>;
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   // TODO: nothing sets this yet — the axios-client 401 redirect should send
   // users to /login?session=expired so this banner shows.
-  const { session } = await searchParams;
+  const { session, reset } = await searchParams;
 
   return (
     <AuthLayout
@@ -20,7 +20,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         />
       }
     >
-      <LoginForm sessionExpired={session === "expired"} />
+      <LoginForm sessionExpired={session === "expired"} passwordReset={reset === "success"} />
     </AuthLayout>
   );
 }
