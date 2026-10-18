@@ -74,7 +74,13 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.request.use((config) => {
+instance.interceptors.request.use(async (config) => {
+  // On page load the app renders from the cached user while hydrate is still fetching the
+  // access token. Wait for that instead of sending the request without one, which would come
+  // back 401 and be sent a second time below.
+  if (!tokenStorage.getAccessToken() && refreshPromise) {
+    await refreshPromise.catch(() => undefined);
+  }
   const accessToken = tokenStorage.getAccessToken();
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
@@ -141,9 +147,18 @@ function redirectToLogin() {
 }
 
 // Auth endpoints return their own 401s (wrong password, unverified email, expired
-// refresh token) that callers need to see as-is - they must never trigger the
-// access-token refresh/redirect flow below, which is only for authenticated requests.
-const AUTH_ENDPOINTS = ["/auth/login", "/auth/register", "/auth/refresh"];
+// refresh token, invalid reset link) that callers need to see as-is - they must never
+// trigger the access-token refresh/redirect flow below, which is only for authenticated
+// requests. (/auth/change-password is authenticated, so it isn't listed.)
+const AUTH_ENDPOINTS = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/refresh",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+  "/auth/verify-email",
+  "/auth/resend-verification",
+];
 
 function isAuthEndpoint(url?: string): boolean {
   return Boolean(url && AUTH_ENDPOINTS.some((endpoint) => url.includes(endpoint)));

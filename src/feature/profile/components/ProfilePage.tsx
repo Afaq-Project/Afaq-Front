@@ -14,15 +14,16 @@ import type { EditingState } from "./common/editing";
 import { EducationSection } from "./education/EducationSection";
 import { PROFILE_NEXT_STEP, type MatchFactor } from "./header/completion";
 import { ProfileHeader } from "./header/ProfileHeader";
-import { ProfilePageSkeleton } from "./skeletons/ProfilePageSkeleton";
+import { ProfileSectionSkeleton } from "./skeletons/ProfileSectionSkeleton";
 import { SkillsLanguagesSection } from "./skills/SkillsLanguagesSection";
 
-// Same order as the onboarding wizard.
-const SECTIONS: AnchorNavItem[] = [
-  { id: "education", label: "Education", icon: GraduationCap },
-  { id: "background", label: "Background and goals", icon: Target },
-  { id: "skills", label: "Skills and languages", icon: Languages },
-  { id: "account", label: "Account", icon: UserRound },
+// Same order as the onboarding wizard. `cards` is how many placeholder cards each shows while
+// the profile loads, mirroring the real section.
+const SECTIONS: (AnchorNavItem & { cards: number })[] = [
+  { id: "education", label: "Education", icon: GraduationCap, cards: 1 },
+  { id: "background", label: "Background and goals", icon: Target, cards: 2 },
+  { id: "skills", label: "Skills and languages", icon: Languages, cards: 2 },
+  { id: "account", label: "Account", icon: UserRound, cards: 2 },
 ];
 
 // TODO: provide the five match factors with their filled / missing state once the API reports
@@ -42,9 +43,6 @@ export function ProfilePage() {
   const [editing, setEditing] = useState<string | null>(null);
   const edit: EditingState = { editing, start: setEditing, stop: () => setEditing(null) };
 
-  // The nav observes the sections when it mounts, so it only renders once they exist.
-  if (isLoading) return <ProfilePageSkeleton />;
-
   const name = currentName || "Your profile";
 
   return (
@@ -63,20 +61,31 @@ export function ProfilePage() {
         <AnchorNav items={SECTIONS} label="Profile sections" />
 
         <div className="flex min-w-0 flex-1 flex-col gap-8">
-          <EducationSection
-            levelId={profile?.educationLevelId}
-            educations={profile?.educations ?? []}
-            names={names}
-            edit={edit}
-          />
-          <BackgroundGoalsSection profile={profile} preferences={preferences} names={names} edit={edit} />
-          <SkillsLanguagesSection
-            experiences={profile?.experiences ?? []}
-            languages={profile?.languages ?? []}
-            names={names}
-            edit={edit}
-          />
-          <AccountSection profile={profile} accountEmail={user?.email} edit={edit} />
+          {isLoading ? (
+            // The header and nav already have what they need (name and email from the signed-in
+            // user, completion from the last known value); only the sections wait. They keep
+            // their ids, since the nav observes them when it mounts.
+            SECTIONS.map((section) => (
+              <ProfileSectionSkeleton key={section.id} id={section.id} title={section.label} cards={section.cards} />
+            ))
+          ) : (
+            <>
+              <EducationSection
+                levelId={profile?.educationLevelId}
+                educations={profile?.educations ?? []}
+                names={names}
+                edit={edit}
+              />
+              <BackgroundGoalsSection profile={profile} preferences={preferences} names={names} edit={edit} />
+              <SkillsLanguagesSection
+                experiences={profile?.experiences ?? []}
+                languages={profile?.languages ?? []}
+                names={names}
+                edit={edit}
+              />
+              <AccountSection profile={profile} accountEmail={user?.email} edit={edit} />
+            </>
+          )}
         </div>
       </div>
     </div>

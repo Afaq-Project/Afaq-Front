@@ -1,12 +1,24 @@
 import Link from "next/link";
+import { Clock } from "lucide-react";
 import { StatusChip } from "@/src/feature/applications/components/StatusChip";
-import { formatDeadline } from "@/src/feature/applications/services/utils";
 import type { ApplicationSummary } from "@/src/feature/applications/types/application";
 import { buttonClasses } from "@/src/shared/ui/Button";
 
 const MAX_ITEMS = 3;
 
-/** Applications that end within two days and still need work. Renders nothing when there are none. */
+const ROW = "flex sm:flex-row flex-col sm:items-center gap-3 px-4 py-3 min-h-14";
+
+/** " ends today", " ends tomorrow", " ends in 2 days": follows the title. */
+function endsIn(daysLeft: number) {
+  if (daysLeft <= 0) return "ends today";
+  if (daysLeft === 1) return "ends tomorrow";
+  return `ends in ${daysLeft} days`;
+}
+
+/**
+ * Applications that end within two days and still need work, as a slim alert list under the
+ * greeting: white, with a red left edge, one row each. Renders nothing when there are none.
+ */
 export function AttentionStrip({ applications }: { applications: ApplicationSummary[] }) {
   if (applications.length === 0) return null;
 
@@ -14,48 +26,43 @@ export function AttentionStrip({ applications }: { applications: ApplicationSumm
   const more = applications.length - shown.length;
 
   return (
-    // danger-100 isn't a token, so the border is the 400 stop at low opacity.
     <section
-      aria-labelledby="attention-heading"
-      className="bg-danger-50 p-5 md:p-6 border border-danger-400/30 rounded-lg"
+      aria-label="Needs your attention"
+      className="bg-white border border-neutral-100 border-l-4 border-l-danger-600 rounded-lg"
     >
-      <h2 id="attention-heading" className="text-danger-800 text-h3">
-        Needs your attention
-      </h2>
-
-      <ul className="divide-y divide-danger-400/20 mt-2">
+      <ul>
         {shown.map((application) => (
-          <li
-            key={application.id}
-            className="flex sm:flex-row flex-col sm:items-center gap-3 py-3 last:pb-0"
-          >
-            <div className="flex-1 min-w-0">
-              <h3 className="text-h3 text-neutral-900">{application.title}</h3>
-              <div className="flex flex-wrap items-center gap-2 mt-1">
-                <span className="font-medium text-danger-800 text-small">
-                  {formatDeadline(application.daysLeft)}
+          <li key={application.id} className={`${ROW} border-neutral-100 border-t first:border-t-0`}>
+            <div className="flex flex-1 items-start sm:items-center gap-3 min-w-0">
+              <Clock size={20} strokeWidth={1.75} aria-hidden="true" className="mt-px sm:mt-0 text-danger-800 shrink-0" />
+              <p className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0 text-body">
+                <span>
+                  <span className="font-semibold text-neutral-900">{application.title}</span>{" "}
+                  <span className="text-danger-800">{endsIn(application.daysLeft)}</span>
                 </span>
                 <StatusChip status={application.status} />
-              </div>
+              </p>
             </div>
             <Link
               href={`/applications/${application.id}`}
-              className={buttonClasses("secondary", "bg-white shrink-0 self-start sm:self-auto")}
+              className={buttonClasses("soft", "w-full sm:w-auto md:h-8 px-3 text-small shrink-0")}
             >
               Open application
             </Link>
           </li>
         ))}
+        {more > 0 && (
+          <li className="border-neutral-100 border-t">
+            {/* TODO: /applications has no deadline filter in its URL yet; its default order is active applications by soonest deadline. */}
+            <Link
+              href="/applications"
+              className="flex items-center hover:bg-neutral-50 px-4 py-3 rounded-b-lg min-h-14 font-medium text-primary-600 text-small hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-inset transition-colors"
+            >
+              +{more} more due soon
+            </Link>
+          </li>
+        )}
       </ul>
-
-      {more > 0 && (
-        <Link
-          href="/applications"
-          className="inline-flex items-center mt-3 rounded-sm min-h-11 md:min-h-0 font-medium text-primary-600 text-small hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
-        >
-          +{more} more
-        </Link>
-      )}
     </section>
   );
 }

@@ -81,7 +81,7 @@ export const NAV_ITEMS: Record<ShellVariant, NavItem[]> = {
 export const MENU_ITEMS: Record<ShellVariant, MenuItem[]> = {
   user: [
     { href: "/profile", label: "Your profile", icon: CircleUserRound },
-    { href: "/billing", label: "Subscription", icon: CreditCard },
+    { href: "/billing", label: "Plan & billing", icon: CreditCard },
     { href: "/settings", label: "Settings", icon: Settings },
   ],
   // No Settings: /settings lives in the student-only route group and redirects admins away.

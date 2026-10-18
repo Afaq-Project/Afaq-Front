@@ -10,7 +10,7 @@ import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { MENU_ITEMS, type ShellVariant } from "./shell-config";
 
 const ITEM_CLASS =
-  "flex items-center gap-3 px-4 w-full h-11 md:h-10 text-neutral-800 text-small text-left hover:bg-neutral-50 focus:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-400 transition-colors";
+  "flex items-center gap-3 px-4 w-full h-11 md:h-10 text-neutral-800 text-small text-left hover:bg-neutral-50 focus-visible:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-400 transition-colors";
 
 /** Avatar button with the account menu (menu-button pattern: arrow keys, Home/End, Escape). */
 export function UserMenu({ variant }: { variant: ShellVariant }) {

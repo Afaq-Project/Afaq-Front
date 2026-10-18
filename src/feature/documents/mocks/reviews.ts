@@ -1,8 +1,9 @@
+import { FREE_LIMITS } from "@/src/feature/billing/config/plans";
 import type { DocumentTypeKey } from "@/src/shared/lib/document-types";
 import type { ReviewQuota } from "../types/review";
 
 /** Essay reviews on the free plan each month. */
-export const REVIEW_QUOTA: ReviewQuota = { used: 1, limit: 3 };
+export const REVIEW_QUOTA: ReviewQuota = { used: 1, limit: FREE_LIMITS.essayReviews };
 
 /** A seeded review: `daysAgo` is counted back from today. */
 interface ReviewSeed {

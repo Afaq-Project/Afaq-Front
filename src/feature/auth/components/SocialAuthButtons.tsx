@@ -17,7 +17,7 @@ export default function SocialAuthButtons() {
           Google
         </Button>
         <Button type="button" variant="secondary" className="rounded-md! w-full">
-          <LinkedInIcon className="w-4 h-4 text-[#0A66C2]" />
+          <LinkedInIcon className="w-4 h-4 text-brand-linkedin" />
           LinkedIn
         </Button>
       </div>

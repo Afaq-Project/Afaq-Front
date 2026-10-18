@@ -203,7 +203,7 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
       "Twelve-month scholarship building applied machine learning products with mentors.",
     type: "Scholarship",
     matchScore: 88,
-    daysLeft: 15,
+    daysLeft: 1,
     location: "Cairo, Egypt",
     countryCode: "eg",
     fieldOfStudy: "Computer Science",
