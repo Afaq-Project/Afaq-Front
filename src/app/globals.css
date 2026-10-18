@@ -91,6 +91,8 @@
    * red = danger). Off-white is the alternating section background.
    */
   --color-offwhite: #faf9f5;
+  /* Lime marker stroke under a highlighted word (hero headline). Decorative, behind text only. */
+  --color-highlight: #c7f46a;
 
   /* 1440px instead of Tailwind's 1536px (375 base, 768 md, 1024 lg, 1280 xl, 1440 2xl). */
   --breakpoint-2xl: 90rem;
@@ -189,6 +191,17 @@ input:autofill {
 @theme {
   --animate-auth-card: auth-fade-in 200ms ease-out both;
   --animate-auth-row: auth-rise 350ms ease-out both;
+  /* Landing hero entrance: text rises, photo fades, cards rise (delays set where used). */
+  --animate-landing-rise: auth-rise 300ms ease-out both;
+  --animate-landing-fade: auth-fade-in 400ms ease-out both;
+  /* Hero scroll link arrow: bounces 4px inside its circle, starting 1s after load (stopped by script on scroll). */
+  --animate-landing-bounce: landing-bounce 1.4s ease-in-out 1s infinite;
+
+  @keyframes landing-bounce {
+    50% {
+      transform: translateY(4px);
+    }
+  }
 
   @keyframes auth-fade-in {
     from {
@@ -246,6 +259,11 @@ input:autofill {
   }
 }
 
+/* Headings and sections focused by script (after an in-page jump) need no focus ring. */
+.landing [tabindex="-1"]:focus {
+  outline: none;
+}
+
 /* Smooth anchor scrolling on the landing page only, and only when motion is welcome. */
 @media (prefers-reduced-motion: no-preference) {
   html:has(.landing) {
@@ -253,13 +271,18 @@ input:autofill {
   }
 }
 
-/* Landing type scale. Mobile sizes first; display and h2 step up at 768px. */
+/* Landing type scale. Mobile sizes first; display steps up at 768px and 1024px, h2 at 768px. */
 @utility text-landing-display {
-  font-size: 34px;
-  line-height: calc(42px * var(--leading-scale, 1));
+  font-size: 32px;
+  line-height: calc(40px * var(--leading-scale, 1));
   font-weight: 600;
 
   @media (width >= 48rem) {
+    font-size: 40px;
+    line-height: calc(48px * var(--leading-scale, 1));
+  }
+
+  @media (width >= 64rem) {
     font-size: 48px;
     line-height: calc(56px * var(--leading-scale, 1));
   }

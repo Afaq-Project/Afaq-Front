@@ -16,8 +16,9 @@ const FOCUS_RING = "focus-visible:outline-2 focus-visible:outline-primary-400 fo
 
 /**
  * Sticky header (id "top"), 56px below 1024px and 64px from 1024px (--landing-header-height).
- * Transparent at the top of the page, white with a bottom border once scrolled. Desktop shows
- * the logo, the section links (the one in view is underlined), then Log in and Sign up;
+ * Overlaps the hero (negative bottom margin; the hero pads for it) and is transparent at the
+ * top of the page, white with a bottom border once scrolled. Desktop shows
+ * the logo, the centered section links (the one in view is underlined), then Log in and Sign up;
  * smaller screens show Sign up and a menu button that opens MobileMenu.
  */
 export function LandingHeader() {
@@ -41,12 +42,13 @@ export function LandingHeader() {
       <header
         id="top"
         className={cn(
-          "top-0 z-40 sticky h-(--landing-header-height) border-b transition-colors duration-150 motion-reduce:transition-none",
+          "top-0 z-40 sticky h-(--landing-header-height) mb-[calc(var(--landing-header-height)*-1)] border-b transition-colors duration-150 motion-reduce:transition-none",
           scrolled ? "bg-white border-neutral-100" : "bg-transparent border-transparent",
         )}
       >
-        <Container className="flex items-center gap-8 h-full">
-          <Logo />
+        {/* From 1024px a 1fr / auto / 1fr grid keeps the links centered in the header whatever the widths of the logo and actions. */}
+        <Container className="flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center gap-8 h-full">
+          <Logo className="lg:justify-self-start" />
 
           <nav aria-label={nav.label} className="hidden lg:block">
             <ul className="flex items-center gap-7">
@@ -73,7 +75,7 @@ export function LandingHeader() {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-2 ms-auto">
+          <div className="flex items-center lg:justify-self-end gap-2 ms-auto">
             <Button href={APP_LOGIN_URL} variant="secondary" size="sm" className="hidden lg:inline-flex">
               {nav.logIn}
             </Button>
