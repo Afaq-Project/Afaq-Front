@@ -54,9 +54,9 @@ export const content = {
     brand: "Afaq",
     links: [
       { href: "#how-it-works", label: "How it works" },
+      { href: "#scholarships", label: "Scholarships" },
       { href: "#matching", label: "Matching" },
       { href: "#ai-guidance", label: "AI guidance" },
-      { href: "#scholarships", label: "Scholarships" },
       { href: "#pricing", label: "Pricing" },
       { href: "#faq", label: "FAQ" },
     ],
