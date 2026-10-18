@@ -9,6 +9,7 @@ import type { ComponentType } from "react";
 import type { SectionTone } from "../constants";
 import { AiGuidanceSection } from "./sections/ai-guidance/AiGuidanceSection";
 import { FaqSection } from "./sections/faq/FaqSection";
+import { GetStartedSection } from "./sections/get-started/GetStartedSection";
 import { HeroSection } from "./sections/hero/HeroSection";
 import { HowItWorksSection } from "./sections/how-it-works/HowItWorksSection";
 import { MatchingSection } from "./sections/matching/MatchingSection";
@@ -30,6 +31,7 @@ const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: Section
   "who-its-for": WhoItsForSection,
   pricing: PricingSection,
   faq: FaqSection,
+  "get-started": GetStartedSection,
 };
 
 /** The public landing page: header, every section slot in order, footer. */

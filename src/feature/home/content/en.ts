@@ -402,6 +402,12 @@ export const content = {
     ],
   },
 
+  getStarted: {
+    title: "Your next horizon starts with a short profile",
+    text: "It takes a few minutes, and your matches are ready right after.",
+    primaryCta: "Create your free profile",
+  },
+
   /** Section names, used as the accessible name of each slot and its placeholder label. */
   sections: {
     hero: { name: "Hero" },
