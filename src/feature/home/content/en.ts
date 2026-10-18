@@ -6,9 +6,24 @@
  * no social proof, no promised outcomes, scholarships only.
  */
 
+import type { ApplicationStatusKey } from "@/src/shared/lib/status-colors";
+
 /** Plural forms by Intl.PluralRules category; `{count}` is replaced with the number. */
 export type PluralForms = Partial<Record<Intl.LDMLPluralRule, string>> & {
   other: string;
+};
+
+/** A point in a feature section's list; `chips` are optional small tags under the description. */
+export type FeaturePoint = { title: string; description: string; chips?: string[] };
+
+/** A row in the tracking preview: a deadline (`daysLeft`) or, once submitted, a `note`. */
+export type TrackingRow = {
+  title: string;
+  country: string;
+  countryCode: string;
+  status: ApplicationStatusKey;
+  daysLeft?: number;
+  note?: string;
 };
 
 export const content = {
