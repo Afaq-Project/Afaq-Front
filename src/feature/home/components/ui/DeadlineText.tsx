@@ -9,7 +9,8 @@ function formatPlural(forms: PluralForms, count: number) {
   return template.replace("{count}", String(count));
 }
 
-const URGENCY_TEXT: Record<DeadlineUrgency, string> = {
+/** Color and weight per urgency; also used for deadlines written inside a sentence. */
+export const DEADLINE_TEXT: Record<DeadlineUrgency, string> = {
   urgent: "font-medium text-danger-800",
   soon: "font-medium text-neutral-900",
   later: "text-neutral-600",
@@ -33,7 +34,7 @@ export function DeadlineText({ daysLeft, className }: { daysLeft: number; classN
           : formatPlural(deadline.inDays, daysLeft);
 
   return (
-    <span className={cn("inline-flex items-center gap-1.5 text-landing-small", daysLeft < 0 ? URGENCY_TEXT.later : URGENCY_TEXT[urgency], className)}>
+    <span className={cn("inline-flex items-center gap-1.5 text-landing-small", daysLeft < 0 ? DEADLINE_TEXT.later : DEADLINE_TEXT[urgency], className)}>
       {urgency === "soon" && <Clock size={14} strokeWidth={1.75} aria-hidden="true" />}
       {label}
     </span>

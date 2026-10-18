@@ -23,8 +23,10 @@ interface OwnProps {
   variant?: LandingButtonVariant;
   /** sm: 36px tall. md: 44px tall. */
   size?: LandingButtonSize;
-  /** Directional icon after the label (arrow, chevron); flipped in right-to-left layouts. */
+  /** Icon after the label. Flipped in right-to-left layouts unless `flipIconInRtl` is false. */
   trailingIcon?: LucideIcon;
+  /** Set false for icons that aren't directional along the line (e.g. arrow-down). Default true. */
+  flipIconInRtl?: boolean;
   className?: string;
   children: ReactNode;
 }
@@ -45,12 +47,12 @@ export function landingButtonClasses(variant: LandingButtonVariant = "primary", 
 }
 
 /** Landing page button. Renders a Link when given `href`, otherwise a <button>. */
-export function Button({ variant = "primary", size = "md", trailingIcon: TrailingIcon, className, children, ...rest }: LandingButtonProps) {
+export function Button({ variant = "primary", size = "md", trailingIcon: TrailingIcon, flipIconInRtl = true, className, children, ...rest }: LandingButtonProps) {
   const classes = landingButtonClasses(variant, size, className);
   const content = (
     <>
       {children}
-      {TrailingIcon && <TrailingIcon size={SIZES[size].icon} strokeWidth={1.75} aria-hidden="true" className="flip-rtl shrink-0" />}
+      {TrailingIcon && <TrailingIcon size={SIZES[size].icon} strokeWidth={1.75} aria-hidden="true" className={cn("shrink-0", flipIconInRtl && "flip-rtl")} />}
     </>
   );
 
