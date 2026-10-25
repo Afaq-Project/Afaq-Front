@@ -7,10 +7,13 @@ import { CalendarDays } from "lucide-react";
 import { APPLICATIONS } from "@/src/feature/applications/mocks/applications";
 import type { ApplicationStatus } from "@/src/feature/applications/types/status";
 import { OpportunityCard } from "@/src/feature/opportunities/components/OpportunityCard";
+import { OpportunityCardSkeleton } from "@/src/feature/opportunities/components/OpportunityCardSkeleton";
 import {
-  OPPORTUNITIES,
-  RECOMMENDED_OPPORTUNITIES,
-} from "@/src/feature/opportunities/mocks/opportunities";
+  useMatchTierCounts,
+  useNewestOpportunities,
+  useTopMatches,
+} from "@/src/feature/opportunities/hooks/useOpportunities";
+import { OPPORTUNITIES } from "@/src/feature/opportunities/mocks/opportunities";
 import {
   PROFILE_NEXT_STEP,
   type NextStep,
@@ -112,6 +115,58 @@ function mockMatchCounts(): Record<MatchTier, number> {
   return counts;
 }
 
+const MATCHES_SHOWN = 4;
+
+/**
+ * The best four matches; without any (profile not matchable, or scores not calculated yet),
+ * the newest opportunities instead.
+ */
+function MatchesSection() {
+  // The backend scores incomplete profiles too, so matches are always tried first.
+  const top = useTopMatches({ limit: MATCHES_SHOWN });
+  const showNewest = top.isSuccess && top.opportunities.length === 0;
+  const newest = useNewestOpportunities({ limit: MATCHES_SHOWN, enabled: showNewest });
+  const feed = showNewest ? newest : top;
+
+  return (
+    <section aria-labelledby="matches-heading">
+      <div className="flex justify-between items-baseline gap-3">
+        <h2 id="matches-heading" className="text-h2 text-neutral-900">
+          {showNewest ? "New opportunities" : "Best matches for you"}
+        </h2>
+        <Link href="/discover" className={GHOST_LINK_CLASS}>
+          View all
+        </Link>
+      </div>
+      {feed.isError ? (
+        <p className="mt-4 text-body text-neutral-600">We couldn&apos;t load opportunities right now.</p>
+      ) : feed.isPending ? (
+        <div role="status" className="gap-4 md:gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
+          <span className="sr-only">Loading opportunities</span>
+          {Array.from({ length: MATCHES_SHOWN }, (_, index) => (
+            <OpportunityCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : feed.opportunities.length === 0 ? (
+        <p className="mt-4 text-body text-neutral-600">No open opportunities right now. New ones are added daily.</p>
+      ) : (
+        <div className="gap-4 md:gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
+          {feed.opportunities.map((opportunity) => (
+            <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+/** "Your matches" by tier, once there's at least one match to count. */
+function LiveMatchesSnapshot() {
+  const { counts } = useMatchTierCounts();
+  if (!counts || counts.strong + counts.possible + counts.low === 0) return null;
+  return <MatchesSnapshotCard counts={counts} />;
+}
+
 /**
  * Dashboard, ordered by what needs action: deadlines, then applications, then matches,
  * then the profile. Below 1024px it's one column with deadlines moved up under the header.
@@ -203,24 +258,7 @@ export function DashboardView() {
           {/* Below 1024px deadlines follow the applications card; on desktop they're in the right column. */}
           <div className="lg:hidden">{deadlines}</div>
 
-          <section aria-labelledby="matches-heading">
-            <div className="flex justify-between items-baseline gap-3">
-              <h2 id="matches-heading" className="text-h2 text-neutral-900">
-                Best matches for you
-              </h2>
-              <Link href="/discover" className={GHOST_LINK_CLASS}>
-                View all
-              </Link>
-            </div>
-            <div className="gap-4 md:gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
-              {RECOMMENDED_OPPORTUNITIES.map((opportunity) => (
-                <OpportunityCard
-                  key={opportunity.id}
-                  opportunity={opportunity}
-                />
-              ))}
-            </div>
-          </section>
+          <MatchesSection />
         </div>
 
         <div className="flex flex-col gap-6 min-w-0">
@@ -230,10 +268,11 @@ export function DashboardView() {
           ) : !completionKnown ? (
             completion < 100 && <ProfileProgressCardSkeleton />
           ) : completion >= 100 ? (
-            // TODO: render <MatchesSnapshotCard> here once a feed/matching endpoint provides open,
-            // feed-visible match counts by tier. Until then a complete profile gets the one-time
-            // completion moment and then no card, so the cards below move up.
-            user && <ProfileCompleteMoment userId={user.id} />
+            // The one-time completion moment (nothing after the first time), then the tier counts.
+            <>
+              {user && <ProfileCompleteMoment userId={user.id} />}
+              <LiveMatchesSnapshot />
+            </>
           ) : (
             <ProfileProgressCard
               percent={completion}

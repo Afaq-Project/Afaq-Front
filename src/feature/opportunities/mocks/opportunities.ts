@@ -239,11 +239,6 @@ export const OPPORTUNITIES: MockSummary[] = [
   },
 ];
 
-// Highest matches that are still open, for the dashboard.
-export const RECOMMENDED_OPPORTUNITIES: OpportunitySummary[] = OPPORTUNITIES.filter((o) => o.daysLeft >= 0)
-  .sort((a, b) => b.matchScore - a.matchScore)
-  .slice(0, 4);
-
 // Extra fields shown on the opportunity details page, keyed by id. Kept
 // separate from OPPORTUNITIES so the summary catalog stays the single
 // source of truth for title/description/etc.
