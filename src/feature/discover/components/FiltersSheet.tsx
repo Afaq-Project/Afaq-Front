@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { buttonClasses } from "@/src/shared/ui/Button";
+import { useTranslations } from "next-intl";
 
 interface FiltersSheetProps {
   open: boolean;
@@ -16,6 +17,8 @@ interface FiltersSheetProps {
  * button just closes it. Escape or the backdrop closes it, and the caller returns focus.
  */
 export function FiltersSheet({ open, onClose, onClearAll, children }: FiltersSheetProps) {
+  const t = useTranslations("discover");
+  const tc = useTranslations("common");
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,12 +52,12 @@ export function FiltersSheet({ open, onClose, onClearAll, children }: FiltersShe
       >
         <div className="flex justify-between items-center px-4 py-3 border-neutral-100 border-b">
           <h2 id="filters-sheet-title" className="text-h3 text-neutral-900">
-            Filters
+            {t("filters")}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close filters"
+            aria-label={t("closeFilters")}
             className="flex justify-center items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 text-neutral-600"
           >
             <X size={20} strokeWidth={1.75} aria-hidden="true" />
@@ -67,10 +70,10 @@ export function FiltersSheet({ open, onClose, onClearAll, children }: FiltersShe
             onClick={onClearAll}
             className="rounded-sm min-h-11 font-medium text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
           >
-            Clear all
+            {tc("clearAll")}
           </button>
           <button type="button" onClick={onClose} className={buttonClasses("primary", "flex-1")}>
-            Show results
+            {t("showResults")}
           </button>
         </div>
       </div>

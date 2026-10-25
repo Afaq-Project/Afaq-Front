@@ -70,7 +70,14 @@
     "viewAll": "View all",
     "dismiss": "Dismiss",
     "review": "Review",
-    "discoverOpportunities": "Discover opportunities"
+    "discoverOpportunities": "Discover opportunities",
+    "opensInNewTab": "(opens in a new tab)",
+    "loadMore": "Load more",
+    "loadingDots": "Loading…",
+    "clearAll": "Clear all",
+    "closed": "Closed",
+    "notListed": "Not listed",
+    "remote": "Remote"
   },
   "aiUsage": {
     "title": "Your AI usage this month",
@@ -428,5 +435,163 @@
       "moment": "Your profile is complete. Your matches are now as accurate as they can be."
     },
     "promoLearnMore": "Learn more about {title}"
+  },
+  "opportunityType": {
+    "Scholarship": "Scholarship",
+    "Internship": "Internship"
+  },
+  "funding": {
+    "Fully Funded": "Fully funded",
+    "Partially Funded": "Partially funded",
+    "Paid": "Paid",
+    "Unpaid": "Unpaid"
+  },
+  "discover": {
+    "title": "Discover opportunities",
+    "subtitle": "Scholarships and internships matched to your profile.",
+    "filtersLegend": "Search and filter opportunities",
+    "search": "Search by title or provider",
+    "searchSoon": "Search by title or provider (coming soon)",
+    "type": "Opportunity type",
+    "types": {
+      "all": "All",
+      "scholarship": "Scholarships",
+      "internship": "Internships"
+    },
+    "deadline": "Deadline",
+    "deadlineChip": "Deadline: {label}",
+    "deadlines": {
+      "week": "This week",
+      "month": "This month",
+      "3months": "Next 3 months",
+      "any": "Any time"
+    },
+    "location": "Location",
+    "field": "Field of study",
+    "quick": {
+      "strong": "Strong matches",
+      "closing": "Closing this week",
+      "funded": "Fully funded",
+      "remote": "Remote"
+    },
+    "filters": "Filters",
+    "closeFilters": "Close filters",
+    "showResults": "Show results",
+    "removeFilter": "Remove filter: {label}",
+    "sortBy": "Sort by",
+    "sorts": {
+      "match": "Best match",
+      "deadline": "Deadline soonest",
+      "newest": "Newest"
+    },
+    "loadError": "We couldn't load opportunities",
+    "loading": "Loading opportunities",
+    "missing": {
+      "educationLevel": "education level",
+      "fieldOfStudy": "field of study",
+      "nationality": "nationality",
+      "profile": "profile"
+    },
+    "improveMatches": "Add your {field} to make your matches more accurate.",
+    "seeMatches": "Add your {field} to see how well each opportunity matches you.",
+    "completeProfile": "Complete your profile",
+    "hiddenMatches": "None of your matches are open scholarships or internships yet. Until then, here are all open opportunities.",
+    "calculating": "We're still calculating your matches. Until then, here are all open opportunities.",
+    "noMatchFilters": "No opportunities match these filters",
+    "noneYet": "No opportunities yet",
+    "addedDaily": "New opportunities are added daily.",
+    "clearFilters": "Clear all filters"
+  },
+  "opportunity": {
+    "mayNotBeEligible": "You may not be eligible",
+    "save": "Save opportunity",
+    "unsave": "Remove from saved",
+    "saved": "Saved to your list",
+    "noDeadline": "No deadline listed",
+    "locationNotListed": "Location not listed",
+    "whyMatch": "Why this match",
+    "percentMatch": "{score}% match",
+    "tierDetail": {
+      "strong": "Strong match with your profile",
+      "possible": "Possible match — review the eligibility criteria",
+      "low": "Limited match with your profile"
+    },
+    "factors": {
+      "field_of_study": "Field of study",
+      "opportunity_requirements": "Skills & requirements",
+      "gpa": "GPA",
+      "language": "Language",
+      "experience": "Work experience"
+    },
+    "fit": {
+      "strong": "Strong fit",
+      "partial": "Partial fit",
+      "missing": "Missing",
+      "notRequired": "Not required"
+    },
+    "details": {
+      "back": "Back to Discover",
+      "loadError": "We couldn't load this opportunity",
+      "loading": "Loading opportunity",
+      "deadline": "Deadline",
+      "funding": "Funding",
+      "location": "Location",
+      "provider": "Provider",
+      "keyFacts": "Key facts",
+      "about": "About",
+      "noDescription": "No description yet. The official page has the full details.",
+      "readMore": "Read more on the official site",
+      "eligibility": "Eligibility",
+      "eligibilityNotListed": "Eligibility criteria aren't listed yet. Check the official page before applying.",
+      "youMeet": "You meet this",
+      "youDontMeet": "You don't meet this",
+      "checkOfficial": "Check the official page",
+      "unverified": "We couldn't verify {count, plural, one {# requirement} other {# requirements}}. Check the official page.",
+      "meetCount": "You meet {met} of {total} requirements",
+      "documents": "Documents required",
+      "documentsNotListed": "Required documents aren't listed yet. Check the official page.",
+      "documentsReady": "You have {ready} of {count, plural, one {# document} other {# documents}} ready.",
+      "checkingDocuments": "Checking your documents…",
+      "documentsUnavailable": "We couldn't check your uploaded documents right now.",
+      "checking": "Checking…",
+      "notChecked": "Not checked",
+      "notUploaded": "Not uploaded yet",
+      "uploaded": "Uploaded",
+      "documentFallback": "Document",
+      "add": "Add",
+      "addItem": "Add {item}",
+      "lastChecked": "Information last checked {date} · Source:",
+      "actionsAndMatch": "Actions and match",
+      "askTitle": "Questions about this opportunity?",
+      "askQuestions": {
+        "eligible": "Am I eligible for this?",
+        "statement": "What should my personal statement focus on?",
+        "essay": "Review my essay for this application"
+      },
+      "askDisclaimer": "AI guidance doesn't guarantee application outcomes.",
+      "track": "Track this application",
+      "tracked": "Added to your applications",
+      "updateStatus": "Update status",
+      "apply": "Apply on official site",
+      "linkCopied": "Link copied",
+      "saveLabel": "Save",
+      "savedLabel": "Saved",
+      "share": "Share",
+      "yourApplication": "Your application",
+      "actions": "Actions",
+      "closedOn": "Applications closed on {date}",
+      "trackingHint": "Tracking turns on deadline reminders.",
+      "yourMatch": "Your match",
+      "matchMissing": "Add your {field} to see how well this matches you.",
+      "noScore": "No match score for this opportunity yet.",
+      "addToProfile": "Add to profile",
+      "howMatching": "How matching works"
+    }
+  },
+  "studyLevel": {
+    "High School": "High School",
+    "Bachelor": "Bachelor's",
+    "Master": "Master's",
+    "PhD": "PhD"
   }
 }

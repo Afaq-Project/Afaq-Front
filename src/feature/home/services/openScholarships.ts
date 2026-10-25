@@ -48,7 +48,8 @@ export async function getOpenScholarships(now: Date): Promise<(PublicScholarship
   );
 
   return recent
-    .map((listing) => fromOpportunity(listing, { countryCodes, now }))
+    // The landing page is English-only for now, so Arabic listings stay out.
+    .map((listing) => fromOpportunity(listing, { countryCodes, now, hideArabic: true, levelLabel: (level) => level }))
     .filter((item) => item !== null)
     .filter((item) => item.type === "Scholarship" && item.daysLeft !== undefined && item.daysLeft >= 0)
     .map((item) => ({

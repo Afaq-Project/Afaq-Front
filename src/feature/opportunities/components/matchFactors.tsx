@@ -1,19 +1,28 @@
 import { Check, Minus } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import type { MatchBreakdown, MatchFit } from "../types/opportunity";
+import type messages from "@/src/messages/en.json";
 
-/** The matching API's factors (SRS matching spec), with where each is filled in. */
-const KNOWN_FACTORS: Record<string, { label: string; profileHref: string }> = {
-  field_of_study: { label: "Field of study", profileHref: "/profile#background" },
-  opportunity_requirements: { label: "Skills & requirements", profileHref: "/profile#skills" },
-  gpa: { label: "GPA", profileHref: "/profile#education" },
-  language: { label: "Language", profileHref: "/profile#skills" },
+/**
+ * The matching API's factors (SRS matching spec), with where each is filled in. Their labels are
+ * opportunity.factors.<key>.
+ */
+const KNOWN_FACTORS: Record<string, { profileHref: string }> = {
+  field_of_study: { profileHref: "/profile#background" },
+  opportunity_requirements: { profileHref: "/profile#skills" },
+  gpa: { profileHref: "/profile#education" },
+  language: { profileHref: "/profile#skills" },
   // TODO: point at a work-experience section once the profile has one.
-  experience: { label: "Work experience", profileHref: "/profile" },
+  experience: { profileHref: "/profile" },
 };
+
+/** A factor with a label under opportunity.factors. */
+export type KnownFactorKey = keyof (typeof messages)["opportunity"]["factors"];
 
 export interface MatchFactorRow {
   key: string;
+  /** Has a message under opportunity.factors (key is a KnownFactorKey); otherwise `label` is the key made readable. */
+  known: boolean;
   label: string;
   weight: number;
   fit: MatchFit;
@@ -39,18 +48,12 @@ export function matchFactorRows(breakdown: MatchBreakdown): MatchFactorRow[] {
       key: factor.key,
       weight: factor.weight,
       fit: fitFor(factor.score),
-      label: KNOWN_FACTORS[factor.key]?.label ?? humanize(factor.key),
+      known: factor.key in KNOWN_FACTORS,
+      label: humanize(factor.key),
       profileHref: KNOWN_FACTORS[factor.key]?.profileHref,
     }))
     .sort((a, b) => b.weight - a.weight);
 }
-
-export const FIT_LABEL: Record<MatchFit, string> = {
-  strong: "Strong fit",
-  partial: "Partial fit",
-  missing: "Missing",
-  notRequired: "Not required",
-};
 
 export const FIT_TEXT: Record<MatchFit, string> = {
   strong: "text-primary-800",
@@ -60,7 +63,7 @@ export const FIT_TEXT: Record<MatchFit, string> = {
 };
 
 /**
- * Fit marker, always paired with FIT_LABEL text: a green check (strong), a half-filled circle
+ * Fit marker, always paired with its opportunity.fit.<fit> text: a green check (strong), a half-filled circle
  * (partial), a hollow circle (missing) or a dash (not required).
  */
 export function FitIcon({ fit, className }: { fit: MatchFit; className?: string }) {

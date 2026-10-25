@@ -3,7 +3,8 @@
 import { usePreferencesQuery, useProfileQuery } from "@/src/feature/profile/hooks/useProfileQuery";
 
 export interface MissingField {
-  label: string;
+  /** discover.missing.<key>: education level, field of study, nationality, or the profile as a whole. */
+  key: "educationLevel" | "fieldOfStudy" | "nationality" | "profile";
   /** Profile section where it's filled in. */
   href: string;
 }
@@ -25,11 +26,11 @@ export function useMatchingReadiness() {
 
   let missing: MissingField | null = null;
   if (!isLoading && !failed && profile?.isMatchable !== true) {
-    if (!profile?.educationLevelId) missing = { label: "education level", href: "/profile#education" };
-    else if ((preferences?.targetMajors?.length ?? 0) === 0) missing = { label: "field of study", href: "/profile#background" };
-    else if (!profile?.nationalityId) missing = { label: "nationality", href: "/profile#background" };
+    if (!profile?.educationLevelId) missing = { key: "educationLevel", href: "/profile#education" };
+    else if ((preferences?.targetMajors?.length ?? 0) === 0) missing = { key: "fieldOfStudy", href: "/profile#background" };
+    else if (!profile?.nationalityId) missing = { key: "nationality", href: "/profile#background" };
     // The backend says no but all three are filled in: point at the profile as a whole.
-    else if (profile?.isMatchable === false) missing = { label: "profile", href: "/profile" };
+    else if (profile?.isMatchable === false) missing = { key: "profile", href: "/profile" };
   }
 
   return { isLoading, missing };

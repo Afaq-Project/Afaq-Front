@@ -8,7 +8,7 @@ import type {
   OpportunityType,
 } from "../types/opportunity";
 
-/** Country name (lowercase) → ISO alpha-2 code (lowercase), from the countries reference list. */
+/** Country name (lowercase, English or Arabic) → ISO alpha-2 code (lowercase), from the countries reference list. */
 export type CountryCodes = Map<string, string>;
 
 // v1 shows these two; anything else the backend sends is left out.
@@ -17,19 +17,13 @@ const SHOWN_TYPES: Record<string, OpportunityType> = {
   internship: "Internship",
 };
 
-// The app is English-only for now, so listings scraped from Arabic sources are left out.
-// TODO: filter on a language field once the API has one, and show them with the Arabic UI.
-const ARABIC_SCRIPT = /[؀-ۿ]/;
+// Listings scraped from Arabic sources show only in the Arabic UI.
+// TODO: filter on a language field once the API has one.
+const ARABIC_SCRIPT = /[\u0600-\u06FF]/;
 
 const FUNDING: Record<string, FundingStatus> = {
   fully_funded: "Fully Funded",
   partially_funded: "Partially Funded",
-};
-
-// The API's study levels, in the wording the UI uses elsewhere.
-const LEVEL_LABEL: Record<string, string> = {
-  Bachelor: "Bachelor's",
-  Master: "Master's",
 };
 
 // Some sources only give an RSS excerpt ending in "[…]"; it reads as a plain ellipsis instead.
@@ -57,11 +51,15 @@ interface Basics {
 interface MapContext {
   countryCodes: CountryCodes;
   now: Date;
+  /** English UI: Arabic listings are left out. */
+  hideArabic: boolean;
+  /** An API study level ("Bachelor") as the UI shows it in the app's language. */
+  levelLabel: (level: string) => string;
 }
 
-function toSummary(basics: Basics, match: ApiMatch | undefined, { countryCodes, now }: MapContext): OpportunitySummary | null {
+function toSummary(basics: Basics, match: ApiMatch | undefined, { countryCodes, now, hideArabic }: MapContext): OpportunitySummary | null {
   const type = SHOWN_TYPES[basics.type?.toLowerCase() ?? ""];
-  if (!type || ARABIC_SCRIPT.test(basics.title)) return null;
+  if (!type || (hideArabic && ARABIC_SCRIPT.test(basics.title))) return null;
   // Deadlines come as UTC midnight timestamps; the date part is the calendar day.
   const deadlineDate = basics.deadline?.slice(0, 10);
 
@@ -117,7 +115,7 @@ export function fromMatch(m: ApiMatchWithOpportunity, ctx: MapContext): Opportun
 export function toDetail(o: ApiOpportunity, match: ApiMatch | undefined, ctx: MapContext): OpportunityDetail | null {
   const summary = toSummary(opportunityBasics(o), match, ctx);
   if (!summary) return null;
-  const levels = o.studyLevels.map((level) => LEVEL_LABEL[level] ?? level);
+  const levels = o.studyLevels.map(ctx.levelLabel);
   return {
     ...summary,
     description: cleanDescription(o.description),

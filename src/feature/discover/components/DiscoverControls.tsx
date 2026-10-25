@@ -8,6 +8,7 @@ import {
   DEADLINE_OPTIONS,
   DEFAULT_QUERY,
   QUICK_FILTER_OPTIONS,
+  REMOTE_LOCATION,
   TYPE_OPTIONS,
   type DeadlineFilter,
   type DiscoverQuery,
@@ -16,6 +17,7 @@ import {
 import { activeFilterCount } from "../services/utils";
 import { CheckboxList, RadioList } from "./FilterOptions";
 import { FiltersSheet } from "./FiltersSheet";
+import { useTranslations } from "next-intl";
 
 const SEARCH_DEBOUNCE_MS = 200;
 
@@ -74,6 +76,10 @@ function FilterPopover({ label, count, children }: { label: string; count: numbe
  * and the focused search. Every change goes straight to the URL.
  */
 export function DiscoverControls({ query, update, support, disabled = false, sort }: DiscoverControlsProps) {
+  const t = useTranslations("discover");
+  const tc = useTranslations("common");
+  // "Remote" is a URL value; every other location is already display text.
+  const locationLabel = (location: string) => (location === REMOTE_LOCATION ? tc("remote") : location);
   // Local copy so typing is instant; it follows the URL when that changes elsewhere (back/forward).
   const [input, setInput] = useState(query.q);
   const [syncedQ, setSyncedQ] = useState(query.q);
@@ -99,40 +105,46 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
 
   const clearFilters = () => update({ deadline: DEFAULT_QUERY.deadline, locations: [], fields: [], quick: [] });
   const filterCount = activeFilterCount(query);
-  const deadlineLabel = DEADLINE_OPTIONS.find((option) => option.value === query.deadline)?.label;
+  const deadlineLabel = t(`deadlines.${query.deadline}`);
 
   const deadlineList = (
     <RadioList<DeadlineFilter>
-      legend="Deadline"
+      legend={t("deadline")}
       name="deadline"
-      options={DEADLINE_OPTIONS}
+      options={DEADLINE_OPTIONS.map((option) => ({ value: option.value, label: t(`deadlines.${option.value}`) }))}
       value={query.deadline}
       onChange={(deadline) => update({ deadline })}
     />
   );
   const locationList = (
-    <CheckboxList legend="Location" options={support.locations} selected={query.locations} onChange={(locations) => update({ locations })} />
+    <CheckboxList
+      legend={t("location")}
+      options={support.locations}
+      selected={query.locations}
+      onChange={(locations) => update({ locations })}
+      labelFor={locationLabel}
+    />
   );
   const hasLocations = support.locations.length > 0;
   const hasFields = support.fields.length > 0;
   const hasFilters = support.deadline || hasLocations || hasFields;
   const fieldList = (
-    <CheckboxList legend="Field of study" options={support.fields} selected={query.fields} onChange={(fields) => update({ fields })} />
+    <CheckboxList legend={t("field")} options={support.fields} selected={query.fields} onChange={(fields) => update({ fields })} />
   );
 
   const chips = [
     // Quick filters have no buttons anymore, but a shared link can still carry them.
     ...QUICK_FILTER_OPTIONS.filter((option) => query.quick.includes(option.value)).map((option) => ({
       key: `quick-${option.value}`,
-      label: option.label,
+      label: t(`quick.${option.value}`),
       remove: () => update({ quick: query.quick.filter((q) => q !== option.value) }),
     })),
     ...(query.deadline !== "any"
-      ? [{ key: "deadline", label: `Deadline: ${deadlineLabel}`, remove: () => update({ deadline: "any" }) }]
+      ? [{ key: "deadline", label: t("deadlineChip", { label: deadlineLabel }), remove: () => update({ deadline: "any" }) }]
       : []),
     ...query.locations.map((location) => ({
       key: `location-${location}`,
-      label: location,
+      label: locationLabel(location),
       remove: () => update({ locations: query.locations.filter((l) => l !== location) }),
     })),
     ...query.fields.map((field) => ({
@@ -144,7 +156,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
 
   return (
     <fieldset disabled={disabled} className="flex flex-col gap-3 bg-white m-0 p-4 border border-neutral-100 rounded-lg min-w-0">
-      <legend className="sr-only">Search and filter opportunities</legend>
+      <legend className="sr-only">{t("filtersLegend")}</legend>
 
       {/* Always shown; disabled until the API can search, so typing never looks like it failed. */}
       <label
@@ -159,13 +171,13 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
           aria-hidden="true"
           className={cn("shrink-0", support.search ? "text-primary-600" : "text-neutral-400")}
         />
-        <span className="sr-only">Search by title or provider</span>
+        <span className="sr-only">{t("search")}</span>
         <input
           type="search"
           value={input}
           onChange={(event) => onSearch(event.target.value)}
           disabled={!support.search}
-          placeholder={support.search ? "Search by title or provider" : "Search by title or provider (coming soon)"}
+          placeholder={support.search ? t("search") : t("searchSoon")}
           className="flex-1 bg-transparent min-w-0 text-neutral-900 text-small placeholder:text-neutral-400 focus:outline-none disabled:cursor-not-allowed"
         />
       </label>
@@ -173,7 +185,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
       {(support.type || hasFilters || sort) && (
         <div className="flex md:flex-row flex-col md:items-center gap-3">
           {support.type && (
-            <div role="group" aria-label="Opportunity type" className="flex bg-neutral-50 p-1 rounded-md w-full md:w-auto">
+            <div role="group" aria-label={t("type")} className="flex bg-neutral-50 p-1 rounded-md w-full md:w-auto">
               {TYPE_OPTIONS.map((option) => {
                 const active = query.type === option.value;
                 return (
@@ -187,7 +199,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
                       active ? "bg-primary-600 font-medium text-white" : "text-neutral-600 hover:text-neutral-900",
                     )}
                   >
-                    {option.label}
+                    {t(`types.${option.value}`)}
                   </button>
                 );
               })}
@@ -197,17 +209,17 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
           {/* Tablet and up: one popover per filter. */}
           <div className="hidden md:flex flex-wrap items-center gap-2">
             {support.deadline && (
-              <FilterPopover label="Deadline" count={query.deadline !== "any" ? 1 : 0}>
+              <FilterPopover label={t("deadline")} count={query.deadline !== "any" ? 1 : 0}>
                 {deadlineList}
               </FilterPopover>
             )}
             {hasLocations && (
-              <FilterPopover label="Location" count={query.locations.length}>
+              <FilterPopover label={t("location")} count={query.locations.length}>
                 {locationList}
               </FilterPopover>
             )}
             {hasFields && (
-              <FilterPopover label="Field of study" count={query.fields.length}>
+              <FilterPopover label={t("field")} count={query.fields.length}>
                 {fieldList}
               </FilterPopover>
             )}
@@ -223,7 +235,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
               className={cn(CONTROL_BUTTON_CLASS, controlState(filterCount > 0), "md:hidden justify-center h-11")}
             >
               <SlidersHorizontal size={16} strokeWidth={1.75} aria-hidden="true" />
-              Filters
+              {t("filters")}
               {filterCount > 0 && <span>· {filterCount}</span>}
             </button>
           )}
@@ -243,7 +255,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
               <button
                 type="button"
                 onClick={chip.remove}
-                aria-label={`Remove filter: ${chip.label}`}
+                aria-label={t("removeFilter", { label: chip.label })}
                 className="after:absolute relative flex justify-center items-center hover:bg-primary-100 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-5 text-primary-800 after:-inset-3 after:content-['']"
               >
                 <X size={12} strokeWidth={2} aria-hidden="true" />
@@ -255,7 +267,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
             onClick={clearFilters}
             className="rounded-sm min-h-11 md:min-h-0 font-medium text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
           >
-            Clear all
+            {tc("clearAll")}
           </button>
         </div>
       )}

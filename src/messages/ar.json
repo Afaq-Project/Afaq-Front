@@ -70,7 +70,14 @@
     "viewAll": "عرض الكل",
     "dismiss": "إغلاق",
     "review": "مراجعة",
-    "discoverOpportunities": "استكشف الفرص"
+    "discoverOpportunities": "استكشف الفرص",
+    "opensInNewTab": "(يفتح في علامة تبويب جديدة)",
+    "loadMore": "عرض المزيد",
+    "loadingDots": "جارٍ التحميل…",
+    "clearAll": "مسح الكل",
+    "closed": "مغلق",
+    "notListed": "غير مدرج",
+    "remote": "عن بُعد"
   },
   "aiUsage": {
     "title": "استخدامك للذكاء الاصطناعي هذا الشهر",
@@ -428,5 +435,163 @@
       "moment": "اكتمل ملفك الشخصي. أصبحت مطابقاتك الآن بأعلى دقة ممكنة."
     },
     "promoLearnMore": "اعرف المزيد عن {title}"
+  },
+  "opportunityType": {
+    "Scholarship": "منحة",
+    "Internship": "تدريب"
+  },
+  "funding": {
+    "Fully Funded": "ممولة بالكامل",
+    "Partially Funded": "ممولة جزئيًا",
+    "Paid": "مدفوع",
+    "Unpaid": "غير مدفوع"
+  },
+  "discover": {
+    "title": "استكشف الفرص",
+    "subtitle": "منح وتدريبات مطابقة لملفك الشخصي.",
+    "filtersLegend": "ابحث في الفرص وصفّها",
+    "search": "ابحث بالعنوان أو الجهة",
+    "searchSoon": "ابحث بالعنوان أو الجهة (قريبًا)",
+    "type": "نوع الفرصة",
+    "types": {
+      "all": "الكل",
+      "scholarship": "المنح",
+      "internship": "التدريبات"
+    },
+    "deadline": "الموعد النهائي",
+    "deadlineChip": "الموعد النهائي: {label}",
+    "deadlines": {
+      "week": "هذا الأسبوع",
+      "month": "هذا الشهر",
+      "3months": "الأشهر الثلاثة القادمة",
+      "any": "أي وقت"
+    },
+    "location": "الموقع",
+    "field": "التخصص",
+    "quick": {
+      "strong": "مطابقات قوية",
+      "closing": "تنتهي هذا الأسبوع",
+      "funded": "ممولة بالكامل",
+      "remote": "عن بُعد"
+    },
+    "filters": "عوامل التصفية",
+    "closeFilters": "إغلاق عوامل التصفية",
+    "showResults": "عرض النتائج",
+    "removeFilter": "إزالة عامل التصفية: {label}",
+    "sortBy": "الترتيب حسب",
+    "sorts": {
+      "match": "الأفضل مطابقة",
+      "deadline": "الأقرب موعدًا",
+      "newest": "الأحدث"
+    },
+    "loadError": "تعذّر تحميل الفرص",
+    "loading": "جارٍ تحميل الفرص",
+    "missing": {
+      "educationLevel": "مستواك التعليمي",
+      "fieldOfStudy": "تخصصك",
+      "nationality": "جنسيتك",
+      "profile": "بيانات ملفك الشخصي"
+    },
+    "improveMatches": "أضف {field} لتصبح مطابقاتك أدق.",
+    "seeMatches": "أضف {field} لترى مدى ملاءمة كل فرصة لك.",
+    "completeProfile": "أكمل ملفك الشخصي",
+    "hiddenMatches": "لا توجد بين مطابقاتك منح أو تدريبات مفتوحة بعد. إلى ذلك الحين، إليك جميع الفرص المفتوحة.",
+    "calculating": "ما زلنا نحسب مطابقاتك. إلى ذلك الحين، إليك جميع الفرص المفتوحة.",
+    "noMatchFilters": "لا توجد فرص تطابق عوامل التصفية هذه",
+    "noneYet": "لا توجد فرص بعد",
+    "addedDaily": "تُضاف فرص جديدة يوميًا.",
+    "clearFilters": "مسح جميع عوامل التصفية"
+  },
+  "opportunity": {
+    "mayNotBeEligible": "قد لا تكون مؤهلًا",
+    "save": "حفظ الفرصة",
+    "unsave": "إزالة من المحفوظات",
+    "saved": "حُفظت في قائمتك",
+    "noDeadline": "لا يوجد موعد نهائي مدرج",
+    "locationNotListed": "الموقع غير مدرج",
+    "whyMatch": "سبب المطابقة",
+    "percentMatch": "تطابق بنسبة {score}%",
+    "tierDetail": {
+      "strong": "تطابق قوي مع ملفك الشخصي",
+      "possible": "تطابق محتمل — راجع شروط الأهلية",
+      "low": "تطابق محدود مع ملفك الشخصي"
+    },
+    "factors": {
+      "field_of_study": "التخصص",
+      "opportunity_requirements": "المهارات والمتطلبات",
+      "gpa": "المعدل",
+      "language": "اللغة",
+      "experience": "الخبرة العملية"
+    },
+    "fit": {
+      "strong": "ملاءمة قوية",
+      "partial": "ملاءمة جزئية",
+      "missing": "غير متوفر",
+      "notRequired": "غير مطلوب"
+    },
+    "details": {
+      "back": "العودة إلى الاستكشاف",
+      "loadError": "تعذّر تحميل هذه الفرصة",
+      "loading": "جارٍ تحميل الفرصة",
+      "deadline": "الموعد النهائي",
+      "funding": "التمويل",
+      "location": "الموقع",
+      "provider": "الجهة المقدّمة",
+      "keyFacts": "معلومات أساسية",
+      "about": "نبذة",
+      "noDescription": "لا يوجد وصف بعد. تحتوي الصفحة الرسمية على التفاصيل الكاملة.",
+      "readMore": "اقرأ المزيد في الموقع الرسمي",
+      "eligibility": "الأهلية",
+      "eligibilityNotListed": "شروط الأهلية غير مدرجة بعد. راجع الصفحة الرسمية قبل التقديم.",
+      "youMeet": "تستوفي هذا الشرط",
+      "youDontMeet": "لا تستوفي هذا الشرط",
+      "checkOfficial": "راجع الصفحة الرسمية",
+      "unverified": "تعذّر التحقق من {count, plural, one {شرط واحد} two {شرطين} few {# شروط} many {# شرطًا} other {# شرط}}. راجع الصفحة الرسمية.",
+      "meetCount": "تستوفي {met} من {total} شروط",
+      "documents": "المستندات المطلوبة",
+      "documentsNotListed": "المستندات المطلوبة غير مدرجة بعد. راجع الصفحة الرسمية.",
+      "documentsReady": "لديك {ready} من {count, plural, one {مستند واحد} two {مستندين} few {# مستندات} many {# مستندًا} other {# مستند}} جاهزة.",
+      "checkingDocuments": "جارٍ التحقق من مستنداتك…",
+      "documentsUnavailable": "تعذّر التحقق من مستنداتك المرفوعة الآن.",
+      "checking": "جارٍ التحقق…",
+      "notChecked": "لم يُتحقق",
+      "notUploaded": "لم يُرفع بعد",
+      "uploaded": "مرفوع",
+      "documentFallback": "مستند",
+      "add": "إضافة",
+      "addItem": "إضافة {item}",
+      "lastChecked": "آخر تحقق من المعلومات {date} · المصدر:",
+      "actionsAndMatch": "الإجراءات والمطابقة",
+      "askTitle": "أسئلة حول هذه الفرصة؟",
+      "askQuestions": {
+        "eligible": "هل أنا مؤهل لهذه الفرصة؟",
+        "statement": "على ماذا يجب أن يركز بياني الشخصي؟",
+        "essay": "راجع مقالي لهذا الطلب"
+      },
+      "askDisclaimer": "إرشاد الذكاء الاصطناعي لا يضمن نتائج الطلبات.",
+      "track": "تابع هذا الطلب",
+      "tracked": "أُضيف إلى طلباتك",
+      "updateStatus": "تحديث الحالة",
+      "apply": "التقديم عبر الموقع الرسمي",
+      "linkCopied": "نُسخ الرابط",
+      "saveLabel": "حفظ",
+      "savedLabel": "محفوظ",
+      "share": "مشاركة",
+      "yourApplication": "طلبك",
+      "actions": "الإجراءات",
+      "closedOn": "أُغلق التقديم في {date}",
+      "trackingHint": "المتابعة تفعّل تذكيرات المواعيد النهائية.",
+      "yourMatch": "مطابقتك",
+      "matchMissing": "أضف {field} لترى مدى ملاءمة هذه الفرصة لك.",
+      "noScore": "لا توجد نسبة مطابقة لهذه الفرصة بعد.",
+      "addToProfile": "أضف إلى الملف الشخصي",
+      "howMatching": "كيف تعمل المطابقة"
+    }
+  },
+  "studyLevel": {
+    "High School": "الثانوية",
+    "Bachelor": "البكالوريوس",
+    "Master": "الماجستير",
+    "PhD": "الدكتوراه"
   }
 }

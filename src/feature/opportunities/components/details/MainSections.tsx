@@ -6,8 +6,8 @@ import { cn } from "@/src/feature/dashboard/services/utils";
 import { CARD_CLASS } from "@/src/feature/dashboard/components/styles";
 import { useUserDocuments } from "@/src/feature/profile/hooks/useUserDocuments";
 import type { EligibilityCriterion, EligibilityFit, OpportunityDetail } from "../../types/opportunity";
-
-const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocale } from "@/src/i18n/format";
 
 // What a section says when the listing doesn't cover it.
 const NOT_LISTED_CLASS = "mt-2 text-body text-neutral-600";
@@ -17,17 +17,18 @@ const NOT_LISTED_CLASS = "mt-2 text-body text-neutral-600";
  * full text; many listings only carry an excerpt. Without an official link, the whole text shows.
  */
 export function AboutSection({ description, officialLink }: { description?: string; officialLink?: string }) {
+  const t = useTranslations();
   return (
     <section aria-labelledby="about-heading" className={CARD_CLASS}>
       <h2 id="about-heading" className="text-h2 text-neutral-900">
-        About
+        {t("opportunity.details.about")}
       </h2>
       {description ? (
         <p dir="auto" className={cn("mt-2 max-w-[70ch] text-body text-neutral-800", officialLink && "line-clamp-4")}>
           {description}
         </p>
       ) : (
-        <p className={NOT_LISTED_CLASS}>No description yet. The official page has the full details.</p>
+        <p className={NOT_LISTED_CLASS}>{t("opportunity.details.noDescription")}</p>
       )}
       {officialLink && (
         <a
@@ -36,18 +37,19 @@ export function AboutSection({ description, officialLink }: { description?: stri
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 mt-3 rounded-sm font-medium text-primary-600 text-small hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
         >
-          Read more on the official site
+          {t("opportunity.details.readMore")}
           <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" />
-          <span className="sr-only">(opens in a new tab)</span>
+          <span className="sr-only">{t("common.opensInNewTab")}</span>
         </a>
       )}
     </section>
   );
 }
 
-const FIT_STATE: Record<EligibilityFit, { label: string; text: string; icon: React.ReactNode }> = {
+// Labels are opportunity.details.<label>.
+const FIT_STATE: Record<EligibilityFit, { label: "youMeet" | "youDontMeet" | "checkOfficial"; text: string; icon: React.ReactNode }> = {
   met: {
-    label: "You meet this",
+    label: "youMeet",
     text: "text-primary-800",
     icon: (
       <span className="flex justify-center items-center bg-primary-600 rounded-full size-5 text-white">
@@ -56,7 +58,7 @@ const FIT_STATE: Record<EligibilityFit, { label: string; text: string; icon: Rea
     ),
   },
   not_met: {
-    label: "You don't meet this",
+    label: "youDontMeet",
     text: "text-danger-800",
     icon: (
       <span className="flex justify-center items-center bg-danger-200 rounded-full size-5 text-danger-800">
@@ -65,7 +67,7 @@ const FIT_STATE: Record<EligibilityFit, { label: string; text: string; icon: Rea
     ),
   },
   unknown: {
-    label: "Check the official page",
+    label: "checkOfficial",
     text: "text-neutral-600",
     icon: <CircleHelp size={20} strokeWidth={1.75} className="text-neutral-600" />,
   },
@@ -80,21 +82,26 @@ function eligibilitySummary(criteria: EligibilityCriterion[]) {
   const withFit = criteria.filter((c) => c.userFit !== undefined);
   if (withFit.length === 0) return null;
   const unverified = criteria.filter((c) => c.userFit === undefined || c.userFit === "unknown").length;
-  if (unverified > 0) return `We couldn't verify ${plural(unverified, "requirement")}. Check the official page.`;
-  const met = criteria.filter((c) => c.userFit === "met").length;
-  return `You meet ${met} of ${criteria.length} requirements`;
+  if (unverified > 0) return { kind: "unverified", count: unverified } as const;
+  return { kind: "met", met: criteria.filter((c) => c.userFit === "met").length, total: criteria.length } as const;
 }
 
 export function EligibilitySection({ criteria }: { criteria: EligibilityCriterion[] }) {
-  const summary = eligibilitySummary(criteria);
+  const t = useTranslations("opportunity.details");
+  const result = eligibilitySummary(criteria);
+  const summary = !result
+    ? null
+    : result.kind === "unverified"
+      ? t("unverified", { count: result.count })
+      : t("meetCount", { met: result.met, total: result.total });
 
   return (
     <section aria-labelledby="eligibility-heading" className={CARD_CLASS}>
       <h2 id="eligibility-heading" className="text-h2 text-neutral-900">
-        Eligibility
+        {t("eligibility")}
       </h2>
       {criteria.length === 0 && (
-        <p className={NOT_LISTED_CLASS}>Eligibility criteria aren&apos;t listed yet. Check the official page before applying.</p>
+        <p className={NOT_LISTED_CLASS}>{t("eligibilityNotListed")}</p>
       )}
       {summary && <p className="mt-1 text-body text-neutral-600">{summary}</p>}
 
@@ -108,7 +115,7 @@ export function EligibilitySection({ criteria }: { criteria: EligibilityCriterio
               </span>
               <div className="min-w-0">
                 <p className="text-body text-neutral-900">{criterion.text}</p>
-                {state && <p className={cn("text-caption", state.text)}>{state.label}</p>}
+                {state && <p className={cn("text-caption", state.text)}>{t(state.label)}</p>}
               </div>
             </li>
           );
@@ -125,6 +132,7 @@ export function EligibilitySection({ criteria }: { criteria: EligibilityCriterio
  * or if the user's documents can't be fetched, rows say so instead of claiming either way.
  */
 export function DocumentsSection({ documents }: { documents: OpportunityDetail["requiredDocuments"] }) {
+  const t = useTranslations("opportunity.details");
   const userDocs = useUserDocuments();
   // TODO: if the user's documents carry no type at all, nothing can be matched, so every row
   // shows "Not uploaded yet" until uploads are typed.
@@ -135,17 +143,17 @@ export function DocumentsSection({ documents }: { documents: OpportunityDetail["
   return (
     <section aria-labelledby="documents-heading" className={CARD_CLASS}>
       <h2 id="documents-heading" className="text-h2 text-neutral-900">
-        Documents required
+        {t("documents")}
       </h2>
       {documents.length === 0 ? (
-        <p className={NOT_LISTED_CLASS}>Required documents aren&apos;t listed yet. Check the official page.</p>
+        <p className={NOT_LISTED_CLASS}>{t("documentsNotListed")}</p>
       ) : (
         <p className="mt-1 text-body text-neutral-600">
           {userDocs.available
-            ? `You have ${ready} of ${plural(documents.length, "document")} ready.`
+            ? t("documentsReady", { ready, count: documents.length })
             : userDocs.isLoading
-              ? "Checking your documents…"
-              : "We couldn't check your uploaded documents right now."}
+              ? t("checkingDocuments")
+              : t("documentsUnavailable")}
         </p>
       )}
 
@@ -154,11 +162,11 @@ export function DocumentsSection({ documents }: { documents: OpportunityDetail["
           const uploaded = matchFor(doc);
           const status = !userDocs.available
             ? userDocs.isLoading
-              ? "Checking…"
-              : "Not checked"
+              ? t("checking")
+              : t("notChecked")
             : uploaded
               ? null
-              : "Not uploaded yet";
+              : t("notUploaded");
 
           return (
             <li key={doc.name} className="flex items-start gap-3">
@@ -175,7 +183,7 @@ export function DocumentsSection({ documents }: { documents: OpportunityDetail["
                 <p className="text-body text-neutral-900">{doc.name}</p>
                 {uploaded ? (
                   <p className="text-neutral-600 text-small truncate">
-                    <span className="text-primary-800">Uploaded</span> · {uploaded.displayName ?? "Document"}
+                    <span className="text-primary-800">{t("uploaded")}</span> · {uploaded.displayName ?? t("documentFallback")}
                   </p>
                 ) : (
                   <p className="text-neutral-600 text-small">{status}</p>
@@ -185,10 +193,10 @@ export function DocumentsSection({ documents }: { documents: OpportunityDetail["
                 // TODO: link to a Documents section on the profile once one exists.
                 <Link
                   href="/documents"
-                  aria-label={`Add ${doc.name.toLowerCase()}`}
+                  aria-label={t("addItem", { item: doc.name.toLowerCase() })}
                   className="inline-flex items-center rounded-sm min-h-11 md:min-h-0 font-medium text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 shrink-0"
                 >
-                  Add
+                  {t("add")}
                 </Link>
               )}
             </li>
@@ -201,15 +209,17 @@ export function DocumentsSection({ documents }: { documents: OpportunityDetail["
 
 /** "Information last checked Oct 6, 2026 · Source: listings.example.org"; hidden without both. */
 export function SourceLine({ sourceUrl, lastCheckedAt }: { sourceUrl?: string; lastCheckedAt?: string }) {
+  const t = useTranslations();
+  const locale = useLocale();
   // TODO: every listing should carry its source and last-checked date once scraping provides them.
   if (!sourceUrl || !lastCheckedAt) return null;
   const [year, month, day] = lastCheckedAt.split("-").map(Number);
-  const checked = new Date(year, month - 1, day).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const checked = new Date(year, month - 1, day).toLocaleDateString(intlLocale(locale), { month: "short", day: "numeric", year: "numeric" });
   const domain = new URL(sourceUrl).hostname.replace(/^www\./, "");
 
   return (
     <p className="text-neutral-600 text-small">
-      Information last checked {checked} · Source:{" "}
+      {t("opportunity.details.lastChecked", { date: checked })}{" "}
       <a
         href={sourceUrl}
         target="_blank"
@@ -218,7 +228,7 @@ export function SourceLine({ sourceUrl, lastCheckedAt }: { sourceUrl?: string; l
       >
         {domain}
         <ExternalLink size={12} strokeWidth={1.75} aria-hidden="true" />
-        <span className="sr-only">(opens in a new tab)</span>
+        <span className="sr-only">{t("common.opensInNewTab")}</span>
       </a>
     </p>
   );

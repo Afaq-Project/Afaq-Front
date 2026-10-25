@@ -2,6 +2,7 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { SORT_OPTIONS, type SortOrder } from "../types/filters";
 import { CONTROL_BUTTON_CLASS } from "./DiscoverControls";
+import { useTranslations } from "next-intl";
 
 /**
  * Sort dropdown, styled like the filter buttons: a native select with the browser styling
@@ -18,9 +19,10 @@ export function SortSelect({
   options: SortOrder[];
   className?: string;
 }) {
+  const t = useTranslations("discover");
   return (
     <label className={cn("flex items-center gap-2 text-neutral-600 text-small", className)}>
-      <span className="sm:not-sr-only sr-only">Sort by</span>
+      <span className="sm:not-sr-only sr-only">{t("sortBy")}</span>
       <span className="relative">
         <select
           value={value}
@@ -32,7 +34,7 @@ export function SortSelect({
         >
           {SORT_OPTIONS.filter((option) => options.includes(option.value)).map((option) => (
             <option key={option.value} value={option.value}>
-              {option.label}
+              {t(`sorts.${option.value}`)}
             </option>
           ))}
         </select>

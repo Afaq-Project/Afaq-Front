@@ -12,12 +12,10 @@ import type { OpportunityDetail } from "../../types/opportunity";
 import { DetailsHeader } from "./DetailsHeader";
 import { AboutSection, DocumentsSection, EligibilitySection, SourceLine } from "./MainSections";
 import { ActionsCard, AskAiCard, MatchCard, UpdateStatusMenu, type TrackingState } from "./SideCards";
+import { useTranslations } from "next-intl";
 
-const AI_QUESTIONS = [
-  "Am I eligible for this?",
-  "What should my personal statement focus on?",
-  "Review my essay for this application",
-];
+// Suggested questions for the assistant: opportunity.details.askQuestions.<key>.
+const AI_QUESTIONS = ["eligible", "statement", "essay"] as const;
 
 /**
  * Opportunity details. Desktop: the header (with key facts), then the main column (about,
@@ -26,6 +24,7 @@ const AI_QUESTIONS = [
  * the header; on phones the primary action also sits in a bar above the tab bar.
  */
 export function OpportunityDetailsView({ opportunity }: { opportunity: OpportunityDetail }) {
+  const t = useTranslations("opportunity");
   // The countdown comes from the deadline date, computed now rather than trusting a stored count.
   const [now] = useState(() => new Date());
   const daysLeft = opportunity.deadlineDate ? daysUntil(opportunity.deadlineDate, now) : undefined;
@@ -43,12 +42,12 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
     saved,
     onTrack: () => {
       setTracked(true);
-      notify.success("Added to your applications");
+      notify.success(t("details.tracked"));
     },
     onStatusChange: setStatus,
     onToggleSaved: () => {
       setSaved((value) => !value);
-      if (!saved) notify.success("Saved to your list");
+      if (!saved) notify.success(t("saved"));
     },
   };
 
@@ -67,7 +66,7 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
         className="flex items-center gap-1.5 rounded-sm w-fit text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
       >
         <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
-        Back to Discover
+        {t("details.back")}
       </Link>
 
       <DetailsHeader opportunity={opportunity} daysLeft={daysLeft} />
@@ -84,15 +83,15 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
           <EligibilitySection criteria={opportunity.eligibility} />
           <DocumentsSection documents={opportunity.requiredDocuments} />
           <AskAiCard
-            title="Questions about this opportunity?"
-            questions={AI_QUESTIONS}
+            title={t("details.askTitle")}
+            questions={AI_QUESTIONS.map((key) => t(`details.askQuestions.${key}`))}
             hrefFor={(q) => `/ai?opportunity=${encodeURIComponent(opportunity.id)}&q=${encodeURIComponent(q)}`}
           />
           <SourceLine sourceUrl={opportunity.sourceUrl} lastCheckedAt={opportunity.lastCheckedAt} />
         </div>
 
         {/* Desktop only. Sticks below the top bar (60px) plus the page's 24px top spacing. */}
-        <aside className="hidden top-21 sticky lg:flex flex-col gap-6 min-w-0" aria-label="Actions and match">
+        <aside className="hidden top-21 sticky lg:flex flex-col gap-6 min-w-0" aria-label={t("details.actionsAndMatch")}>
           {actions}
           {match}
         </aside>
@@ -104,7 +103,7 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
             <UpdateStatusMenu status={status} onChange={setStatus} side="top" />
           ) : (
             <button type="button" onClick={tracking.onTrack} className={buttonClasses("primary", "w-full")}>
-              Track this application
+              {t("details.track")}
             </button>
           )}
         </div>
