@@ -15,6 +15,7 @@ import {
 import { PASSWORD_ROW_ID } from "./AccountSection";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { SettingsRow, SettingsSection } from "./SettingsSection";
+import { useTranslations } from "next-intl";
 
 const PROVIDERS: Provider[] = ["google", "linkedin"];
 
@@ -38,6 +39,7 @@ export function ConnectedAccountsSection({
   onChange,
   onSetPassword,
 }: ConnectedAccountsSectionProps) {
+  const t = useTranslations("settings");
   const [connecting, setConnecting] = useState<Provider | null>(null);
   const [confirming, setConfirming] = useState<Provider | null>(null);
   const connectedCount = Object.keys(loginMethods.providers).length;
@@ -72,8 +74,8 @@ export function ConnectedAccountsSection({
     <>
       <SettingsSection
         id="connected-accounts"
-        title="Connected accounts"
-        description="Log in with Google or LinkedIn instead of your password."
+        title={t("sections.connected-accounts")}
+        description={t("connected.description")}
       >
         {PROVIDERS.map((provider) => {
           const name = PROVIDER_NAMES[provider];
@@ -99,17 +101,20 @@ export function ConnectedAccountsSection({
               }
               help={
                 <>
-                  <p className="break-all">{connectedAs ? `Connected as ${connectedAs}` : "Not connected"}</p>
+                  <p className="break-all">{connectedAs ? t("connected.connectedAs", { email: connectedAs }) : t("connected.notConnected")}</p>
                   {locked && (
                     <p id={lockNoteId} className="text-caption">
-                      <a
-                        href={`#${PASSWORD_ROW_ID}`}
-                        onClick={goToPassword}
-                        className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 font-medium text-primary-800 underline underline-offset-2"
-                      >
-                        Set a password
-                      </a>{" "}
-                      first so you can still log in.
+                      {t.rich("connected.lockout", {
+                        link: (chunks) => (
+                          <a
+                            href={`#${PASSWORD_ROW_ID}`}
+                            onClick={goToPassword}
+                            className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 font-medium text-primary-800 underline underline-offset-2"
+                          >
+                            {chunks}
+                          </a>
+                        ),
+                      })}
                     </p>
                   )}
                 </>
@@ -122,10 +127,10 @@ export function ConnectedAccountsSection({
                 className={cn(connectedAs && "text-neutral-800")}
                 disabled={locked || busy}
                 aria-describedby={locked ? lockNoteId : undefined}
-                aria-label={connectedAs ? `Disconnect ${name}` : `Connect ${name}`}
+                aria-label={connectedAs ? t("connected.disconnectItem", { name }) : t("connected.connectItem", { name })}
                 onClick={() => (connectedAs ? setConfirming(provider) : connect(provider))}
               >
-                {connectedAs ? "Disconnect" : busy ? "Connecting…" : "Connect"}
+                {connectedAs ? t("connected.disconnect") : busy ? t("connected.connecting") : t("connected.connect")}
               </Button>
             </SettingsRow>
           );
@@ -134,16 +139,15 @@ export function ConnectedAccountsSection({
 
       <ConfirmDialog
         open={confirming !== null}
-        title={confirming ? `Disconnect ${PROVIDER_NAMES[confirming]}?` : ""}
+        title={confirming ? t("connected.confirmTitle", { name: PROVIDER_NAMES[confirming] }) : ""}
         onClose={() => setConfirming(null)}
         onConfirm={() => (confirming ? disconnect(confirming) : Promise.resolve())}
-        confirmLabel="Disconnect"
-        busyLabel="Disconnecting…"
+        confirmLabel={t("connected.disconnect")}
+        busyLabel={t("connected.disconnecting")}
       >
         {confirming && (
           <p>
-            You won&apos;t be able to log in with {PROVIDER_NAMES[confirming]} anymore. You can connect it again at any
-            time.
+            {t("connected.confirmBody", { name: PROVIDER_NAMES[confirming] })}
           </p>
         )}
       </ConfirmDialog>

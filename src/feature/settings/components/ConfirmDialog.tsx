@@ -5,6 +5,7 @@ import Button, { type ButtonVariant } from "@/src/shared/ui/Button";
 import InlineAlert from "@/src/shared/ui/InlineAlert";
 import Modal from "@/src/shared/ui/Modal";
 import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
+import { useTranslations } from "next-intl";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -32,6 +33,7 @@ export function ConfirmDialog({
   confirmDisabled = false,
   children,
 }: ConfirmDialogProps) {
+  const tc = useTranslations("common");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,7 +68,7 @@ export function ConfirmDialog({
         {error && <InlineAlert variant="error">{error}</InlineAlert>}
         <div className="flex sm:flex-row flex-col-reverse sm:justify-end gap-2">
           <Button type="button" variant="ghost" onClick={close} disabled={busy}>
-            Cancel
+            {tc("cancel")}
           </Button>
           <Button type="submit" variant={confirmVariant} disabled={confirmDisabled || busy}>
             {busy ? busyLabel : confirmLabel}

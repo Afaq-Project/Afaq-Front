@@ -11,50 +11,54 @@ import Badge from "@/src/shared/ui/Badge";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import { firstOfNextMonth, formatDeadlineDay } from "@/src/shared/lib/deadline";
 import { SettingsBlock, SettingsRow, SettingsSection } from "./SettingsSection";
+import { useLocale, useTranslations } from "next-intl";
 
 // TODO: read the plan, usage and renewal date from the subscription API once it exists. Until
 // then this matches the AI assistant: the plan comes from the billing mock, chat usage from the
 // AI mock, and essay reviews from the local review store.
 
 export function PlanSection() {
+  const t = useTranslations("settings.plan");
+  const tSections = useTranslations("settings.sections");
+  const locale = useLocale();
   const reviews = useReviews();
   // Quotas reset on the 1st of the month: always a future date.
   const [nextCycle] = useState(() => firstOfNextMonth());
 
   const planLabel = (
     <span className="flex items-center gap-2">
-      Current plan
-      <Badge tone={IS_PREMIUM ? "green" : "gray"}>{IS_PREMIUM ? "Premium" : "Free"}</Badge>
+      {t("current")}
+      <Badge tone={IS_PREMIUM ? "green" : "gray"}>{IS_PREMIUM ? t("premium") : t("free")}</Badge>
     </span>
   );
 
   return (
-    <SettingsSection id="plan" title="Plan" description="Your plan and AI usage this month.">
+    <SettingsSection id="plan" title={tSections("plan")} description={t("description")}>
       {IS_PREMIUM ? (
         <SettingsRow
           label={planLabel}
           help={
             <>
-              <p>Unlimited AI guidance and priority deadline alerts</p>
-              <p>Renews {formatDeadlineDay(PERIOD_END)}</p>
+              <p>{t("premiumHelp")}</p>
+              <p>{t("renews", { date: formatDeadlineDay(PERIOD_END, locale) })}</p>
             </>
           }
         >
           <Link href="/billing" className={buttonClasses("secondary")}>
-            Manage billing
+            {t("manage")}
           </Link>
         </SettingsRow>
       ) : (
         <>
           <SettingsRow
             label={planLabel}
-            help={`${CREDIT_USAGE.limit} chat messages and ${REVIEW_QUOTA.limit} essay reviews a month`}
+            help={t("freeHelp", { chats: CREDIT_USAGE.limit, reviews: REVIEW_QUOTA.limit })}
           >
             <Link href="/billing" className={buttonClasses("ghost")}>
-              View plans and billing
+              {t("viewPlans")}
             </Link>
             <Link href="/billing" className={buttonClasses("primary")}>
-              Upgrade to Premium
+              {t("upgrade")}
             </Link>
           </SettingsRow>
           <SettingsBlock>
@@ -63,8 +67,8 @@ export function PlanSection() {
               showUpgrade={false}
               resetsOn={nextCycle}
               rows={[
-                { label: "Chat messages", used: CREDIT_USAGE.used, limit: CREDIT_USAGE.limit },
-                { label: "Essay reviews", used: reviews.used, limit: REVIEW_QUOTA.limit },
+                { label: t("chatMessages"), used: CREDIT_USAGE.used, limit: CREDIT_USAGE.limit },
+                { label: t("essayReviews"), used: reviews.used, limit: REVIEW_QUOTA.limit },
               ]}
             />
           </SettingsBlock>
