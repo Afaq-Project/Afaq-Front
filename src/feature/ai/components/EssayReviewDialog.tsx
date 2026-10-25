@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { FileText } from "lucide-react";
+import { useTranslations } from "next-intl";
+import type { ReviewNoun } from "@/src/shared/lib/document-types";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import Modal from "@/src/shared/ui/Modal";
 
@@ -24,7 +26,7 @@ export interface EssayChoice {
   /** It already has a review, which a new one replaces. */
   hasReview?: boolean;
   /** How the copy names it: "essay" (default), "CV", "recommendation letter". */
-  noun?: string;
+  noun?: ReviewNoun;
 }
 
 interface EssayReviewDialogProps {
@@ -61,12 +63,13 @@ export function EssayReviewDialog({
   resetsOn,
   onSubmit,
 }: EssayReviewDialogProps) {
+  const tReview = useTranslations("documentReview");
   const [text, setText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [purpose, setPurpose] = useState(defaultPurpose ?? "");
   const [choiceId, setChoiceId] = useState("");
   const essayDocument = givenDocument ?? choices.find((choice) => choice.id === choiceId);
-  const noun = essayDocument?.noun ?? "essay";
+  const noun: ReviewNoun = essayDocument?.noun ?? "essay";
   const contentRef = useRef<HTMLDivElement>(null);
   const remaining = Math.max(0, limit - used);
 
@@ -118,7 +121,7 @@ export function EssayReviewDialog({
   const canSubmit = Boolean(essayDocument) || text.trim().length > 0 || fileName !== null;
 
   return (
-    <Modal open={open} onClose={onClose} title={givenDocument ? `Review your ${noun}` : "Review with AI"} className="max-w-xl">
+    <Modal open={open} onClose={onClose} title={givenDocument ? tReview("reviewYour", { noun }) : tReview("reviewWithAi")} className="max-w-xl">
       <div ref={contentRef}>
         {!unlimited && remaining === 0 ? (
           <div className="flex flex-col items-start gap-3">
@@ -209,7 +212,7 @@ export function EssayReviewDialog({
             )}
             <div className="flex flex-col gap-1.5">
               <label htmlFor="essay-purpose" className="text-caption text-neutral-600">
-                What is this {noun} for? (optional)
+                {tReview("whatFor", { noun })}
               </label>
               <input
                 id="essay-purpose"

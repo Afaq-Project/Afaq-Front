@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useDocumentTypeLabel } from "@/src/shared/lib/useDocumentTypeLabel";
 import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from "@/src/feature/onboarding/services/documentSlots";
 import { DOCUMENT_TYPES, isReviewable, type DocumentTypeKey } from "@/src/shared/lib/document-types";
 import { buttonClasses } from "@/src/shared/ui/Button";
@@ -25,19 +27,12 @@ interface DocumentDialogProps {
   onDelete: () => void;
 }
 
-const TITLES: Record<DialogKind, string> = {
-  rename: "Rename document",
-  type: "Change type",
-  replace: "Replace file",
-  link: "Link to application",
-  delete: "Delete document?",
-};
-
 function Actions({ busy, submitLabel, destructive, onCancel }: { busy: boolean; submitLabel: string; destructive?: boolean; onCancel: () => void }) {
+  const t = useTranslations("common");
   return (
     <div className="flex justify-end gap-2 mt-5">
       <button type="button" onClick={onCancel} disabled={busy} className={buttonClasses("ghost")}>
-        Cancel
+        {t("cancel")}
       </button>
       <button type="submit" disabled={busy} className={buttonClasses(destructive ? "destructive" : "primary")}>
         {submitLabel}
@@ -48,6 +43,8 @@ function Actions({ busy, submitLabel, destructive, onCancel }: { busy: boolean; 
 
 /** One dialog for every row action; `kind` picks the form. */
 export function DocumentDialog({ kind, item, applications, busy, onClose, onRename, onChangeType, onReplace, onLink, onDelete }: DocumentDialogProps) {
+  const t = useTranslations("documents.dialogs");
+  const typeLabel = useDocumentTypeLabel();
   const [name, setName] = useState("");
   const [type, setType] = useState<DocumentTypeKey>("other");
   const [file, setFile] = useState<File | null>(null);
@@ -74,7 +71,7 @@ export function DocumentDialog({ kind, item, applications, busy, onClose, onRena
     if (kind === "rename" && name.trim()) onRename(name.trim());
     if (kind === "type") onChangeType(type);
     if (kind === "replace") {
-      if (!file) return setFileError("Choose a file to upload.");
+      if (!file) return setFileError(t("chooseFileError"));
       onReplace(file);
     }
     if (kind === "link") onLink(links);
@@ -82,7 +79,7 @@ export function DocumentDialog({ kind, item, applications, busy, onClose, onRena
   };
 
   return (
-    <Modal open onClose={busy ? () => {} : onClose} title={TITLES[kind]} className="max-w-md">
+    <Modal open onClose={busy ? () => {} : onClose} title={t(kind)} className="max-w-md">
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -91,18 +88,18 @@ export function DocumentDialog({ kind, item, applications, busy, onClose, onRena
       >
         {kind === "rename" && (
           <label className="flex flex-col gap-1.5">
-            <span className="text-caption text-neutral-600">Name</span>
+            <span className="text-caption text-neutral-600">{t("name")}</span>
             <input autoFocus value={name} onChange={(event) => setName(event.target.value)} className={FIELD_CLASS} />
           </label>
         )}
 
         {kind === "type" && (
           <label className="flex flex-col gap-1.5">
-            <span className="text-caption text-neutral-600">Document type</span>
+            <span className="text-caption text-neutral-600">{t("documentType")}</span>
             <select autoFocus value={type} onChange={(event) => setType(event.target.value as DocumentTypeKey)} className={FIELD_CLASS}>
               {DOCUMENT_TYPES.map((option) => (
                 <option key={option.key} value={option.key}>
-                  {option.label}
+                  {typeLabel(option.key)}
                 </option>
               ))}
             </select>
@@ -112,18 +109,18 @@ export function DocumentDialog({ kind, item, applications, busy, onClose, onRena
         {kind === "replace" && (
           <div className="flex flex-col gap-2">
             <p className="text-body text-neutral-800">
-              Uploads a new file for {item.name} under the same type, then removes the old one.
-              {isReviewable(item.type) && " Its current review stays until you review the new file."}
+              {t("replaceBody", { name: item.name })}
+              {isReviewable(item.type) && t("replaceReviewNote")}
             </p>
             <input
               type="file"
               accept={ACCEPTED_FILE_TYPES}
-              aria-label="Choose a file"
+              aria-label={t("chooseFile")}
               onChange={(event) => {
                 const picked = event.target.files?.[0] ?? null;
                 if (picked && picked.size > MAX_FILE_SIZE) {
                   setFile(null);
-                  setFileError(`That file is larger than ${MAX_FILE_SIZE / (1024 * 1024)} MB. Try a smaller file.`);
+                  setFileError(t("tooLarge", { mb: MAX_FILE_SIZE / (1024 * 1024) }));
                   return;
                 }
                 setFileError(null);
@@ -141,10 +138,10 @@ export function DocumentDialog({ kind, item, applications, busy, onClose, onRena
 
         {kind === "link" &&
           (applications.length === 0 ? (
-            <p className="text-neutral-600 text-small">You aren&apos;t tracking any applications yet.</p>
+            <p className="text-neutral-600 text-small">{t("noApplications")}</p>
           ) : (
             <fieldset className="flex flex-col gap-1">
-              <legend className="sr-only">Applications</legend>
+              <legend className="sr-only">{t("applications")}</legend>
               {applications.map((application) => (
                 <label key={application.id} className="flex items-center gap-2.5 min-h-11 md:min-h-9 text-neutral-800 text-small cursor-pointer">
                   <input
@@ -166,8 +163,8 @@ export function DocumentDialog({ kind, item, applications, busy, onClose, onRena
         {kind === "delete" && (
           <p className="text-body text-neutral-800">
             {item.usedIn.length > 0
-              ? `This document is used in ${item.usedIn.length} ${item.usedIn.length === 1 ? "application" : "applications"}. They'll show it as missing.`
-              : `${item.name} will be deleted. This can't be undone.`}
+              ? t("deleteUsed", { count: item.usedIn.length })
+              : t("deleteBody", { name: item.name })}
           </p>
         )}
 
@@ -176,7 +173,7 @@ export function DocumentDialog({ kind, item, applications, busy, onClose, onRena
           onCancel={onClose}
           destructive={kind === "delete"}
           submitLabel={
-            kind === "delete" ? "Delete document" : kind === "replace" ? (busy ? "Replacing…" : "Replace file") : "Save"
+            kind === "delete" ? t("deleteSubmit") : kind === "replace" ? (busy ? t("replacing") : t("replace")) : t("save")
           }
         />
       </form>

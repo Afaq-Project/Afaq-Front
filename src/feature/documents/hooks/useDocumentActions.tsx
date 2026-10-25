@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { profileService } from "@/src/feature/profile/services/profileService";
 import { isReviewable } from "@/src/shared/lib/document-types";
 import { notify } from "@/src/shared/lib/notify";
@@ -23,6 +24,8 @@ interface Options {
  * shared by the Documents list and the review page. Render `dialog` once.
  */
 export function useDocumentActions({ refresh, onReplaced, onDeleted }: Options) {
+  const t = useTranslations("documents");
+  const tCommon = useTranslations("common");
   const [active, setActive] = useState<{ kind: DialogKind; item: DocumentItem } | null>(null);
   const [busy, setBusy] = useState(false);
   const returnFocus = useRef<HTMLElement | null>(null);
@@ -41,7 +44,7 @@ export function useDocumentActions({ refresh, onReplaced, onDeleted }: Options) 
       const { url } = await profileService.getDocumentDownloadUrl(item.id);
       window.open(url, "_blank", "noopener");
     } catch {
-      notify.error("We couldn't download that file", "Try again in a moment.");
+      notify.error(t("errors.download"), t("errors.tryLater"));
     }
   };
 
@@ -58,7 +61,7 @@ export function useDocumentActions({ refresh, onReplaced, onDeleted }: Options) 
     },
     replace: async (file: File) => {
       const item = active!.item;
-      if (!item.apiTypeId) return notify.error("This document has no type to upload under");
+      if (!item.apiTypeId) return notify.error(t("errors.noType"));
       setBusy(true);
       try {
         // No replace endpoint: upload the new file under the same type, then delete the old one.
@@ -69,9 +72,9 @@ export function useDocumentActions({ refresh, onReplaced, onDeleted }: Options) 
         await refresh();
         setActive(null);
         if (onReplaced) onReplaced(item, created.id);
-        else notify.success("File replaced");
+        else notify.success(t("replaced"));
       } catch {
-        notify.error("We couldn't replace that file", "Check your connection and try again.");
+        notify.error(t("errors.replace"), tCommon("checkConnection"));
       } finally {
         setBusy(false);
       }
@@ -87,12 +90,12 @@ export function useDocumentActions({ refresh, onReplaced, onDeleted }: Options) 
       try {
         await profileService.deleteDocument(item.id);
         forgetReview(item.id);
-        notify.success("Document deleted");
+        notify.success(t("deleted"));
         await refresh();
         setActive(null);
         onDeleted?.(item);
       } catch {
-        notify.error("We couldn't delete that document", "Try again in a moment.");
+        notify.error(t("errors.delete"), t("errors.tryLater"));
       } finally {
         setBusy(false);
       }
