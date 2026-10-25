@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { AskAiCard, UpdateStatusMenu } from "@/src/feature/opportunities/components/details/SideCards";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { notify } from "@/src/shared/lib/notify";
 import type { ApplicationActivityItem, ApplicationDetail, ApplicationDocument } from "../types/detail";
@@ -31,7 +31,7 @@ function questionsFor(status: ApplicationStatus) {
  * phones "Update status" also sits in a bar above the tab bar.
  */
 export function ApplicationDetailView({ application }: { application: ApplicationDetail }) {
-  const opportunity = application.opportunityId ? getOpportunityById(application.opportunityId) : undefined;
+  const opportunity = application.opportunityId ? getMockOpportunityById(application.opportunityId) : undefined;
   const [now] = useState(() => new Date());
 
   // TODO: there's no tracker API yet, so status, linked documents and the activity they add are

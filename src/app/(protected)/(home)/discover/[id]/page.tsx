@@ -1,7 +1,4 @@
-import { notFound } from "next/navigation";
-
-import { OpportunityDetailsView } from "@/src/feature/opportunities/components/details/OpportunityDetailsView";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { OpportunityDetailsScreen } from "@/src/feature/opportunities/components/details/OpportunityDetailsScreen";
 
 export default async function OpportunityDetailsPage({
   params,
@@ -9,11 +6,6 @@ export default async function OpportunityDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const opportunity = getOpportunityById(id);
 
-  if (!opportunity) {
-    notFound();
-  }
-
-  return <OpportunityDetailsView opportunity={opportunity} />;
+  return <OpportunityDetailsScreen id={id} />;
 }

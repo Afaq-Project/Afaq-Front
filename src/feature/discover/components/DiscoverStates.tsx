@@ -4,44 +4,63 @@ import { buttonClasses } from "@/src/shared/ui/Button";
 import type { MissingField } from "../hooks/useMatchingReadiness";
 
 const STATE_LAYOUT_CLASS = "flex flex-col items-center gap-2 mx-auto px-6 py-12 w-full max-w-xl text-center";
-const STATE_CARD_CLASS = `${STATE_LAYOUT_CLASS} bg-white border border-neutral-100 rounded-lg`;
+const BANNER_CLASS = "flex items-start gap-2 bg-info-50 px-4 py-3 border border-info-400/30 rounded-md text-body text-info-800";
+const BANNER_LINK_CLASS =
+  "rounded-sm font-medium underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2";
 
-/** Replaces results until the profile has the fields matching needs (FR-3.11). */
-export function ProfileIncompleteState({ missing }: { missing: MissingField }) {
+/**
+ * Above the results while the profile lacks what matching needs (FR-3.11). With matches it asks
+ * for more accurate ones; without, for any score at all.
+ */
+export function ProfileIncompleteBanner({ missing, hasMatches }: { missing: MissingField; hasMatches: boolean }) {
   return (
-    <div className={STATE_CARD_CLASS}>
-      <h2 className="text-h3 text-neutral-900">Complete your profile to see matches</h2>
-      <p className="max-w-md text-body text-neutral-600">
-        Your education level, field of study, and nationality decide which opportunities you&apos;re eligible for.
-      </p>
-      <Link href={missing.href} className={buttonClasses("primary", "mt-3")}>
-        Complete your profile
-      </Link>
-    </div>
+    <p className={BANNER_CLASS}>
+      <Info size={20} strokeWidth={1.75} aria-hidden="true" className="mt-px shrink-0" />
+      <span>
+        {hasMatches
+          ? `Add your ${missing.label} to make your matches more accurate.`
+          : `Add your ${missing.label} to see how well each opportunity matches you.`}{" "}
+        <Link href={missing.href} className={BANNER_LINK_CLASS}>
+          Complete your profile
+        </Link>
+      </span>
+    </p>
   );
 }
 
-export function NoResultsState({ onClearAll }: { onClearAll: () => void }) {
+/**
+ * Above unscored results when the profile is matchable but nothing scored can be shown: no
+ * scores yet, or every match is one v1 hides (closed, another type, or in Arabic).
+ */
+export function MatchesPendingBanner({ hiddenMatches }: { hiddenMatches: boolean }) {
+  return (
+    <p className={BANNER_CLASS}>
+      <Info size={20} strokeWidth={1.75} aria-hidden="true" className="mt-px shrink-0" />
+      {hiddenMatches
+        ? "None of your matches are open scholarships or internships yet. Until then, here are all open opportunities."
+        : "We're still calculating your matches. Until then, here are all open opportunities."}
+    </p>
+  );
+}
+
+/** Empty results; with filters on, offers to clear them. */
+export function NoResultsState({ onClearAll }: { onClearAll?: () => void }) {
   return (
     // Sits on the page background; the icon gets the white circle so it still reads.
     <div className={STATE_LAYOUT_CLASS}>
       <span aria-hidden="true" className="flex justify-center items-center bg-white mb-2 rounded-full size-12 text-neutral-600">
         <SearchX size={24} strokeWidth={1.75} />
       </span>
-      <h2 className="text-h3 text-neutral-900">No opportunities match these filters</h2>
-      <button type="button" onClick={onClearAll} className={buttonClasses("secondary", "mt-3")}>
-        Clear all filters
-      </button>
+      <h2 className="text-h3 text-neutral-900">
+        {onClearAll ? "No opportunities match these filters" : "No opportunities yet"}
+      </h2>
+      {onClearAll ? (
+        <button type="button" onClick={onClearAll} className={buttonClasses("secondary", "mt-3")}>
+          Clear all filters
+        </button>
+      ) : (
+        <p className="text-body text-neutral-600">New opportunities are added daily.</p>
+      )}
     </div>
-  );
-}
-
-/** Shown above the grid when nothing passes the hard filters and closest results are shown instead. */
-export function RelaxedResultsBanner() {
-  return (
-    <p className="flex items-start gap-2 bg-info-50 px-4 py-3 border border-info-400/30 rounded-md text-body text-info-800">
-      <Info size={20} strokeWidth={1.75} aria-hidden="true" className="mt-px shrink-0" />
-      No exact matches yet, so here are the closest opportunities. Check eligibility before applying.
-    </p>
   );
 }

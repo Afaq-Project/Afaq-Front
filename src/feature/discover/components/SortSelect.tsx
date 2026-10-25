@@ -5,18 +5,17 @@ import { CONTROL_BUTTON_CLASS } from "./DiscoverControls";
 
 /**
  * Sort dropdown, styled like the filter buttons: a native select with the browser styling
- * removed and a custom chevron. "Newest" is listed but disabled until opportunities have a
- * published date.
+ * removed and a custom chevron. Lists only the sorts the current results can use.
  */
 export function SortSelect({
   value,
   onChange,
-  newestAvailable,
+  options,
   className,
 }: {
   value: SortOrder;
   onChange: (sort: SortOrder) => void;
-  newestAvailable: boolean;
+  options: SortOrder[];
   className?: string;
 }) {
   return (
@@ -31,19 +30,11 @@ export function SortSelect({
             "appearance-none bg-white pr-9 border-neutral-200 hover:border-neutral-400 text-neutral-800 cursor-pointer",
           )}
         >
-          {SORT_OPTIONS.map((option) => {
-            const unavailable = option.value === "newest" && !newestAvailable;
-            return (
-              <option
-                key={option.value}
-                value={option.value}
-                disabled={unavailable}
-                title={unavailable ? "Not available yet: opportunities don't have a published date" : undefined}
-              >
-                {option.label}
-              </option>
-            );
-          })}
+          {SORT_OPTIONS.filter((option) => options.includes(option.value)).map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
         <ChevronDown
           size={16}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, ChevronRight, Clock, ExternalLink, MoreHorizontal } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { FlagTile } from "@/src/feature/opportunities/components/FlagTile";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { countryName } from "@/src/shared/lib/countries";
 import { DEADLINE_URGENCY_TEXT, getDeadlineUrgency, isoDateFromToday } from "@/src/shared/lib/deadline";
 import { STATUS_COLORS } from "@/src/shared/lib/status-colors";
@@ -20,7 +20,7 @@ const STEPS = 5;
 
 /** The tracked opportunity, when the application is linked to one. */
 export const opportunityFor = (application: ApplicationSummary) =>
-  application.opportunityId ? getOpportunityById(application.opportunityId) : undefined;
+  application.opportunityId ? getMockOpportunityById(application.opportunityId) : undefined;
 
 /** Every row opens the application's own details page. */
 export const rowHref = (application: ApplicationSummary) => `/applications/${application.id}`;

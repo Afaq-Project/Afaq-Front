@@ -9,13 +9,38 @@ import type { EligibilityCriterion, EligibilityFit, OpportunityDetail } from "..
 
 const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
-export function AboutSection({ description }: { description: string }) {
+// What a section says when the listing doesn't cover it.
+const NOT_LISTED_CLASS = "mt-2 text-body text-neutral-600";
+
+/**
+ * A short paragraph (four lines at most) with "Read more" to the official page, which has the
+ * full text; many listings only carry an excerpt. Without an official link, the whole text shows.
+ */
+export function AboutSection({ description, officialLink }: { description?: string; officialLink?: string }) {
   return (
     <section aria-labelledby="about-heading" className={CARD_CLASS}>
       <h2 id="about-heading" className="text-h2 text-neutral-900">
         About
       </h2>
-      <p className="mt-2 max-w-[70ch] text-body text-neutral-800">{description}</p>
+      {description ? (
+        <p dir="auto" className={cn("mt-2 max-w-[70ch] text-body text-neutral-800", officialLink && "line-clamp-4")}>
+          {description}
+        </p>
+      ) : (
+        <p className={NOT_LISTED_CLASS}>No description yet. The official page has the full details.</p>
+      )}
+      {officialLink && (
+        <a
+          href={officialLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 mt-3 rounded-sm font-medium text-primary-600 text-small hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+        >
+          Read more on the official site
+          <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" />
+          <span className="sr-only">(opens in a new tab)</span>
+        </a>
+      )}
     </section>
   );
 }
@@ -68,9 +93,12 @@ export function EligibilitySection({ criteria }: { criteria: EligibilityCriterio
       <h2 id="eligibility-heading" className="text-h2 text-neutral-900">
         Eligibility
       </h2>
+      {criteria.length === 0 && (
+        <p className={NOT_LISTED_CLASS}>Eligibility criteria aren&apos;t listed yet. Check the official page before applying.</p>
+      )}
       {summary && <p className="mt-1 text-body text-neutral-600">{summary}</p>}
 
-      <ul className="flex flex-col gap-3 mt-4">
+      <ul className="empty:hidden flex flex-col gap-3 mt-4">
         {criteria.map((criterion) => {
           const state = criterion.userFit ? FIT_STATE[criterion.userFit] : undefined;
           return (
@@ -109,15 +137,19 @@ export function DocumentsSection({ documents }: { documents: OpportunityDetail["
       <h2 id="documents-heading" className="text-h2 text-neutral-900">
         Documents required
       </h2>
-      <p className="mt-1 text-body text-neutral-600">
-        {userDocs.available
-          ? `You have ${ready} of ${plural(documents.length, "document")} ready.`
-          : userDocs.isLoading
-            ? "Checking your documents…"
-            : "We couldn't check your uploaded documents right now."}
-      </p>
+      {documents.length === 0 ? (
+        <p className={NOT_LISTED_CLASS}>Required documents aren&apos;t listed yet. Check the official page.</p>
+      ) : (
+        <p className="mt-1 text-body text-neutral-600">
+          {userDocs.available
+            ? `You have ${ready} of ${plural(documents.length, "document")} ready.`
+            : userDocs.isLoading
+              ? "Checking your documents…"
+              : "We couldn't check your uploaded documents right now."}
+        </p>
+      )}
 
-      <ul className="flex flex-col gap-3 mt-4">
+      <ul className="empty:hidden flex flex-col gap-3 mt-4">
         {documents.map((doc) => {
           const uploaded = matchFor(doc);
           const status = !userDocs.available

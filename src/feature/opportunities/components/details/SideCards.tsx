@@ -7,6 +7,7 @@ import { CARD_CLASS, GHOST_LINK_CLASS } from "@/src/feature/dashboard/components
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { getMatchTier, MATCH_TIER_STROKE, MATCH_TIER_TEXT } from "@/src/feature/dashboard/types/status";
 import { APPLICATION_STATUSES, STATUS_LABEL, STATUS_STAGE_INDEX } from "@/src/feature/applications/types/status";
+import type { MissingField } from "@/src/feature/discover/hooks/useMatchingReadiness";
 import { formatDeadlineDay } from "@/src/shared/lib/deadline";
 import { notify } from "@/src/shared/lib/notify";
 import type { ApplicationStatusKey } from "@/src/shared/lib/status-colors";
@@ -16,8 +17,8 @@ import { CompletionDonut } from "@/src/shared/ui/CompletionDonut";
 import { Popover } from "@/src/shared/ui/Popover";
 import { StatusTimeline } from "@/src/shared/ui/StatusTimeline";
 import { MATCH_TIER_LABEL } from "../../services/utils";
-import type { OpportunityDetail } from "../../types/opportunity";
-import { FIT_LABEL, FIT_TEXT, FitIcon, MATCH_FACTORS } from "../matchFactors";
+import type { MatchBreakdown, OpportunityDetail } from "../../types/opportunity";
+import { FIT_LABEL, FIT_TEXT, FitIcon, matchFactorRows } from "../matchFactors";
 
 const STATUSES = APPLICATION_STATUSES;
 
@@ -74,14 +75,14 @@ export function UpdateStatusMenu({
   );
 }
 
-function ApplyLink({ href, disabled }: { href: string; disabled: boolean }) {
+function ApplyLink({ href, disabled }: { href?: string; disabled: boolean }) {
   const content = (
     <>
       Apply on official site
       <ExternalLink size={16} strokeWidth={1.75} aria-hidden="true" />
     </>
   );
-  if (disabled) {
+  if (disabled || !href) {
     return (
       <span aria-disabled="true" className={buttonClasses("secondary", "w-full opacity-50 cursor-not-allowed")}>
         {content}
@@ -184,58 +185,93 @@ export function ActionsCard({
       <ApplyLink href={opportunity.officialLink} disabled={closed} />
       {secondaryRow}
       <p className="text-caption text-neutral-600">
-        {closed ? `Applications closed on ${formatDeadlineDay(opportunity.deadlineDate)}` : "Tracking turns on deadline reminders."}
+        {closed && opportunity.deadlineDate
+          ? `Applications closed on ${formatDeadlineDay(opportunity.deadlineDate)}`
+          : "Tracking turns on deadline reminders."}
       </p>
     </section>
   );
 }
 
-/** Match score as a tier-colored donut, the tier label, and the five weighted factors. */
-export function MatchCard({ opportunity }: { opportunity: OpportunityDetail }) {
-  const tier = getMatchTier(opportunity.matchScore);
+/**
+ * Match score as a tier-colored donut, the tier label, and the five weighted factors.
+ * Without a score: what the profile is missing, or that no score exists yet.
+ */
+export function MatchCard({
+  score,
+  breakdown,
+  missing,
+}: {
+  score?: number;
+  breakdown?: MatchBreakdown;
+  /** Set while the profile can't be matched. */
+  missing: MissingField | null;
+}) {
+  const heading = (
+    <h2 id="match-heading" className="text-h3 text-neutral-900">
+      Your match
+    </h2>
+  );
+
+  if (score === undefined) {
+    return (
+      <section aria-labelledby="match-heading" className={CARD_CLASS}>
+        {heading}
+        {missing ? (
+          <>
+            <p className="mt-2 text-body text-neutral-800">Add your {missing.label} to see how well this matches you.</p>
+            {/* Soft, not primary: the actions card above already has the page's primary button. */}
+            <Link href={missing.href} className={buttonClasses("soft", "mt-4 w-full")}>
+              Complete your profile
+            </Link>
+          </>
+        ) : (
+          // TODO: there's no endpoint for one opportunity's match, so only matches already loaded
+          // by Discover or the dashboard have a score here.
+          <p className="mt-2 text-body text-neutral-600">No match score for this opportunity yet.</p>
+        )}
+      </section>
+    );
+  }
+
+  const tier = getMatchTier(score);
 
   return (
     <section aria-labelledby="match-heading" className={CARD_CLASS}>
-      <h2 id="match-heading" className="text-h3 text-neutral-900">
-        Your match
-      </h2>
+      {heading}
       <div className="flex items-center gap-4 mt-4">
-        <div role="img" aria-label={`${opportunity.matchScore}% match`}>
+        <div role="img" aria-label={`${score}% match`}>
           <CompletionDonut
-            percent={opportunity.matchScore}
+            percent={score}
             size={96}
             strokeWidth={8}
             arcClassName={MATCH_TIER_STROKE[tier]}
-            center={<span className={cn("text-h2", MATCH_TIER_TEXT[tier])}>{opportunity.matchScore}%</span>}
+            center={<span className={cn("text-h2", MATCH_TIER_TEXT[tier])}>{score}%</span>}
           />
         </div>
         <p className="text-body text-neutral-800">{MATCH_TIER_LABEL[tier]}</p>
       </div>
 
-      {/* TODO: every opportunity should carry matchFactors once the matching API returns them. */}
-      {opportunity.matchFactors && (
+      {breakdown && (
         <ul className="flex flex-col gap-2.5 mt-5 pt-4 border-neutral-100 border-t">
-          {MATCH_FACTORS.map((factor) => {
-            const fit = opportunity.matchFactors![factor.key];
-            return (
-              <li key={factor.key} className="flex justify-between items-center gap-3 text-small">
-                <span className="text-neutral-800">
-                  {factor.label} <span className="text-neutral-600">{factor.weight}%</span>
+          {matchFactorRows(breakdown).map((factor) => (
+            <li key={factor.key} className="flex justify-between items-center gap-3 text-small">
+              <span className="text-neutral-800">
+                {factor.label} <span className="text-neutral-600">{factor.weight}%</span>
+              </span>
+              <span className="flex items-center gap-2 shrink-0">
+                {factor.fit === "missing" && factor.profileHref && (
+                  <Link href={factor.profileHref} className="rounded-sm font-medium text-caption text-primary-600 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400">
+                    Add to profile
+                  </Link>
+                )}
+                <span className={cn("flex items-center gap-1.5 text-caption", FIT_TEXT[factor.fit])}>
+                  <FitIcon fit={factor.fit} />
+                  {FIT_LABEL[factor.fit]}
                 </span>
-                <span className="flex items-center gap-2 shrink-0">
-                  {fit === "missing" && (
-                    <Link href={factor.profileHref} className="rounded-sm font-medium text-caption text-primary-600 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400">
-                      Add to profile
-                    </Link>
-                  )}
-                  <span className={cn("flex items-center gap-1.5 text-caption", FIT_TEXT[fit])}>
-                    <FitIcon fit={fit} />
-                    {FIT_LABEL[fit]}
-                  </span>
-                </span>
-              </li>
-            );
-          })}
+              </span>
+            </li>
+          ))}
         </ul>
       )}
 

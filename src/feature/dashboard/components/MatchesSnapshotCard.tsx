@@ -16,7 +16,7 @@ const TIERS: { key: MatchTier; label: string }[] = [
 ];
 
 export interface MatchesSnapshotCardProps {
-  /** Open opportunities in the user's feed, by match tier (≥70%, 40–69%, <40%). */
+  /** The user's matches by tier (≥70%, 40–69%, <40%). From the API these include closed ones. */
   counts: Record<MatchTier, number>;
   /** Matches published since the last visit; the pill only shows when > 0. */
   newCount?: number;
@@ -35,9 +35,8 @@ function relativeTime(date: Date, now: number) {
 
 /**
  * "Your matches" snapshot for a complete profile: strong-match headline, possible count, a
- * tier bar with a legend, and a profile-freshness footer. Built from props only.
- * TODO: no feed/matching endpoint exists yet, so production doesn't render this; the dashboard
- * only shows it in the dev preview (?preview=matches-snapshot) with counts from the mock.
+ * tier bar with a legend, and a profile-freshness footer. Built from props only; the dev
+ * preview (?preview=matches-snapshot) feeds it counts from the mock.
  */
 export function MatchesSnapshotCard({ counts, newCount, lastUpdated }: MatchesSnapshotCardProps) {
   const total = counts.strong + counts.possible + counts.low;

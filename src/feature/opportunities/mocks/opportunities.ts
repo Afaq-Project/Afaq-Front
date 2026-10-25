@@ -1,9 +1,14 @@
 import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { OpportunityDetail, OpportunitySummary } from "../types/opportunity";
 
-// Full opportunity catalog, browsed on the Discover page (FR-3.x) and
-// sampled from on the dashboard's "best opportunities" preview.
-export const OPPORTUNITIES: OpportunitySummary[] = [
+// Mock catalog for the features still on mock data (applications, notifications, documents,
+// AI context), whose records point at these ids. Discover and the dashboard use the API.
+
+/** Mock records always have a deadline and a score, which those features rely on. */
+type MockSummary = OpportunitySummary & { daysLeft: number; matchScore: number };
+export type MockOpportunityDetail = OpportunityDetail & MockSummary & { deadlineDate: string };
+
+export const OPPORTUNITIES: MockSummary[] = [
   {
     id: "o1",
     title: "Qatar Foundation Academic Excellence Scholarship",
@@ -18,7 +23,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Qatar Foundation",
     fundingStatus: "Fully Funded",
     level: "Bachelor's",
-    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "strong", language: "strong", experience: "strong" },
   },
   {
     id: "o2",
@@ -34,7 +38,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Northwind Labs",
     fundingStatus: "Paid",
     level: "Bachelor's",
-    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "partial" },
   },
   {
     id: "o3",
@@ -50,7 +53,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Arab Youth Empowerment Initiative",
     fundingStatus: "Fully Funded",
     level: "Bachelor's",
-    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "strong", language: "partial", experience: "strong" },
   },
   {
     id: "o4",
@@ -67,7 +69,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     fundingStatus: "Paid",
     level: "Bachelor's",
     isRemote: true,
-    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "strong" },
   },
   {
     id: "o5",
@@ -83,7 +84,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Meridian Institute",
     fundingStatus: "Fully Funded",
     level: "Master's",
-    matchFactors: { fieldOfStudy: "strong", skills: "partial", gpa: "strong", language: "partial", experience: "partial" },
   },
   {
     id: "o6",
@@ -99,7 +99,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Beacon Trust",
     fundingStatus: "Partially Funded",
     level: "Bachelor's",
-    matchFactors: { fieldOfStudy: "strong", skills: "partial", gpa: "partial", language: "partial", experience: "missing" },
   },
   {
     id: "o7",
@@ -115,7 +114,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "WHO Regional Office",
     fundingStatus: "Fully Funded",
     level: "Master's",
-    matchFactors: { fieldOfStudy: "partial", skills: "partial", gpa: "strong", language: "partial", experience: "missing" },
   },
   {
     id: "o8",
@@ -146,7 +144,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Levant Legal Foundation",
     fundingStatus: "Partially Funded",
     level: "Bachelor's",
-    matchFactors: { fieldOfStudy: "partial", skills: "missing", gpa: "partial", language: "strong", experience: "missing" },
     meetsRequirements: false,
   },
   {
@@ -163,7 +160,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Gulf Renewable Energy Council",
     fundingStatus: "Fully Funded",
     level: "Master's",
-    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "partial" },
   },
   {
     id: "o11",
@@ -178,7 +174,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     fieldOfStudy: "Arts",
     provider: "Studio Nawafir",
     fundingStatus: "Unpaid",
-    matchFactors: { fieldOfStudy: "partial", skills: "partial", gpa: "partial", language: "strong", experience: "missing" },
   },
   {
     id: "o12",
@@ -194,7 +189,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Emirates Engineering Trust",
     fundingStatus: "Fully Funded",
     level: "Bachelor's",
-    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "strong", language: "strong", experience: "partial" },
   },
   {
     id: "o13",
@@ -210,7 +204,6 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Applied AI Collective",
     fundingStatus: "Fully Funded",
     level: "PhD",
-    matchFactors: { fieldOfStudy: "strong", skills: "strong", gpa: "partial", language: "strong", experience: "strong" },
   },
   {
     id: "o14",
@@ -243,14 +236,8 @@ export const OPPORTUNITIES: OpportunitySummary[] = [
     provider: "Gulf Tech Foundation",
     fundingStatus: "Partially Funded",
     level: "Bachelor's",
-    matchFactors: { fieldOfStudy: "strong", skills: "partial", gpa: "strong", language: "strong", experience: "missing" },
   },
 ];
-
-// Highest matches that are still open, for the dashboard.
-export const RECOMMENDED_OPPORTUNITIES: OpportunitySummary[] = OPPORTUNITIES.filter((o) => o.daysLeft >= 0)
-  .sort((a, b) => b.matchScore - a.matchScore)
-  .slice(0, 4);
 
 // Extra fields shown on the opportunity details page, keyed by id. Kept
 // separate from OPPORTUNITIES so the summary catalog stays the single
@@ -261,7 +248,6 @@ type DetailExtras = Omit<OpportunityDetail, keyof OpportunitySummary | "deadline
 
 const DETAIL_EXTRAS: Record<string, DetailExtras> = {
   o1: {
-    keywords: ["STEM", "Undergraduate", "Full Tuition", "Qatar"],
     providerUrl: "https://example.com/providers/o1",
     sourceUrl: "https://listings.example.org/opportunities/o1",
     lastCheckedAt: "2026-10-06",
@@ -280,7 +266,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o2: {
-    keywords: ["UX/UI", "Consumer Product", "Design Systems"],
     providerUrl: "https://example.com/providers/o2",
     sourceUrl: "https://listings.example.org/opportunities/o2",
     lastCheckedAt: "2026-10-06",
@@ -297,7 +282,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o3: {
-    keywords: ["Leadership", "Social Impact", "MENA"],
     providerUrl: "https://example.com/providers/o3",
     sourceUrl: "https://listings.example.org/opportunities/o3",
     lastCheckedAt: "2026-10-06",
@@ -314,7 +298,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o4: {
-    keywords: ["Machine Learning", "Data Pipelines", "Python"],
     providerUrl: "https://example.com/providers/o4",
     sourceUrl: "https://listings.example.org/opportunities/o4",
     lastCheckedAt: "2026-10-06",
@@ -331,7 +314,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o5: {
-    keywords: ["Applied Physics", "Research", "Fully Funded"],
     providerUrl: "https://example.com/providers/o5",
     sourceUrl: "https://listings.example.org/opportunities/o5",
     lastCheckedAt: "2026-10-06",
@@ -349,7 +331,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o6: {
-    keywords: ["STEM", "Women in Tech", "Graduate Studies"],
     providerUrl: "https://example.com/providers/o6",
     sourceUrl: "https://listings.example.org/opportunities/o6",
     lastCheckedAt: "2026-10-06",
@@ -366,7 +347,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o7: {
-    keywords: ["Public Health", "NGO", "Global Health"],
     providerUrl: "https://example.com/providers/o7",
     sourceUrl: "https://listings.example.org/opportunities/o7",
     lastCheckedAt: "2026-10-06",
@@ -383,7 +363,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o8: {
-    keywords: ["Marketing", "Analytics", "Growth"],
     providerUrl: "https://example.com/providers/o8",
     sourceUrl: "https://listings.example.org/opportunities/o8",
     lastCheckedAt: "2026-10-06",
@@ -399,7 +378,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o9: {
-    keywords: ["Law", "Public Policy", "MENA"],
     providerUrl: "https://example.com/providers/o9",
     sourceUrl: "https://listings.example.org/opportunities/o9",
     lastCheckedAt: "2026-10-06",
@@ -416,7 +394,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o10: {
-    keywords: ["Renewable Energy", "Clean Tech", "Graduate Research"],
     providerUrl: "https://example.com/providers/o10",
     sourceUrl: "https://listings.example.org/opportunities/o10",
     lastCheckedAt: "2026-10-06",
@@ -434,7 +411,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o11: {
-    keywords: ["Branding", "Film & Print", "Creative"],
     officialLink: "https://example.com/opportunities/o11/apply",
     eligibility: [
       { text: "Portfolio demonstrating work in film, print, or digital media" },
@@ -448,7 +424,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o12: {
-    keywords: ["Engineering", "Full Tuition", "Merit-Based"],
     providerUrl: "https://example.com/providers/o12",
     sourceUrl: "https://listings.example.org/opportunities/o12",
     lastCheckedAt: "2026-10-06",
@@ -465,7 +440,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o13: {
-    keywords: ["Machine Learning", "Applied AI", "Mentorship"],
     providerUrl: "https://example.com/providers/o13",
     sourceUrl: "https://listings.example.org/opportunities/o13",
     lastCheckedAt: "2026-10-06",
@@ -482,7 +456,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o14: {
-    keywords: ["Public Policy", "Research Briefs", "Government"],
     officialLink: "https://example.com/opportunities/o14/apply",
     eligibility: [
       { text: "Pursuing a degree in Public Policy, Business, or a related field", userFit: "met" },
@@ -495,7 +468,6 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
     ],
   },
   o15: {
-    keywords: ["Women in STEM", "Computer Science", "Partial Tuition"],
     providerUrl: "https://example.com/providers/o15",
     sourceUrl: "https://listings.example.org/opportunities/o15",
     lastCheckedAt: "2026-10-06",
@@ -512,7 +484,7 @@ const DETAIL_EXTRAS: Record<string, DetailExtras> = {
 };
 
 // Provider and funding moved onto the summaries (the cards show them); details still require both.
-export const OPPORTUNITY_DETAILS: OpportunityDetail[] = OPPORTUNITIES.map((opportunity) => {
+export const OPPORTUNITY_DETAILS: MockOpportunityDetail[] = OPPORTUNITIES.map((opportunity) => {
   const { provider, fundingStatus } = opportunity;
   if (!provider || !fundingStatus) {
     throw new Error(`Mock opportunity ${opportunity.id} needs a provider and a funding status`);

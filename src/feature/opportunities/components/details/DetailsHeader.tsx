@@ -19,7 +19,7 @@ function Fact({ icon: Icon, label, children }: { icon: LucideIcon; label: string
       </span>
       <div className="min-w-0">
         <p className="text-caption text-neutral-600">{label}</p>
-        <div className="font-medium text-body text-neutral-900 break-words">{children}</div>
+        <div dir="auto" className="font-medium text-body text-neutral-900 break-words">{children}</div>
       </div>
     </li>
   );
@@ -37,16 +37,16 @@ function Countdown({ daysLeft }: { daysLeft: number }) {
 /**
  * Header card: a green-50 band (the official header image when one exists, otherwise the
  * horizon pattern), the flag tile overlapping its edge, then title, provider, fact chips and
- * the key facts (deadline, funding, location, provider).
+ * the key facts (deadline, funding, location, provider). Facts the listing lacks say "Not listed".
  */
-export function DetailsHeader({ opportunity, daysLeft }: { opportunity: OpportunityDetail; daysLeft: number }) {
-  const closed = daysLeft < 0;
-  const remote = Boolean(opportunity.isRemote) || !opportunity.countryCode;
-  const country = opportunity.countryCode ? countryName(opportunity.countryCode) : undefined;
+export function DetailsHeader({ opportunity, daysLeft }: { opportunity: OpportunityDetail; daysLeft?: number }) {
+  const closed = daysLeft !== undefined && daysLeft < 0;
+  const remote = Boolean(opportunity.isRemote);
+  const country = opportunity.countryCode ? countryName(opportunity.countryCode) : opportunity.location;
 
   const chips = [
     opportunity.type,
-    FUNDING_LABEL[opportunity.fundingStatus],
+    opportunity.fundingStatus && FUNDING_LABEL[opportunity.fundingStatus],
     opportunity.level,
     opportunity.fieldOfStudy,
     remote ? "Remote" : country,
@@ -78,26 +78,28 @@ export function DetailsHeader({ opportunity, daysLeft }: { opportunity: Opportun
         />
 
         <div className="flex flex-wrap items-center gap-2 mt-3">
-          <h1 className="text-h1 text-neutral-900">{opportunity.title}</h1>
+          <h1 dir="auto" className="text-h1 text-neutral-900">{opportunity.title}</h1>
           {closed && <Badge tone="gray">Closed</Badge>}
         </div>
 
-        <p className="mt-1 text-body text-neutral-600">
-          {opportunity.providerUrl ? (
-            <a
-              href={opportunity.providerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-sm hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
-            >
-              {opportunity.provider}
-              <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" />
-              <span className="sr-only">(opens in a new tab)</span>
-            </a>
-          ) : (
-            opportunity.provider
-          )}
-        </p>
+        {opportunity.provider && (
+          <p dir="auto" className="mt-1 text-body text-neutral-600">
+            {opportunity.providerUrl ? (
+              <a
+                href={opportunity.providerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 rounded-sm hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+              >
+                {opportunity.provider}
+                <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" />
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            ) : (
+              opportunity.provider
+            )}
+          </p>
+        )}
 
         <ul className="flex flex-wrap gap-1.5 mt-4">
           {chips.map((chip) => (
@@ -110,17 +112,23 @@ export function DetailsHeader({ opportunity, daysLeft }: { opportunity: Opportun
         {/* Key facts: 4 across from 768px, 2×2 below. */}
         <ul aria-label="Key facts" className="gap-4 grid grid-cols-2 md:grid-cols-4 mt-5 pt-5 border-neutral-100 border-t">
           <Fact icon={CalendarDays} label="Deadline">
-            {formatDeadlineDay(opportunity.deadlineDate)}
-            <Countdown daysLeft={daysLeft} />
+            {opportunity.deadlineDate && daysLeft !== undefined ? (
+              <>
+                {formatDeadlineDay(opportunity.deadlineDate)}
+                <Countdown daysLeft={daysLeft} />
+              </>
+            ) : (
+              "Not listed"
+            )}
           </Fact>
           <Fact icon={Wallet} label="Funding">
-            {FUNDING_LABEL[opportunity.fundingStatus]}
+            {opportunity.fundingStatus ? FUNDING_LABEL[opportunity.fundingStatus] : "Not listed"}
           </Fact>
           <Fact icon={MapPin} label="Location">
-            {opportunity.isRemote ? "Remote" : opportunity.location}
+            {remote ? "Remote" : (opportunity.location ?? "Not listed")}
           </Fact>
           <Fact icon={Building2} label="Provider">
-            {opportunity.provider}
+            {opportunity.provider ?? "Not listed"}
           </Fact>
         </ul>
       </div>

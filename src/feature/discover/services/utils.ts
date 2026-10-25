@@ -1,20 +1,21 @@
-import type { OpportunitySummary } from "@/src/feature/opportunities/types/opportunity";
+import type { ListOpportunitiesParams } from "@/src/feature/opportunities/types/api";
+import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import {
   DEADLINE_OPTIONS,
   DEFAULT_QUERY,
   QUICK_FILTER_OPTIONS,
   REMOTE_LOCATION,
   SORT_OPTIONS,
+  STRONG_MATCH_MIN,
   TYPE_OPTIONS,
   type DeadlineFilter,
+  type DiscoverMode,
   type DiscoverQuery,
+  type DiscoverSupport,
   type QuickFilter,
   type SortOrder,
   type TypeFilter,
 } from "../types/filters";
-
-/** Recently closed opportunities stay listed (dimmed) for this many days. */
-const CLOSED_GRACE_DAYS = 30;
 
 const oneOf = <T extends string>(value: string | null, options: { value: T }[], fallback: T): T =>
   options.some((option) => option.value === value) ? (value as T) : fallback;
@@ -50,52 +51,42 @@ export function toSearchParams(query: DiscoverQuery): URLSearchParams {
 export const activeFilterCount = (query: DiscoverQuery) =>
   (query.deadline !== "any" ? 1 : 0) + query.locations.length + query.fields.length + query.quick.length;
 
-const QUICK_TEST: Record<QuickFilter, (o: OpportunitySummary) => boolean> = {
-  strong: (o) => o.matchScore >= 70,
-  closing: (o) => o.daysLeft >= 0 && o.daysLeft <= 7,
-  funded: (o) => o.fundingStatus === "Fully Funded",
-  remote: (o) => o.isRemote === true,
+/**
+ * What each mode's endpoint can filter and sort on. Matches only take a minimum score; the
+ * opportunities list takes remote, a deadline range and a sort. Everything else waits for the API.
+ */
+export const MODE_SUPPORT: Record<DiscoverMode, DiscoverSupport> = {
+  matched: { search: false, type: false, deadline: false, locations: [], fields: [], quick: ["strong"], sorts: ["match"] },
+  all: { search: false, type: false, deadline: true, locations: [REMOTE_LOCATION], fields: [], quick: [], sorts: ["newest", "deadline"] },
 };
 
-/** Open opportunities plus recently closed ones; older closed ones are hidden. */
-export const listable = (opportunities: OpportunitySummary[]) =>
-  opportunities.filter((o) => o.daysLeft >= -CLOSED_GRACE_DAYS);
+/** The query with what the mode can't apply reset, so a shared link never shows filters it ignores. */
+export function supportedQuery(query: DiscoverQuery, support: DiscoverSupport): DiscoverQuery {
+  return {
+    q: support.search ? query.q : DEFAULT_QUERY.q,
+    type: support.type ? query.type : DEFAULT_QUERY.type,
+    deadline: support.deadline ? query.deadline : DEFAULT_QUERY.deadline,
+    locations: query.locations.filter((location) => support.locations.includes(location)),
+    fields: query.fields.filter((field) => support.fields.includes(field)),
+    quick: query.quick.filter((quick) => support.quick.includes(quick)),
+    sort: support.sorts.includes(query.sort) ? query.sort : support.sorts[0],
+  };
+}
 
-export function filterOpportunities(opportunities: OpportunitySummary[], query: DiscoverQuery) {
-  const search = query.q.trim().toLowerCase();
+/**
+ * The opportunities-list params for a (supported) query. Closed opportunities are left out
+ * unless the user is searching, since an old one is only worth showing when asked for.
+ */
+export function toListParams(query: DiscoverQuery): Omit<ListOpportunitiesParams, "page" | "limit"> {
   const maxDays = DEADLINE_OPTIONS.find((option) => option.value === query.deadline)?.maxDays;
-
-  return opportunities.filter((o) => {
-    if (search && !o.title.toLowerCase().includes(search) && !(o.provider ?? "").toLowerCase().includes(search)) {
-      return false;
-    }
-    if (query.type !== "all" && o.type.toLowerCase() !== query.type) return false;
-    if (maxDays !== undefined && (o.daysLeft < 0 || o.daysLeft > maxDays)) return false;
-    if (
-      query.locations.length > 0 &&
-      !query.locations.some((location) => (location === REMOTE_LOCATION ? o.isRemote : o.location === location))
-    ) {
-      return false;
-    }
-    if (query.fields.length > 0 && !query.fields.includes(o.fieldOfStudy)) return false;
-    if (!query.quick.every((quick) => QUICK_TEST[quick](o))) return false;
-    return true;
-  });
+  const openOnly = maxDays !== undefined || query.q.trim() === "";
+  return {
+    sort: query.sort === "deadline" ? "deadline:asc" : "created_at:desc",
+    deadline_from: openOnly ? isoDateFromToday(0) : undefined,
+    deadline_to: maxDays !== undefined ? isoDateFromToday(maxDays) : undefined,
+    is_remote: query.locations.includes(REMOTE_LOCATION) ? true : undefined,
+  };
 }
 
-/** Best match (default) or soonest deadline; closed ones always go last. "Newest" has no data yet. */
-export function sortOpportunities(opportunities: OpportunitySummary[], sort: SortOrder) {
-  const byMatch = (a: OpportunitySummary, b: OpportunitySummary) => b.matchScore - a.matchScore;
-  const byDeadline = (a: OpportunitySummary, b: OpportunitySummary) => a.daysLeft - b.daysLeft;
-  const compare = sort === "deadline" ? byDeadline : byMatch;
-
-  return [...opportunities].sort((a, b) => {
-    const closedA = a.daysLeft < 0;
-    const closedB = b.daysLeft < 0;
-    if (closedA !== closedB) return closedA ? 1 : -1;
-    return compare(a, b);
-  });
-}
-
-/** Distinct values for a filter's options, sorted. */
-export const distinct = (values: string[]) => Array.from(new Set(values)).sort();
+/** The matches feed's minimum score for a (supported) query. */
+export const toMinScore = (query: DiscoverQuery) => (query.quick.includes("strong") ? STRONG_MATCH_MIN : undefined);
