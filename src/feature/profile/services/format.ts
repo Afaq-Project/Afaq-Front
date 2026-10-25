@@ -1,7 +1,3 @@
-export function formatDate(value?: string | null) {
-  return value ? new Date(value).toLocaleDateString() : undefined;
-}
-
 /** "PREFER_NOT_TO_SAY" / "male" → "Prefer not to say" / "Male" */
 export function formatEnum(value?: string | null) {
   if (!value) return undefined;

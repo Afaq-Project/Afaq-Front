@@ -133,7 +133,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
           {isFetching ? (
             <div className="p-3 text-center text-xs text-on-surface-variant">Searching…</div>
           ) : displayItems.length === 0 ? (
-            <div className="p-3 text-center text-xs text-on-surface-variant">No results found</div>
+            <div className="p-3 text-center text-xs text-on-surface-variant">{t("noResults")}</div>
           ) : (
             displayItems.map((item) => (
               <button

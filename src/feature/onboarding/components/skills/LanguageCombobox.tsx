@@ -57,7 +57,7 @@ export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxP
       {open && (
         <div className="absolute top-full start-0 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 max-h-52 overflow-y-auto">
           {results.length === 0 && !isFetching ? (
-            <div className="px-4 py-3 text-xs text-on-surface-variant text-center">No languages found</div>
+            <div className="px-4 py-3 text-xs text-on-surface-variant text-center">{t("noLanguagesFound")}</div>
           ) : (
             results.map((lang) => (
               <button

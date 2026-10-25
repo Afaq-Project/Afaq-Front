@@ -151,9 +151,10 @@ export function ProfileProgressCard({ percent, sections, nextStep, className }: 
 
 /** Holds the card's place while the profile loads, so the column doesn't sit empty. */
 export function ProfileProgressCardSkeleton({ className }: { className?: string }) {
+  const t = useTranslations("dashboard.profile");
   return (
     <section role="status" className={cn(CARD_CLASS, "self-start w-full", className)}>
-      <span className="sr-only">Loading profile progress</span>
+      <span className="sr-only">{t("loading")}</span>
       <Skeleton className="w-36 h-5" />
       <div className="flex items-center gap-4 mt-4">
         <Skeleton className="rounded-full size-14 shrink-0" />

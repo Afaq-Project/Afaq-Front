@@ -372,7 +372,8 @@
       "proficiency": "Proficiency level",
       "selectLevel": "Select level",
       "removeLanguage": "Remove language",
-      "searchLanguage": "Search language…"
+      "searchLanguage": "Search language…",
+      "noLanguagesFound": "No languages found"
     },
     "documents": {
       "title": "Add your documents",
@@ -532,7 +533,8 @@
         "documentsImpact": "Most applications ask for a resume and transcript."
       },
       "momentLabel": "Profile complete",
-      "moment": "Your profile is complete. Your matches are now as accurate as they can be."
+      "moment": "Your profile is complete. Your matches are now as accurate as they can be.",
+      "loading": "Loading profile progress"
     },
     "promoLearnMore": "Learn more about {title}"
   },
