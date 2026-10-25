@@ -3,29 +3,31 @@ import { isoDateFromToday } from "@/src/shared/lib/deadline";
 export type Funding = "full" | "partial";
 export type StudyLevel = "Bachelor's" | "Master's" | "PhD";
 
+/**
+ * A scholarship in the landing's showcase: an example below, or a live one from the API
+ * (services/openScholarships), which only has the summary fields. The card leaves out what's missing.
+ */
 export interface PublicScholarship {
   id: string;
   title: string;
-  provider: string;
+  provider?: string;
   /** ISO 3166-1 alpha-2, lowercase. Ignored when `isRemote`. */
   countryCode: string;
   isRemote: boolean;
-  funding: Funding;
-  level: StudyLevel;
+  funding?: Funding;
+  level?: StudyLevel;
   /** One sentence. */
-  description: string;
+  description?: string;
   /** ISO date (YYYY-MM-DD). */
   deadline: string;
   /** "Berlin, Germany" or "Remote". */
-  location: string;
-  officialUrl: string;
+  location?: string;
+  officialUrl?: string;
 }
 
 /*
- * Example open scholarships for the public landing page. All fictional.
- * TODO: replace with the public backend endpoint of approved scholarships. Deadlines are set
- * relative to today so the examples never expire; the page is statically built, so days left
- * are fixed at build time until this is fetched with revalidation.
+ * Example open scholarships, shown when the API has no open scholarship to show (or can't be
+ * reached). All fictional. Deadlines are set relative to today so the examples never expire.
  */
 export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
   {

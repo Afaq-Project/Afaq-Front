@@ -24,40 +24,50 @@ const FADE_MS = 150;
 function ScholarshipCard({ item }: { item: ScholarshipItem }) {
   const copy = content.openScholarships;
   const chips: { label: string; tone: ChipTone }[] = [
-    { label: copy.funding[item.funding], tone: item.funding === "full" ? "green" : "neutral" },
-    { label: item.level, tone: "neutral" },
+    ...(item.funding ? [{ label: copy.funding[item.funding], tone: item.funding === "full" ? ("green" as const) : ("neutral" as const) }] : []),
+    ...(item.level ? [{ label: item.level, tone: "neutral" as const }] : []),
     ...(item.isRemote ? [{ label: content.common.remote, tone: "neutral" as const }] : []),
   ];
+  const location = item.location ?? (item.isRemote ? content.common.remote : undefined);
 
   return (
     <Card className="flex flex-col p-5 lg:p-5 h-full hover:border-neutral-200 transition-colors">
       <div className="flex items-center gap-3">
         <FlagTile code={item.isRemote ? "remote" : item.countryCode} />
         <div className="min-w-0">
-          <p className="font-medium text-landing-small text-neutral-800">{item.provider}</p>
-          <p className="text-landing-caption text-neutral-600">{item.location}</p>
+          {item.provider && <p className="font-medium text-landing-small text-neutral-800">{item.provider}</p>}
+          {location && <p className="text-landing-caption text-neutral-600">{location}</p>}
         </div>
       </div>
 
       <h3 className="mt-3 font-semibold text-[18px] text-neutral-900 leading-6.5 line-clamp-2">{item.title}</h3>
 
-      <ul className="flex flex-wrap gap-1.5 mt-3">
-        {chips.slice(0, 3).map((chip) => (
-          <li key={chip.label}>
-            <Chip tone={chip.tone}>{chip.label}</Chip>
-          </li>
-        ))}
-      </ul>
+      {chips.length > 0 && (
+        <ul className="flex flex-wrap gap-1.5 mt-3">
+          {chips.slice(0, 3).map((chip) => (
+            <li key={chip.label}>
+              <Chip tone={chip.tone}>{chip.label}</Chip>
+            </li>
+          ))}
+        </ul>
+      )}
 
-      <p className="mt-3 mb-4 text-landing-small text-neutral-600 line-clamp-2">{item.description}</p>
+      {/* Listings from the API have no description yet; the margin keeps the footer clear of the title. */}
+      {item.description ? (
+        <p className="mt-3 mb-4 text-landing-small text-neutral-600 line-clamp-2">{item.description}</p>
+      ) : (
+        <div className="mb-4" />
+      )}
 
       <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-2 mt-auto pt-4 border-neutral-100 border-t">
         <DeadlineText daysLeft={item.daysLeft} />
         <div className="flex items-center gap-2 ms-auto">
-          <Button href={item.officialUrl} target="_blank" rel="noopener noreferrer" variant="ghost" size="sm" trailingIcon={ExternalLink} className="px-2.5">
-            {copy.officialSite}
-            <span className="sr-only">{copy.opensInNewTab}</span>
-          </Button>
+          {item.officialUrl && (
+            <Button href={item.officialUrl} target="_blank" rel="noopener noreferrer" variant="ghost" size="sm" trailingIcon={ExternalLink} className="px-2.5">
+              {copy.officialSite}
+              <span className="sr-only">{copy.opensInNewTab}</span>
+            </Button>
+          )}
           <Button href={APP_SIGNUP_URL} variant="soft" size="sm">
             {copy.seeMatch}
           </Button>
@@ -124,36 +134,39 @@ export function ScholarshipsBrowser({ items, titleId }: { items: ScholarshipItem
         </h2>
         <p className="max-w-[60ch] text-landing-body-lg text-neutral-600 md:[grid-area:intro]">{copy.intro}</p>
 
-        <div
-          role="radiogroup"
-          aria-label={copy.tabsLabel}
-          onKeyDown={onKeyDown}
-          className="inline-flex justify-self-start gap-1 bg-offwhite mt-2 md:mt-0 p-1 border border-neutral-100 rounded-md md:[grid-area:tabs]"
-        >
-          {tabs.map((option) => {
-            const selected = option === tab;
-            return (
-              <button
-                key={option}
-                ref={(element) => {
-                  tabRefs.current[option] = element;
-                }}
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                tabIndex={selected ? 0 : -1}
-                onClick={() => select(option)}
-                className={cn(
-                  "px-3 border rounded-sm h-9 font-medium text-landing-small whitespace-nowrap transition-colors",
-                  "focus-visible:outline-2 focus-visible:outline-primary-400 focus-visible:outline-offset-2",
-                  selected ? "bg-white border-neutral-100 text-neutral-900" : "border-transparent text-neutral-600 hover:text-neutral-900",
-                )}
-              >
-                {copy.tabs[option]}
-              </button>
-            );
-          })}
-        </div>
+        {/* Only when there's something to choose: live listings have no funding data yet. */}
+        {tabs.length > 1 && (
+          <div
+            role="radiogroup"
+            aria-label={copy.tabsLabel}
+            onKeyDown={onKeyDown}
+            className="inline-flex justify-self-start gap-1 bg-offwhite mt-2 md:mt-0 p-1 border border-neutral-100 rounded-md md:[grid-area:tabs]"
+          >
+            {tabs.map((option) => {
+              const selected = option === tab;
+              return (
+                <button
+                  key={option}
+                  ref={(element) => {
+                    tabRefs.current[option] = element;
+                  }}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  tabIndex={selected ? 0 : -1}
+                  onClick={() => select(option)}
+                  className={cn(
+                    "px-3 border rounded-sm h-9 font-medium text-landing-small whitespace-nowrap transition-colors",
+                    "focus-visible:outline-2 focus-visible:outline-primary-400 focus-visible:outline-offset-2",
+                    selected ? "bg-white border-neutral-100 text-neutral-900" : "border-transparent text-neutral-600 hover:text-neutral-900",
+                  )}
+                >
+                  {copy.tabs[option]}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </header>
 
       <div className={cn("transition-opacity duration-150 motion-reduce:transition-none", fading && "opacity-0")}>
