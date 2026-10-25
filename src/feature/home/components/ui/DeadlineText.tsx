@@ -1,11 +1,12 @@
 import { Clock } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { getDeadlineUrgency, type DeadlineUrgency } from "@/src/shared/lib/deadline";
-import { content, type PluralForms } from "../../content/en";
+import { useLocale } from "next-intl";
+import { useLandingContent, type PluralForms } from "../../content";
 
 /** Picks the plural form for `count` and fills in `{count}`. */
-function formatPlural(forms: PluralForms, count: number) {
-  const template = forms[new Intl.PluralRules("en").select(count)] ?? forms.other;
+function formatPlural(forms: PluralForms, count: number, locale: string) {
+  const template = forms[new Intl.PluralRules(locale).select(count)] ?? forms.other;
   return template.replace("{count}", String(count));
 }
 
@@ -21,6 +22,8 @@ export const DEADLINE_TEXT: Record<DeadlineUrgency, string> = {
  * clock; later is plain gray.
  */
 export function DeadlineText({ daysLeft, className }: { daysLeft: number; className?: string }) {
+  const content = useLandingContent();
+  const locale = useLocale();
   const { deadline } = content.common;
   const urgency = getDeadlineUrgency(daysLeft);
 
@@ -31,7 +34,7 @@ export function DeadlineText({ daysLeft, className }: { daysLeft: number; classN
         ? deadline.today
         : daysLeft === 1
           ? deadline.tomorrow
-          : formatPlural(deadline.inDays, daysLeft);
+          : formatPlural(deadline.inDays, daysLeft, locale);
 
   return (
     <span className={cn("inline-flex items-center gap-1.5 text-landing-small", daysLeft < 0 ? DEADLINE_TEXT.later : DEADLINE_TEXT[urgency], className)}>

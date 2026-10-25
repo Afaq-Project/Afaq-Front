@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { EditActions } from "./EditActions";
 import { EditButton } from "./EditButton";
+import { useTranslations } from "next-intl";
 
 interface SectionCardProps {
   title: string;
@@ -43,6 +44,7 @@ export function SectionCard({
   error,
   children,
 }: SectionCardProps) {
+  const t = useTranslations("common");
   return (
     <div className="rounded-lg border border-neutral-100 bg-white p-4 md:p-5">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
@@ -56,7 +58,7 @@ export function SectionCard({
         {!isEditing && (actions || onEdit) && (
           <div className="flex items-center gap-2">
             {actions}
-            {onEdit && <EditButton onClick={onEdit} label={`Edit ${title.toLowerCase()}`} />}
+            {onEdit && <EditButton onClick={onEdit} label={t("editItem", { item: title.toLowerCase() })} />}
           </div>
         )}
       </div>

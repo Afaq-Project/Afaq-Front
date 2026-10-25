@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, CheckCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { cn } from "@/src/feature/dashboard/services/utils";
@@ -16,6 +17,7 @@ const PREVIEW_LIMIT = 5;
 
 /** The top-bar bell: unread count badge, then the latest 5 (unread first) in the same rows as the page. */
 export function NotificationsDropdown({ className }: { className?: string }) {
+  const t = useTranslations("notifications");
   const [isOpen, setIsOpen] = useState(false);
   // Relative times are measured from when the panel opened.
   const [openedAt, setOpenedAt] = useState(() => new Date());
@@ -39,7 +41,7 @@ export function NotificationsDropdown({ className }: { className?: string }) {
           if (!isOpen) setOpenedAt(new Date());
           setIsOpen(!isOpen);
         }}
-        aria-label={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"}
+        aria-label={unreadCount > 0 ? t("bellUnread", { count: unreadCount }) : t("bellLabel")}
         aria-haspopup="true"
         aria-expanded={isOpen}
         className={cn(
@@ -51,7 +53,7 @@ export function NotificationsDropdown({ className }: { className?: string }) {
         {unreadCount > 0 && (
           <span
             aria-hidden="true"
-            className="top-1 right-1 absolute flex justify-center items-center bg-danger-600 px-1 border-2 border-white rounded-full min-w-4 h-4 font-semibold text-[10px] text-white leading-none"
+            className="top-1 end-1 absolute flex justify-center items-center bg-danger-600 px-1 border-2 border-white rounded-full min-w-4 h-4 font-semibold text-[10px] text-white leading-none"
           >
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
@@ -60,17 +62,17 @@ export function NotificationsDropdown({ className }: { className?: string }) {
 
       {isOpen && (
         // Below 640px the bell isn't at the screen edge, so the panel spans the viewport instead.
-        <div className="top-16 sm:top-full right-4 sm:right-0 left-4 sm:left-auto z-50 fixed sm:absolute bg-white shadow-sm sm:mt-2 border border-neutral-100 rounded-lg sm:w-104 overflow-hidden">
-          <div className="flex justify-between items-center gap-3 py-2 pr-2 pl-4 border-neutral-100 border-b">
-            <h2 className="text-h3 text-neutral-900">Notifications</h2>
+        <div className="top-16 sm:top-full end-4 sm:end-0 start-4 sm:start-auto z-50 fixed sm:absolute bg-white shadow-sm sm:mt-2 border border-neutral-100 rounded-lg sm:w-104 overflow-hidden">
+          <div className="flex justify-between items-center gap-3 py-2 pe-2 ps-4 border-neutral-100 border-b">
+            <h2 className="text-h3 text-neutral-900">{t("title")}</h2>
             <Button variant="ghost" onClick={markAllRead} disabled={unreadCount === 0} className="px-2 md:h-8 text-small">
               <CheckCheck size={16} strokeWidth={1.75} aria-hidden="true" />
-              Mark all as read
+              {t("markAllRead")}
             </Button>
           </div>
 
           {preview.length === 0 ? (
-            <p className="px-4 py-8 text-neutral-600 text-small text-center">You&apos;re all caught up</p>
+            <p className="px-4 py-8 text-neutral-600 text-small text-center">{t("caughtUp")}</p>
           ) : (
             <ul className="max-h-[60vh] overflow-y-auto">
               {preview.map(({ notification, view }) => (
@@ -93,7 +95,7 @@ export function NotificationsDropdown({ className }: { className?: string }) {
             onClick={close}
             className="block hover:bg-neutral-50 px-4 py-3 border-neutral-100 border-t font-medium text-primary-600 text-small text-center transition-colors"
           >
-            View all
+            {t("viewAll")}
           </Link>
         </div>
       )}

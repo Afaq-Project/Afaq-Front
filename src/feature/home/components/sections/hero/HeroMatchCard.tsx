@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
-import { content } from "../../../content/en";
+import { useLandingContent, type LandingContent } from "../../../content";
 import { Card } from "../../ui/Card";
 import { Chip } from "../../ui/Chip";
 import { FlagTile } from "../../ui/FlagTile";
@@ -12,9 +12,12 @@ import { MatchBadge } from "../../ui/MatchBadge";
  * 300px wide (266px inside). The meta row wraps if it ever runs out of room, so the badge
  * drops below the meta instead of truncating it.
  */
-type MatchCardContent = typeof content.hero.matchCard;
+type MatchCardContent = LandingContent["hero"]["matchCard"];
 
-export function HeroMatchCard({ card = content.hero.matchCard, className }: { card?: MatchCardContent; className?: string }) {
+/** `card` defaults to the hero's main example. */
+export function HeroMatchCard({ card: given, className }: { card?: MatchCardContent; className?: string }) {
+  const content = useLandingContent();
+  const card = given ?? content.hero.matchCard;
   return (
     <Card
       aria-hidden="true"

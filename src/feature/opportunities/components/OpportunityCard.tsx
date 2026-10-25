@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Bookmark, Info } from "lucide-react";
 
 import { cn } from "@/src/feature/dashboard/services/utils";
-import { formatDeadline } from "@/src/feature/applications/services/utils";
 import { DEADLINE_URGENCY_ICON, DEADLINE_URGENCY_TEXT, getDeadlineUrgency } from "@/src/shared/lib/deadline";
 import { notify } from "@/src/shared/lib/notify";
 import Badge from "@/src/shared/ui/Badge";
@@ -14,16 +13,16 @@ import { FlagTile } from "./FlagTile";
 import MatchBadge from "./MatchBadge";
 import { MatchWhyPopover } from "./MatchWhyPopover";
 import type { OpportunitySummary } from "../types/opportunity";
-import { FUNDING_LABEL } from "./labels";
-import { formatDaysLeft } from "../services/utils";
+import { useLocale, useTranslations } from "next-intl";
+import { useDeadlineText } from "@/src/shared/lib/useDeadlineText";
 
 const MAX_CHIPS = 3;
 
 function DeadlineLabel({ daysLeft }: { daysLeft: number }) {
+  const deadline = useDeadlineText();
   const urgency = getDeadlineUrgency(daysLeft);
   const Icon = DEADLINE_URGENCY_ICON[urgency];
-  const text =
-    urgency === "urgent" ? formatDeadline(daysLeft) : urgency === "soon" ? `${daysLeft} days left` : formatDaysLeft(daysLeft);
+  const text = urgency === "urgent" ? deadline.endsIn(daysLeft) : deadline.timeLeft(daysLeft);
 
   return (
     <span className={cn("flex items-center gap-1.5 shrink-0", DEADLINE_URGENCY_TEXT[urgency])}>
@@ -40,19 +39,21 @@ function DeadlineLabel({ daysLeft }: { daysLeft: number }) {
  * fail a hard filter carry a "You may not be eligible" note.
  */
 export function OpportunityCard({ opportunity }: { opportunity: OpportunitySummary }) {
+  const t = useTranslations();
+  const locale = useLocale();
   // TODO: wire to a real save action and persist it; there's no saved-opportunities API yet.
   const [saved, setSaved] = useState(false);
   const { daysLeft, matchScore } = opportunity;
   const closed = daysLeft !== undefined && daysLeft < 0;
   const relaxed = opportunity.meetsRequirements === false;
   const remote = Boolean(opportunity.isRemote);
-  const country = opportunity.countryCode ? countryName(opportunity.countryCode) : opportunity.location;
+  const country = opportunity.countryCode ? countryName(opportunity.countryCode, locale) : opportunity.location;
 
   const chips = [
-    opportunity.type,
-    opportunity.fundingStatus && FUNDING_LABEL[opportunity.fundingStatus],
+    t(`opportunityType.${opportunity.type}`),
+    opportunity.fundingStatus && t(`funding.${opportunity.fundingStatus}`),
     opportunity.level,
-    opportunity.isRemote && "Remote",
+    opportunity.isRemote && t("common.remote"),
   ]
     .filter((chip): chip is string => Boolean(chip))
     .slice(0, MAX_CHIPS);
@@ -61,7 +62,7 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
     const next = !saved;
     setSaved(next);
     // TODO: add a "View saved" link once there's a saved-opportunities page.
-    if (next) notify.success("Saved to your list");
+    if (next) notify.success(t("opportunity.saved"));
   };
 
   return (
@@ -74,7 +75,7 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
       {relaxed && (
         <p className="flex items-center gap-1.5 bg-warning-50 px-3 py-2 rounded-md text-caption text-warning-800">
           <Info size={14} strokeWidth={2} aria-hidden="true" className="shrink-0" />
-          You may not be eligible
+          {t("opportunity.mayNotBeEligible")}
         </p>
       )}
 
@@ -85,12 +86,12 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
           {opportunity.provider && (
             <p dir="auto" className="font-medium text-neutral-800 text-small truncate">{opportunity.provider}</p>
           )}
-          <p dir="auto" className="text-caption text-neutral-600 truncate">{remote ? "Remote" : (country ?? "Location not listed")}</p>
+          <p dir="auto" className="text-caption text-neutral-600 truncate">{remote ? t("common.remote") : (country ?? t("opportunity.locationNotListed"))}</p>
         </div>
         {/* Sits above the card's stretched link, so clicking it doesn't open the details page. */}
         <button
           type="button"
-          aria-label={saved ? "Remove from saved" : "Save opportunity"}
+          aria-label={saved ? t("opportunity.unsave") : t("opportunity.save")}
           aria-pressed={saved}
           onClick={(event) => {
             event.stopPropagation();
@@ -137,13 +138,13 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
 
       <div className="flex justify-between items-center gap-3 mt-auto pt-3 border-neutral-100 border-t text-small">
         {daysLeft === undefined ? (
-          <span className="text-neutral-600">No deadline listed</span>
+          <span className="text-neutral-600">{t("opportunity.noDeadline")}</span>
         ) : closed ? (
-          <Badge tone="gray">Closed</Badge>
+          <Badge tone="gray">{t("common.closed")}</Badge>
         ) : (
           <DeadlineLabel daysLeft={daysLeft} />
         )}
-        <span dir="auto" className="text-neutral-600 text-right truncate">{remote ? "Remote" : opportunity.location}</span>
+        <span dir="auto" className="text-neutral-600 text-end truncate">{remote ? t("common.remote") : country}</span>
       </div>
     </article>
   );

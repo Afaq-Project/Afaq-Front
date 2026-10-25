@@ -22,12 +22,11 @@ import { educationFormFrom, educationPayloadFrom, type EducationForm } from "../
 import type { ApiEducation } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
 import { savedThen } from "../common/saved";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
-const GPA_SCALE_OPTIONS = [
-  { value: "OUT_OF_4", label: "Out of 4.0" },
-  { value: "OUT_OF_5", label: "Out of 5.0" },
-  { value: "OUT_OF_100", label: "Percentage" },
-];
+// Labels are profile.education.gpaScales.<value>.
+const GPA_SCALE_VALUES = ["OUT_OF_4", "OUT_OF_5", "OUT_OF_100"] as const;
 
 interface EducationRecordFormProps {
   /** The record to edit, or null to add a new one. */
@@ -38,6 +37,8 @@ interface EducationRecordFormProps {
 
 /** Inline form for adding or editing an education record, shown in place of its entry. */
 export function EducationRecordForm({ education, names, onDone }: EducationRecordFormProps) {
+  const t = useTranslations("profile.education");
+  const { name: refName } = useReferenceName();
   const createMut = useCreateEducation();
   const updateMut = useUpdateEducation();
   const deleteMut = useDeleteEducation();
@@ -63,8 +64,8 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
 
   const handleSave = () => {
     const payload = educationPayloadFrom(form);
-    if (education) updateMut.mutate({ id: education.id, data: payload }, { onSuccess: savedThen("Education record saved", onDone) });
-    else createMut.mutate(payload, { onSuccess: savedThen("Education record added", onDone) });
+    if (education) updateMut.mutate({ id: education.id, data: payload }, { onSuccess: savedThen(t("recordSaved"), onDone) });
+    else createMut.mutate(payload, { onSuccess: savedThen(t("recordAdded"), onDone) });
   };
 
   const saveMut = education ? updateMut : createMut;
@@ -88,63 +89,63 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Select
           id={FIELD_IDS.educationLevel}
-          label="Education level"
+          label={t("level")}
           value={form.educationLevelId}
           onChange={(e) => set({ educationLevelId: e.target.value })}
-          options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: l.nameEn }))]}
+          options={[{ value: "", label: t("selectLevel") }, ...levels.map((l) => ({ value: l.id, label: refName(l) }))]}
         />
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.institution}
-          label="Institution"
-          hint="optional"
+          label={t("institution")}
+          optional
           selectedName={labels.institution}
           items={institutions.options}
           isFetching={institutions.isFetching}
           onSearch={institutions.setQuery}
           {...pick("institution", "institutionId")}
           minSearchLength={2}
-          placeholder="Type to search institutions…"
+          placeholder={t("searchInstitutions")}
         />
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.major}
-          label="Field of study"
+          label={t("fieldOfStudy")}
           selectedName={labels.major}
           items={majors.options}
           isFetching={majors.isFetching}
           onSearch={majors.setQuery}
           {...pick("major", "majorId")}
           minSearchLength={2}
-          placeholder="Type to search fields…"
+          placeholder={t("searchFields")}
         />
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.minor}
-          label="Minor or second field"
-          hint="optional"
+          label={t("minorOrSecond")}
+          optional
           selectedName={labels.minor}
           items={minors.options}
           isFetching={minors.isFetching}
           onSearch={minors.setQuery}
           {...pick("minor", "minorMajorId")}
           minSearchLength={2}
-          placeholder="Type to search fields…"
+          placeholder={t("searchFields")}
         />
         <Input
           id={FIELD_IDS.gpa}
-          label="GPA"
+          label={t("gpa")}
           type="number"
           step={scale.step}
           min="0"
           max={scale.max}
           value={form.gpaRaw}
           onChange={(e) => set({ gpaRaw: e.target.value })}
-          error={gpaInvalid ? `Enter a value between 0 and ${scale.max}.` : undefined}
+          error={gpaInvalid ? t("gpaRange", { max: scale.max }) : undefined}
         />
         <Select
           id="profile-edu-scale"
-          label="GPA scale"
+          label={t("gpaScale")}
           value={form.gpaScale}
           onChange={(e) => set({ gpaScale: e.target.value as GpaScale })}
-          options={GPA_SCALE_OPTIONS}
+          options={GPA_SCALE_VALUES.map((value) => ({ value, label: t(`gpaScales.${value}`) }))}
         />
         <label className="flex min-h-11 cursor-pointer select-none items-center gap-2 sm:col-span-2 md:min-h-0">
           <input
@@ -153,23 +154,23 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
             onChange={(e) => set({ isCurrent: e.target.checked })}
             className="size-4 accent-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
           />
-          <span className="text-body text-neutral-800">I&apos;m currently enrolled</span>
+          <span className="text-body text-neutral-800">{t("currentlyEnrolledCheck")}</span>
         </label>
         <Input
           id={FIELD_IDS.startDate}
-          label="Start date"
+          label={t("startDate")}
           type="date"
           value={form.startDate}
           onChange={(e) => set({ startDate: e.target.value })}
         />
         <Input
           id="profile-edu-end"
-          label={form.isCurrent ? "Expected graduation" : "End date"}
+          label={form.isCurrent ? t("expectedGraduation") : t("endDate")}
           type="date"
           min={form.startDate || undefined}
           value={form.isCurrent ? form.expectedGraduationDate : form.endDate}
           onChange={(e) => set(form.isCurrent ? { expectedGraduationDate: e.target.value } : { endDate: e.target.value })}
-          error={periodInvalid ? "This can't be before the start date." : undefined}
+          error={periodInvalid ? t("beforeStart") : undefined}
         />
       </div>
 
@@ -179,17 +180,17 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
           variant="destructive"
           className="mt-5"
           disabled={deleteMut.isPending}
-          onClick={() => deleteMut.mutate(education.id, { onSuccess: savedThen("Education record deleted", onDone) })}
+          onClick={() => deleteMut.mutate(education.id, { onSuccess: savedThen(t("recordDeleted"), onDone) })}
         >
           <Trash2 size={16} strokeWidth={1.75} aria-hidden="true" />
-          Delete this record
+          {t("deleteRecord")}
         </Button>
       )}
 
       <EditActions
         onCancel={onDone}
         onSave={handleSave}
-        saveLabel={education ? "Save changes" : "Add education"}
+        saveLabel={education ? undefined : t("addEducation")}
         isSaving={saveMut.isPending || deleteMut.isPending}
         saveDisabled={gpaInvalid || periodInvalid}
         error={error ? getErrorMessage(error) : null}

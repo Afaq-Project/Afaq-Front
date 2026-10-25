@@ -3,6 +3,7 @@
 import { useId, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { MoreHorizontal } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { FlagTile } from "@/src/feature/opportunities/components/FlagTile";
 import { buttonClasses } from "@/src/shared/ui/Button";
@@ -13,13 +14,13 @@ import type { Notification } from "../types/notification";
 const ICON_BUTTON =
   "flex justify-center items-center hover:bg-neutral-100 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 md:size-8 text-neutral-600 hover:text-neutral-900 transition-colors";
 const MENU_ITEM =
-  "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-left text-neutral-800 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
+  "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-start text-neutral-800 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
 
 // On devices that can hover, the ⋯ button sits over the time and shows on hover or focus; on
 // touch screens both are always visible, side by side.
 const HOVER = "[@media(hover:hover)]";
 const TIME_HIDES = `${HOVER}:group-hover:opacity-0 ${HOVER}:group-focus-within:opacity-0`;
-const MENU_SHOWS = `${HOVER}:absolute ${HOVER}:inset-y-0 ${HOVER}:right-0 ${HOVER}:flex ${HOVER}:items-center ${HOVER}:opacity-0 ${HOVER}:group-hover:opacity-100 ${HOVER}:group-focus-within:opacity-100`;
+const MENU_SHOWS = `${HOVER}:absolute ${HOVER}:inset-y-0 ${HOVER}:end-0 ${HOVER}:flex ${HOVER}:items-center ${HOVER}:opacity-0 ${HOVER}:group-hover:opacity-100 ${HOVER}:group-focus-within:opacity-100`;
 
 function IconTile({ view }: { view: NotificationView }) {
   const Icon = view.icon;
@@ -38,11 +39,12 @@ function IconTile({ view }: { view: NotificationView }) {
 
 /** Title (with the opportunity's flag) and body. The unread state is in the accessible name too. */
 function Content({ notification, view, titleId, compact }: { notification: Notification; view: NotificationView; titleId?: string; compact: boolean }) {
+  const t = useTranslations("notifications");
   return (
     <div className="flex flex-col gap-1 min-w-0">
       <p id={titleId} className={cn("text-body text-neutral-900", notification.read ? "font-normal" : "font-semibold", compact && "truncate")}>
-        {!notification.read && <span className="sr-only">Unread: </span>}
-        {view.flag && <FlagTile size="sm" {...view.flag} className="inline-flex mr-1.5 align-[-3px]" />}
+        {!notification.read && <span className="sr-only">{t("unreadPrefix")}</span>}
+        {view.flag && <FlagTile size="sm" {...view.flag} className="inline-flex me-1.5 align-[-3px]" />}
         {view.title}
       </p>
       <p className={cn("text-neutral-600 text-small", compact ? "truncate" : "line-clamp-2 lg:line-clamp-1")}>{view.body}</p>
@@ -51,10 +53,12 @@ function Content({ notification, view, titleId, compact }: { notification: Notif
 }
 
 function Time({ notification, now, className }: { notification: Notification; now: Date; className?: string }) {
+  const t = useTranslations("notifications");
+  const locale = useLocale();
   return (
     <span className={cn("flex justify-end items-center gap-1.5 text-caption text-neutral-600 whitespace-nowrap transition-opacity", className)}>
       {!notification.read && <span aria-hidden="true" className="bg-primary-600 rounded-full size-2 shrink-0" />}
-      <time dateTime={notification.createdAt}>{relativeTime(notification.createdAt, now)}</time>
+      <time dateTime={notification.createdAt}>{relativeTime(notification.createdAt, now, t, locale)}</time>
     </span>
   );
 }
@@ -70,6 +74,7 @@ function RowMenu({
   onToggleRead: () => void;
   onDismiss: () => void;
 }) {
+  const t = useTranslations("notifications");
   const [open, setOpen] = useState(false);
   const run = (action: () => void) => {
     setOpen(false);
@@ -81,10 +86,10 @@ function RowMenu({
       <Popover
         open={open}
         onOpenChange={setOpen}
-        label={`More actions for ${title}`}
+        label={t("moreActions", { title })}
         panelClassName="w-48 p-1"
         trigger={(triggerProps) => (
-          <button type="button" {...triggerProps} aria-label={`More actions for ${title}`} className={ICON_BUTTON}>
+          <button type="button" {...triggerProps} aria-label={t("moreActions", { title })} className={ICON_BUTTON}>
             <MoreHorizontal size={18} strokeWidth={1.75} aria-hidden="true" />
           </button>
         )}
@@ -92,12 +97,12 @@ function RowMenu({
         <ul className="flex flex-col">
           <li>
             <button type="button" onClick={() => run(onToggleRead)} className={MENU_ITEM}>
-              {notification.read ? "Mark as unread" : "Mark as read"}
+              {notification.read ? t("markUnread") : t("markRead")}
             </button>
           </li>
           <li>
             <button type="button" onClick={() => run(onDismiss)} className={MENU_ITEM}>
-              Dismiss
+              {t("dismiss")}
             </button>
           </li>
         </ul>

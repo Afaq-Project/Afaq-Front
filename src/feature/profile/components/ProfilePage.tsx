@@ -16,15 +16,17 @@ import { PROFILE_NEXT_STEP, type MatchFactor } from "./header/completion";
 import { ProfileHeader } from "./header/ProfileHeader";
 import { ProfileSectionSkeleton } from "./skeletons/ProfileSectionSkeleton";
 import { SkillsLanguagesSection } from "./skills/SkillsLanguagesSection";
+import { useTranslations } from "next-intl";
 
 // Same order as the onboarding wizard. `cards` is how many placeholder cards each shows while
 // the profile loads, mirroring the real section.
-const SECTIONS: (AnchorNavItem & { cards: number })[] = [
-  { id: "education", label: "Education", icon: GraduationCap, cards: 1 },
-  { id: "background", label: "Background and goals", icon: Target, cards: 2 },
-  { id: "skills", label: "Skills and languages", icon: Languages, cards: 2 },
-  { id: "account", label: "Account", icon: UserRound, cards: 2 },
-];
+// Labels are profile.sections.<id>.
+const SECTIONS = [
+  { id: "education", icon: GraduationCap, cards: 1 },
+  { id: "background", icon: Target, cards: 2 },
+  { id: "skills", icon: Languages, cards: 2 },
+  { id: "account", icon: UserRound, cards: 2 },
+] as const;
 
 // TODO: provide the five match factors with their filled / missing state once the API reports
 // how each factor is weighted. Until then the header shows the percentage only, without a
@@ -32,6 +34,7 @@ const SECTIONS: (AnchorNavItem & { cards: number })[] = [
 const MATCH_FACTORS: MatchFactor[] = [];
 
 export function ProfilePage() {
+  const t = useTranslations("profile");
   const { user } = useAuth();
   const { data: profile, isLoading } = useProfileQuery();
   const { name: currentName, email } = useCurrentUserName();
@@ -43,7 +46,11 @@ export function ProfilePage() {
   const [editing, setEditing] = useState<string | null>(null);
   const edit: EditingState = { editing, start: setEditing, stop: () => setEditing(null) };
 
-  const name = currentName || "Your profile";
+  const name = currentName || t("yourProfile");
+  const sections: (AnchorNavItem & { cards: number })[] = SECTIONS.map((section) => ({
+    ...section,
+    label: t(`sections.${section.id}`),
+  }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -58,14 +65,14 @@ export function ProfilePage() {
       />
 
       <div className="flex flex-col gap-4 md:flex-row md:gap-8">
-        <AnchorNav items={SECTIONS} label="Profile sections" />
+        <AnchorNav items={sections} label={t("sectionsNav")} />
 
         <div className="flex min-w-0 flex-1 flex-col gap-8">
           {isLoading ? (
             // The header and nav already have what they need (name and email from the signed-in
             // user, completion from the last known value); only the sections wait. They keep
             // their ids, since the nav observes them when it mounts.
-            SECTIONS.map((section) => (
+            sections.map((section) => (
               <ProfileSectionSkeleton key={section.id} id={section.id} title={section.label} cards={section.cards} />
             ))
           ) : (

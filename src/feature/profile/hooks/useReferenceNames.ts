@@ -11,6 +11,8 @@ import {
   useProficiencyLevels,
 } from "@/src/shared/lib/api/hooks/useReferenceData";
 import type { ApiPreferences, ApiProfile } from "../types/api";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 /**
  * Resolves an ID to its name for display: undefined when there's no ID, "Loading…" or
@@ -30,11 +32,11 @@ function toMap<T extends { id: string }>(items: T[], name: (item: T) => string) 
   return new Map(items.map((item) => [item.id, name(item)]));
 }
 
-function resolverFor(map: Map<string, string>, isLoading: boolean): NameResolver {
+function resolverFor(map: Map<string, string>, isLoading: boolean, unknown: string): NameResolver {
   const exact = (id?: string | null) => (id ? map.get(id) : undefined);
   const display = (id?: string | null) => {
     if (!id) return undefined;
-    return exact(id) ?? (isLoading ? LOADING_NAME : "Unknown");
+    return exact(id) ?? (isLoading ? LOADING_NAME : unknown);
   };
   return Object.assign(display, { exact });
 }
@@ -61,32 +63,35 @@ export function useReferenceNames(profile?: ApiProfile, preferences?: ApiPrefere
   const proficiencyLevels = useProficiencyLevels();
   const maritalStatuses = useMaritalStatuses();
   const educationLevels = useEducationLevels();
+  const refName = useReferenceName();
+  const unknown = useTranslations("profile")("unknownName");
 
   return useMemo(() => {
-    const majorName = resolverFor(toMap(majors.data ?? [], (m) => m.nameEn), majors.isLoading);
+    const majorName = resolverFor(toMap(majors.data ?? [], refName.name), majors.isLoading, unknown);
 
     return {
-      country: resolverFor(toMap(countries.data ?? [], (c) => c.nameEn), countries.isLoading),
+      country: resolverFor(toMap(countries.data ?? [], refName.name), countries.isLoading, unknown),
       nationality: resolverFor(
-        toMap(countries.data ?? [], (c) => c.nationalityNameEn ?? c.nameEn),
+        toMap(countries.data ?? [], refName.nationality),
         countries.isLoading,
+        unknown,
       ),
-      city: resolverFor(toMap(cities.data ?? [], (c) => c.nameEn), cities.isLoading),
+      city: resolverFor(toMap(cities.data ?? [], refName.name), cities.isLoading, unknown),
       major: majorName,
       // There is no way to look institutions up by ID yet (10k+ entries, no by-ID endpoint).
       // TODO: use the backend's lookup once it exists.
-      institution: resolverFor(new Map(), false),
-      language: resolverFor(toMap(languages.data ?? [], (l) => l.nameEn), languages.isLoading),
-      proficiencyLevel: resolverFor(toMap(proficiencyLevels.data ?? [], (p) => p.nameEn), proficiencyLevels.isLoading),
-      maritalStatus: resolverFor(toMap(maritalStatuses.data ?? [], (s) => s.nameEn), maritalStatuses.isLoading),
-      educationLevel: resolverFor(toMap(educationLevels.data ?? [], (l) => l.nameEn), educationLevels.isLoading),
+      institution: resolverFor(new Map(), false, unknown),
+      language: resolverFor(toMap(languages.data ?? [], refName.name), languages.isLoading, unknown),
+      proficiencyLevel: resolverFor(toMap(proficiencyLevels.data ?? [], refName.name), proficiencyLevels.isLoading, unknown),
+      maritalStatus: resolverFor(toMap(maritalStatuses.data ?? [], refName.name), maritalStatuses.isLoading, unknown),
+      educationLevel: resolverFor(toMap(educationLevels.data ?? [], refName.name), educationLevels.isLoading, unknown),
       /** Onboarding stores major IDs in `experiences`, but the API also accepts free text. */
       skill: (value?: string | null): string | undefined =>
         value && !UUID_RE.test(value) ? value : majorName(value),
     };
   }, [countries.data, countries.isLoading, cities.data, cities.isLoading, majors.data, majors.isLoading,
     languages.data, languages.isLoading, proficiencyLevels.data, proficiencyLevels.isLoading,
-    maritalStatuses.data, maritalStatuses.isLoading, educationLevels.data, educationLevels.isLoading]);
+    maritalStatuses.data, maritalStatuses.isLoading, educationLevels.data, educationLevels.isLoading, refName, unknown]);
 }
 
 export type ReferenceNames = ReturnType<typeof useReferenceNames>;

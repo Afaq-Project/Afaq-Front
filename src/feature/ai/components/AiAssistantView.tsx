@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { IS_PREMIUM } from "@/src/feature/billing/mocks/subscription";
 import { useDocumentItems } from "@/src/feature/documents/hooks/useDocumentItems";
 import { isReviewable, reviewNoun } from "@/src/shared/lib/document-types";
@@ -11,7 +12,7 @@ import { reviewPath, startReview } from "@/src/feature/documents/services/review
 import { AiUsageCard } from "@/src/shared/ui/AiUsageCard";
 import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { CONVERSATIONS, CREDIT_USAGE } from "../mocks/conversations";
-import { contextFor } from "../services/context";
+import { contextFor, useContextLabels } from "../services/context";
 import { buildAssistantReply, formatMessageTime } from "../services/utils";
 import type { ChatMessage, Conversation } from "../types/chat";
 import { ChatList } from "./ChatList";
@@ -24,10 +25,13 @@ import { YourReviews } from "./YourReviews";
 
 const REPLY_DELAY_MS = 900;
 
-function newConversation(context: { opportunityId?: string; applicationId?: string; documentId?: string } = {}): Conversation {
+function newConversation(
+  title: string,
+  context: { opportunityId?: string; applicationId?: string; documentId?: string } = {},
+): Conversation {
   return {
     id: `conv-${Date.now()}`,
-    title: "New chat",
+    title,
     timeLabel: "Now",
     updatedAt: isoDateFromToday(0),
     messages: [],
@@ -43,7 +47,7 @@ const nowIso = () => new Date().toISOString();
  * recent chat.
  * TODO: afaq-ai needs to receive the document context (the essay and its review) with each message.
  */
-function initialState(params: URLSearchParams) {
+function initialState(params: URLSearchParams, newChatTitle: string) {
   const opportunityId = params.get("opportunity") ?? undefined;
   const applicationId = params.get("application") ?? undefined;
   const documentId = params.get("document") ?? undefined;
@@ -51,7 +55,7 @@ function initialState(params: URLSearchParams) {
   let activeId = CONVERSATIONS[0]?.id;
 
   if (documentId) {
-    const created = newConversation({ documentId });
+    const created = newConversation(newChatTitle, { documentId });
     conversations = [created, ...CONVERSATIONS];
     activeId = created.id;
   } else if (opportunityId || applicationId) {
@@ -61,7 +65,7 @@ function initialState(params: URLSearchParams) {
     if (existing) {
       activeId = existing.id;
     } else {
-      const created = newConversation(applicationId ? { applicationId } : { opportunityId });
+      const created = newConversation(newChatTitle, applicationId ? { applicationId } : { opportunityId });
       conversations = [created, ...CONVERSATIONS];
       activeId = created.id;
     }
@@ -75,8 +79,11 @@ function initialState(params: URLSearchParams) {
  * bottom. Both fill the screen below the top bar; only the message log scrolls.
  */
 export function AiAssistantView() {
+  const t = useTranslations("ai");
+  const locale = useLocale();
+  const contextLabels = useContextLabels();
   const searchParams = useSearchParams();
-  const [initial] = useState(() => initialState(new URLSearchParams(searchParams.toString())));
+  const [initial] = useState(() => initialState(new URLSearchParams(searchParams.toString()), t("newChat")));
   const [now] = useState(() => new Date());
 
   // Chats live in local state, as before (no persistence yet).
@@ -99,7 +106,7 @@ export function AiAssistantView() {
   const drawerRef = useRef<HTMLDivElement>(null);
 
   const active = conversations.find((c) => c.id === activeId) ?? conversations[0];
-  const context = contextFor(active, documentName);
+  const context = contextFor(active, contextLabels, documentName);
   const limitReached = creditsUsed >= CREDIT_USAGE.limit;
 
   const updateChat = (id: string, update: (c: Conversation) => Conversation) =>
@@ -124,7 +131,7 @@ export function AiAssistantView() {
           id: `a-${Date.now()}`,
           role: "assistant",
           text: reply.text,
-          timestamp: formatMessageTime(),
+          timestamp: formatMessageTime(locale),
           at: nowIso(),
           suggestions: reply.suggestions,
         });
@@ -140,14 +147,14 @@ export function AiAssistantView() {
 
   const send = (text: string) => {
     if (limitReached || isReplying) return;
-    append(active.id, { id: `u-${Date.now()}`, role: "user", text, timestamp: formatMessageTime(), at: nowIso() });
+    append(active.id, { id: `u-${Date.now()}`, role: "user", text, timestamp: formatMessageTime(locale), at: nowIso() });
     setCreditsUsed((used) => Math.min(CREDIT_USAGE.limit, used + 1));
     setDraft("");
     requestReply(active.id, text);
   };
 
   const startNewChat = () => {
-    const created = newConversation();
+    const created = newConversation(t("newChat"));
     setConversations((prev) => [created, ...prev]);
     setActiveId(created.id);
     setFailedChat(null);
@@ -168,8 +175,8 @@ export function AiAssistantView() {
     append(chatId, {
       id: `u-${Date.now()}`,
       role: "user",
-      text: `Review my essay: ${essay.essayName}`,
-      timestamp: formatMessageTime(),
+      text: t("reviewMyEssay", { name: essay.essayName }),
+      timestamp: formatMessageTime(locale),
       at: nowIso(),
     });
     setIsReplying(true);
@@ -186,7 +193,7 @@ export function AiAssistantView() {
           id: `a-${Date.now()}`,
           role: "assistant",
           text: "",
-          timestamp: formatMessageTime(),
+          timestamp: formatMessageTime(locale),
           at: nowIso(),
           review: {
             essayName: review.essayName,
@@ -226,8 +233,8 @@ export function AiAssistantView() {
       premium={IS_PREMIUM}
       resetsOn={CREDIT_USAGE.resetsOn}
       rows={[
-        { label: "Chat messages", used: creditsUsed, limit: CREDIT_USAGE.limit },
-        { label: "Essay reviews", used: reviewsUsed, limit: REVIEW_QUOTA.limit },
+        { label: t("chatMessages"), used: creditsUsed, limit: CREDIT_USAGE.limit },
+        { label: t("essayReviews"), used: reviewsUsed, limit: REVIEW_QUOTA.limit },
       ]}
     />
   );
@@ -256,13 +263,13 @@ export function AiAssistantView() {
   return (
     // Fills the screen below the top bar: minus the top bar, page padding and (on phones) the tab bar.
     <div className="flex gap-6 h-[calc(100dvh-168px-env(safe-area-inset-bottom))] md:h-[calc(100dvh-108px)] lg:h-[calc(100dvh-116px)]">
-      <h1 className="sr-only">AI assistant</h1>
+      <h1 className="sr-only">{t("title")}</h1>
 
-      <aside aria-label="Chats and usage" className="hidden lg:flex flex-col bg-white border border-neutral-100 rounded-lg w-80 min-h-0 shrink-0">
+      <aside aria-label={t("chatsAndUsage")} className="hidden lg:flex flex-col bg-white border border-neutral-100 rounded-lg w-80 min-h-0 shrink-0">
         {chatList}
       </aside>
 
-      <section aria-label="Conversation" className="flex flex-col flex-1 bg-white border border-neutral-100 rounded-lg min-w-0 min-h-0 overflow-hidden">
+      <section aria-label={t("conversation")} className="flex flex-col flex-1 bg-white border border-neutral-100 rounded-lg min-w-0 min-h-0 overflow-hidden">
         <ContextHeader context={context} onOpenChats={openDrawer} />
         <div className="flex-1 min-h-0 overflow-y-auto">
           {active.messages.length === 0 && !isReplying ? (
@@ -293,12 +300,12 @@ export function AiAssistantView() {
       {drawerOpen && (
         <div className="lg:hidden z-50 fixed inset-0">
           <div aria-hidden="true" onClick={closeDrawer} className="absolute inset-0 bg-neutral-900/40" />
-          <div ref={drawerRef} role="dialog" aria-modal="true" aria-label="Your chats" className="top-0 bottom-0 left-0 absolute bg-white shadow-sm w-80 max-w-[85vw]">
+          <div ref={drawerRef} role="dialog" aria-modal="true" aria-label={t("yourChats")} className="top-0 bottom-0 start-0 absolute bg-white shadow-sm w-80 max-w-[85vw]">
             <button
               type="button"
               onClick={closeDrawer}
-              aria-label="Close chats"
-              className="top-3 right-14 z-10 absolute flex justify-center items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 text-neutral-600"
+              aria-label={t("closeChats")}
+              className="top-3 end-14 z-10 absolute flex justify-center items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 text-neutral-600"
             >
               <X size={18} strokeWidth={1.75} aria-hidden="true" />
             </button>

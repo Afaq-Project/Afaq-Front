@@ -2,16 +2,18 @@
 
 import { useState, type ReactNode } from "react";
 import { FileText, Plus, Search, Sparkles } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { FlagTile } from "@/src/feature/opportunities/components/FlagTile";
 import { countryName } from "@/src/shared/lib/countries";
 import { relativeDay } from "@/src/shared/lib/deadline";
-import { contextFor, type ChatContext } from "../services/context";
+import { contextFor, useContextLabels, type ChatContext } from "../services/context";
 import type { Conversation } from "../types/chat";
 
 const SEARCH_THRESHOLD = 8;
 
 export function ContextTile({ context }: { context: ChatContext }) {
+  const locale = useLocale();
   if (context.kind === "general" || context.kind === "document") {
     const Icon = context.kind === "document" ? FileText : Sparkles;
     return (
@@ -23,7 +25,7 @@ export function ContextTile({ context }: { context: ChatContext }) {
   return (
     <FlagTile
       countryCode={context.countryCode}
-      countryName={context.countryCode ? countryName(context.countryCode) : undefined}
+      countryName={context.countryCode ? countryName(context.countryCode, locale) : undefined}
       remote={Boolean(context.isRemote) || !context.countryCode}
     />
   );
@@ -55,12 +57,15 @@ export function ChatList({
   /** Names essay documents that chats are about. */
   documentName?: (id: string) => string | undefined;
 }) {
+  const t = useTranslations("ai");
+  const locale = useLocale();
+  const labels = useContextLabels();
   const [search, setSearch] = useState("");
   const query = search.trim().toLowerCase();
 
   const groups = new Map<string, { context: ChatContext; chats: Conversation[] }>();
   for (const conversation of conversations) {
-    const context = contextFor(conversation, documentName);
+    const context = contextFor(conversation, labels, documentName);
     if (query && !conversation.title.toLowerCase().includes(query) && !context.title.toLowerCase().includes(query)) continue;
     const group = groups.get(context.key) ?? { context, chats: [] };
     group.chats.push(conversation);
@@ -72,11 +77,11 @@ export function ChatList({
   return (
     <div className="flex flex-col h-full min-h-0">
       <div className="flex justify-between items-center gap-3 px-4 pt-4 pb-3">
-        <h2 className="text-h3 text-neutral-900">Your chats</h2>
+        <h2 className="text-h3 text-neutral-900">{t("yourChats")}</h2>
         <button
           type="button"
           onClick={onNewChat}
-          aria-label="New chat"
+          aria-label={t("newChat")}
           className="flex justify-center items-center bg-primary-600 hover:bg-primary-800 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 size-11 md:size-10 text-white transition-colors"
         >
           <Plus size={18} strokeWidth={2} aria-hidden="true" />
@@ -86,21 +91,21 @@ export function ChatList({
       {conversations.length > SEARCH_THRESHOLD && (
         <label className="flex items-center gap-2 bg-white mx-4 mb-3 px-3 border border-neutral-200 focus-within:border-primary-600 rounded-sm focus-within:ring-2 focus-within:ring-primary-400 h-10">
           <Search size={16} strokeWidth={1.75} aria-hidden="true" className="text-neutral-600 shrink-0" />
-          <span className="sr-only">Search chats</span>
+          <span className="sr-only">{t("searchChats")}</span>
           <input
             type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search chats"
+            placeholder={t("searchChats")}
             className="flex-1 bg-transparent min-w-0 text-neutral-900 text-small placeholder:text-neutral-400 focus:outline-none"
           />
         </label>
       )}
 
       <div className="flex-1 px-2 pb-4 min-h-0 overflow-y-auto">
-        <nav aria-label="Chats">
+        <nav aria-label={t("chats")}>
           {ordered.length === 0 ? (
-            <p className="px-2 py-3 text-neutral-600 text-small">No chats match.</p>
+            <p className="px-2 py-3 text-neutral-600 text-small">{t("noChats")}</p>
           ) : (
             ordered.map(({ context, chats }) => (
               <div key={context.key} className="mb-3">
@@ -118,7 +123,7 @@ export function ChatList({
                           aria-current={active ? "true" : undefined}
                           onClick={() => onSelect(chat.id)}
                           className={cn(
-                            "flex flex-col items-start px-3 py-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 w-full min-h-11 text-left transition-colors",
+                            "flex flex-col items-start px-3 py-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 w-full min-h-11 text-start transition-colors",
                             active ? "bg-primary-50" : "hover:bg-neutral-50",
                           )}
                         >
@@ -126,7 +131,7 @@ export function ChatList({
                             {chat.title}
                           </span>
                           <span className="text-caption text-neutral-600">
-                            {chat.updatedAt ? relativeDay(chat.updatedAt, now) : chat.timeLabel}
+                            {chat.updatedAt ? relativeDay(chat.updatedAt, now, locale) : chat.timeLabel}
                           </span>
                         </button>
                       </li>

@@ -1,5 +1,6 @@
 import { cn } from "@/src/feature/dashboard/services/utils";
-import { getMatchTier, MATCH_TIER_LABEL, MATCH_TIER_TEXT } from "@/src/feature/dashboard/types/status";
+import { getMatchTier, MATCH_TIER_TEXT } from "@/src/feature/dashboard/types/status";
+import { useTranslations } from "next-intl";
 
 interface MatchBadgeProps {
   percent: number;
@@ -13,6 +14,7 @@ interface MatchBadgeProps {
  * gray) with the tier label beside it, so color is never the only signal.
  */
 export default function MatchBadge({ percent, muted = false, className }: MatchBadgeProps) {
+  const t = useTranslations("matchTier");
   const tier = getMatchTier(percent);
 
   return (
@@ -20,7 +22,7 @@ export default function MatchBadge({ percent, muted = false, className }: MatchB
       <span className={cn("font-semibold text-[19px] leading-6.5", muted ? "text-neutral-400" : MATCH_TIER_TEXT[tier])}>
         {percent}%
       </span>
-      <span className={cn("text-caption", muted ? "text-neutral-400" : "text-neutral-600")}>{MATCH_TIER_LABEL[tier]}</span>
+      <span className={cn("text-caption", muted ? "text-neutral-400" : "text-neutral-600")}>{t(tier)}</span>
     </span>
   );
 }

@@ -26,7 +26,7 @@ export function Markdown({ text }: { text: string }) {
         const lines = block.split("\n");
         if (lines.every((line) => /^\s*[-*]\s+/.test(line))) {
           return (
-            <ul key={index} className="flex flex-col gap-1 pl-5 list-disc">
+            <ul key={index} className="flex flex-col gap-1 ps-5 list-disc">
               {lines.map((line, i) => (
                 <li key={i}>{inline(line.replace(/^\s*[-*]\s+/, ""))}</li>
               ))}
@@ -35,7 +35,7 @@ export function Markdown({ text }: { text: string }) {
         }
         if (lines.every((line) => /^\s*\d+\.\s+/.test(line))) {
           return (
-            <ol key={index} className="flex flex-col gap-1 pl-5 list-decimal">
+            <ol key={index} className="flex flex-col gap-1 ps-5 list-decimal">
               {lines.map((line, i) => (
                 <li key={i}>{inline(line.replace(/^\s*\d+\.\s+/, ""))}</li>
               ))}

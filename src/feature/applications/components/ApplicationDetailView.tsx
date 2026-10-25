@@ -3,26 +3,28 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { AskAiCard, UpdateStatusMenu } from "@/src/feature/opportunities/components/details/SideCards";
 import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { isoDateFromToday } from "@/src/shared/lib/deadline";
 import { notify } from "@/src/shared/lib/notify";
 import type { ApplicationActivityItem, ApplicationDetail, ApplicationDocument } from "../types/detail";
-import { STATUS_LABEL, type ApplicationStatus } from "../types/status";
+import type { ApplicationStatus } from "../types/status";
 import { ApplicationDocumentsCard } from "./detail/ApplicationDocumentsCard";
 import { ApplicationHeader } from "./detail/ApplicationHeader";
 import { ActivityCard, NotesCard } from "./detail/NotesAndActivity";
 
-const AI_QUESTIONS: Record<"active" | "waiting" | "decided", string[]> = {
-  active: ["What do I still need to submit?", "Review my statement of purpose", "Help me plan before the deadline"],
-  waiting: ["What happens after submitting?", "How should I follow up?", "Prepare me for an interview"],
-  decided: ["What should I do next?", "Help me write a thank-you note", "Find similar opportunities"],
-};
+// Suggested questions for the assistant by stage: applications.detail.questions.<key>.
+const AI_QUESTIONS = {
+  active: ["remaining", "reviewStatement", "plan"],
+  waiting: ["afterSubmit", "followUp", "interview"],
+  decided: ["nextStep", "thankYou", "similar"],
+} as const;
 
-function questionsFor(status: ApplicationStatus) {
-  if (status === "not_started" || status === "in_progress") return AI_QUESTIONS.active;
-  if (status === "submitted" || status === "in_review") return AI_QUESTIONS.waiting;
-  return AI_QUESTIONS.decided;
+function stageFor(status: ApplicationStatus): keyof typeof AI_QUESTIONS {
+  if (status === "not_started" || status === "in_progress") return "active";
+  if (status === "submitted" || status === "in_review") return "waiting";
+  return "decided";
 }
 
 /**
@@ -31,6 +33,8 @@ function questionsFor(status: ApplicationStatus) {
  * phones "Update status" also sits in a bar above the tab bar.
  */
 export function ApplicationDetailView({ application }: { application: ApplicationDetail }) {
+  const t = useTranslations("applications.detail");
+  const tStatus = useTranslations("applicationStatus");
   const opportunity = application.opportunityId ? getMockOpportunityById(application.opportunityId) : undefined;
   const [now] = useState(() => new Date());
 
@@ -50,20 +54,21 @@ export function ApplicationDetailView({ application }: { application: Applicatio
   const changeStatus = (next: ApplicationStatus) => {
     if (next === status) return;
     setStatus(next);
-    log({ kind: "status", status: next, label: `Moved to ${STATUS_LABEL[next]}` });
-    notify.success(`Status updated to ${STATUS_LABEL[next]}`);
+    log({ kind: "status", status: next });
+    notify.success(t("statusUpdated", { status: tStatus(next) }));
   };
 
   const linkDocument = (doc: ApplicationDocument) => {
     setDocuments((prev) => (prev.some((d) => d.id === doc.id) ? prev : [...prev, doc]));
-    log({ kind: "document", label: `Linked ${doc.name}` });
-    notify.success("Document linked");
+    log({ kind: "document", documentName: doc.name });
+    notify.success(t("documentLinked"));
   };
 
+  const stage = stageFor(status);
   const ai = (
     <AskAiCard
-      title="Ask about this application"
-      questions={questionsFor(status)}
+      title={t("askAi")}
+      questions={AI_QUESTIONS[stage].map((key) => t(`questions.${key}`))}
       hrefFor={(q) => `/ai?application=${encodeURIComponent(application.id)}&q=${encodeURIComponent(q)}`}
       layout="stack"
     />
@@ -76,8 +81,8 @@ export function ApplicationDetailView({ application }: { application: Applicatio
         href="/applications"
         className="inline-flex items-center gap-1.5 rounded-sm w-fit text-neutral-600 hover:text-neutral-900 text-small focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
       >
-        <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
-        Back to applications
+        <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
+        {t("back")}
       </Link>
 
       <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
@@ -102,7 +107,7 @@ export function ApplicationDetailView({ application }: { application: Applicatio
         </div>
       </div>
 
-      <div className="md:hidden right-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 z-30 fixed bg-white px-4 py-3 border-neutral-100 border-t">
+      <div className="md:hidden end-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] start-0 z-30 fixed bg-white px-4 py-3 border-neutral-100 border-t">
         <UpdateStatusMenu status={status} onChange={changeStatus} side="top" />
       </div>
     </div>

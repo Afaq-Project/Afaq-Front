@@ -44,32 +44,25 @@ export const DEFAULT_QUERY: DiscoverQuery = {
   sort: "match",
 };
 
-export const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "scholarship", label: "Scholarships" },
-  { value: "internship", label: "Internships" },
-];
+// Labels for these option lists are discover.types / deadlines / sorts / quick.<value>.
+export const TYPE_OPTIONS: { value: TypeFilter }[] = [{ value: "all" }, { value: "scholarship" }, { value: "internship" }];
 
 /** Deadline windows in days; "any" has no limit. */
-export const DEADLINE_OPTIONS: { value: DeadlineFilter; label: string; maxDays?: number }[] = [
-  { value: "week", label: "This week", maxDays: 7 },
-  { value: "month", label: "This month", maxDays: 30 },
-  { value: "3months", label: "Next 3 months", maxDays: 90 },
-  { value: "any", label: "Any time" },
+export const DEADLINE_OPTIONS: { value: DeadlineFilter; maxDays?: number }[] = [
+  { value: "week", maxDays: 7 },
+  { value: "month", maxDays: 30 },
+  { value: "3months", maxDays: 90 },
+  { value: "any" },
 ];
 
-export const SORT_OPTIONS: { value: SortOrder; label: string }[] = [
-  { value: "match", label: "Best match" },
-  { value: "deadline", label: "Deadline soonest" },
-  { value: "newest", label: "Newest" },
+export const SORT_OPTIONS: { value: SortOrder }[] = [{ value: "match" }, { value: "deadline" }, { value: "newest" }];
+
+export const QUICK_FILTER_OPTIONS: { value: QuickFilter }[] = [
+  { value: "strong" },
+  { value: "closing" },
+  { value: "funded" },
+  { value: "remote" },
 ];
 
-export const QUICK_FILTER_OPTIONS: { value: QuickFilter; label: string }[] = [
-  { value: "strong", label: "Strong matches" },
-  { value: "closing", label: "Closing this week" },
-  { value: "funded", label: "Fully funded" },
-  { value: "remote", label: "Remote" },
-];
-
-/** Location option that matches remote opportunities rather than a city. */
+/** Location option that matches remote opportunities rather than a city. A URL value; shown as common.remote. */
 export const REMOTE_LOCATION = "Remote";

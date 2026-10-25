@@ -3,6 +3,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Download, FileText, RefreshCw, RotateCcw } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import type { ReviewNoun } from "@/src/shared/lib/document-types";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { FlagTile } from "@/src/feature/opportunities/components/FlagTile";
 import { countryName } from "@/src/shared/lib/countries";
@@ -32,13 +34,15 @@ export function YourFileCard({
   onAction,
 }: {
   item: DocumentItem;
-  noun: string;
+  noun: ReviewNoun;
   onDownload: () => void;
   onAction: (kind: DialogKind, item: DocumentItem) => void;
 }) {
+  const t = useTranslations("documentReview");
+  const title = t("yourNoun", { noun });
   return (
-    <section aria-label={`Your ${noun}`} className={SIDE_CARD}>
-      <CardTitle action={<DocumentMenu item={item} onAction={onAction} onPage />}>Your {noun}</CardTitle>
+    <section aria-label={title} className={SIDE_CARD}>
+      <CardTitle action={<DocumentMenu item={item} onAction={onAction} onPage />}>{title}</CardTitle>
       <div className="flex items-center gap-3 min-w-0">
         <span aria-hidden="true" className="flex justify-center items-center bg-neutral-50 rounded-md size-10 text-neutral-600 shrink-0">
           <FileText size={18} strokeWidth={1.75} />
@@ -51,14 +55,14 @@ export function YourFileCard({
         </div>
       </div>
       {!item.mock && (
-        <div className="flex flex-wrap gap-1 -ml-2">
+        <div className="flex flex-wrap gap-1 -ms-2">
           <button type="button" onClick={onDownload} className={buttonClasses("ghost", SMALL_GHOST)}>
             <Download size={14} strokeWidth={1.75} aria-hidden="true" />
-            Download
+            {t("download")}
           </button>
           <button type="button" onClick={() => onAction("replace", item)} className={buttonClasses("ghost", SMALL_GHOST)}>
             <RefreshCw size={14} strokeWidth={1.75} aria-hidden="true" />
-            Replace file
+            {t("replaceFile")}
           </button>
         </div>
       )}
@@ -68,16 +72,18 @@ export function YourFileCard({
 
 /** The applications the document is linked to, with each one's deadline; or a prompt to link one. */
 export function UsedForCard({ item, onLink }: { item: DocumentItem; onLink: () => void }) {
+  const t = useTranslations("documentReview");
+  const locale = useLocale();
   return (
     <section aria-labelledby="used-for-heading" className={SIDE_CARD}>
       <h2 id="used-for-heading" className="text-h3 text-neutral-900">
-        Used for
+        {t("usedFor")}
       </h2>
       {item.usedIn.length === 0 ? (
         <>
-          <p className="text-neutral-600 text-small">Not linked to an application yet</p>
+          <p className="text-neutral-600 text-small">{t("notLinked")}</p>
           <button type="button" onClick={onLink} className={buttonClasses("soft", "self-start px-3 h-9 md:h-8 text-small")}>
-            Link to application
+            {t("linkToApplication")}
           </button>
         </>
       ) : (
@@ -90,7 +96,7 @@ export function UsedForCard({ item, onLink }: { item: DocumentItem; onLink: () =
               >
                 <FlagTile
                   countryCode={application.opportunity?.countryCode}
-                  countryName={application.opportunity?.countryCode ? countryName(application.opportunity.countryCode) : undefined}
+                  countryName={application.opportunity?.countryCode ? countryName(application.opportunity.countryCode, locale) : undefined}
                   remote={Boolean(application.opportunity?.isRemote) || !application.opportunity?.countryCode}
                 />
                 <span className="flex flex-col min-w-0">
@@ -125,31 +131,32 @@ export function NextReviewCard({
   allDone: boolean;
   onReview: () => void;
 }) {
+  const t = useTranslations("documentReview");
   const atLimit = !unlimited && remaining === 0;
   const highlight = allDone && !atLimit;
   return (
     <section aria-labelledby="next-review-heading" className={cn(SIDE_CARD, highlight && "bg-primary-50 border-primary-100")}>
       <h2 id="next-review-heading" className="text-h3 text-neutral-900">
-        Next review
+        {t("nextReview")}
       </h2>
       {atLimit ? (
         <>
-          <p className="text-body text-neutral-800">You&apos;ve used all {limit} AI reviews this month.</p>
+          <p className="text-body text-neutral-800">{t("usedAll", { limit })}</p>
           {/* Secondary so the header's "Ask a follow-up" stays the page's only primary action. */}
           <Link href="/billing" className={buttonClasses("secondary", "self-start")}>
-            Upgrade to Premium
+            {t("upgrade")}
           </Link>
-          <p className="text-caption text-neutral-600">Premium includes unlimited chat and AI reviews.</p>
+          <p className="text-caption text-neutral-600">{t("premiumIncludes")}</p>
         </>
       ) : (
         <>
-          {highlight && <p className="text-body text-neutral-900">You&apos;ve worked through every suggestion. Ready for another look?</p>}
+          {highlight && <p className="text-body text-neutral-900">{t("allWorkedThrough")}</p>}
           <p className="text-neutral-600 text-small">
-            {unlimited ? "Unlimited reviews with Premium" : `${remaining} of ${limit} reviews left this month`}
+            {unlimited ? t("unlimited") : t("left", { remaining, limit })}
           </p>
           <button type="button" onClick={onReview} className={buttonClasses(highlight ? "primary" : "secondary", "self-start")}>
             <RotateCcw size={16} strokeWidth={1.75} aria-hidden="true" />
-            Review again
+            {t("reviewAgain")}
           </button>
         </>
       )}

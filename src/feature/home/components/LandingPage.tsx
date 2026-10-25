@@ -1,5 +1,5 @@
 import { SECTION_SLOTS } from "../constants";
-import { content } from "../content/en";
+import { useLandingContent } from "../content";
 import { LandingRoot } from "./LandingRoot";
 import { LandingFooter } from "./layout/LandingFooter";
 import { LandingHeader } from "./layout/LandingHeader";
@@ -36,6 +36,7 @@ const SECTIONS: Partial<Record<string, ComponentType<{ id: string; tone: Section
 
 /** The public landing page: header, every section slot in order, footer. */
 export function LandingPage() {
+  const content = useLandingContent();
   return (
     <LandingRoot>
       <a

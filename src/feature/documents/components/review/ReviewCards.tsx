@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Download, FileText, Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
+import type { ReviewNoun } from "@/src/shared/lib/document-types";
 import { CARD_CLASS } from "@/src/feature/dashboard/components/styles";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { buttonClasses } from "@/src/shared/ui/Button";
@@ -7,12 +9,13 @@ import { Skeleton } from "@/src/shared/ui/Skeleton";
 import type { DocumentItem } from "../../types/document";
 
 /** The feedback card while a review runs. */
-export function ReviewingCard({ noun }: { noun: string }) {
+export function ReviewingCard({ noun }: { noun: ReviewNoun }) {
+  const t = useTranslations("documentReview");
   return (
     <section role="status" aria-live="polite" className={CARD_CLASS}>
       <p className="flex items-center gap-2 text-h2 text-neutral-900">
         <Sparkles size={18} strokeWidth={1.75} aria-hidden="true" className="text-primary-600" />
-        Reviewing your {noun}…
+        {t("reviewingYour", { noun })}
       </p>
       <div className="flex flex-col gap-5 mt-5">
         {Array.from({ length: 3 }, (_, index) => (
@@ -35,8 +38,9 @@ export function ReviewingCard({ noun }: { noun: string }) {
  * there's text extraction.
  */
 export function FilePreviewCard({ item, onDownload }: { item: DocumentItem; onDownload: () => void }) {
+  const t = useTranslations("documentReview");
   return (
-    <section aria-label="File" className={cn(CARD_CLASS, "flex flex-col items-center gap-3 py-12 text-center")}>
+    <section aria-label={t("file")} className={cn(CARD_CLASS, "flex flex-col items-center gap-3 py-12 text-center")}>
       <span aria-hidden="true" className="flex justify-center items-center bg-neutral-50 rounded-md size-14 text-neutral-600">
         <FileText size={26} strokeWidth={1.5} />
       </span>
@@ -46,11 +50,11 @@ export function FilePreviewCard({ item, onDownload }: { item: DocumentItem; onDo
           {item.format} · {item.size}
         </p>
       </div>
-      <p className="text-neutral-600 text-small">Previews aren&apos;t available yet. Download the file to view it.</p>
+      <p className="text-neutral-600 text-small">{t("noPreview")}</p>
       {!item.mock && (
         <button type="button" onClick={onDownload} className={buttonClasses("secondary")}>
           <Download size={16} strokeWidth={1.75} aria-hidden="true" />
-          Download
+          {t("download")}
         </button>
       )}
     </section>
@@ -65,12 +69,13 @@ export function GetFeedbackCard({
   unlimited,
   onReview,
 }: {
-  noun: string;
+  noun: ReviewNoun;
   remaining: number;
   limit: number;
   unlimited: boolean;
   onReview: () => void;
 }) {
+  const t = useTranslations("documentReview");
   const atLimit = !unlimited && remaining === 0;
   return (
     <section aria-labelledby="get-feedback-heading" className={cn(CARD_CLASS, "flex flex-col gap-3 self-start")}>
@@ -78,27 +83,27 @@ export function GetFeedbackCard({
         <Sparkles size={18} strokeWidth={1.75} />
       </span>
       <h2 id="get-feedback-heading" className="text-h2 text-neutral-900">
-        Get AI feedback on this {noun}
+        {t("feedbackOn", { noun })}
       </h2>
       <p className="text-body text-neutral-600">
-        See what works, what to improve, and specific suggestions before you submit it.
+        {t("feedbackBody")}
       </p>
       {atLimit ? (
         <>
-          <p className="text-body text-neutral-800">You&apos;ve used all {limit} AI reviews this month.</p>
+          <p className="text-body text-neutral-800">{t("usedAll", { limit })}</p>
           <Link href="/billing" className={buttonClasses("primary", "self-start")}>
-            Upgrade to Premium
+            {t("upgrade")}
           </Link>
-          <p className="text-caption text-neutral-600">Premium includes unlimited chat and AI reviews.</p>
+          <p className="text-caption text-neutral-600">{t("premiumIncludes")}</p>
         </>
       ) : (
         <>
           <p className="text-caption text-neutral-600">
-            {unlimited ? "Unlimited reviews with Premium" : `${remaining} of ${limit} reviews left this month`}
+            {unlimited ? t("unlimited") : t("left", { remaining, limit })}
           </p>
           <button type="button" onClick={onReview} className={buttonClasses("primary", "self-start")}>
             <Sparkles size={16} strokeWidth={1.75} aria-hidden="true" />
-            Review with AI
+            {t("reviewWithAi")}
           </button>
         </>
       )}

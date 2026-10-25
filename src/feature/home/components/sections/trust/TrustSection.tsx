@@ -1,6 +1,6 @@
 import { CircleHelp, Layers, RefreshCw, ShieldCheck } from "lucide-react";
 import type { SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Section } from "../../layout/Section";
 import { Reveal } from "../../ui/Reveal";
 
@@ -14,6 +14,7 @@ const ICONS = [RefreshCw, ShieldCheck, Layers, CircleHelp];
  * from 1024px with the icon above, divided by 1px rules on the inline-start side.
  */
 export function TrustSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { trust } = content;
 
   return (

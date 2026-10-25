@@ -3,6 +3,8 @@
 import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowUp, FileText } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocale } from "@/src/i18n/format";
 import { formatDeadlineDay } from "@/src/shared/lib/deadline";
 import { buttonClasses } from "@/src/shared/ui/Button";
 
@@ -27,6 +29,8 @@ interface ComposerProps {
  * disclaimer line. Replaced by an upgrade card once the monthly chat limit is reached.
  */
 export function Composer({ draft, onDraftChange, onSend, onReviewEssay, busy, limitReached, chatLimit, resetsOn }: ComposerProps) {
+  const t = useTranslations("ai.composer");
+  const locale = useLocale();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useLayoutEffect(() => {
@@ -40,13 +44,13 @@ export function Composer({ draft, onDraftChange, onSend, onReviewEssay, busy, li
     return (
       <div className="flex flex-col items-start gap-2 bg-neutral-50 m-4 md:m-5 px-4 py-4 border border-neutral-100 rounded-lg">
         <p className="text-body text-neutral-800">
-          You&apos;ve used all {chatLimit} chat messages this month.
-          {resetsOn && ` They reset on ${formatDeadlineDay(resetsOn)}.`}
+          {t("limit", { limit: chatLimit })}
+          {resetsOn && t("resets", { date: formatDeadlineDay(resetsOn, locale) })}
         </p>
         <Link href="/billing" className={buttonClasses("primary")}>
-          Upgrade to Premium
+          {t("upgrade")}
         </Link>
-        <p className="text-caption text-neutral-600">Premium includes unlimited chat and essay reviews.</p>
+        <p className="text-caption text-neutral-600">{t("premiumIncludes")}</p>
       </div>
     );
   }
@@ -60,7 +64,7 @@ export function Composer({ draft, onDraftChange, onSend, onReviewEssay, busy, li
   return (
     <div className="flex flex-col gap-2 px-4 md:px-5 pt-3 pb-3 border-neutral-100 border-t">
       <label htmlFor="chat-input" className="sr-only">
-        Message
+        {t("message")}
       </label>
       <textarea
         ref={textareaRef}
@@ -74,19 +78,19 @@ export function Composer({ draft, onDraftChange, onSend, onReviewEssay, busy, li
             send();
           }
         }}
-        placeholder="Ask about eligibility, essays, or your application…"
+        placeholder={t("placeholder")}
         className="bg-white px-3 py-2.5 border border-neutral-200 focus:border-primary-600 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-400 w-full text-body text-neutral-900 placeholder:text-neutral-400 resize-none"
       />
       <div className="flex justify-between items-center gap-3">
         <button type="button" onClick={onReviewEssay} className={buttonClasses("soft", "px-3 text-small")}>
           <FileText size={16} strokeWidth={1.75} aria-hidden="true" />
-          Review an essay
+          {t("reviewEssay")}
         </button>
         <button
           type="button"
           onClick={send}
           disabled={!text || busy}
-          aria-label="Send message"
+          aria-label={t("send")}
           className="flex justify-center items-center bg-primary-600 hover:bg-primary-800 disabled:opacity-50 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 size-11 md:size-10 text-white transition-colors disabled:pointer-events-none"
         >
           <ArrowUp size={18} strokeWidth={2} aria-hidden="true" />
@@ -94,10 +98,10 @@ export function Composer({ draft, onDraftChange, onSend, onReviewEssay, busy, li
       </div>
       <div className="flex justify-between items-start gap-3">
         <p className="text-caption text-neutral-600">
-          AI guidance can be wrong and doesn&apos;t guarantee outcomes. Verify important details on the official page.
+          {t("disclaimer")}
         </p>
         {draft.length > SHOW_COUNT_FROM && (
-          <p className="text-caption text-neutral-600 whitespace-nowrap">{draft.length.toLocaleString("en-US")} characters</p>
+          <p className="text-caption text-neutral-600 whitespace-nowrap">{t("characters", { count: draft.length.toLocaleString(intlLocale(locale)) })}</p>
         )}
       </div>
     </div>

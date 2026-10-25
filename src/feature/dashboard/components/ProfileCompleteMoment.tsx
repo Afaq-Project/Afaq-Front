@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 import { CompletionDonut } from "@/src/shared/ui/CompletionDonut";
 import { cn } from "../services/utils";
 import { CARD_CLASS } from "./styles";
+import { useTranslations } from "next-intl";
 
 const AUTO_DISMISS_MS = 2500;
 const FADE_MS = 250;
@@ -40,6 +41,7 @@ const prefersReducedMotion = () =>
  * reduced motion it's static and stays for that visit. Renders nothing after the first time.
  */
 export function ProfileCompleteMoment({ userId }: { userId: string }) {
+  const t = useTranslations("dashboard.profile");
   // Signed-in pages render on the client only, so storage and media queries are safe here.
   const [show] = useState(() => !hasSeen(userId));
   const [reduced] = useState(prefersReducedMotion);
@@ -72,7 +74,7 @@ export function ProfileCompleteMoment({ userId }: { userId: string }) {
   return (
     <section
       role="status"
-      aria-label="Profile complete"
+      aria-label={t("momentLabel")}
       onClick={reduced ? undefined : () => setPhase("leaving")}
       className={cn(
         CARD_CLASS,
@@ -96,7 +98,7 @@ export function ProfileCompleteMoment({ userId }: { userId: string }) {
         }
       />
       <p className="text-body text-neutral-800">
-        Your profile is complete. Your matches are now as accurate as they can be.
+        {t("moment")}
       </p>
     </section>
   );

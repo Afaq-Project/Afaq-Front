@@ -4,6 +4,7 @@ import { OpportunityCard } from "@/src/feature/opportunities/components/Opportun
 import { OpportunityCardSkeleton } from "@/src/feature/opportunities/components/OpportunityCardSkeleton";
 import type { OpportunitySummary } from "@/src/feature/opportunities/types/opportunity";
 import Button from "@/src/shared/ui/Button";
+import { useTranslations } from "next-intl";
 
 const SKELETON_COUNT = 6;
 const GRID_CLASS = "gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3";
@@ -20,6 +21,7 @@ export function OpportunityGrid({
   loadingMore: boolean;
   onLoadMore: () => void;
 }) {
+  const t = useTranslations("common");
   return (
     <div className="flex flex-col gap-6">
       <ul className={GRID_CLASS}>
@@ -33,7 +35,7 @@ export function OpportunityGrid({
       {hasMore && (
         <div className="flex justify-center">
           <Button variant="secondary" onClick={onLoadMore} disabled={loadingMore}>
-            {loadingMore ? "Loading…" : "Load more"}
+            {loadingMore ? t("loadingDots") : t("loadMore")}
           </Button>
         </div>
       )}
@@ -42,9 +44,10 @@ export function OpportunityGrid({
 }
 
 export function OpportunityGridSkeleton() {
+  const t = useTranslations("discover");
   return (
     <div role="status" className={GRID_CLASS}>
-      <span className="sr-only">Loading opportunities</span>
+      <span className="sr-only">{t("loading")}</span>
       {Array.from({ length: SKELETON_COUNT }, (_, index) => (
         <OpportunityCardSkeleton key={index} />
       ))}

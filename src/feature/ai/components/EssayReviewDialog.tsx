@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { FileText } from "lucide-react";
+import { useTranslations } from "next-intl";
+import type { ReviewNoun } from "@/src/shared/lib/document-types";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import Modal from "@/src/shared/ui/Modal";
 
@@ -24,7 +26,7 @@ export interface EssayChoice {
   /** It already has a review, which a new one replaces. */
   hasReview?: boolean;
   /** How the copy names it: "essay" (default), "CV", "recommendation letter". */
-  noun?: string;
+  noun?: ReviewNoun;
 }
 
 interface EssayReviewDialogProps {
@@ -61,12 +63,14 @@ export function EssayReviewDialog({
   resetsOn,
   onSubmit,
 }: EssayReviewDialogProps) {
+  const tReview = useTranslations("documentReview");
+  const t = useTranslations("ai.reviewDialog");
   const [text, setText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [purpose, setPurpose] = useState(defaultPurpose ?? "");
   const [choiceId, setChoiceId] = useState("");
   const essayDocument = givenDocument ?? choices.find((choice) => choice.id === choiceId);
-  const noun = essayDocument?.noun ?? "essay";
+  const noun: ReviewNoun = essayDocument?.noun ?? "essay";
   const contentRef = useRef<HTMLDivElement>(null);
   const remaining = Math.max(0, limit - used);
 
@@ -118,18 +122,18 @@ export function EssayReviewDialog({
   const canSubmit = Boolean(essayDocument) || text.trim().length > 0 || fileName !== null;
 
   return (
-    <Modal open={open} onClose={onClose} title={givenDocument ? `Review your ${noun}` : "Review with AI"} className="max-w-xl">
+    <Modal open={open} onClose={onClose} title={givenDocument ? tReview("reviewYour", { noun }) : tReview("reviewWithAi")} className="max-w-xl">
       <div ref={contentRef}>
         {!unlimited && remaining === 0 ? (
           <div className="flex flex-col items-start gap-3">
             <p className="text-body text-neutral-800">
-              You&apos;ve used all {limit} AI reviews this month.
-              {resetsOn && " They reset next month."}
+              {t("usedAll", { limit })}
+              {resetsOn && t("resetsNextMonth")}
             </p>
             <Link href="/billing" className={buttonClasses("primary")}>
-              Upgrade to Premium
+              {tReview("upgrade")}
             </Link>
-            <p className="text-caption text-neutral-600">Premium includes unlimited chat and AI reviews.</p>
+            <p className="text-caption text-neutral-600">{tReview("premiumIncludes")}</p>
           </div>
         ) : (
           <form
@@ -138,7 +142,7 @@ export function EssayReviewDialog({
               event.preventDefault();
               if (!canSubmit) return;
               onSubmit({
-                essayName: essayDocument?.name ?? fileName ?? "Pasted essay",
+                essayName: essayDocument?.name ?? fileName ?? t("pasted"),
                 documentId: essayDocument?.id,
                 purpose: purpose.trim() || undefined,
                 text,
@@ -148,7 +152,7 @@ export function EssayReviewDialog({
             {!givenDocument && choices.length > 0 && (
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="essay-choice" className="text-caption text-neutral-600">
-                  Document
+                  {t("document")}
                 </label>
                 <select
                   id="essay-choice"
@@ -156,7 +160,7 @@ export function EssayReviewDialog({
                   onChange={(event) => setChoiceId(event.target.value)}
                   className="bg-white px-3 border border-neutral-200 focus:border-primary-600 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-400 w-full h-10 text-body text-neutral-900"
                 >
-                  <option value="">Paste or upload an essay</option>
+                  <option value="">{t("pasteOrUpload")}</option>
                   {choices.map((choice) => (
                     <option key={choice.id} value={choice.id}>
                       {choice.name}
@@ -177,13 +181,13 @@ export function EssayReviewDialog({
               </div>
             ) : null}
             {essayDocument?.hasReview && (
-              <p className="text-neutral-600 text-small">This will replace your current review.</p>
+              <p className="text-neutral-600 text-small">{t("replaces")}</p>
             )}
             {!essayDocument && (
               <>
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="essay-text" className="text-caption text-neutral-600">
-                    Paste your essay
+                    {t("paste")}
                   </label>
                   <textarea
                     id="essay-text"
@@ -195,21 +199,21 @@ export function EssayReviewDialog({
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="essay-file" className="text-caption text-neutral-600">
-                    Or upload a file (.docx, .pdf, .txt)
+                    {t("upload")}
                   </label>
                   <input
                     id="essay-file"
                     type="file"
                     accept=".docx,.pdf,.txt"
                     onChange={(event) => onFile(event.target.files?.[0])}
-                    className="file:bg-white file:mr-3 file:px-3 file:border file:border-neutral-200 file:rounded-sm file:h-9 file:font-medium text-neutral-800 text-small file:text-neutral-800 file:cursor-pointer"
+                    className="file:bg-white file:me-3 file:px-3 file:border file:border-neutral-200 file:rounded-sm file:h-9 file:font-medium text-neutral-800 text-small file:text-neutral-800 file:cursor-pointer"
                   />
                 </div>
               </>
             )}
             <div className="flex flex-col gap-1.5">
               <label htmlFor="essay-purpose" className="text-caption text-neutral-600">
-                What is this {noun} for? (optional)
+                {tReview("whatFor", { noun })}
               </label>
               <input
                 id="essay-purpose"
@@ -220,10 +224,10 @@ export function EssayReviewDialog({
             </div>
             <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center gap-3 pt-2">
               <p className="text-caption text-neutral-600">
-                {unlimited ? "Unlimited reviews with Premium" : `${remaining} of ${limit} reviews left this month`}
+                {unlimited ? tReview("unlimited") : tReview("left", { remaining, limit })}
               </p>
               <button type="submit" disabled={!canSubmit} className={buttonClasses("primary")}>
-                Review essay
+                {t("submit")}
               </button>
             </div>
           </form>

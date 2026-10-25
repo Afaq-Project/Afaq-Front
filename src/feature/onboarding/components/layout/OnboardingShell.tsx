@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingSidebar } from "./OnboardingSidebar";
 import { OnboardingMobileHeader } from "./OnboardingMobileHeader";
+import { useTranslations } from "next-intl";
 
 interface OnboardingShellProps {
   /** 1–4 for the steps; anything else (e.g. the complete page) renders without the step chrome. */
@@ -12,6 +13,7 @@ interface OnboardingShellProps {
 }
 
 export function OnboardingShell({ step, children }: OnboardingShellProps) {
+  const t = useTranslations("onboarding");
   const router = useRouter();
   const isStep = step >= 1 && step <= 4;
 
@@ -39,7 +41,7 @@ export function OnboardingShell({ step, children }: OnboardingShellProps) {
                 onClick={() => router.push("/dashboard")}
                 className="text-xs font-medium text-neutral-400 hover:text-neutral-600 transition-colors cursor-pointer"
               >
-                Save &amp; exit
+                {t("saveAndExit")}
               </button>
             </div>
             <div className="flex-1 overflow-y-auto flex flex-col">{children}</div>

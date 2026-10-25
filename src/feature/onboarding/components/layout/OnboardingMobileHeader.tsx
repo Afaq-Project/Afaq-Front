@@ -1,10 +1,13 @@
 import Link from "next/link";
 import Brand from "@/src/shared/ui/Brand";
 import { ONBOARDING_STEPS } from "../../services/steps";
+import { useTranslations } from "next-intl";
 
 /** Mobile top bar with the current step and a progress bar. */
 export function OnboardingMobileHeader({ currentStep }: { currentStep: number }) {
-  const label = ONBOARDING_STEPS.find((s) => s.number === currentStep)?.label ?? "";
+  const t = useTranslations("onboarding");
+  const labelKey = ONBOARDING_STEPS.find((s) => s.number === currentStep)?.labelKey;
+  const label = labelKey ? t(`steps.${labelKey}`) : "";
   const total = ONBOARDING_STEPS.length;
 
   return (
@@ -14,7 +17,7 @@ export function OnboardingMobileHeader({ currentStep }: { currentStep: number })
       </Link>
       <div className="flex flex-col items-end gap-1.5">
         <span className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">
-          Step {currentStep} of {total} · {label}
+          {t("stepOf", { step: currentStep, total, label })}
         </span>
         <div className="w-28 h-1 bg-neutral-100 rounded-full overflow-hidden">
           <div

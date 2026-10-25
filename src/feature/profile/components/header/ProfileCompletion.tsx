@@ -7,6 +7,7 @@ import { NextStepPrompt } from "@/src/shared/ui/NextStepPrompt";
 import { Popover } from "@/src/shared/ui/Popover";
 import type { MatchFactor, NextStep } from "./completion";
 import { MatchFactorList } from "./MatchFactorList";
+import { useTranslations } from "next-intl";
 
 interface ProfileCompletionProps {
   percent: number;
@@ -20,14 +21,15 @@ interface ProfileCompletionProps {
  * factors are available; at 100%, a teal "Profile complete" chip in place of the next step.
  */
 export function ProfileCompletion({ percent, nextStep, factors = [] }: ProfileCompletionProps) {
+  const t = useTranslations("profile.header");
   const [open, setOpen] = useState(false);
   const value = Math.min(100, Math.max(0, Math.round(percent)));
-  const label = `Profile ${value}% complete`;
+  const label = t("percentComplete", { value });
 
   // At 100% there's no next step left, so the chip takes its place beside the full ring.
   const prompt =
     value >= 100 ? (
-      <Badge tone="teal">Profile complete</Badge>
+      <Badge tone="teal">{t("complete")}</Badge>
     ) : (
       nextStep && <NextStepPrompt title={nextStep.label} linkLabel={nextStep.impact} href={nextStep.href} />
     );
@@ -47,13 +49,13 @@ export function ProfileCompletion({ percent, nextStep, factors = [] }: ProfileCo
     <Popover
       open={open}
       onOpenChange={setOpen}
-      label="Match score breakdown"
+      label={t("breakdown")}
       trigger={(triggerProps) => (
         <div className="flex items-center gap-3">
           <button
             type="button"
             {...triggerProps}
-            aria-label={`${label}. See breakdown`}
+            aria-label={t("percentSeeBreakdown", { value })}
             className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
           >
             <CompletionDonut percent={value} />
@@ -65,7 +67,7 @@ export function ProfileCompletion({ percent, nextStep, factors = [] }: ProfileCo
               {...triggerProps}
               className="inline-flex min-h-11 items-center rounded-sm text-small text-neutral-600 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 md:min-h-0"
             >
-              See breakdown
+              {t("seeBreakdown")}
             </button>
           </div>
         </div>

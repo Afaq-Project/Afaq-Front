@@ -14,10 +14,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   return (
     <AuthLayout
       visual={
-        <AuthVisualPanel
-          headline="Your next opportunity is waiting"
-          subline="Personalized matches, AI guidance, and every deadline in one place."
-        />
+        <AuthVisualPanel />
       }
     >
       <LoginForm sessionExpired={session === "expired"} passwordReset={reset === "success"} />

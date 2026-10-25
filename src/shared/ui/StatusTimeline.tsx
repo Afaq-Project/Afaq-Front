@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
+import { useTranslations } from "next-intl";
 
 /** The app-wide status names, in sentence case. */
-export const STATUS_STEPS = ["Not started", "In progress", "Submitted", "In review", "Decision"];
+/** The five steps, as message keys under statusTimeline.steps. */
+export const STATUS_STEPS = ["notStarted", "inProgress", "submitted", "inReview", "decision"] as const;
 
 interface StatusTimelineProps {
   currentStep: number;
@@ -22,6 +24,8 @@ interface StatusTimelineProps {
  * steps outlined with a muted number. The connecting line fills with green-400.
  */
 export function StatusTimeline({ currentStep, stackOnMobile = false, renderStep }: StatusTimelineProps) {
+  const t = useTranslations("statusTimeline.steps");
+  const tTimeline = useTranslations("statusTimeline");
   const contentClass = stackOnMobile
     ? "flex md:flex-col items-center gap-3 md:gap-1.5 md:text-center"
     : "flex flex-col items-center gap-1.5 text-center";
@@ -43,8 +47,8 @@ export function StatusTimeline({ currentStep, stackOnMobile = false, renderStep 
               {done ? <Check size={12} strokeWidth={3} aria-hidden="true" /> : index + 1}
             </span>
             <span className={cn("text-caption leading-tight", current ? "font-medium text-neutral-900" : "text-neutral-600")}>
-              {step}
-              {done && <span className="sr-only"> (done)</span>}
+              {t(step)}
+              {done && <span className="sr-only"> {tTimeline("done")}</span>}
             </span>
           </>
         );
@@ -62,8 +66,8 @@ export function StatusTimeline({ currentStep, stackOnMobile = false, renderStep 
                 className={cn(
                   "absolute",
                   stackOnMobile
-                    ? "-top-4 left-2.75 w-0.5 h-4 md:top-3 md:right-1/2 md:-left-1/2 md:w-auto md:h-0.5"
-                    : "top-3 right-1/2 -left-1/2 h-0.5",
+                    ? "-top-4 start-2.75 w-0.5 h-4 md:top-3 md:end-1/2 md:-start-1/2 md:w-auto md:h-0.5"
+                    : "top-3 end-1/2 -start-1/2 h-0.5",
                   index <= currentStep ? "bg-primary-400" : "bg-neutral-100",
                 )}
               />

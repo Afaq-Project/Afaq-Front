@@ -5,13 +5,6 @@ export function getMockOpportunityById(id: string): MockOpportunityDetail | unde
   return OPPORTUNITY_DETAILS.find((opportunity) => opportunity.id === id);
 }
 
-export function formatDaysLeft(daysLeft: number): string {
-  if (daysLeft === 1) return "1 day left";
-  if (daysLeft < 30) return `${daysLeft} days left`;
-  const months = Math.round(daysLeft / 30);
-  return months === 1 ? "1 month left" : `${months} months left`;
-}
-
 export type MatchTier = "strong" | "possible" | "low";
 
 export function getMatchTier(percent: number): MatchTier {
@@ -20,8 +13,3 @@ export function getMatchTier(percent: number): MatchTier {
   return "low";
 }
 
-export const MATCH_TIER_LABEL: Record<MatchTier, string> = {
-  strong: "Strong match with your profile",
-  possible: "Possible match — review the eligibility criteria",
-  low: "Limited match with your profile",
-};

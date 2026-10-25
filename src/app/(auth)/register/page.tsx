@@ -6,10 +6,7 @@ export default function RegisterPage() {
   return (
     <AuthLayout
       visual={
-        <AuthVisualPanel
-          headline="Find scholarships and internships that fit you"
-          subline="Personalized matches, AI guidance, and every deadline in one place."
-        />
+        <AuthVisualPanel variant="register" />
       }
     >
       <SignupForm />

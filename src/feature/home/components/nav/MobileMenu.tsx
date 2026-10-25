@@ -4,7 +4,7 @@ import { useEffect, useRef, type MouseEvent, type RefObject } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { APP_LOGIN_URL, APP_SIGNUP_URL, MENU_PANEL_ID } from "../../constants";
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 import { Button } from "../ui/Button";
 import { Logo } from "./Logo";
 
@@ -40,6 +40,7 @@ function lockScroll() {
  * menu first, then scrolls to the section.
  */
 export function MobileMenu({ open, onClose, activeId, menuButtonRef }: MobileMenuProps) {
+  const content = useLandingContent();
   const { nav } = content;
   const panelRef = useRef<HTMLDivElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);

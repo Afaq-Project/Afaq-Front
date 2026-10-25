@@ -2,7 +2,7 @@ import { Bell } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { STATUS_COLORS, type ApplicationStatusKey } from "@/src/shared/lib/status-colors";
 import type { SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Card } from "../../ui/Card";
 import { DeadlineText } from "../../ui/DeadlineText";
 import { FlagTile } from "../../ui/FlagTile";
@@ -38,6 +38,7 @@ function ProgressDots({ status }: { status: ApplicationStatusKey }) {
  * 1024px it sits above the list at the inline-end.
  */
 function ReminderCard({ className }: { className?: string }) {
+  const content = useLandingContent();
   const { reminder } = content.tracking.preview;
   return (
     <Card floating className={cn("flex items-start gap-3 p-3.5 lg:p-3.5", className)}>
@@ -54,6 +55,7 @@ function ReminderCard({ className }: { className?: string }) {
 
 /** Tracking preview: an applications list sorted by deadline, plus a floating reminder. */
 function TrackingPreview() {
+  const content = useLandingContent();
   const preview = content.tracking.preview;
 
   return (
@@ -92,6 +94,7 @@ function TrackingPreview() {
 
 /** Section 7: tracking and reminders, text at the inline-start and the example list at the inline-end. */
 export function TrackingSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { tracking } = content;
   return (
     <FeatureSection

@@ -3,13 +3,15 @@
 import { useEffect, type ReactNode } from "react";
 import { notFound, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 
 function LoadingScreen() {
+  const t = useTranslations("common");
   return (
     <div className="flex flex-col justify-center items-center gap-3 min-h-screen">
       <Loader2 size={28} strokeWidth={1.75} className="text-primary-400 animate-spin" />
-      <p className="font-medium text-neutral-600 text-sm">Loading...</p>
+      <p className="font-medium text-neutral-600 text-sm">{t("loadingDots")}</p>
     </div>
   );
 }

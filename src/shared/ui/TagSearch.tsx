@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export interface TagSearchProps<T extends { id: string; name: string }> {
   label: string;
-  hint?: string;
+  /** Marks the field "(optional)" next to its label. */
+  optional?: boolean;
   placeholder?: string;
   selectedIds: string[];
   selectedNames: string[];
@@ -20,7 +22,7 @@ export interface TagSearchProps<T extends { id: string; name: string }> {
 /** Multi-select: a search input with a results dropdown, and the selection shown as removable tags. */
 export function TagSearch<T extends { id: string; name: string }>({
   label,
-  hint,
+  optional,
   placeholder,
   selectedIds,
   selectedNames,
@@ -32,6 +34,7 @@ export function TagSearch<T extends { id: string; name: string }>({
   maxItems = 5,
   minSearchLength = 1,
 }: TagSearchProps<T>) {
+  const t = useTranslations("common");
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -84,9 +87,9 @@ export function TagSearch<T extends { id: string; name: string }>({
       <div className="flex justify-between items-center">
         <label className="font-medium text-on-surface text-sm">
           {label}
-          {hint && (
-            <span className="ml-1 text-outline font-normal text-xs">
-              ({hint})
+          {optional && (
+            <span className="ms-1 text-outline font-normal text-xs">
+              {t("optionalField")}
             </span>
           )}
         </label>
@@ -98,7 +101,7 @@ export function TagSearch<T extends { id: string; name: string }>({
       </div>
 
       <div className="relative">
-        <span className="top-1/2 left-3.5 absolute text-[18px] text-on-surface-variant -translate-y-1/2 pointer-events-none material-symbols-outlined">
+        <span className="top-1/2 start-3.5 absolute text-[18px] text-on-surface-variant -translate-y-1/2 pointer-events-none material-symbols-outlined">
           search
         </span>
         <input
@@ -110,16 +113,16 @@ export function TagSearch<T extends { id: string; name: string }>({
           }}
           placeholder={
             isAtMax
-              ? `Max ${maxItems} selected`
-              : (placeholder ?? `Search ${label.toLowerCase()}…`)
+              ? t("maxSelected", { count: maxItems })
+              : (placeholder ?? t("searchItems", { items: label.toLowerCase() }))
           }
           disabled={isAtMax}
-          className={`w-full pl-10 pr-10 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant ${
+          className={`w-full ps-10 pe-10 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant ${
             isAtMax ? "opacity-50 cursor-not-allowed bg-neutral-50" : ""
           }`}
         />
         {isFetching ? (
-          <div className="top-1/2 right-3.5 absolute border-2 border-primary border-t-transparent rounded-full w-4 h-4 -translate-y-1/2 animate-spin" />
+          <div className="top-1/2 end-3.5 absolute border-2 border-primary border-t-transparent rounded-full w-4 h-4 -translate-y-1/2 animate-spin" />
         ) : inputValue ? (
           <button
             type="button"
@@ -127,21 +130,21 @@ export function TagSearch<T extends { id: string; name: string }>({
               setInputValue("");
               onSearch("");
             }}
-            className="top-1/2 right-3.5 absolute text-on-surface-variant hover:text-on-surface -translate-y-1/2"
+            className="top-1/2 end-3.5 absolute text-on-surface-variant hover:text-on-surface -translate-y-1/2"
           >
             <span className="text-[18px] material-symbols-outlined">close</span>
           </button>
         ) : null}
 
         {showDropdown && (
-          <div className="top-full left-0 z-50 absolute bg-white shadow-xl mt-1.5 border border-neutral-200 rounded-lg w-full max-h-64 overflow-y-auto">
+          <div className="top-full start-0 z-50 absolute bg-white shadow-xl mt-1.5 border border-neutral-200 rounded-lg w-full max-h-64 overflow-y-auto">
             {isFetching ? (
               <div className="p-3 text-on-surface-variant text-xs text-center">
-                Searching…
+                {t("searching")}
               </div>
             ) : items.length === 0 ? (
               <div className="p-3 text-on-surface-variant text-xs text-center">
-                No results found
+                {t("noResults")}
               </div>
             ) : (
               items.map((item) => {
@@ -152,7 +155,7 @@ export function TagSearch<T extends { id: string; name: string }>({
                     key={item.id}
                     type="button"
                     onClick={() => !isDisabled && handleSelect(item)}
-                    className={`w-full text-left px-4 py-2.5 transition-colors text-sm flex items-center justify-between ${
+                    className={`w-full text-start px-4 py-2.5 transition-colors text-sm flex items-center justify-between ${
                       isDisabled
                         ? "opacity-40 cursor-not-allowed"
                         : isSelected

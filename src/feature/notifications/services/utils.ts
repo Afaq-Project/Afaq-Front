@@ -1,33 +1,22 @@
 import { Clock, CreditCard, FileText, Sparkles, Target, type LucideIcon } from "lucide-react";
+import type { useTranslations } from "next-intl";
 import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { countryName } from "@/src/shared/lib/countries";
 import { reviewPath } from "@/src/feature/documents/services/reviewStore";
 import { formatDeadlineDay, getDeadlineUrgency } from "@/src/shared/lib/deadline";
-import type { DocumentTypeKey } from "@/src/shared/lib/document-types";
+import type { useDeadlineText } from "@/src/shared/lib/useDeadlineText";
+import { intlLocale } from "@/src/i18n/format";
 import type { Notification } from "../types/notification";
 
-/** "a recommendation letter": the noun used in "{Opportunity} needs …". */
-const DOCUMENT_PHRASES: Record<DocumentTypeKey, string> = {
-  cv: "a CV",
-  transcript: "a transcript",
-  degree: "a degree certificate",
-  recommendation: "a recommendation letter",
-  essay: "a personal statement",
-  id: "a passport or ID copy",
-  language: "a language certificate",
-  other: "a document",
-};
+/** The notifications messages, as useTranslations("notifications") returns them. */
+export type NotificationText = ReturnType<typeof useTranslations<"notifications">>;
 
-/** "a, b and c". */
-function joinList(items: string[]) {
-  return items.length <= 1 ? (items[0] ?? "") : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
-}
+/** "a, b and c" in the app's language. */
+const joinList = (items: string[], locale: string) =>
+  new Intl.ListFormat(intlLocale(locale), { style: "long", type: "conjunction" }).format(items);
 
-function endsIn(days: number) {
-  if (days === 0) return "ends today";
-  if (days === 1) return "ends tomorrow";
-  return `ends in ${days} days`;
-}
+/** Deadline wording, as useDeadlineText() returns it. */
+type DeadlineText = ReturnType<typeof useDeadlineText>;
 
 export interface NotificationView {
   title: string;
@@ -40,12 +29,12 @@ export interface NotificationView {
   flag?: { countryCode?: string; countryName?: string; remote: boolean };
 }
 
-function flagFor(opportunityId: string) {
+function flagFor(opportunityId: string, locale: string) {
   const opportunity = getMockOpportunityById(opportunityId);
   if (!opportunity) return { opportunity: undefined, flag: undefined };
   const flag = {
     countryCode: opportunity.countryCode,
-    countryName: opportunity.countryCode ? countryName(opportunity.countryCode) : undefined,
+    countryName: opportunity.countryCode ? countryName(opportunity.countryCode, locale) : undefined,
     remote: Boolean(opportunity.isRemote) || !opportunity.countryCode,
   };
   return { opportunity, flag };
@@ -53,66 +42,73 @@ function flagFor(opportunityId: string) {
 
 /**
  * Title, body, icon and main action for a notification, or null when it no longer applies
- * (its opportunity is gone or the deadline has passed).
+ * (its opportunity is gone or the deadline has passed). Text comes in the app's language.
  */
-export function describe(notification: Notification): NotificationView | null {
+export function describe(
+  notification: Notification,
+  t: NotificationText,
+  locale: string,
+  deadline: DeadlineText,
+): NotificationView | null {
   switch (notification.type) {
     case "deadline": {
-      const { opportunity, flag } = flagFor(notification.opportunityId);
+      const { opportunity, flag } = flagFor(notification.opportunityId, locale);
       if (!opportunity || opportunity.daysLeft < 0) return null;
       const missing = notification.missingDocuments ?? [];
       return {
-        title: `${opportunity.title} ${endsIn(opportunity.daysLeft)}`,
-        body: missing.length ? `You still need ${joinList(missing)}.` : "Make sure everything is ready before the deadline.",
+        title: t("deadline.title", { title: opportunity.title, endsIn: deadline.endsInInline(opportunity.daysLeft) }),
+        body: missing.length ? t("deadline.missing", { list: joinList(missing, locale) }) : t("deadline.ready"),
         icon: Clock,
         urgent: getDeadlineUrgency(opportunity.daysLeft) === "urgent",
-        action: { label: "Open application", href: `/applications/${notification.applicationId}` },
+        action: { label: t("deadline.action"), href: `/applications/${notification.applicationId}` },
         flag,
       };
     }
     case "document_needed": {
-      const { opportunity, flag } = flagFor(notification.opportunityId);
+      const { opportunity, flag } = flagFor(notification.opportunityId, locale);
       if (!opportunity) return null;
       const params = new URLSearchParams({ upload: notification.documentType, application: notification.applicationId });
       return {
-        title: `${opportunity.title} needs ${DOCUMENT_PHRASES[notification.documentType]}`,
-        body: "Upload it once and reuse it for other applications.",
+        title: t("documentNeeded.title", {
+          title: opportunity.title,
+          document: t(`documentPhrases.${notification.documentType}`),
+        }),
+        body: t("documentNeeded.body"),
         icon: FileText,
         urgent: false,
-        action: { label: "Upload document", href: `/documents?${params}` },
+        action: { label: t("documentNeeded.action"), href: `/documents?${params}` },
         flag,
       };
     }
-    case "review_ready": {
-      const count = notification.suggestionCount;
+    case "review_ready":
       return {
-        title: "Your essay review is ready",
-        body: `Feedback on ${notification.documentName}: ${count} ${count === 1 ? "suggestion" : "suggestions"}.`,
+        title: t("reviewReady.title"),
+        body: t("reviewReady.body", { name: notification.documentName, count: notification.suggestionCount }),
         icon: Sparkles,
         urgent: false,
-        action: { label: "View review", href: reviewPath(notification.documentId) },
+        action: { label: t("reviewReady.action"), href: reviewPath(notification.documentId) },
       };
-    }
     case "new_matches":
       return {
-        title: `${notification.count} new strong ${notification.count === 1 ? "match" : "matches"} this week`,
-        body: "Based on your profile.",
+        title: t("newMatches.title", { count: notification.count }),
+        body: t("newMatches.body"),
         icon: Target,
         urgent: false,
-        action: { label: "View matches", href: "/discover?quick=strong" },
+        action: { label: t("newMatches.action"), href: "/discover?quick=strong" },
       };
     case "payment_issue":
       return {
-        title: "Your last payment didn't go through",
-        body: `You'll keep Premium until ${formatDeadlineDay(notification.premiumUntil)}.`,
+        title: t("payment.title"),
+        body: t("payment.body", { date: formatDeadlineDay(notification.premiumUntil, locale) }),
         icon: CreditCard,
         urgent: false,
-        action: { label: "Update payment", href: "/billing" },
+        action: { label: t("payment.action"), href: "/billing" },
       };
   }
 }
 
-export type TimeGroup = "Today" | "Yesterday" | "Earlier this week" | "Earlier";
+/** Which bucket a notification falls in; its label is notifications.groups.<group>. */
+export type TimeGroup = "today" | "yesterday" | "thisWeek" | "earlier";
 
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
@@ -120,37 +116,34 @@ const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(),
 export function timeGroup(iso: string, now: Date): TimeGroup {
   const day = startOfDay(new Date(iso)).getTime();
   const today = startOfDay(now);
-  if (day >= today.getTime()) return "Today";
-  if (day >= today.getTime() - 86_400_000) return "Yesterday";
+  if (day >= today.getTime()) return "today";
+  if (day >= today.getTime() - 86_400_000) return "yesterday";
   const weekStart = new Date(today);
   weekStart.setDate(today.getDate() - today.getDay());
-  return day >= weekStart.getTime() ? "Earlier this week" : "Earlier";
+  return day >= weekStart.getTime() ? "thisWeek" : "earlier";
 }
 
 /** Consecutive notifications in the same bucket; expects newest first. */
 export function groupByTime<T extends { notification: Notification }>(items: T[], now: Date) {
-  const groups: { label: TimeGroup; items: T[] }[] = [];
+  const groups: { group: TimeGroup; items: T[] }[] = [];
   for (const item of items) {
-    const label = timeGroup(item.notification.createdAt, now);
+    const group = timeGroup(item.notification.createdAt, now);
     const last = groups[groups.length - 1];
-    if (last?.label === label) last.items.push(item);
-    else groups.push({ label, items: [item] });
+    if (last?.group === group) last.items.push(item);
+    else groups.push({ group, items: [item] });
   }
   return groups;
 }
 
-/** "Just now", "12 min ago", "3 hours ago", "Yesterday", "4 days ago", then "Oct 3". */
-export function relativeTime(iso: string, now: Date) {
+/** "Just now", "12 min ago", "3 hours ago", "Yesterday", "4 days ago", then "Oct 3", in the app's language. */
+export function relativeTime(iso: string, now: Date, t: NotificationText, locale: string) {
   const date = new Date(iso);
   const minutes = Math.floor((now.getTime() - date.getTime()) / 60_000);
-  if (minutes < 1) return "Just now";
-  if (minutes < 60) return `${minutes} min ago`;
+  if (minutes < 1) return t("time.justNow");
+  if (minutes < 60) return t("time.minutesAgo", { count: minutes });
   const days = Math.round((startOfDay(now).getTime() - startOfDay(date).getTime()) / 86_400_000);
-  if (days === 0) {
-    const hours = Math.floor(minutes / 60);
-    return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-  }
-  if (days === 1) return "Yesterday";
-  if (days < 7) return `${days} days ago`;
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  if (days === 0) return t("time.hoursAgo", { count: Math.floor(minutes / 60) });
+  if (days === 1) return t("time.yesterday");
+  if (days < 7) return t("time.daysAgo", { count: days });
+  return date.toLocaleDateString(intlLocale(locale), { month: "short", day: "numeric" });
 }

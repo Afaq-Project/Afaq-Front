@@ -15,6 +15,8 @@ import {
   loginSchema,
   type LoginFormValues,
 } from "@/src/shared/lib/validation/auth-schemas";
+import { useTranslations } from "next-intl";
+import { useErrorText } from "@/src/shared/lib/validation/useErrorText";
 
 const FORGOT_PASSWORD_HREF = "/forgot-password";
 
@@ -41,6 +43,8 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ sessionExpired = false, passwordReset = false }: LoginFormProps) {
+  const t = useTranslations("auth");
+  const errorText = useErrorText();
   const { login, isAdmin } = useAuth();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -65,62 +69,58 @@ export default function LoginForm({ sessionExpired = false, passwordReset = fals
 
   return (
     <AuthForm
-      title="Sign in"
-      subtitle="Welcome back. Sign in to see your matches."
+      title={t("login.title")}
+      subtitle={t("login.subtitle")}
       notice={
         passwordReset
-          ? "Your password was reset. Sign in with your new password."
+          ? t("login.passwordReset")
           : sessionExpired
-            ? "Your session expired. Sign back in. Your draft is saved."
+            ? t("login.sessionExpired")
             : undefined
       }
       onSubmit={handleSubmit(onSubmit)}
-      submitLabel="Sign in"
-      submittingLabel="Signing in"
+      submitLabel={t("login.submit")}
+      submittingLabel={t("login.submitting")}
       isSubmitting={isSubmitting}
       errorId="login-error"
       error={
         formError === INVALID_CREDENTIALS ? (
-          <>
-            That email and password don&apos;t match. Try again or{" "}
-            <TextLink
-              href={FORGOT_PASSWORD_HREF}
-              inline
-              className="text-danger-800! underline"
-            >
-              reset your password
-            </TextLink>
-            .
-          </>
+          t.rich("login.invalidCredentials", {
+            link: (chunks) => (
+              <TextLink href={FORGOT_PASSWORD_HREF} inline className="text-danger-800! underline">
+                {chunks}
+              </TextLink>
+            ),
+          })
         ) : (
           formError
         )
       }
-      switchPrompt="Don't have an account?"
-      switchLabel="Sign up"
+      switchPrompt={t("login.noAccount")}
+      switchLabel={t("login.signUp")}
       switchHref="/register"
     >
       <Input
         id="email"
         type="email"
-        label="Email"
+        label={t("email")}
         autoComplete="email"
-        placeholder="name@example.com"
-        error={errors.email?.message}
+        placeholder={t("emailPlaceholder")}
+        error={errorText(errors.email?.message)}
         {...register("email")}
       />
 
       <PasswordInput
         id="password"
-        label="Password"
+        label={t("password")}
         labelAction={
           // Negative margin keeps the 44px mobile tap target without making this label row taller than sign-up's.
           <TextLink href={FORGOT_PASSWORD_HREF} className="max-md:-my-3.5 text-caption">
-            Forgot password?
+            {t("login.forgotPassword")}
           </TextLink>
         }
         autoComplete="current-password"
-        error={errors.password?.message}
+        error={errorText(errors.password?.message)}
         {...register("password")}
       />
     </AuthForm>

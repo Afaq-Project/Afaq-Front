@@ -16,7 +16,7 @@ export function UsersTable({
   return (
     <div className="bg-white shadow-card rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left">
+        <table className="w-full text-start">
           <thead>
             <tr className="bg-neutral-100 text-caption text-neutral-800 uppercase tracking-wide">
               <th className="px-5 py-4 font-medium">Name / email</th>

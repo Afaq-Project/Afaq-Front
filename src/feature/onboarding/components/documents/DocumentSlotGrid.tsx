@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { ACCEPTED_FILE_TYPES, DOCUMENT_SLOTS } from "../../services/documentSlots";
 import type { DocumentSlotKey, DocumentSlotsState, SlotUpload } from "../../types";
 import { DocumentSlotCard } from "./DocumentSlotCard";
+import { useTranslations } from "next-intl";
 
 interface DocumentSlotGridProps {
   slots: DocumentSlotsState;
@@ -14,6 +15,7 @@ interface DocumentSlotGridProps {
 
 /** The five document slots; clicking one opens a file picker for that slot. */
 export function DocumentSlotGrid({ slots, slotUploads, onUpload, onDelete }: DocumentSlotGridProps) {
+  const t = useTranslations("onboarding.documents.slots");
   const inputRef = useRef<HTMLInputElement>(null);
   const [targetSlot, setTargetSlot] = useState<DocumentSlotKey | null>(null);
 
@@ -37,10 +39,10 @@ export function DocumentSlotGrid({ slots, slotUploads, onUpload, onDelete }: Doc
         }}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        {DOCUMENT_SLOTS.map(({ key, label }) => (
+        {DOCUMENT_SLOTS.map(({ key }) => (
           <DocumentSlotCard
             key={key}
-            label={label}
+            label={t(key)}
             slot={slots[key]}
             upload={slotUploads[key]}
             onPick={() => pickFileFor(key)}

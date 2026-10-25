@@ -15,9 +15,13 @@ import {
   registerSchema,
   type RegisterFormValues,
 } from "@/src/shared/lib/validation/auth-schemas";
+import { useTranslations } from "next-intl";
+import { useErrorText } from "@/src/shared/lib/validation/useErrorText";
 
 
 export default function SignupForm() {
+  const t = useTranslations("auth");
+  const errorText = useErrorText();
   const { register: registerUser } = useAuth();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -42,47 +46,49 @@ export default function SignupForm() {
 
   return (
     <AuthForm
-      title="Sign up"
-      subtitle="Create your account to start finding opportunities."
+      title={t("signup.title")}
+      subtitle={t("signup.subtitle")}
       onSubmit={handleSubmit(onSubmit)}
       beforeSubmit={
-        <>
-          By creating an account, you agree to our{" "}
-          <TextLink href={TERMS_HREF} inline>
-            Terms
-          </TextLink>{" "}
-          and{" "}
-          <TextLink href={PRIVACY_HREF} inline>
-            Privacy policy
-          </TextLink>
-        </>
+        t.rich("signup.consent", {
+          terms: (chunks) => (
+            <TextLink href={TERMS_HREF} inline>
+              {chunks}
+            </TextLink>
+          ),
+          privacy: (chunks) => (
+            <TextLink href={PRIVACY_HREF} inline>
+              {chunks}
+            </TextLink>
+          ),
+        })
       }
-      submitLabel="Create account"
-      submittingLabel="Creating account"
+      submitLabel={t("signup.submit")}
+      submittingLabel={t("signup.submitting")}
       isSubmitting={isSubmitting}
       errorId="signup-error"
       error={formError}
-      switchPrompt="Already have an account?"
-      switchLabel="Sign in"
+      switchPrompt={t("signup.haveAccount")}
+      switchLabel={t("signup.signIn")}
       switchHref="/login"
     >
       <div className="gap-4 grid grid-cols-2">
         <Input
           id="firstName"
           type="text"
-          label="First name"
+          label={t("signup.firstName")}
           autoComplete="given-name"
-          placeholder="John"
-          error={errors.firstName?.message}
+          placeholder={t("signup.firstNamePlaceholder")}
+          error={errorText(errors.firstName?.message)}
           {...register("firstName")}
         />
         <Input
           id="lastName"
           type="text"
-          label="Last name"
+          label={t("signup.lastName")}
           autoComplete="family-name"
-          placeholder="Doe"
-          error={errors.lastName?.message}
+          placeholder={t("signup.lastNamePlaceholder")}
+          error={errorText(errors.lastName?.message)}
           {...register("lastName")}
         />
       </div>
@@ -90,18 +96,18 @@ export default function SignupForm() {
       <Input
         id="email"
         type="email"
-        label="Email"
+        label={t("email")}
         autoComplete="email"
-        placeholder="name@example.com"
-        error={errors.email?.message}
+        placeholder={t("emailPlaceholder")}
+        error={errorText(errors.email?.message)}
         {...register("email")}
       />
 
       <PasswordInput
         id="password"
-        label="Password"
+        label={t("password")}
         autoComplete="new-password"
-        error={errors.password?.message}
+        error={errorText(errors.password?.message)}
         {...register("password")}
       />
     </AuthForm>

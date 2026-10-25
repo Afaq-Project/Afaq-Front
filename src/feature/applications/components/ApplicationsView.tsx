@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { notify } from "@/src/shared/lib/notify";
 import { buttonClasses } from "@/src/shared/ui/Button";
 import Modal from "@/src/shared/ui/Modal";
@@ -26,6 +27,8 @@ const STATE_CARD_CLASS =
  * (deadline first for active ones, FR-5.4), the empty states, and the remove confirmation.
  */
 export function ApplicationsView() {
+  const t = useTranslations("applications");
+  const tCommon = useTranslations("common");
   const { query, update } = useApplicationsQuery();
 
   // TODO: there's no tracker API yet, so status changes and removals only change this local copy
@@ -73,7 +76,7 @@ export function ApplicationsView() {
   const confirmRemove = () => {
     if (!removing) return;
     setApplications((prev) => prev.filter((a) => a.id !== removing.application.id));
-    notify.success("Removed from your applications");
+    notify.success(t("removed"));
     setRemoving(null);
   };
 
@@ -90,13 +93,11 @@ export function ApplicationsView() {
   if (applications.length === 0) {
     return (
       <div className={STATE_CARD_CLASS}>
-        <h2 className="text-h3 text-neutral-900">Start tracking your first application</h2>
-        <p className="max-w-md text-body text-neutral-600">
-          When you track an opportunity, it shows up here with reminders before the deadline.
-        </p>
+        <h2 className="text-h3 text-neutral-900">{t("emptyTitle")}</h2>
+        <p className="max-w-md text-body text-neutral-600">{t("emptyBody")}</p>
         {/* Secondary: the header's "Find opportunities" is the page's one primary button. */}
         <Link href="/discover" className={buttonClasses("secondary", "mt-3")}>
-          Discover opportunities
+          {t("findOpportunities")}
         </Link>
       </div>
     );
@@ -112,25 +113,25 @@ export function ApplicationsView() {
         <div className="flex items-center gap-2 lg:pb-2">
           <label className="flex flex-1 lg:flex-none items-center gap-2 bg-white px-3 border border-neutral-200 focus-within:border-primary-600 rounded-sm focus-within:ring-2 focus-within:ring-primary-400 lg:w-64 h-10 transition-colors">
             <Search size={16} strokeWidth={1.75} aria-hidden="true" className="text-neutral-600 shrink-0" />
-            <span className="sr-only">Search applications</span>
+            <span className="sr-only">{t("search")}</span>
             <input
               type="search"
               value={input}
               onChange={(event) => onSearch(event.target.value)}
-              placeholder="Search by title or provider"
+              placeholder={t("searchPlaceholder")}
               className="flex-1 bg-transparent min-w-0 text-neutral-900 text-small placeholder:text-neutral-400 focus:outline-none"
             />
           </label>
           <label className="relative">
-            <span className="sr-only">Type</span>
+            <span className="sr-only">{t("type")}</span>
             <select
               value={query.type}
               onChange={(event) => update({ type: event.target.value as TypeFilter })}
-              className="bg-white pr-9 pl-3 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 h-10 font-medium text-neutral-800 text-small appearance-none cursor-pointer"
+              className="bg-white pe-9 ps-3 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 h-10 font-medium text-neutral-800 text-small appearance-none cursor-pointer"
             >
               {TYPE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
-                  {option.label}
+                  {t(`types.${option.value}`)}
                 </option>
               ))}
             </select>
@@ -138,7 +139,7 @@ export function ApplicationsView() {
               size={16}
               strokeWidth={1.75}
               aria-hidden="true"
-              className="top-1/2 right-3 absolute text-neutral-600 -translate-y-1/2 pointer-events-none"
+              className="top-1/2 end-3 absolute text-neutral-600 -translate-y-1/2 pointer-events-none"
             />
           </label>
         </div>
@@ -146,18 +147,18 @@ export function ApplicationsView() {
 
       {results.length === 0 ? (
         <div className={STATE_CARD_CLASS}>
-          <h2 className="text-h3 text-neutral-900">No applications match</h2>
+          <h2 className="text-h3 text-neutral-900">{t("noMatch")}</h2>
           <button
             type="button"
             onClick={clearFilters}
             className="rounded-sm min-h-11 font-medium text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
           >
-            Clear filters
+            {t("clearFilters")}
           </button>
         </div>
       ) : (
         <>
-          <p className="text-caption text-neutral-600">Sorted by deadline</p>
+          <p className="text-caption text-neutral-600">{t("sorted")}</p>
           <ApplicationsList
             applications={visible}
             offset={offset}
@@ -171,16 +172,16 @@ export function ApplicationsView() {
         </>
       )}
 
-      <Modal open={removing !== null} onClose={closeRemove} title="Remove from tracker?" className="max-w-md">
+      <Modal open={removing !== null} onClose={closeRemove} title={t("removeTitle")} className="max-w-md">
         <p className="text-body text-neutral-800">
-          {removing?.application.title} will be removed from your applications and its deadline reminders stop.
+          {t("removeBody", { title: removing?.application.title ?? "" })}
         </p>
         <div className="flex justify-end gap-2 mt-5">
           <button ref={cancelButton} type="button" onClick={closeRemove} className={buttonClasses("secondary")}>
-            Cancel
+            {tCommon("cancel")}
           </button>
           <button type="button" onClick={confirmRemove} className={buttonClasses("destructive")}>
-            Remove
+            {t("remove")}
           </button>
         </div>
       </Modal>

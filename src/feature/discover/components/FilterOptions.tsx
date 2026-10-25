@@ -8,11 +8,14 @@ export function CheckboxList({
   options,
   selected,
   onChange,
+  labelFor = (option) => option,
 }: {
   legend: string;
   options: string[];
   selected: string[];
   onChange: (next: string[]) => void;
+  /** How an option reads, when its value isn't display text (e.g. "Remote"). */
+  labelFor?: (option: string) => string;
 }) {
   const toggle = (option: string) =>
     onChange(selected.includes(option) ? selected.filter((s) => s !== option) : [...selected, option]);
@@ -23,7 +26,7 @@ export function CheckboxList({
       {options.map((option) => (
         <label key={option} className={ROW_CLASS}>
           <input type="checkbox" checked={selected.includes(option)} onChange={() => toggle(option)} className={INPUT_CLASS} />
-          {option}
+          {labelFor(option)}
         </label>
       ))}
     </fieldset>

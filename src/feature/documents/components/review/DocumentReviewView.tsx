@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Download, FileText, MessageSquare } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { FlagTile } from "@/src/feature/opportunities/components/FlagTile";
 import { countryName } from "@/src/shared/lib/countries";
 import { isReviewable, reviewNoun } from "@/src/shared/lib/document-types";
@@ -29,18 +30,21 @@ const BACK_LINK_CLASS =
 
 /** Back to where the user came from: the AI assistant, an application, or (by default) the list. */
 function backLink(from: string | null) {
-  if (from === "ai") return { href: "/ai", label: "Back to AI assistant" };
+  if (from === "ai") return { href: "/ai", label: "backAi" } as const;
   const application = from?.match(/^application:([\w-]+)$/)?.[1];
-  if (application) return { href: `/applications/${application}`, label: "Back to application" };
-  return { href: "/documents", label: "Back to your documents" };
+  if (application) return { href: `/applications/${application}`, label: "backApplication" } as const;
+  return { href: "/documents", label: "backDocuments" } as const;
 }
 
 function UsedIn({ item }: { item: DocumentItem }) {
-  if (item.usedIn.length === 0) return <p className="text-neutral-600 text-small">Not used yet</p>;
+  const t = useTranslations("documentReview");
+  const tDocs = useTranslations("documents");
+  const locale = useLocale();
+  if (item.usedIn.length === 0) return <p className="text-neutral-600 text-small">{tDocs("notUsed")}</p>;
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
       <span className="text-neutral-600 text-small">
-        Used in {item.usedIn.length} {item.usedIn.length === 1 ? "application" : "applications"}:
+        {t("usedInList", { count: item.usedIn.length })}
       </span>
       <ul className="flex flex-wrap gap-x-3 gap-y-1">
         {item.usedIn.map((application) => (
@@ -51,7 +55,7 @@ function UsedIn({ item }: { item: DocumentItem }) {
             >
               <FlagTile
                 countryCode={application.opportunity?.countryCode}
-                countryName={application.opportunity?.countryCode ? countryName(application.opportunity.countryCode) : undefined}
+                countryName={application.opportunity?.countryCode ? countryName(application.opportunity.countryCode, locale) : undefined}
                 remote={Boolean(application.opportunity?.isRemote) || !application.opportunity?.countryCode}
               />
               {application.title}
@@ -64,9 +68,10 @@ function UsedIn({ item }: { item: DocumentItem }) {
 }
 
 function DetailSkeleton() {
+  const t = useTranslations("documentReview");
   return (
     <div role="status" className="flex flex-col gap-6">
-      <span className="sr-only">Loading review</span>
+      <span className="sr-only">{t("loading")}</span>
       <Skeleton className="w-40 h-4" />
       <div aria-hidden="true" className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
         <div className="flex sm:flex-row flex-col sm:justify-between gap-4 lg:col-span-3">
@@ -101,6 +106,9 @@ function DetailSkeleton() {
  * API documents fall back to the mock documents (doc-1 ... doc-8).
  */
 export function DocumentReviewView({ id }: { id: string }) {
+  const t = useTranslations("documentReview");
+  const tDocs = useTranslations("documents");
+  const locale = useLocale();
   const { userDocs, items, edits, reviews, refresh } = useDocumentItems();
   const router = useRouter();
   const back = backLink(useSearchParams().get("from"));
@@ -126,18 +134,18 @@ export function DocumentReviewView({ id }: { id: string }) {
   const actions = useDocumentActions({
     refresh,
     onReplaced: (_item, newId) => {
-      notify.success("File replaced");
+      notify.success(t("replaced"));
       router.replace(reviewPath(newId));
     },
     onDeleted: () => router.push("/documents"),
   });
   // Started here: the page updates in place when it's ready.
-  const reviewFlow = useReviewFlow({ onReady: () => notify.success("Review ready") });
+  const reviewFlow = useReviewFlow({ onReady: () => notify.success(t("ready")) });
 
   if (!reviews.loaded || (!item && userDocs.isLoading) || notReviewable) return <DetailSkeleton />;
 
   if (!item && userDocs.isError) {
-    return <ErrorState titleAs="h1" title="We couldn't load this document" onRetry={userDocs.refetch} />;
+    return <ErrorState titleAs="h1" title={t("loadFailed")} onRetry={userDocs.refetch} />;
   }
 
   if (!item) {
@@ -146,18 +154,18 @@ export function DocumentReviewView({ id }: { id: string }) {
         variant="page"
         titleAs="h1"
         icon={FileText}
-        title="We couldn't find this document"
-        message="It may have been deleted or replaced."
+        title={t("notFound")}
+        message={t("notFoundBody")}
         action={
           <Link href="/documents" className={buttonClasses("secondary")}>
-            Back to your documents
+            {t("backDocuments")}
           </Link>
         }
       />
     );
   }
 
-  const added = formatDate(item.addedAt);
+  const added = formatDate(item.addedAt, locale);
   const download = () => actions.download(item);
   const openReview = () => reviewFlow.openReview(item);
   const done = review ? (reviews.done[review.id] ?? []) : [];
@@ -168,8 +176,8 @@ export function DocumentReviewView({ id }: { id: string }) {
 
   const backLinkEl = (
     <Link href={back.href} className={BACK_LINK_CLASS}>
-      <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
-      {back.label}
+      <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
+      {t(back.label)}
     </Link>
   );
   const titleBlock = (
@@ -177,7 +185,7 @@ export function DocumentReviewView({ id }: { id: string }) {
       <h1 className="text-h1 text-neutral-900 break-words">{item.name}</h1>
       <p className="mt-1 text-neutral-600 text-small">
         {item.format} · {item.size}
-        {added && ` · Added ${added}`}
+        {added && ` · ${tDocs("added", { date: added })}`}
       </p>
     </div>
   );
@@ -196,7 +204,7 @@ export function DocumentReviewView({ id }: { id: string }) {
               className={buttonClasses(reviewAgainIsPrimary ? "secondary" : "primary", "shrink-0 self-start")}
             >
               <MessageSquare size={16} strokeWidth={1.75} aria-hidden="true" />
-              Ask a follow-up
+              {t("askFollowUp")}
             </Link>
           </header>
 
@@ -216,7 +224,7 @@ export function DocumentReviewView({ id }: { id: string }) {
           </div>
 
           {/* Sticky below the 60px top bar and the page's 32px top padding. */}
-          <aside aria-label="About this document" className="flex flex-col gap-4 lg:top-[92px] lg:sticky">
+          <aside aria-label={t("aboutDocument")} className="flex flex-col gap-4 lg:top-[92px] lg:sticky">
             <YourFileCard item={item} noun={noun} onDownload={download} onAction={actions.open} />
             <UsedForCard item={item} onLink={() => actions.open("link", item)} />
             <NextReviewCard
@@ -259,7 +267,7 @@ export function DocumentReviewView({ id }: { id: string }) {
 
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           {!item.mock && (
-            <button type="button" onClick={download} aria-label={`Download ${item.name}`} className={buttonClasses("ghost", "px-0 size-11 md:size-10")}>
+            <button type="button" onClick={download} aria-label={tDocs("download", { name: item.name })} className={buttonClasses("ghost", "px-0 size-11 md:size-10")}>
               <Download size={18} strokeWidth={1.75} aria-hidden="true" />
             </button>
           )}

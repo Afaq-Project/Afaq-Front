@@ -6,6 +6,7 @@ import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { useOnboardingProgress } from "../../hooks/useOnboardingProgress";
 import { isOnboardingFinished } from "../../services/onboardingStatus";
 import { COMPLETE_PATH, stepPath } from "../../services/steps";
+import { useTranslations } from "next-intl";
 
 interface OnboardingGuardProps {
   /** 1–4 for the steps, 5 for the complete page. */
@@ -18,6 +19,7 @@ interface OnboardingGuardProps {
  * and from going back to the steps once onboarding is finished.
  */
 export function OnboardingGuard({ step, children }: OnboardingGuardProps) {
+  const t = useTranslations();
   const router = useRouter();
   const { user } = useAuth();
   const { isLoading, isError, retry, firstIncompleteStep } = useOnboardingProgress();
@@ -47,13 +49,13 @@ export function OnboardingGuard({ step, children }: OnboardingGuardProps) {
   if (isError) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background px-6 text-center" role="alert">
-        <p className="text-sm text-on-surface-variant">We couldn&apos;t check your progress.</p>
+        <p className="text-sm text-on-surface-variant">{t("onboarding.progressError")}</p>
         <button
           type="button"
           onClick={retry}
           className="cursor-pointer rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary hover:opacity-90"
         >
-          Try again
+          {t("common.tryAgain")}
         </button>
       </div>
     );
@@ -65,8 +67,10 @@ export function OnboardingGuard({ step, children }: OnboardingGuardProps) {
 }
 
 function GuardSpinner() {
+  const t = useTranslations("common");
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Loading">
+    <div className="flex min-h-screen items-center justify-center bg-background" role="status" aria-label={t("loading")}>
       <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-primary border-t-transparent" />
     </div>
   );

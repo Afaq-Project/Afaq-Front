@@ -13,17 +13,15 @@ export interface ApplicationsQuery {
 
 export const DEFAULT_APPLICATIONS_QUERY: ApplicationsQuery = { tab: "all", q: "", type: "all" };
 
-export const STATUS_TABS: { value: StatusTab; label: string; statuses: ApplicationStatus[] }[] = [
-  { value: "all", label: "All", statuses: [] },
-  { value: "not_started", label: "Not started", statuses: ["not_started"] },
-  { value: "in_progress", label: "In progress", statuses: ["in_progress"] },
-  { value: "submitted", label: "Submitted", statuses: ["submitted"] },
-  { value: "in_review", label: "In review", statuses: ["in_review"] },
-  { value: "decision", label: "Decision", statuses: ["accepted", "rejected"] },
+/** Its label is applications.tabs.<value>. */
+export const STATUS_TABS: { value: StatusTab; statuses: ApplicationStatus[] }[] = [
+  { value: "all", statuses: [] },
+  { value: "not_started", statuses: ["not_started"] },
+  { value: "in_progress", statuses: ["in_progress"] },
+  { value: "submitted", statuses: ["submitted"] },
+  { value: "in_review", statuses: ["in_review"] },
+  { value: "decision", statuses: ["accepted", "rejected"] },
 ];
 
-export const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
-  { value: "all", label: "All types" },
-  { value: "scholarship", label: "Scholarships" },
-  { value: "internship", label: "Internships" },
-];
+/** Its label is applications.types.<value>. */
+export const TYPE_OPTIONS: { value: TypeFilter }[] = [{ value: "all" }, { value: "scholarship" }, { value: "internship" }];

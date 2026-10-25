@@ -8,13 +8,17 @@ import { useStepSave } from "../../hooks/useStepSave";
 import { initialSkills } from "../../services/initialState";
 import { saveSkills } from "../../services/onboardingSync";
 import { stepPath } from "../../services/steps";
-import type { Option, SkillsData } from "../../types";
+import type { ProficiencyOption, SkillsData } from "../../types";
 import { OnboardingFooter } from "../layout/OnboardingFooter";
 import { LanguagesSection } from "./LanguagesSection";
 import { SkillsSection } from "./SkillsSection";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 /** Step 3 (optional): holds skills and languages and saves them on Next. */
 export function SkillsStep() {
+  const t = useTranslations("onboarding.skills");
+  const { name: refName } = useReferenceName();
   const router = useRouter();
   const { draft, updateSkills } = useOnboardingDraft();
   const { isSaving, error, run } = useStepSave();
@@ -23,7 +27,11 @@ export function SkillsStep() {
 
   // Only real levels from the API — their IDs are what the backend validates.
   const { data: rawLevels = [] } = useProficiencyLevels();
-  const proficiencyLevels: Option[] = rawLevels.map((p) => ({ id: p.id, name: p.nameEn }));
+  const proficiencyLevels: ProficiencyOption[] = rawLevels.map((p) => ({
+    id: p.id,
+    name: refName(p),
+    native: p.nameEn.toLowerCase().includes("native"),
+  }));
 
   const handleNext = () =>
     run(
@@ -39,10 +47,10 @@ export function SkillsStep() {
       <main className="flex-grow w-full max-w-4xl mx-auto px-6 pt-8 pb-24 flex flex-col gap-8">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-on-surface mb-2 tracking-tight">
-            What are your skills and interests?
+            {t("title")}
           </h1>
           <p className="text-sm text-on-surface-variant">
-            Add skills to help us personalize your experience. (Optional)
+            {t("subtitle")}
           </p>
         </div>
 

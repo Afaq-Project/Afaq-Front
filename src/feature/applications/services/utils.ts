@@ -11,12 +11,6 @@ import {
 } from "../types/filters";
 import { APPLICATION_DETAILS } from "../mocks/applicationDetails";
 
-export function formatDeadline(daysLeft: number): string {
-  if (daysLeft <= 0) return "Ends today";
-  if (daysLeft === 1) return "Ends tomorrow";
-  return `Ends in ${daysLeft} days`;
-}
-
 const ACTIVE_STATUSES: ApplicationStatus[] = ["not_started", "in_progress"];
 
 export const isActive = (application: ApplicationSummary) => ACTIVE_STATUSES.includes(application.status);

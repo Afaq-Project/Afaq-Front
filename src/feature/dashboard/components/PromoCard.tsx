@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, type LucideIcon } from "lucide-react";
 import { buttonClasses } from "@/src/shared/ui/Button";
+import { useTranslations } from "next-intl";
 
 interface PromoCardProps {
   icon: LucideIcon;
@@ -21,6 +22,7 @@ interface PromoCardProps {
  * pill, a short title, and optional description, date and "Learn more" button.
  */
 export function PromoCard({ icon: Icon, title, eyebrow, description, date, time, cta, href }: PromoCardProps) {
+  const t = useTranslations("dashboard");
   return (
     <section
       aria-label={eyebrow ?? title}
@@ -29,7 +31,7 @@ export function PromoCard({ icon: Icon, title, eyebrow, description, date, time,
       {/* Soft glow in the corner; decorative. */}
       <span
         aria-hidden="true"
-        className="-top-8 -left-8 absolute bg-primary-100/50 blur-2xl rounded-full size-24 pointer-events-none"
+        className="-top-8 -start-8 absolute bg-primary-100/50 blur-2xl rounded-full size-24 pointer-events-none"
       />
 
       <span className="relative flex justify-center items-center bg-linear-to-br from-primary-400 to-primary-600 shadow-sm rounded-md size-9 text-white shrink-0">
@@ -58,10 +60,10 @@ export function PromoCard({ icon: Icon, title, eyebrow, description, date, time,
       {href && (
         <Link
           href={href}
-          aria-label={`Learn more about ${title.toLowerCase()}`}
+          aria-label={t("promoLearnMore", { title: title.toLowerCase() })}
           className="after:absolute relative flex justify-center items-center bg-white hover:bg-primary-50 border border-primary-100 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 size-7 self-start shrink-0 text-primary-800 transition-colors after:-inset-2 after:content-['']"
         >
-          <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" />
+          <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" className="rtl:-scale-x-100" />
         </Link>
       )}
     </section>

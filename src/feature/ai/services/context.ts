@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { getApplicationDetail } from "@/src/feature/applications/services/utils";
 import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { reviewPath } from "@/src/feature/documents/services/reviewStore";
@@ -18,7 +19,27 @@ export interface ChatContext {
   linkLabel?: string;
 }
 
-const GENERAL: ChatContext = { kind: "general", key: "general", title: "General guidance" };
+/** The context words in the app's language (useContextLabels). */
+export interface ContextLabels {
+  general: string;
+  yourDocument: string;
+  aiReview: string;
+  openReview: string;
+  viewApplication: string;
+  viewOpportunity: string;
+}
+
+export function useContextLabels(): ContextLabels {
+  const t = useTranslations("ai.context");
+  return {
+    general: t("general"),
+    yourDocument: t("yourDocument"),
+    aiReview: t("aiReview"),
+    openReview: t("openReview"),
+    viewApplication: t("viewApplication"),
+    viewOpportunity: t("viewOpportunity"),
+  };
+}
 
 /**
  * What a chat is about, resolved from its essay document, application or opportunity link.
@@ -26,16 +47,17 @@ const GENERAL: ChatContext = { kind: "general", key: "general", title: "General 
  */
 export function contextFor(
   conversation: Pick<Conversation, "opportunityId" | "applicationId" | "documentId">,
+  labels: ContextLabels,
   documentName?: (id: string) => string | undefined,
 ): ChatContext {
   if (conversation.documentId) {
     return {
       kind: "document",
       key: `document:${conversation.documentId}`,
-      title: documentName?.(conversation.documentId) ?? "Your document",
-      provider: "AI review",
+      title: documentName?.(conversation.documentId) ?? labels.yourDocument,
+      provider: labels.aiReview,
       href: reviewPath(conversation.documentId, "ai"),
-      linkLabel: "Open full review",
+      linkLabel: labels.openReview,
     };
   }
   if (conversation.applicationId) {
@@ -52,7 +74,7 @@ export function contextFor(
         matchScore: opportunity?.matchScore,
         deadlineDate: application.deadlineDate,
         href: `/applications/${application.id}`,
-        linkLabel: "View application",
+        linkLabel: labels.viewApplication,
       };
     }
   }
@@ -69,9 +91,9 @@ export function contextFor(
         matchScore: opportunity.matchScore,
         deadlineDate: opportunity.deadlineDate,
         href: `/discover/${opportunity.id}`,
-        linkLabel: "View opportunity",
+        linkLabel: labels.viewOpportunity,
       };
     }
   }
-  return GENERAL;
+  return { kind: "general", key: "general", title: labels.general };
 }

@@ -1,8 +1,9 @@
+import { intlLocale } from "@/src/i18n/format";
 import { PRICING } from "../config/plans";
 import type { BillingCycle, PlanId } from "../types/billing";
 
-function formatMoney(amount: number) {
-  return new Intl.NumberFormat("en-US", {
+function formatMoney(amount: number, locale: string) {
+  return new Intl.NumberFormat(intlLocale(locale), {
     style: "currency",
     currency: PRICING.currency,
     maximumFractionDigits: Number.isInteger(amount) ? 0 : 2,
@@ -17,11 +18,12 @@ export interface DisplayPrice {
 }
 
 /** The price to show for a plan, or null when Premium's price for that cycle isn't set. */
-export function displayPrice(plan: PlanId, cycle: BillingCycle): DisplayPrice | null {
-  if (plan === "free") return { perMonth: formatMoney(0) };
-  if (cycle === "monthly") return PRICING.monthly === null ? null : { perMonth: formatMoney(PRICING.monthly) };
+export function displayPrice(plan: PlanId, cycle: BillingCycle, locale: string): DisplayPrice | null {
+  const money = (amount: number) => formatMoney(amount, locale);
+  if (plan === "free") return { perMonth: money(0) };
+  if (cycle === "monthly") return PRICING.monthly === null ? null : { perMonth: money(PRICING.monthly) };
   if (PRICING.annual === null) return null;
-  return { perMonth: formatMoney(Math.round((PRICING.annual / 12) * 100) / 100), billedYearly: formatMoney(PRICING.annual) };
+  return { perMonth: money(Math.round((PRICING.annual / 12) * 100) / 100), billedYearly: money(PRICING.annual) };
 }
 
 /** The annual discount, from config or, failing that, from the two prices. Null when neither is set. */

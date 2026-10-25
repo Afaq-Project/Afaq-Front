@@ -1,6 +1,6 @@
 import { Award, Briefcase, FlaskConical, GraduationCap, Repeat } from "lucide-react";
 import type { SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Section } from "../../layout/Section";
 import { SectionHeader } from "../../layout/SectionHeader";
 import { Card } from "../../ui/Card";
@@ -16,6 +16,7 @@ const ICONS = [GraduationCap, Award, FlaskConical, Briefcase, Repeat];
  *  - From 1024px: 5 in a row (16px padding and caption-size descriptions until 1280px).
  */
 export function WhoItsForSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { whoItsFor } = content;
 
   return (

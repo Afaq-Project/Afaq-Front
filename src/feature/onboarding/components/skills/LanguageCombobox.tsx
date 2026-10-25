@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { useLanguagesSearch } from "@/src/shared/lib/api/hooks/useReferenceData";
 import { useDebounce } from "@/src/shared/lib/hooks/useDebounce";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 interface LanguageComboboxProps {
   value: string;
@@ -13,6 +15,8 @@ interface LanguageComboboxProps {
 
 /** Searchable language picker. */
 export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxProps) {
+  const { name: refName } = useReferenceName();
+  const t = useTranslations("onboarding.skills");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -38,22 +42,22 @@ export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxP
             setQuery("");
             setOpen(true);
           }}
-          placeholder="Search language…"
-          className="w-full bg-surface-container text-on-surface border border-outline-variant rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors pr-8"
+          placeholder={t("searchLanguage")}
+          className="w-full bg-surface-container text-on-surface border border-outline-variant rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors pe-8"
         />
         {isFetching ? (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="absolute end-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         ) : (
-          <span className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">
+          <span className="material-symbols-outlined absolute end-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">
             expand_more
           </span>
         )}
       </div>
 
       {open && (
-        <div className="absolute top-full left-0 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 max-h-52 overflow-y-auto">
+        <div className="absolute top-full start-0 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 max-h-52 overflow-y-auto">
           {results.length === 0 && !isFetching ? (
-            <div className="px-4 py-3 text-xs text-on-surface-variant text-center">No languages found</div>
+            <div className="px-4 py-3 text-xs text-on-surface-variant text-center">{t("noLanguagesFound")}</div>
           ) : (
             results.map((lang) => (
               <button
@@ -61,13 +65,13 @@ export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxP
                 type="button"
                 onMouseDown={(e) => {
                   e.preventDefault();
-                  onChange(lang.nameEn, lang.id);
+                  onChange(refName(lang), lang.id);
                   setOpen(false);
                   setQuery("");
                 }}
-                className={`w-full text-left px-4 py-2.5 text-sm hover:bg-neutral-50 transition-colors cursor-pointer ${valueId === lang.id ? "text-primary font-semibold bg-primary/5" : "text-on-surface"}`}
+                className={`w-full text-start px-4 py-2.5 text-sm hover:bg-neutral-50 transition-colors cursor-pointer ${valueId === lang.id ? "text-primary font-semibold bg-primary/5" : "text-on-surface"}`}
               >
-                {lang.nameEn}
+                {refName(lang)}
               </button>
             ))
           )}

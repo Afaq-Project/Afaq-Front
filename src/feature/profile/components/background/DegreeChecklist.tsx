@@ -2,6 +2,8 @@
 
 import { Check } from "lucide-react";
 import { useEducationLevels } from "@/src/shared/lib/api/hooks/useReferenceData";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 interface DegreeChecklistProps {
   selectedIds: string[];
@@ -10,6 +12,8 @@ interface DegreeChecklistProps {
 
 /** Toggleable chips for the short list of education levels. Selection shows a check, not just color. */
 export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps) {
+  const { name: refName } = useReferenceName();
+  const t = useTranslations("profile.goals");
   const { data: levels = [], isLoading } = useEducationLevels();
 
   const toggle = (id: string) =>
@@ -17,7 +21,7 @@ export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps)
 
   return (
     <fieldset>
-      <legend className="mb-2 text-caption text-neutral-800">Target degrees</legend>
+      <legend className="mb-2 text-caption text-neutral-800">{t("targetDegrees")}</legend>
       {isLoading ? (
         <p className="text-small text-neutral-600" role="status">
           Loading degrees…
@@ -39,7 +43,7 @@ export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps)
                 }`}
               >
                 {selected && <Check size={16} strokeWidth={1.75} aria-hidden="true" />}
-                {level.nameEn}
+                {refName(level)}
               </button>
             );
           })}

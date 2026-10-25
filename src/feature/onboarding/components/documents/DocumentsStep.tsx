@@ -10,9 +10,11 @@ import { DocumentDropZone } from "./DocumentDropZone";
 import { DocumentSlotGrid } from "./DocumentSlotGrid";
 import { StagedFileItem } from "./StagedFileItem";
 import { UploadedFileList } from "./UploadedFileList";
+import { useTranslations } from "next-intl";
 
 /** Step 4 (optional): documents upload as they're added; Finish closes onboarding. */
 export function DocumentsStep() {
+  const t = useTranslations("onboarding.documents");
   const router = useRouter();
   const { data: documentTypes = [], isLoading: typesLoading } = useDocumentTypes();
   const documents = useDocumentUploads(documentTypes, typesLoading);
@@ -23,9 +25,9 @@ export function DocumentsStep() {
       <main className="flex-grow flex flex-col items-center justify-center px-6 pt-8 pb-8">
         <div className="w-full max-w-4xl space-y-6">
           <div className="text-center space-y-1">
-            <h1 className="text-2xl md:text-3xl font-semibold text-on-background tracking-tight">Add your documents</h1>
-            <p className="text-sm text-on-surface-variant font-medium">(you can also do this later)</p>
-            <p className="text-xs text-outline">PDF, DOC, DOCX, PNG, or JPG, up to 5MB per file</p>
+            <h1 className="text-2xl md:text-3xl font-semibold text-on-background tracking-tight">{t("title")}</h1>
+            <p className="text-sm text-on-surface-variant font-medium">{t("later")}</p>
+            <p className="text-xs text-outline">{t("formats")}</p>
           </div>
 
           <DocumentDropZone onFile={documents.stageFile} />
@@ -64,7 +66,7 @@ export function DocumentsStep() {
         onNext={finish}
         onBack={() => router.push(stepPath(3))}
         onSkip={finish}
-        nextLabel="Finish"
+        nextLabel={t("finish")}
         nextIcon="check"
         isSaving={isFinishing}
       />

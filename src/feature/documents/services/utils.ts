@@ -2,7 +2,8 @@ import { APPLICATION_DETAILS } from "@/src/feature/applications/mocks/applicatio
 import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { formatFileSize } from "@/src/feature/onboarding/services/documentSlots";
 import type { ApiDocument } from "@/src/feature/profile/types/api";
-import { documentType, isReviewable, typeForName, type DocumentTypeKey } from "@/src/shared/lib/document-types";
+import { isReviewable, typeForName, type DocumentTypeKey } from "@/src/shared/lib/document-types";
+import { intlLocale } from "@/src/i18n/format";
 import { DOCUMENTS } from "../mocks/documents";
 import type { DocumentItem, TrackedApplication } from "../types/document";
 import type { LocalEdits } from "./documentEditsStore";
@@ -39,10 +40,12 @@ export function buildItems(
   documents: { document: ApiDocument; type?: DocumentTypeKey }[],
   edits: LocalEdits,
   reviews: ReviewState,
+  /** The name for a document without one, in the app's language. */
+  untitled: string,
 ): DocumentItem[] {
   return documents.map(({ document, type }) => {
     const itemType = edits.types[document.id] ?? type;
-    const name = edits.names[document.id] ?? document.displayName ?? "Untitled document";
+    const name = edits.names[document.id] ?? document.displayName ?? untitled;
     return {
       id: document.id,
       apiTypeId: document.documentTypeId,
@@ -76,11 +79,8 @@ export function mockItem(id: string, edits: LocalEdits, reviews: ReviewState): D
   };
 }
 
-/** The type label shown for a document; untyped ones read as "Other". */
-export const typeLabel = (type?: DocumentTypeKey) => documentType(type ?? "other").label;
-
-/** "Oct 12, 2026". */
-export function formatDate(iso?: string) {
+/** "Oct 12, 2026", in `locale`. */
+export function formatDate(iso: string | undefined, locale: string) {
   if (!iso) return undefined;
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return new Date(iso).toLocaleDateString(intlLocale(locale), { month: "short", day: "numeric", year: "numeric" });
 }

@@ -2,9 +2,11 @@
 
 import { useRef, useState } from "react";
 import { ACCEPTED_FILE_TYPES } from "../../services/documentSlots";
+import { useTranslations } from "next-intl";
 
 /** Drag-and-drop (or click-to-browse) area for one file at a time. */
 export function DocumentDropZone({ onFile }: { onFile: (file: File) => void }) {
+  const t = useTranslations("onboarding.documents");
   const [isDragOver, setIsDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -53,8 +55,8 @@ export function DocumentDropZone({ onFile }: { onFile: (file: File) => void }) {
         >
           cloud_upload
         </span>
-        <p className="text-sm font-semibold text-neutral-800">Drag and drop files here or click to browse</p>
-        <p className="text-xs text-neutral-400 mt-1">Drop any document to assign its type after upload</p>
+        <p className="text-sm font-semibold text-neutral-800">{t("dropTitle")}</p>
+        <p className="text-xs text-neutral-400 mt-1">{t("dropHint")}</p>
       </div>
     </>
   );

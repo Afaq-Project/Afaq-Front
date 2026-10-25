@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   useInfiniteQuery,
   useQueries,
@@ -16,6 +16,10 @@ import { fromMatch, fromOpportunity, toDetail, type CountryCodes } from "../serv
 import { opportunityService, recommendationService, type Page } from "../services/opportunityService";
 import type { ApiMatch, ListOpportunitiesParams } from "../types/api";
 import type { OpportunitySummary } from "../types/opportunity";
+import { useLocale, useTranslations } from "next-intl";
+import type messages from "@/src/messages/en.json";
+
+type StudyLevelKey = keyof (typeof messages)["studyLevel"];
 
 /** Discover's grid shows 3 / 2 / 1 columns, so 12 fills whole rows at every width. */
 export const FEED_PAGE_SIZE = 12;
@@ -29,8 +33,15 @@ const isShown = (o: OpportunitySummary | null): o is OpportunitySummary => o !==
 const isOpenShown = (o: OpportunitySummary | null): o is OpportunitySummary =>
   o !== null && (o.daysLeft === undefined || o.daysLeft >= 0);
 
-/** Lets the API's country names find their flags. Without the list yet, cards show a globe. */
+/** Lets the API's country names find their flags (without the list yet, cards show a globe), and sets which listings the language shows. */
 function useMapContext() {
+  const hideArabic = useLocale() !== "ar";
+  const tLevel = useTranslations("studyLevel");
+  // Levels without a message (new ones from the API) show as sent.
+  const levelLabel = useCallback(
+    (level: string) => (tLevel.has(level as StudyLevelKey) ? tLevel(level as StudyLevelKey) : level),
+    [tLevel],
+  );
   const { data: countries } = useAllCountries();
   // Captured once so the countdowns don't shift between renders.
   const [now] = useState(() => new Date());
@@ -39,11 +50,16 @@ function useMapContext() {
       new Map(
         (countries ?? [])
           .filter((c) => c.isoCode2)
-          .map((c) => [c.nameEn.toLowerCase(), c.isoCode2!.toLowerCase()]),
+          // Listings give the country in English, or in Arabic for Arabic sources.
+          .flatMap((c) =>
+            [c.nameEn, c.nameAr]
+              .filter((name): name is string => Boolean(name))
+              .map((name) => [name.toLowerCase(), c.isoCode2!.toLowerCase()] as const),
+          ),
       ),
     [countries],
   );
-  return useMemo(() => ({ countryCodes, now }), [countryCodes, now]);
+  return useMemo(() => ({ countryCodes, now, hideArabic, levelLabel }), [countryCodes, now, hideArabic, levelLabel]);
 }
 
 const nextPage = <T>(last: Page<T>) => (last.hasNext ? last.page + 1 : undefined);

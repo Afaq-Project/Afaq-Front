@@ -5,6 +5,8 @@ import { InlineSearch } from "@/src/shared/ui/InlineSearch";
 import { useCountryOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import type { Option, PersonalInfoData } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 interface LocationSectionProps {
   data: PersonalInfoData;
@@ -12,11 +14,13 @@ interface LocationSectionProps {
 }
 
 export function LocationSection({ data, onChange }: LocationSectionProps) {
+  const t = useTranslations("onboarding.personal");
+  const { name: refName } = useReferenceName();
   const countries = useCountryOptions();
   const { data: rawCities = [], isLoading: loadingCities } = useAllCitiesForCountry(
     data.countryOfResidenceId ?? "",
   );
-  const cities: Option[] = rawCities.map((c) => ({ id: c.id, name: c.nameEn }));
+  const cities: Option[] = rawCities.map((c) => ({ id: c.id, name: refName(c) }));
 
   // Changing the country invalidates the city.
   const setCountry = (country?: Option) =>
@@ -30,14 +34,14 @@ export function LocationSection({ data, onChange }: LocationSectionProps) {
 
   return (
     <section className="flex flex-col gap-5">
-      <StepSectionHeading>Current Location</StepSectionHeading>
+      <StepSectionHeading>{t("location")}</StepSectionHeading>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <InlineSearch<Option>
-          label="Country of Residence"
+          label={t("country")}
           required
           selectedName={data.countryOfResidence}
-          placeholder="Search countries…"
+          placeholder={t("countryPlaceholder")}
           items={countries.options}
           isFetching={countries.isFetching}
           onSearch={countries.setQuery}
@@ -46,10 +50,10 @@ export function LocationSection({ data, onChange }: LocationSectionProps) {
         />
 
         <InlineSearch<Option>
-          label="City"
-          hint="optional"
+          label={t("city")}
+          optional
           selectedName={data.currentCity}
-          placeholder={data.countryOfResidenceId ? "Search cities…" : "Select country first"}
+          placeholder={data.countryOfResidenceId ? t("cityPlaceholder") : t("cityFirst")}
           items={cities}
           isFetching={loadingCities}
           onSearch={() => {}}

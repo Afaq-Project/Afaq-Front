@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { HorizonLines } from "@/src/shared/ui/HorizonLines";
 import { APP_SIGNUP_URL, type SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Section } from "../../layout/Section";
 import { Button } from "../../ui/Button";
 import { SectionLinkButton } from "../../ui/SectionLinkButton";
@@ -35,6 +35,7 @@ const RISE = "animate-landing-rise motion-reduce:animate-none";
  * both are decorative and aria-hidden.
  */
 export function HeroSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { hero } = content;
 
   return (

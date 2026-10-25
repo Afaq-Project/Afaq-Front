@@ -13,6 +13,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { DASHBOARD_METRICS } from "@/src/feature/admin/dashboard/mocks/dashboardMetrics";
+import type messages from "@/src/messages/en.json";
+
+/** Message keys under shell.nav and shell.menu; the components translate them. */
+type ShellMessages = (typeof messages)["shell"];
+export type NavLabelKey = `nav.${keyof ShellMessages["nav"]}`;
+export type MenuLabelKey = `menu.${keyof ShellMessages["menu"]}`;
 
 export type ShellVariant = "user" | "admin";
 
@@ -32,18 +38,17 @@ export const ICON_BUTTON_CLASS =
 
 export interface NavItem {
   href: string;
-  label: string;
+  labelKey: NavLabelKey;
   icon: LucideIcon;
-  /** Count shown beside the label, e.g. pending approvals. */
+  /** Count shown beside the label: pending approvals, read out as "N pending". */
   badge?: number;
-  badgeLabel?: string;
   /** The mobile tab bar fits four tabs; anything beyond moves into the user menu. */
   menuOnMobile?: boolean;
 }
 
 export interface MenuItem {
   href: string;
-  label: string;
+  labelKey: NavLabelKey | MenuLabelKey;
   icon: LucideIcon;
   mobileOnly?: boolean;
 }
@@ -54,40 +59,39 @@ export const HOME_HREF: Record<ShellVariant, string> = {
 };
 
 const ADMIN_NAV: NavItem[] = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: Gauge },
+  { href: "/admin/dashboard", labelKey: "nav.dashboard", icon: Gauge },
   {
     href: "/admin/opportunities/approval-queue",
-    label: "Approvals",
+    labelKey: "nav.approvals",
     icon: ShieldCheck,
     // TODO: read from the admin metrics API once it exists; this is the same mock the admin dashboard shows.
     badge: DASHBOARD_METRICS.pendingApprovalCount,
-    badgeLabel: "pending",
   },
-  { href: "/admin/opportunities/manage", label: "Opportunities", icon: Settings2 },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/subscriptions", label: "Subscriptions", icon: CreditCard, menuOnMobile: true },
+  { href: "/admin/opportunities/manage", labelKey: "nav.opportunities", icon: Settings2 },
+  { href: "/admin/users", labelKey: "nav.users", icon: Users },
+  { href: "/admin/subscriptions", labelKey: "nav.subscriptions", icon: CreditCard, menuOnMobile: true },
 ];
 
 export const NAV_ITEMS: Record<ShellVariant, NavItem[]> = {
   user: [
-    { href: "/dashboard", label: "Home", icon: House },
-    { href: "/discover", label: "Discover", icon: Compass },
-    { href: "/applications", label: "Applications", icon: ClipboardList },
-    { href: "/ai", label: "AI assistant", icon: Sparkles },
+    { href: "/dashboard", labelKey: "nav.home", icon: House },
+    { href: "/discover", labelKey: "nav.discover", icon: Compass },
+    { href: "/applications", labelKey: "nav.applications", icon: ClipboardList },
+    { href: "/ai", labelKey: "nav.ai", icon: Sparkles },
   ],
   admin: ADMIN_NAV,
 };
 
 export const MENU_ITEMS: Record<ShellVariant, MenuItem[]> = {
   user: [
-    { href: "/profile", label: "Your profile", icon: CircleUserRound },
-    { href: "/billing", label: "Plan & billing", icon: CreditCard },
-    { href: "/settings", label: "Settings", icon: Settings },
+    { href: "/profile", labelKey: "menu.profile", icon: CircleUserRound },
+    { href: "/billing", labelKey: "menu.billing", icon: CreditCard },
+    { href: "/settings", labelKey: "menu.settings", icon: Settings },
   ],
   // No Settings: /settings lives in the student-only route group and redirects admins away.
-  admin: ADMIN_NAV.filter((item) => item.menuOnMobile).map(({ href, label, icon }) => ({
+  admin: ADMIN_NAV.filter((item) => item.menuOnMobile).map(({ href, labelKey, icon }) => ({
     href,
-    label,
+    labelKey,
     icon,
     mobileOnly: true,
   })),

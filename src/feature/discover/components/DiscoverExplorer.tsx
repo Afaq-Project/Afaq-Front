@@ -11,6 +11,7 @@ import { DiscoverControls } from "./DiscoverControls";
 import { MatchesPendingBanner, NoResultsState, ProfileIncompleteBanner } from "./DiscoverStates";
 import { OpportunityGrid, OpportunityGridSkeleton } from "./OpportunityGrid";
 import { SortSelect } from "./SortSelect";
+import { useTranslations } from "next-intl";
 
 /**
  * Discover: the controls card (with the sort), and the results or the right empty state. The user's
@@ -18,6 +19,7 @@ import { SortSelect } from "./SortSelect";
  * it's every opportunity without scores, with a banner saying why.
  */
 export function DiscoverExplorer() {
+  const t = useTranslations("discover");
   const { query, update } = useDiscoverQuery();
   // Only for the banner: the backend scores incomplete profiles too, so matches are always tried.
   const readiness = useMatchingReadiness();
@@ -52,7 +54,7 @@ export function DiscoverExplorer() {
   if (loading) {
     results = <OpportunityGridSkeleton />;
   } else if (feed.isError) {
-    results = <ErrorState title="We couldn't load opportunities" onRetry={() => feed.refetch()} />;
+    results = <ErrorState title={t("loadError")} onRetry={() => feed.refetch()} />;
   } else if (feed.opportunities.length === 0 && !feed.hasNextPage) {
     results = <NoResultsState onClearAll={filtered ? clearAll : undefined} />;
   } else {

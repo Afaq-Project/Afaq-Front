@@ -3,13 +3,14 @@
 import { useAllMajors, useMajorCategories } from "@/src/shared/lib/api/hooks/useReferenceData";
 import { formatReferenceName } from "../services/format";
 import type { ReferenceNames } from "./useReferenceNames";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 export interface SkillGroup {
   category: string;
   skills: { key: string; label: string }[];
 }
 
-const OTHER = "Other";
 
 /**
  * Groups the profile's skills (major IDs) by major category, alphabetically with "Other"
@@ -17,11 +18,14 @@ const OTHER = "Other";
  * the name lookups, so it adds no requests.
  */
 export function useSkillGroups(experiences: string[], names: ReferenceNames): SkillGroup[] {
+  // Skills without a known category; sorted last.
+  const OTHER = useTranslations("profile.skills")("otherCategory");
+  const { name: refName } = useReferenceName();
   const { data: majors = [] } = useAllMajors(experiences.length > 0);
   const { data: categories = [] } = useMajorCategories();
 
   const categoryOf = new Map(majors.map((m) => [m.id, m.categoryId]));
-  const categoryName = new Map(categories.map((c) => [c.id, formatReferenceName(c.nameEn)]));
+  const categoryName = new Map(categories.map((c) => [c.id, formatReferenceName(refName(c))]));
 
   const groups = new Map<string, SkillGroup["skills"]>();
   experiences.forEach((value) => {

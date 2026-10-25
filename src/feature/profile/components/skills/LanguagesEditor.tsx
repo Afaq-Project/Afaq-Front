@@ -9,6 +9,7 @@ import { useSaveLanguages, type LanguageDraft } from "../../hooks/useSaveLanguag
 import { AddLanguageForm } from "./AddLanguageForm";
 import { LanguageRow } from "./LanguageRow";
 import { savedThen } from "../common/saved";
+import { useTranslations } from "next-intl";
 
 interface LanguagesEditorProps {
   languages: LanguageDraft[];
@@ -18,17 +19,18 @@ interface LanguagesEditorProps {
 
 /** Collects additions and removals; "Save changes" applies them, "Cancel" discards them. */
 export function LanguagesEditor({ languages, names, onDone }: LanguagesEditorProps) {
+  const t = useTranslations("profile.languages");
   const { save, hasChanges, isSaving, error } = useSaveLanguages();
   const [pending, setPending] = useState<LanguageDraft[]>(languages);
   const [adding, setAdding] = useState(languages.length === 0);
 
   const handleSave = async () => {
-    if (await save(languages, pending)) savedThen("Languages saved", onDone)();
+    if (await save(languages, pending)) savedThen(t("saved"), onDone)();
   };
 
   return (
     <SectionCard
-      title="Languages"
+      title={t("title")}
       isEditing
       onCancel={onDone}
       onSave={handleSave}
@@ -61,7 +63,7 @@ export function LanguagesEditor({ languages, names, onDone }: LanguagesEditorPro
       ) : (
         <Button type="button" variant="secondary" onClick={() => setAdding(true)}>
           <Plus size={16} strokeWidth={1.75} aria-hidden="true" />
-          Add language
+          {t("add")}
         </Button>
       )}
     </SectionCard>

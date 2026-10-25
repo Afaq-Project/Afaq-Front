@@ -1,6 +1,7 @@
 import { CARD_CLASS } from "@/src/feature/dashboard/components/styles";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { Skeleton } from "@/src/shared/ui/Skeleton";
+import { useTranslations } from "next-intl";
 
 /** Card title plus `lines` text lines, the shape of About. */
 function TextCardSkeleton({ titleWidth, lines }: { titleWidth: string; lines: number }) {
@@ -74,9 +75,11 @@ function MatchSkeleton() {
  * Eligibility, Documents, the AI questions and the source line.
  */
 export function DetailsSkeleton() {
+  const t = useTranslations("opportunity.details");
+
   return (
     <div role="status" className="flex flex-col gap-6">
-      <span className="sr-only">Loading opportunity</span>
+      <span className="sr-only">{t("loading")}</span>
       <Skeleton className="w-32 h-4" />
 
       <div className="bg-white border border-neutral-100 rounded-lg overflow-hidden">

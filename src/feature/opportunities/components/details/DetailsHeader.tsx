@@ -1,5 +1,4 @@
 import { Building2, CalendarDays, ExternalLink, MapPin, Wallet, type LucideIcon } from "lucide-react";
-import { formatDeadline } from "@/src/feature/applications/services/utils";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { DEADLINE_URGENCY_TEXT, formatDeadlineDay, getDeadlineUrgency } from "@/src/shared/lib/deadline";
 import { countryName } from "@/src/shared/lib/countries";
@@ -8,8 +7,8 @@ import { HorizonLines } from "@/src/shared/ui/HorizonLines";
 import type { OpportunityDetail } from "../../types/opportunity";
 import { FlagTile } from "../FlagTile";
 import { FieldPattern } from "./FieldPattern";
-import { formatDaysLeft } from "../../services/utils";
-import { FUNDING_LABEL } from "../labels";
+import { useLocale, useTranslations } from "next-intl";
+import { useDeadlineText } from "@/src/shared/lib/useDeadlineText";
 
 function Fact({ icon: Icon, label, children }: { icon: LucideIcon; label: string; children: React.ReactNode }) {
   return (
@@ -27,10 +26,11 @@ function Fact({ icon: Icon, label, children }: { icon: LucideIcon; label: string
 
 /** "12 days left", "Ends tomorrow", "Closed", colored by urgency. */
 function Countdown({ daysLeft }: { daysLeft: number }) {
-  if (daysLeft < 0) return <span className="block font-normal text-neutral-600 text-small">Closed</span>;
+  const t = useTranslations("common");
+  const deadline = useDeadlineText();
+  if (daysLeft < 0) return <span className="block font-normal text-neutral-600 text-small">{t("closed")}</span>;
   const urgency = getDeadlineUrgency(daysLeft);
-  const text =
-    urgency === "urgent" ? formatDeadline(daysLeft) : urgency === "soon" ? `${daysLeft} days left` : formatDaysLeft(daysLeft);
+  const text = urgency === "urgent" ? deadline.endsIn(daysLeft) : deadline.timeLeft(daysLeft);
   return <span className={cn("block font-normal text-small", DEADLINE_URGENCY_TEXT[urgency])}>{text}</span>;
 }
 
@@ -40,16 +40,18 @@ function Countdown({ daysLeft }: { daysLeft: number }) {
  * the key facts (deadline, funding, location, provider). Facts the listing lacks say "Not listed".
  */
 export function DetailsHeader({ opportunity, daysLeft }: { opportunity: OpportunityDetail; daysLeft?: number }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const closed = daysLeft !== undefined && daysLeft < 0;
   const remote = Boolean(opportunity.isRemote);
-  const country = opportunity.countryCode ? countryName(opportunity.countryCode) : opportunity.location;
+  const country = opportunity.countryCode ? countryName(opportunity.countryCode, locale) : opportunity.location;
 
   const chips = [
-    opportunity.type,
-    opportunity.fundingStatus && FUNDING_LABEL[opportunity.fundingStatus],
+    t(`opportunityType.${opportunity.type}`),
+    opportunity.fundingStatus && t(`funding.${opportunity.fundingStatus}`),
     opportunity.level,
     opportunity.fieldOfStudy,
-    remote ? "Remote" : country,
+    remote ? t("common.remote") : country,
   ].filter((chip): chip is string => Boolean(chip));
 
   return (
@@ -79,7 +81,7 @@ export function DetailsHeader({ opportunity, daysLeft }: { opportunity: Opportun
 
         <div className="flex flex-wrap items-center gap-2 mt-3">
           <h1 dir="auto" className="text-h1 text-neutral-900">{opportunity.title}</h1>
-          {closed && <Badge tone="gray">Closed</Badge>}
+          {closed && <Badge tone="gray">{t("common.closed")}</Badge>}
         </div>
 
         {opportunity.provider && (
@@ -93,7 +95,7 @@ export function DetailsHeader({ opportunity, daysLeft }: { opportunity: Opportun
               >
                 {opportunity.provider}
                 <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" />
-                <span className="sr-only">(opens in a new tab)</span>
+                <span className="sr-only">{t("common.opensInNewTab")}</span>
               </a>
             ) : (
               opportunity.provider
@@ -110,25 +112,25 @@ export function DetailsHeader({ opportunity, daysLeft }: { opportunity: Opportun
         </ul>
 
         {/* Key facts: 4 across from 768px, 2×2 below. */}
-        <ul aria-label="Key facts" className="gap-4 grid grid-cols-2 md:grid-cols-4 mt-5 pt-5 border-neutral-100 border-t">
-          <Fact icon={CalendarDays} label="Deadline">
+        <ul aria-label={t("opportunity.details.keyFacts")} className="gap-4 grid grid-cols-2 md:grid-cols-4 mt-5 pt-5 border-neutral-100 border-t">
+          <Fact icon={CalendarDays} label={t("opportunity.details.deadline")}>
             {opportunity.deadlineDate && daysLeft !== undefined ? (
               <>
-                {formatDeadlineDay(opportunity.deadlineDate)}
+                {formatDeadlineDay(opportunity.deadlineDate, locale)}
                 <Countdown daysLeft={daysLeft} />
               </>
             ) : (
-              "Not listed"
+              t("common.notListed")
             )}
           </Fact>
-          <Fact icon={Wallet} label="Funding">
-            {opportunity.fundingStatus ? FUNDING_LABEL[opportunity.fundingStatus] : "Not listed"}
+          <Fact icon={Wallet} label={t("opportunity.details.funding")}>
+            {opportunity.fundingStatus ? t(`funding.${opportunity.fundingStatus}`) : t("common.notListed")}
           </Fact>
-          <Fact icon={MapPin} label="Location">
-            {remote ? "Remote" : (opportunity.location ?? "Not listed")}
+          <Fact icon={MapPin} label={t("opportunity.details.location")}>
+            {remote ? t("common.remote") : (country ?? t("common.notListed"))}
           </Fact>
-          <Fact icon={Building2} label="Provider">
-            {opportunity.provider ?? "Not listed"}
+          <Fact icon={Building2} label={t("opportunity.details.provider")}>
+            {opportunity.provider ?? t("common.notListed")}
           </Fact>
         </ul>
       </div>

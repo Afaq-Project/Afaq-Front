@@ -101,7 +101,8 @@
   --breakpoint-2xl: 90rem;
 
   /* ---- Typography ---- */
-  --font-sans: var(--font-ibm-plex-sans);
+  /* Latin glyphs from Plex Sans, Arabic from its Arabic sibling, so mixed text matches. */
+  --font-sans: var(--font-ibm-plex-sans), var(--font-arabic);
 
   /* Hero — large marketing headline (auth visual panel). Scales 44px → 48px. */
   --text-hero: clamp(44px, 3.4vw, 48px);
@@ -168,6 +169,19 @@ body {
     sans-serif;
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
+}
+
+/*
+ * In Arabic the Arabic font (Cairo) leads; it has Latin letters too. Otherwise the generated
+ * "IBM Plex Sans Fallback" face, which is local Arial, catches Arabic text before it.
+ */
+html:lang(ar) body {
+  font-family:
+    var(--font-arabic),
+    var(--font-ibm-plex-sans),
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
 }
 
 /*
@@ -245,20 +259,32 @@ input:autofill {
 
 /*
  * Landing page (public marketing site). Scoped to `.landing` so the app keeps its own
- * font and type scale. English only for now; layouts use logical properties so a
- * right-to-left version needs no rework. --leading-scale multiplies every landing
- * line-height (an Arabic version would set it to 1.2).
+ * font and type scale. Layouts use logical properties, so Arabic (right to left) needs no
+ * overrides. --leading-scale multiplies every landing line-height: 1.2 in Arabic, whose
+ * script needs taller lines.
  */
 .landing {
   /* 56px below 1024px, 64px from 1024px. Also the scroll margin for anchor jumps. */
   --landing-header-height: 56px;
   --leading-scale: 1;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  /* Arabic fonts: Cairo for body text, Almarai for headings and the hero (text-landing-display/h2/h3). */
+  --landing-arabic: var(--font-arabic);
+  --landing-heading-arabic: var(--font-arabic-heading, var(--landing-arabic));
+  --landing-heading-family: var(--font-inter), var(--landing-heading-arabic), system-ui, sans-serif;
+  font-family: var(--font-inter), var(--landing-arabic), system-ui, sans-serif;
   font-size: 16px;
   line-height: calc(24px * var(--leading-scale));
 
   @media (width >= 64rem) {
     --landing-header-height: 64px;
+  }
+
+  /* In Arabic the Arabic font leads: Inter's generated fallback face (local Arial) has Arabic
+     letters and would otherwise catch Arabic text first. */
+  &:lang(ar) {
+    --leading-scale: 1.2;
+    --landing-heading-family: var(--landing-heading-arabic), var(--font-inter), system-ui, sans-serif;
+    font-family: var(--landing-arabic), var(--font-inter), system-ui, sans-serif;
   }
 }
 
@@ -276,6 +302,7 @@ input:autofill {
 
 /* Landing type scale. Mobile sizes first; display steps up at 768px and 1024px, h2 at 768px. */
 @utility text-landing-display {
+  font-family: var(--landing-heading-family, inherit);
   font-size: 32px;
   line-height: calc(40px * var(--leading-scale, 1));
   font-weight: 600;
@@ -292,6 +319,7 @@ input:autofill {
 }
 
 @utility text-landing-h2 {
+  font-family: var(--landing-heading-family, inherit);
   font-size: 28px;
   line-height: calc(36px * var(--leading-scale, 1));
   font-weight: 600;
@@ -303,6 +331,7 @@ input:autofill {
 }
 
 @utility text-landing-h3 {
+  font-family: var(--landing-heading-family, inherit);
   font-size: 20px;
   line-height: calc(28px * var(--leading-scale, 1));
   font-weight: 600;

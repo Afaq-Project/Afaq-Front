@@ -42,9 +42,9 @@ export function Toaster() {
           title: "text-body font-medium text-neutral-900",
           description: "text-small text-neutral-600",
           actionButton:
-            "ml-auto shrink-0 rounded-sm px-2 text-small font-medium text-primary-600 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
+            "ms-auto shrink-0 rounded-sm px-2 text-small font-medium text-primary-600 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
           closeButton:
-            "absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full border border-[inherit] bg-inherit text-neutral-600 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
+            "absolute -end-2 -top-2 flex size-6 items-center justify-center rounded-full border border-[inherit] bg-inherit text-neutral-600 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
         },
       }}
     />

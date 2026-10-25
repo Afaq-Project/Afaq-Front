@@ -7,6 +7,7 @@ import InlineAlert from "@/src/shared/ui/InlineAlert";
 import { PROVIDER_NAMES, type LoginMethods, type Provider } from "../services/accountService";
 import { CURRENT_PASSWORD_ID, ChangePasswordForm, NEW_PASSWORD_ID, SetPasswordForm } from "./PasswordForms";
 import { SettingsRow, SettingsSection } from "./SettingsSection";
+import { useTranslations } from "next-intl";
 
 /** Anchor for the password row; the connected-accounts lockout note links here. */
 export const PASSWORD_ROW_ID = "account-password";
@@ -29,6 +30,7 @@ export function AccountSection({
   passwordFormOpen: open,
   onPasswordFormOpenChange: setOpen,
 }: AccountSectionProps) {
+  const t = useTranslations("settings");
   const [saved, setSaved] = useState<string | null>(null);
   // Bumped to remount the form, which clears its fields and errors.
   const [formKey, setFormKey] = useState(0);
@@ -49,25 +51,25 @@ export function AccountSection({
   };
 
   const onSaved = () => {
-    setSaved(hasPassword ? "Your password was updated." : "Your password was set. You can now log in with your email.");
+    setSaved(hasPassword ? t("account.updated") : t("account.set"));
     if (!hasPassword) onPasswordSet();
     close();
   };
 
   return (
-    <SettingsSection id="account" title="Account">
-      <SettingsRow label="Email">
-        <div className="md:text-right">
+    <SettingsSection id="account" title={t("sections.account")}>
+      <SettingsRow label={t("account.email")}>
+        <div className="md:text-end">
           <p className="text-body text-neutral-900 break-all">{email || "—"}</p>
-          <p className="text-caption text-neutral-600">Used for login and reminders</p>
+          <p className="text-caption text-neutral-600">{t("account.emailHelp")}</p>
         </div>
       </SettingsRow>
 
       <SettingsRow
         id={PASSWORD_ROW_ID}
         // TODO: show "Last changed {relative date}" once /auth/me reports when the password changed.
-        label={hasPassword ? "Password" : "No password set"}
-        help={hasPassword ? "Change the password you use to log in" : `You log in with ${providerNames.join(" and ")}`}
+        label={hasPassword ? t("account.password") : t("account.noPassword")}
+        help={hasPassword ? t("account.passwordHelp") : t("account.providersHelp", { providers: providerNames.join(t("account.and")) })}
         after={
           <>
             {/* Always mounted so it can animate closed; inert (out of tab order and the a11y tree) while collapsed. */}
@@ -110,7 +112,7 @@ export function AccountSection({
             else setOpen(true);
           }}
         >
-          {hasPassword ? "Change password" : "Set a password"}
+          {hasPassword ? t("account.changePassword") : t("account.setPassword")}
         </Button>
       </SettingsRow>
     </SettingsSection>

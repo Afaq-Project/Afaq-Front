@@ -20,7 +20,7 @@ export function OpportunitiesTable({
   return (
     <div className="bg-white shadow-card rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left">
+        <table className="w-full text-start">
           <thead>
             <tr className="bg-neutral-100 text-caption text-neutral-800 uppercase tracking-wide">
               <th className="px-5 py-4 font-medium">Title</th>
@@ -29,7 +29,7 @@ export function OpportunitiesTable({
               <th className="px-5 py-4 font-medium">Field of study</th>
               <th className="px-5 py-4 font-medium">Deadline</th>
               <th className="px-5 py-4 font-medium">Status</th>
-              <th className="px-5 py-4 font-medium text-right">Actions</th>
+              <th className="px-5 py-4 font-medium text-end">Actions</th>
             </tr>
           </thead>
           <tbody>

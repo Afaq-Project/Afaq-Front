@@ -1,7 +1,7 @@
 import { CircleCheck, ExternalLink, FileText, Lightbulb, Sparkles, TriangleAlert, type LucideIcon } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import type { SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Card } from "../../ui/Card";
 import { Chip, type ChipTone } from "../../ui/Chip";
 import { FlagTile } from "../../ui/FlagTile";
@@ -9,6 +9,7 @@ import { FeatureSection } from "../feature/FeatureSection";
 
 /** Chat card: the scholarship context, the conversation in the app's chat style, and the disclaimer. */
 function ChatCard({ className }: { className?: string }) {
+  const content = useLandingContent();
   const { chat } = content.aiGuidance.preview;
 
   return (
@@ -59,6 +60,7 @@ const SUMMARY: { key: "strengths" | "weaknesses" | "suggestions"; icon: LucideIc
 
 /** Small essay feedback summary: title, version, and counts as compact chips. */
 function EssaySummaryCard({ className }: { className?: string }) {
+  const content = useLandingContent();
   const { essay } = content.aiGuidance.preview;
 
   return (
@@ -112,6 +114,7 @@ function AiGuidancePreview() {
 
 /** Section 6: AI guidance, with the preview at the inline-start from 1024px (text stays first in the DOM). */
 export function AiGuidanceSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { aiGuidance } = content;
   return (
     <FeatureSection

@@ -12,15 +12,17 @@ export interface ApplicationDocument {
   type?: DocumentTypeKey;
 }
 
-export type ActivityKind = "status" | "document" | "reminder";
+/** "tracked" is the first entry; its text and the others' are applications.activity.*. */
+export type ActivityKind = "tracked" | "status" | "document" | "reminder";
 
 export interface ApplicationActivityItem {
   id: string;
   kind: ActivityKind;
-  label: string;
+  /** For linked documents: the file name. */
+  documentName?: string;
   /** ISO date (YYYY-MM-DD). */
   at: string;
-  /** For status changes: the status it moved to (colors the dot). */
+  /** For tracking and status changes: the status it moved to (colors the dot). */
   status?: ApplicationStatus;
 }
 

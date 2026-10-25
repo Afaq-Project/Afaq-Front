@@ -6,7 +6,7 @@ import { cn } from "@/src/feature/dashboard/services/utils";
 import hero1 from "@/public/hero/hero-1.jpg";
 import hero2 from "@/public/hero/hero-2.jpg";
 import hero3 from "@/public/hero/hero-3.jpg";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 
 /** Each photo with the crop focus that keeps its people in frame (alt text comes from content). */
 const PHOTOS: { src: StaticImageData; position: string }[] = [
@@ -25,6 +25,7 @@ const SIZES = "(min-width: 1024px) 560px, 100vw";
  * motion it stays on the first photo. Never mirrored.
  */
 export function HeroPhoto() {
+  const content = useLandingContent();
   const { photos } = content.hero;
   /** 0..PHOTOS.length; PHOTOS.length is the copy of the first photo. */
   const [index, setIndex] = useState(0);

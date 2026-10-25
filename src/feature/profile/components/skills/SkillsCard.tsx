@@ -8,6 +8,7 @@ import { useSkillGroups } from "../../hooks/useSkillGroups";
 import { LabeledGroup } from "../common/LabeledGroup";
 import { isLoadingName } from "../common/nameSkeleton";
 import { SkillsEditor } from "./SkillsEditor";
+import { useTranslations } from "next-intl";
 
 interface SkillsCardProps {
   experiences: string[];
@@ -18,6 +19,7 @@ interface SkillsCardProps {
 }
 
 export function SkillsCard({ experiences, names, isEditing, onEdit, onDone }: SkillsCardProps) {
+  const t = useTranslations("profile.skills");
   const groups = useSkillGroups(experiences, names);
   // Grouping needs the major list too, so show placeholders until it has loaded.
   const loading = experiences.some((value) => isLoadingName(names.skill(value)));
@@ -25,9 +27,9 @@ export function SkillsCard({ experiences, names, isEditing, onEdit, onDone }: Sk
   if (isEditing) return <SkillsEditor experiences={experiences} names={names} onDone={onDone} />;
 
   return (
-    <SectionCard title="Skills" onEdit={onEdit}>
+    <SectionCard title={t("title")} onEdit={onEdit}>
       {experiences.length === 0 ? (
-        <EmptyState message="Skills help us find opportunities that fit what you're good at." />
+        <EmptyState message={t("empty")} />
       ) : loading ? (
         <ChipList items={experiences.map((value) => ({ key: value, label: value }))} loading />
       ) : (

@@ -1,4 +1,5 @@
 import Button from "./Button";
+import { useTranslations } from "next-intl";
 
 interface EditActionsProps {
   onCancel: () => void;
@@ -14,11 +15,13 @@ interface EditActionsProps {
 export function EditActions({
   onCancel,
   onSave,
-  saveLabel = "Save changes",
+  saveLabel,
   isSaving = false,
   saveDisabled = false,
   error,
 }: EditActionsProps) {
+  const t = useTranslations("common");
+
   return (
     <div className="mt-5 flex flex-col gap-3">
       {error && (
@@ -28,10 +31,10 @@ export function EditActions({
       )}
       <div className="flex flex-wrap justify-end gap-2">
         <Button type="button" variant="ghost" onClick={onCancel} disabled={isSaving}>
-          Cancel
+          {t("cancel")}
         </Button>
         <Button type="button" onClick={onSave} disabled={isSaving || saveDisabled}>
-          {isSaving ? "Saving…" : saveLabel}
+          {isSaving ? t("saving") : (saveLabel ?? t("saveChanges"))}
         </Button>
       </div>
     </div>

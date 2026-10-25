@@ -14,11 +14,15 @@ import {
 import { resetPassword } from "../services/passwordReset";
 import AuthForm from "./AuthForm";
 import TextLink from "./TextLink";
+import { useTranslations } from "next-intl";
+import { useErrorText } from "@/src/shared/lib/validation/useErrorText";
 
 const RULES_ID = "reset-password-rules";
 
 /** The link's token is checked by the API on submit; an expired or used link fails there. */
 export default function ResetPasswordForm({ token }: { token: string | null }) {
+  const t = useTranslations("auth");
+  const errorText = useErrorText();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -37,12 +41,12 @@ export default function ResetPasswordForm({ token }: { token: string | null }) {
   if (!token) {
     return (
       <div>
-        <h1 className="text-h1 text-neutral-900">This link doesn&apos;t work</h1>
+        <h1 className="text-h1 text-neutral-900">{t("reset.brokenTitle")}</h1>
         <p className="mt-1 text-body text-neutral-600">
-          The reset link is incomplete. Open it again from your email, or request a new one.
+          {t("reset.brokenBody")}
         </p>
         <p className="mt-8 text-small text-center">
-          <TextLink href="/forgot-password">Request a new link</TextLink>
+          <TextLink href="/forgot-password">{t("reset.requestNew")}</TextLink>
         </p>
       </div>
     );
@@ -60,44 +64,47 @@ export default function ResetPasswordForm({ token }: { token: string | null }) {
 
   return (
     <AuthForm
-      title="Choose a new password"
-      subtitle="Use a password you don't use anywhere else."
+      title={t("reset.title")}
+      subtitle={t("reset.subtitle")}
       onSubmit={handleSubmit(onSubmit)}
-      submitLabel="Reset password"
-      submittingLabel="Resetting password"
+      submitLabel={t("reset.submit")}
+      submittingLabel={t("reset.submitting")}
       isSubmitting={isSubmitting}
       errorId="reset-password-error"
       error={
         formError && (
           <>
-            {formError} If your link has expired,{" "}
-            <TextLink href="/forgot-password" inline className="text-danger-800! underline">
-              request a new one
-            </TextLink>
-            .
+            {formError}{" "}
+            {t.rich("reset.expired", {
+              link: (chunks) => (
+                <TextLink href="/forgot-password" inline className="text-danger-800! underline">
+                  {chunks}
+                </TextLink>
+              ),
+            })}
           </>
         )
       }
       showSocial={false}
-      switchLabel="Back to sign in"
+      switchLabel={t("backToSignIn")}
       switchHref="/login"
     >
       <div className="flex flex-col gap-2">
         <PasswordInput
           id="new-password"
-          label="New password"
+          label={t("reset.newPassword")}
           autoComplete="new-password"
           aria-describedby={RULES_ID}
-          error={errors.newPassword && "Choose a password that meets all the rules below."}
+          error={errors.newPassword && t("reset.meetRules")}
           {...register("newPassword")}
         />
         <PasswordChecklist id={RULES_ID} password={newPassword} />
       </div>
       <PasswordInput
         id="confirm-password"
-        label="Confirm new password"
+        label={t("reset.confirmPassword")}
         autoComplete="new-password"
-        error={errors.confirmPassword?.message}
+        error={errorText(errors.confirmPassword?.message)}
         {...register("confirmPassword")}
       />
     </AuthForm>

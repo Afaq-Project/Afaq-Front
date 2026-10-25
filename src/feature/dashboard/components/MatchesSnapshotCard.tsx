@@ -6,14 +6,13 @@ import { CheckCircle2 } from "lucide-react";
 import { MATCH_TIER_FILL, type MatchTier } from "../types/status";
 import { cn } from "../services/utils";
 import { CARD_CLASS, GHOST_LINK_CLASS } from "./styles";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocale } from "@/src/i18n/format";
 
 const STALE_AFTER_DAYS = 180;
 
-const TIERS: { key: MatchTier; label: string }[] = [
-  { key: "strong", label: "Strong" },
-  { key: "possible", label: "Possible" },
-  { key: "low", label: "Low" },
-];
+// Legend labels are matchTier.short.<key>.
+const TIERS: MatchTier[] = ["strong", "possible", "low"];
 
 export interface MatchesSnapshotCardProps {
   /** The user's matches by tier (≥70%, 40–69%, <40%). From the API these include closed ones. */
@@ -25,9 +24,9 @@ export interface MatchesSnapshotCardProps {
 }
 
 /** "3 days ago", "5 months ago", relative to `now`. */
-function relativeTime(date: Date, now: number) {
+function relativeTime(date: Date, now: number, locale: string) {
   const days = Math.round((date.getTime() - now) / 86_400_000);
-  const format = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  const format = new Intl.RelativeTimeFormat(intlLocale(locale), { numeric: "auto" });
   if (Math.abs(days) < 30) return format.format(days, "day");
   if (Math.abs(days) < 365) return format.format(Math.round(days / 30), "month");
   return format.format(Math.round(days / 365), "year");
@@ -39,6 +38,8 @@ function relativeTime(date: Date, now: number) {
  * preview (?preview=matches-snapshot) feeds it counts from the mock.
  */
 export function MatchesSnapshotCard({ counts, newCount, lastUpdated }: MatchesSnapshotCardProps) {
+  const t = useTranslations();
+  const locale = useLocale();
   const total = counts.strong + counts.possible + counts.low;
   const isEmpty = counts.strong === 0 && counts.possible === 0;
   // Captured once so re-renders don't shift the relative times.
@@ -49,48 +50,48 @@ export function MatchesSnapshotCard({ counts, newCount, lastUpdated }: MatchesSn
     <section aria-labelledby="matches-snapshot-heading" className={cn(CARD_CLASS, "self-start w-full")}>
       <div className="flex justify-between items-baseline gap-3">
         <h2 id="matches-snapshot-heading" className="text-h3 text-neutral-900">
-          Your matches
+          {t("dashboard.snapshot.title")}
         </h2>
         <Link href="/discover" className={GHOST_LINK_CLASS}>
-          Explore matches
+          {t("dashboard.snapshot.explore")}
         </Link>
       </div>
 
       {isEmpty ? (
-        <p className="mt-4 text-body text-neutral-800">No strong matches yet. New opportunities are added daily.</p>
+        <p className="mt-4 text-body text-neutral-800">{t("dashboard.snapshot.empty")}</p>
       ) : (
         <>
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mt-4">
             <span className="font-semibold text-[30px] text-success-800 leading-9">{counts.strong}</span>
-            <span className="text-body text-neutral-800">strong {counts.strong === 1 ? "match" : "matches"}</span>
+            <span className="text-body text-neutral-800">{t("dashboard.snapshot.strong", { count: counts.strong })}</span>
             {newCount !== undefined && newCount > 0 && (
               <span className="bg-primary-50 px-2 py-0.5 rounded-full text-caption text-primary-800">
-                {newCount} new this week
+                {t("dashboard.snapshot.newThisWeek", { count: newCount })}
               </span>
             )}
           </div>
           <p className="text-neutral-600 text-small">
-            {counts.possible} possible {counts.possible === 1 ? "match" : "matches"}
+            {t("dashboard.snapshot.possible", { count: counts.possible })}
           </p>
 
           {/* The legend below carries the same numbers as text. */}
           <div aria-hidden="true" className="flex gap-1 mt-4 h-2">
-            {TIERS.filter((tier) => counts[tier.key] > 0).map((tier) => (
+            {TIERS.filter((tier) => counts[tier] > 0).map((tier) => (
               <div
-                key={tier.key}
-                className={cn("rounded-full", MATCH_TIER_FILL[tier.key])}
-                style={{ flexGrow: counts[tier.key] }}
+                key={tier}
+                className={cn("rounded-full", MATCH_TIER_FILL[tier])}
+                style={{ flexGrow: counts[tier] }}
               />
             ))}
           </div>
           <ul className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-caption text-neutral-600">
             {TIERS.map((tier) => (
-              <li key={tier.key} className="flex items-center gap-1.5">
-                <span aria-hidden="true" className={cn("rounded-full size-2", MATCH_TIER_FILL[tier.key])} />
-                {tier.label} <span className="text-neutral-900">{counts[tier.key]}</span>
+              <li key={tier} className="flex items-center gap-1.5">
+                <span aria-hidden="true" className={cn("rounded-full size-2", MATCH_TIER_FILL[tier])} />
+                {t(`matchTier.short.${tier}`)} <span className="text-neutral-900">{counts[tier]}</span>
               </li>
             ))}
-            <li className="sr-only">{total} open matches in total</li>
+            <li className="sr-only">{t("dashboard.snapshot.total", { count: total })}</li>
           </ul>
         </>
       )}
@@ -99,22 +100,22 @@ export function MatchesSnapshotCard({ counts, newCount, lastUpdated }: MatchesSn
         <div className="flex justify-between items-center gap-3 mt-5 pt-4 border-neutral-100 border-t text-neutral-600 text-small">
           {stale ? (
             <>
-              <p>Last updated {relativeTime(lastUpdated, now)}. Still accurate?</p>
+              <p>{t("dashboard.snapshot.staleUpdated", { when: relativeTime(lastUpdated, now, locale) })}</p>
               <Link
                 href="/profile"
                 className="inline-flex items-center rounded-sm min-h-11 md:min-h-0 font-medium text-neutral-800 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 shrink-0"
               >
-                Review
+                {t("common.review")}
               </Link>
             </>
           ) : (
             <>
               <p className="flex items-center gap-1.5">
                 <CheckCircle2 size={16} strokeWidth={1.75} aria-hidden="true" className="text-primary-600 shrink-0" />
-                Profile complete · Updated {relativeTime(lastUpdated, now)}
+                {t("dashboard.snapshot.completeUpdated", { when: relativeTime(lastUpdated, now, locale) })}
               </p>
               <Link href="/profile" className={cn(GHOST_LINK_CLASS, "shrink-0")}>
-                Edit
+                {t("common.edit")}
               </Link>
             </>
           )}

@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FolderOpen } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { NotificationsDropdown } from "@/src/feature/notifications/components/NotificationsDropdown";
+import { LanguageToggle } from "@/src/shared/ui/LanguageToggle";
 import {
   HOME_HREF,
   ICON_BUTTON_CLASS,
@@ -19,6 +21,7 @@ import { UserMenu } from "./user-menu";
 
 /** Sticky white bar: logo, text nav (tablet and up), then search, your documents (students), bell and the user menu. */
 export function TopBar({ variant }: { variant: ShellVariant }) {
+  const t = useTranslations("shell");
   const pathname = usePathname();
 
   return (
@@ -31,17 +34,17 @@ export function TopBar({ variant }: { variant: ShellVariant }) {
             className="flex items-center gap-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
           >
             <Image src="/afaq.png" alt="" width={32} height={32} className="size-8" priority />
-            <span className="text-h3 text-primary-800">Afaq</span>
+            <span className="text-h3 text-primary-800">{t("brand")}</span>
           </Link>
           {variant === "admin" && (
             <span className="bg-neutral-50 px-2 py-0.5 rounded-full text-caption text-neutral-800">
-              Admin
+              {t("admin")}
             </span>
           )}
         </div>
 
-        <nav aria-label="Main" className="hidden md:flex self-stretch gap-4 lg:gap-6">
-          {NAV_ITEMS[variant].map(({ href, label, badge, badgeLabel }) => {
+        <nav aria-label={t("mainNav")} className="hidden md:flex self-stretch gap-4 lg:gap-6">
+          {NAV_ITEMS[variant].map(({ href, labelKey, badge }) => {
             const active = isNavActive(pathname, href);
 
             return (
@@ -59,7 +62,7 @@ export function TopBar({ variant }: { variant: ShellVariant }) {
                 )}
               >
                 <span className="flex items-center gap-1.5 rounded-sm group-focus-visible:ring-2 group-focus-visible:ring-primary-400 group-focus-visible:ring-offset-2">
-                  {label}
+                  {t(labelKey)}
                   {badge ? (
                     <>
                       <span
@@ -68,9 +71,7 @@ export function TopBar({ variant }: { variant: ShellVariant }) {
                       >
                         {badge > 99 ? "99+" : badge}
                       </span>
-                      <span className="sr-only">
-                        , {badge} {badgeLabel}
-                      </span>
+                      <span className="sr-only">{t("pendingCount", { count: badge })}</span>
                     </>
                   ) : null}
                 </span>
@@ -79,13 +80,18 @@ export function TopBar({ variant }: { variant: ShellVariant }) {
           })}
         </nav>
 
-        <div className="flex items-center gap-1 md:gap-2 ml-auto">
+        <div className="flex items-center gap-1 md:gap-2 ms-auto">
           {SHOW_GLOBAL_SEARCH && <TopBarSearch />}
+          {/* One tap to the other language; Settings has the same choice. */}
+          <LanguageToggle
+            className="justify-center hover:bg-neutral-50 rounded-md min-w-10 h-10 min-h-0 md:min-h-0"
+            labelClassName="max-sm:sr-only"
+          />
           {variant === "user" && (
             <Link
               href="/documents"
-              aria-label="Your documents"
-              title="Your documents"
+              aria-label={t("documents")}
+              title={t("documents")}
               aria-current={isNavActive(pathname, "/documents") ? "page" : undefined}
               className={cn(
                 ICON_BUTTON_CLASS,

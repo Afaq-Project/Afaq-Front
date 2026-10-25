@@ -3,6 +3,7 @@
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { useScrollSpy } from "@/src/shared/hooks/useScrollSpy";
 import { smoothScrollToHash } from "@/src/shared/lib/scroll";
+import { useTranslations } from "next-intl";
 
 export interface SettingsNavItem {
   id: string;
@@ -11,10 +12,11 @@ export interface SettingsNavItem {
 
 /** Sticky list of the page's sections (1024px and up). The active item follows the scroll; a click smooth-scrolls. */
 export function SettingsNav({ items }: { items: SettingsNavItem[] }) {
+  const t = useTranslations("settings");
   const [activeId, setActiveId] = useScrollSpy(items.map((item) => item.id));
 
   return (
-    <nav aria-label="Settings sections" className="hidden lg:block top-21 sticky self-start">
+    <nav aria-label={t("nav")} className="hidden lg:block top-21 sticky self-start">
       <ul className="flex flex-col gap-1">
         {items.map(({ id, label }) => {
           const active = activeId === id;

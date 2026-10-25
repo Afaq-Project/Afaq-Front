@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export interface TagItem {
   key: string;
@@ -25,11 +26,12 @@ export function CollapsibleTagList({
   tagClassName = "bg-primary-container text-on-primary-container",
   className = "",
 }: CollapsibleTagListProps) {
+  const t = useTranslations("common");
   const [expanded, setExpanded] = useState(false);
 
   if (items.length === 0) {
     return emptyMessage ? (
-      <span className="text-sm text-on-surface-variant/60 italic pl-1">{emptyMessage}</span>
+      <span className="text-sm text-on-surface-variant/60 italic ps-1">{emptyMessage}</span>
     ) : null;
   }
 
@@ -48,7 +50,7 @@ export function CollapsibleTagList({
             <button
               type="button"
               onClick={item.onRemove}
-              aria-label={`Remove ${item.label}`}
+              aria-label={t("remove", { item: item.label })}
               className="hover:opacity-75 flex items-center justify-center cursor-pointer"
             >
               <span className="material-symbols-outlined text-[16px]">close</span>

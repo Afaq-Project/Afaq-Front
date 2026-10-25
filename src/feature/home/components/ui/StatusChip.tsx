@@ -1,9 +1,10 @@
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { STATUS_COLORS, type ApplicationStatusKey } from "@/src/shared/lib/status-colors";
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 
 /** Application status pill, using the app's status colors so the landing page matches it. */
 export function StatusChip({ status, className }: { status: ApplicationStatusKey; className?: string }) {
+  const content = useLandingContent();
   const { chip, icon: Icon } = STATUS_COLORS[status];
 
   return (

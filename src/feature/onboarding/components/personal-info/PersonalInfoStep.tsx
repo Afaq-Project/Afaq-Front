@@ -15,9 +15,11 @@ import { OnboardingFooter } from "../layout/OnboardingFooter";
 import { LocationSection } from "./LocationSection";
 import { NameSection } from "./NameSection";
 import { PersonalDetailsSection } from "./PersonalDetailsSection";
+import { useTranslations } from "next-intl";
 
 /** Step 1: holds the form state and saves it to the profile on Next. */
 export function PersonalInfoStep() {
+  const t = useTranslations("onboarding.personal");
   const router = useRouter();
   const { user } = useAuth();
   const { draft, updatePersonal } = useOnboardingDraft();
@@ -42,7 +44,7 @@ export function PersonalInfoStep() {
     <div className="flex flex-col flex-grow">
       <main className="flex-grow w-full max-w-3xl mx-auto px-6 pt-8 pb-24 flex flex-col gap-8">
         <h1 className="text-2xl md:text-3xl font-semibold text-on-surface tracking-tight">
-          Tell us about yourself
+          {t("title")}
         </h1>
         <NameSection data={personal} onChange={setPersonal} />
         <LocationSection data={personal} onChange={setPersonal} />

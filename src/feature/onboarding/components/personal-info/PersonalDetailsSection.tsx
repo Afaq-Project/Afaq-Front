@@ -7,13 +7,11 @@ import type { Option, PersonalInfoData } from "../../types";
 import { FieldLabel } from "@/src/shared/ui/FieldLabel";
 import { INPUT_CLASS } from "../common/formStyles";
 import { StepSectionHeading } from "../common/StepSectionHeading";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
-const GENDER_OPTIONS = [
-  { value: "MALE", label: "Male" },
-  { value: "FEMALE", label: "Female" },
-  { value: "OTHER", label: "Other" },
-  { value: "PREFER_NOT_TO_SAY", label: "Prefer not to say" },
-];
+// The API's gender values; their labels are onboarding.personal.genders.<value>.
+const GENDER_OPTIONS = ["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"] as const;
 
 interface PersonalDetailsSectionProps {
   data: PersonalInfoData;
@@ -29,16 +27,18 @@ export function PersonalDetailsSection({
   maxDateOfBirth,
   dobInFuture,
 }: PersonalDetailsSectionProps) {
+  const t = useTranslations("onboarding.personal");
+  const { name: refName } = useReferenceName();
   const nationalities = useCountryOptions({ asNationality: true });
   const { data: maritalStatuses = [] } = useMaritalStatuses();
 
   return (
     <section className="flex flex-col gap-5">
-      <StepSectionHeading>Personal Details</StepSectionHeading>
+      <StepSectionHeading>{t("details")}</StepSectionHeading>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <FieldLabel htmlFor="onb-dob" required>Date of Birth</FieldLabel>
+          <FieldLabel htmlFor="onb-dob" required>{t("dateOfBirth")}</FieldLabel>
           <input
             id="onb-dob"
             type="date"
@@ -49,15 +49,15 @@ export function PersonalDetailsSection({
             className={INPUT_CLASS}
           />
           {dobInFuture && (
-            <p className="text-xs text-error">Date of birth can&apos;t be in the future.</p>
+            <p className="text-xs text-error">{t("dobFuture")}</p>
           )}
         </div>
 
         <InlineSearch<Option>
-          label="Nationality"
+          label={t("nationality")}
           required
           selectedName={data.nationality}
-          placeholder="Search nationality…"
+          placeholder={t("nationalityPlaceholder")}
           items={nationalities.options}
           isFetching={nationalities.isFetching}
           onSearch={nationalities.setQuery}
@@ -68,34 +68,34 @@ export function PersonalDetailsSection({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <FieldLabel htmlFor="onb-gender" optional>Gender</FieldLabel>
+          <FieldLabel htmlFor="onb-gender" optional>{t("gender")}</FieldLabel>
           <select
             id="onb-gender"
             value={data.gender ?? ""}
             onChange={(e) => onChange({ ...data, gender: e.target.value })}
             className={INPUT_CLASS}
           >
-            <option value="" disabled>Select gender</option>
-            {GENDER_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            <option value="" disabled>{t("genderPlaceholder")}</option>
+            {GENDER_OPTIONS.map((value) => (
+              <option key={value} value={value}>{t(`genders.${value}`)}</option>
             ))}
           </select>
         </div>
 
         <div className="flex flex-col gap-2">
-          <FieldLabel htmlFor="onb-marital" optional>Marital Status</FieldLabel>
+          <FieldLabel htmlFor="onb-marital" optional>{t("maritalStatus")}</FieldLabel>
           <select
             id="onb-marital"
             value={data.maritalStatusId ?? ""}
             onChange={(e) => {
               const status = maritalStatuses.find((m) => m.id === e.target.value);
-              onChange({ ...data, maritalStatus: status?.nameEn ?? "", maritalStatusId: e.target.value });
+              onChange({ ...data, maritalStatus: status ? refName(status) : "", maritalStatusId: e.target.value });
             }}
             className={INPUT_CLASS}
           >
-            <option value="">Select marital status</option>
+            <option value="">{t("maritalPlaceholder")}</option>
             {maritalStatuses.map((status) => (
-              <option key={status.id} value={status.id}>{status.nameEn}</option>
+              <option key={status.id} value={status.id}>{refName(status)}</option>
             ))}
           </select>
         </div>

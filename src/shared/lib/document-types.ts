@@ -53,9 +53,11 @@ export const REVIEWABLE_TYPES: DocumentTypeKey[] = ["essay", "cv", "recommendati
 export const isReviewable = (type?: DocumentTypeKey): type is DocumentTypeKey =>
   Boolean(type && REVIEWABLE_TYPES.includes(type));
 
-/** How review copy names a document of this type ("Get AI feedback on this CV"). */
-export function reviewNoun(type?: DocumentTypeKey) {
-  if (type === "cv") return "CV";
-  if (type === "recommendation") return "recommendation letter";
+/** How review copy names a reviewable document; messages pick the words with {noun, select, ...}. */
+export type ReviewNoun = "cv" | "recommendation" | "essay";
+
+/** The review noun for a document type ("Get AI feedback on this CV"). */
+export function reviewNoun(type?: DocumentTypeKey): ReviewNoun {
+  if (type === "cv" || type === "recommendation") return type;
   return "essay";
 }

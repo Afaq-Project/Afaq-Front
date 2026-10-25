@@ -6,10 +6,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout
       visual={
-        <AuthVisualPanel
-          headline="Your next opportunity is waiting"
-          subline="Personalized matches, AI guidance, and every deadline in one place."
-        />
+        <AuthVisualPanel />
       }
     >
       <ForgotPasswordForm />

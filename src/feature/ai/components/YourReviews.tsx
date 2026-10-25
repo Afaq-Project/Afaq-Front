@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { FileText } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocale } from "@/src/i18n/format";
 import { reviewPath } from "@/src/feature/documents/services/reviewStore";
 import type { DocumentReview } from "@/src/feature/documents/types/review";
 
-const formatDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+const formatDate = (iso: string, locale: string) => new Date(iso).toLocaleDateString(intlLocale(locale), { month: "short", day: "numeric" });
 
 /** "Your reviews" in the AI sidebar: one row per reviewed document, newest first, each opening its review page. */
 export function YourReviews({ reviews, nameFor }: { reviews: DocumentReview[]; nameFor: (review: DocumentReview) => string }) {
+  const t = useTranslations("ai.reviews");
+  const locale = useLocale();
   const rows = reviews
     .filter((review): review is DocumentReview & { documentId: string } => Boolean(review.documentId))
     .sort((a, b) => b.reviewedAt.localeCompare(a.reviewedAt));
@@ -15,7 +19,7 @@ export function YourReviews({ reviews, nameFor }: { reviews: DocumentReview[]; n
   return (
     <section aria-labelledby="your-reviews-heading" className="mt-2 pt-3 border-neutral-100 border-t">
       <h2 id="your-reviews-heading" className="px-2 pb-2 text-h3 text-neutral-900">
-        Your reviews
+        {t("title")}
       </h2>
       <ul className="flex flex-col gap-0.5">
         {rows.map((review) => (
@@ -30,7 +34,7 @@ export function YourReviews({ reviews, nameFor }: { reviews: DocumentReview[]; n
               <span className="flex flex-col min-w-0">
                 <span className="text-neutral-800 text-small truncate">{nameFor(review)}</span>
                 <span className="text-caption text-neutral-600">
-                  Reviewed {formatDate(review.reviewedAt)} · {review.suggestions.length} suggestions
+                  {t("summary", { date: formatDate(review.reviewedAt, locale), count: review.suggestions.length })}
                 </span>
               </span>
             </Link>

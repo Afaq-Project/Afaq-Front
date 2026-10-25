@@ -23,5 +23,3 @@ export const FIELD_IDS = {
   targetMajors: "profile-target-majors",
   targetInstitutions: "profile-target-institutions",
 } as const;
-
-export const REQUIRED_FOR_MATCHING = "Required for matching";

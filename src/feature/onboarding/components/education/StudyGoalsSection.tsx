@@ -7,6 +7,7 @@ import { fromOptions, toOptions } from "../../services/selection";
 import type { Option, PreferencesData } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";
 import { MajorMultiSelect } from "@/src/shared/ui/pickers/MajorMultiSelect";
+import { useTranslations } from "next-intl";
 
 const MAX_TARGETS = 5;
 
@@ -18,6 +19,7 @@ interface StudyGoalsSectionProps {
 }
 
 export function StudyGoalsSection({ preferences, onChange, educationLevels, loadingLevels }: StudyGoalsSectionProps) {
+  const t = useTranslations("onboarding.education");
   const countries = useCountryOptions();
   const institutions = useInstitutionOptions();
 
@@ -41,14 +43,14 @@ export function StudyGoalsSection({ preferences, onChange, educationLevels, load
 
   return (
     <div className="flex flex-col gap-8">
-      <StepSectionHeading>What You&apos;re Looking For</StepSectionHeading>
+      <StepSectionHeading>{t("goals")}</StepSectionHeading>
 
       <div className="items-start gap-6 grid grid-cols-1 sm:grid-cols-2">
         <InlineSearch<Option>
-          label="Target Degree Level"
+          label={t("targetLevel")}
           required
           selectedName={preferences.targetDegreeLevel || undefined}
-          placeholder="Select degree you want to pursue"
+          placeholder={t("targetLevelPlaceholder")}
           items={educationLevels}
           isFetching={loadingLevels}
           onSearch={() => {}}
@@ -61,7 +63,7 @@ export function StudyGoalsSection({ preferences, onChange, educationLevels, load
         />
 
         <MajorMultiSelect
-          label="Target Fields of Study"
+          label={t("targetFields")}
           required
           max={MAX_TARGETS}
           selected={toOptions(preferences.targetFields, preferences.targetFieldIds)}
@@ -70,9 +72,9 @@ export function StudyGoalsSection({ preferences, onChange, educationLevels, load
 
         {/* Not saved yet: the API has no endpoint for target countries. */}
         <TagSearch<Option>
-          label="Target Countries"
-          hint="optional"
-          placeholder="Search countries to study in…"
+          label={t("targetCountries")}
+          optional
+          placeholder={t("targetCountriesPlaceholder")}
           selectedIds={preferences.targetCountryIds ?? []}
           selectedNames={preferences.targetCountries ?? []}
           items={countries.options}
@@ -84,9 +86,9 @@ export function StudyGoalsSection({ preferences, onChange, educationLevels, load
         />
 
         <TagSearch<Option>
-          label="Target Institutions"
-          hint="optional"
-          placeholder="Search institutions you want to apply to…"
+          label={t("targetInstitutions")}
+          optional
+          placeholder={t("targetInstitutionsPlaceholder")}
           selectedIds={preferences.targetInstitutionIds ?? []}
           selectedNames={preferences.targetInstitutions ?? []}
           items={institutions.options}

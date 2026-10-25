@@ -1,4 +1,8 @@
+import { useTranslations } from "next-intl";
+
 export default function Brand() {
+  const t = useTranslations("shell");
+
   return (
     <div className="flex items-center gap-1 sm:gap-2">
       <span className="flex justify-center items-center">
@@ -11,7 +15,7 @@ export default function Brand() {
         />
       </span>
       <span className="font-extrabold text-primary-800 text-2xl sm:text-4xl">
-        Afaq
+        {t("brand")}
       </span>
     </div>
   );
