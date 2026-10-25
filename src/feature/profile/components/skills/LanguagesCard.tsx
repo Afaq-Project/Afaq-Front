@@ -4,6 +4,7 @@ import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import type { ApiLanguageEntry } from "../../types/api";
 import { LanguageRow } from "./LanguageRow";
 import { LanguagesEditor } from "./LanguagesEditor";
+import { useTranslations } from "next-intl";
 
 interface LanguagesCardProps {
   languages: ApiLanguageEntry[];
@@ -14,13 +15,14 @@ interface LanguagesCardProps {
 }
 
 export function LanguagesCard({ languages, names, isEditing, onEdit, onDone }: LanguagesCardProps) {
+  const t = useTranslations("profile.languages");
   if (isEditing) return <LanguagesEditor languages={languages} names={names} onDone={onDone} />;
 
   return (
-    <SectionCard title="Languages" onEdit={onEdit}>
+    <SectionCard title={t("title")} onEdit={onEdit}>
       {languages.length === 0 ? (
         <EmptyState
-          message="Many programs ask for language skills. Add the languages you speak."
+          message={t("empty")}
         />
       ) : (
         <ul className="flex flex-col divide-y divide-neutral-100">

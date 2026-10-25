@@ -22,8 +22,6 @@ export function formatReferenceName(name: string) {
   return trimmed === trimmed.toUpperCase() ? trimmed.charAt(0) + trimmed.slice(1).toLowerCase() : trimmed;
 }
 
-/** Shown for institutions, which can't be looked up by ID yet (see useReferenceNames). */
-export const UNRESOLVED_INSTITUTION_NAME = "Name not available yet";
 
 export function fullName(firstName?: string | null, lastName?: string | null) {
   return `${firstName ?? ""} ${lastName ?? ""}`.trim();

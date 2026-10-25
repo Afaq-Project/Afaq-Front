@@ -4,6 +4,7 @@ import { editHandler, type EditingState } from "../common/editing";
 import { ProfilePageSection } from "../common/ProfilePageSection";
 import { BackgroundCard } from "./BackgroundCard";
 import { StudyGoalsCard } from "./StudyGoalsCard";
+import { useTranslations } from "next-intl";
 
 interface BackgroundGoalsSectionProps {
   profile?: ApiProfile;
@@ -13,8 +14,9 @@ interface BackgroundGoalsSectionProps {
 }
 
 export function BackgroundGoalsSection({ profile, preferences, names, edit }: BackgroundGoalsSectionProps) {
+  const t = useTranslations("profile.sections");
   return (
-    <ProfilePageSection id="background" title="Background and goals">
+    <ProfilePageSection id="background" title={t("background")}>
       <BackgroundCard
         profile={profile}
         names={names}

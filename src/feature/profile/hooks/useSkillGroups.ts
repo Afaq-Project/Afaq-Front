@@ -4,13 +4,13 @@ import { useAllMajors, useMajorCategories } from "@/src/shared/lib/api/hooks/use
 import { formatReferenceName } from "../services/format";
 import type { ReferenceNames } from "./useReferenceNames";
 import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 export interface SkillGroup {
   category: string;
   skills: { key: string; label: string }[];
 }
 
-const OTHER = "Other";
 
 /**
  * Groups the profile's skills (major IDs) by major category, alphabetically with "Other"
@@ -18,6 +18,8 @@ const OTHER = "Other";
  * the name lookups, so it adds no requests.
  */
 export function useSkillGroups(experiences: string[], names: ReferenceNames): SkillGroup[] {
+  // Skills without a known category; sorted last.
+  const OTHER = useTranslations("profile.skills")("otherCategory");
   const { name: refName } = useReferenceName();
   const { data: majors = [] } = useAllMajors(experiences.length > 0);
   const { data: categories = [] } = useMajorCategories();

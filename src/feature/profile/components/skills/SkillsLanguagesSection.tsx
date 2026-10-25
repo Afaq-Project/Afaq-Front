@@ -4,6 +4,7 @@ import { editHandler, type EditingState } from "../common/editing";
 import { ProfilePageSection } from "../common/ProfilePageSection";
 import { LanguagesCard } from "./LanguagesCard";
 import { SkillsCard } from "./SkillsCard";
+import { useTranslations } from "next-intl";
 
 interface SkillsLanguagesSectionProps {
   experiences: string[];
@@ -13,8 +14,9 @@ interface SkillsLanguagesSectionProps {
 }
 
 export function SkillsLanguagesSection({ experiences, languages, names, edit }: SkillsLanguagesSectionProps) {
+  const t = useTranslations("profile.sections");
   return (
-    <ProfilePageSection id="skills" title="Skills and languages">
+    <ProfilePageSection id="skills" title={t("skills")}>
       <SkillsCard
         experiences={experiences}
         names={names}

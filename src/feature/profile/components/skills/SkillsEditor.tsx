@@ -9,6 +9,7 @@ import { useUpdatePersonal } from "../../hooks/useProfileQuery";
 import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import { formatReferenceName } from "../../services/format";
 import { savedThen } from "../common/saved";
+import { useTranslations } from "next-intl";
 
 interface SkillsEditorProps {
   experiences: string[];
@@ -18,6 +19,7 @@ interface SkillsEditorProps {
 
 /** Edits the profile's skills (`experiences`, saved as a whole list). */
 export function SkillsEditor({ experiences, names, onDone }: SkillsEditorProps) {
+  const t = useTranslations("profile.skills");
   const updateMut = useUpdatePersonal();
   const [selected, setSelected] = useState<ReferenceOption[]>(() =>
     experiences.map((value) => ({ id: value, name: formatReferenceName(names.skill(value) ?? value) })),
@@ -27,11 +29,11 @@ export function SkillsEditor({ experiences, names, onDone }: SkillsEditorProps) 
 
   return (
     <SectionCard
-      title="Skills"
-      description={`${selected.length} of ${MAX_SKILLS} selected`}
+      title={t("title")}
+      description={t("selected", { count: selected.length, max: MAX_SKILLS })}
       isEditing
       onCancel={onDone}
-      onSave={() => updateMut.mutate({ experiences: ids }, { onSuccess: savedThen("Skills saved", onDone) })}
+      onSave={() => updateMut.mutate({ experiences: ids }, { onSuccess: savedThen(t("saved"), onDone) })}
       isSaving={updateMut.isPending}
       saveDisabled={unchanged}
       error={updateMut.isError ? getErrorMessage(updateMut.error) : null}

@@ -3,6 +3,7 @@ import Badge from "@/src/shared/ui/Badge";
 import { getInitials } from "@/src/shared/lib/initials";
 import type { MatchFactor, NextStep } from "./completion";
 import { ProfileCompletion } from "./ProfileCompletion";
+import { useTranslations } from "next-intl";
 
 interface ProfileHeaderProps {
   name: string;
@@ -27,6 +28,7 @@ export function ProfileHeader({
   nextStep,
   matchFactors,
 }: ProfileHeaderProps) {
+  const t = useTranslations("profile.header");
   return (
     <header className="overflow-visible rounded-lg border border-neutral-100 bg-white">
       <div className="h-14 rounded-t-lg bg-primary-50" aria-hidden="true" />
@@ -48,8 +50,8 @@ export function ProfileHeader({
             <button
               type="button"
               disabled
-              aria-label="Change photo (not available yet)"
-              title="Photo upload isn't available yet"
+              aria-label={t("changePhoto")}
+              title={t("photoUnavailable")}
               // after: widens the hit area to 44px without making the icon bigger.
               className="absolute -bottom-1 -end-1 flex size-7 items-center justify-center rounded-full border border-neutral-100 bg-white text-neutral-600 after:absolute after:-inset-2 after:content-[''] hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed"
             >
@@ -62,7 +64,7 @@ export function ProfileHeader({
             <p className="truncate text-small text-neutral-600">{email}</p>
             {isMatchable !== undefined && (
               <Badge tone={isMatchable ? "teal" : "amber"} className="mt-2">
-                {isMatchable ? "Eligible for matching" : "Not yet eligible for matching"}
+                {isMatchable ? t("eligible") : t("notEligible")}
               </Badge>
             )}
           </div>

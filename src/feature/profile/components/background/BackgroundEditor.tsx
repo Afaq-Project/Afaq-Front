@@ -17,14 +17,10 @@ import type { ApiProfile } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
 import { savedThen } from "../common/saved";
 import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
-const GENDER_OPTIONS = [
-  { value: "", label: "Select gender" },
-  { value: "MALE", label: "Male" },
-  { value: "FEMALE", label: "Female" },
-  { value: "OTHER", label: "Other" },
-  { value: "PREFER_NOT_TO_SAY", label: "Prefer not to say" },
-];
+// The API's gender values; labels are onboarding.personal.genders.<value>.
+const GENDER_VALUES = ["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"] as const;
 
 interface BackgroundEditorProps {
   profile?: ApiProfile;
@@ -33,6 +29,8 @@ interface BackgroundEditorProps {
 }
 
 export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorProps) {
+  const t = useTranslations("profile.background");
+  const tGender = useTranslations("onboarding.personal.genders");
   const { name: refName } = useReferenceName();
   useAutoFocus(FIELD_IDS.nationality);
   const updateMut = useUpdatePersonal();
@@ -69,17 +67,17 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
 
   return (
     <SectionCard
-      title="Background"
+      title={t("title")}
       isEditing
       onCancel={onDone}
-      onSave={() => updateMut.mutate(nonEmptyFields(form), { onSuccess: savedThen("Background saved", onDone) })}
+      onSave={() => updateMut.mutate(nonEmptyFields(form), { onSuccess: savedThen(t("saved"), onDone) })}
       isSaving={updateMut.isPending}
       error={updateMut.isError ? getErrorMessage(updateMut.error) : null}
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.nationality}
-          label="Nationality"
+          label={t("nationality")}
           selectedName={labels.nationality}
           items={nationalities.options}
           isFetching={nationalities.isFetching}
@@ -96,7 +94,7 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
         />
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.country}
-          label="Country of residence"
+          label={t("countryOfResidence")}
           optional
           selectedName={labels.country}
           items={countries.options}
@@ -108,7 +106,7 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
         />
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.city}
-          label="City"
+          label={t("city")}
           optional
           selectedName={labels.city}
           items={cities}
@@ -125,33 +123,36 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
           filterLocally
           disabled={!form.countryOfResidenceId}
           minSearchLength={1}
-          placeholder={form.countryOfResidenceId ? "Search cities…" : "Select a country first"}
+          placeholder={form.countryOfResidenceId ? t("searchCities") : t("countryFirst")}
         />
         <Input
           id={FIELD_IDS.dateOfBirth}
-          label="Date of birth"
+          label={t("dateOfBirth")}
           type="date"
           value={form.dateOfBirth}
           onChange={(e) => set({ dateOfBirth: e.target.value })}
         />
         <Select
           id={FIELD_IDS.gender}
-          label="Gender"
+          label={t("gender")}
           value={form.gender}
           onChange={(e) => set({ gender: e.target.value })}
-          options={GENDER_OPTIONS}
+          options={[
+            { value: "", label: t("selectGender") },
+            ...GENDER_VALUES.map((value) => ({ value, label: tGender(value) })),
+          ]}
         />
         <Select
           id={FIELD_IDS.maritalStatus}
-          label="Marital status"
+          label={t("maritalStatus")}
           value={form.maritalStatusId}
           onChange={(e) => set({ maritalStatusId: e.target.value })}
-          options={[{ value: "", label: "Select status" }, ...maritalStatuses.map((m) => ({ value: m.id, label: refName(m) }))]}
+          options={[{ value: "", label: t("selectStatus") }, ...maritalStatuses.map((m) => ({ value: m.id, label: refName(m) }))]}
         />
         <div className="sm:col-span-2">
           <Textarea
             id={FIELD_IDS.bio}
-            label="About you"
+            label={t("aboutYou")}
             rows={3}
             value={form.bio}
             onChange={(e) => set({ bio: e.target.value })}

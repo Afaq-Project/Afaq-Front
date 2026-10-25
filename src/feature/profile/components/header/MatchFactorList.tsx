@@ -1,6 +1,7 @@
 import { Circle, CircleCheck } from "lucide-react";
 import { smoothScrollToHash } from "@/src/shared/lib/scroll";
 import type { MatchFactor } from "./completion";
+import { useTranslations } from "next-intl";
 
 interface MatchFactorListProps {
   factors: MatchFactor[];
@@ -10,9 +11,10 @@ interface MatchFactorListProps {
 
 /** Match factors with their state as icon + text (never color alone) and jump links. */
 export function MatchFactorList({ factors, onNavigate }: MatchFactorListProps) {
+  const t = useTranslations("profile.header");
   return (
     <div>
-      <h3 className="mb-3 text-h3 text-neutral-900">What your match score uses</h3>
+      <h3 className="mb-3 text-h3 text-neutral-900">{t("factorsTitle")}</h3>
       <ul className="flex flex-col gap-1">
         {factors.map((factor) => (
           <li key={factor.key} className="flex min-h-11 items-center gap-2 md:min-h-9">
@@ -23,10 +25,10 @@ export function MatchFactorList({ factors, onNavigate }: MatchFactorListProps) {
             )}
             <span className="flex-1 text-small text-neutral-900">
               {factor.label}
-              <span className="sr-only">{factor.complete ? ", added" : ", missing"}</span>
+              <span className="sr-only">{factor.complete ? t("addedState") : t("missingState")}</span>
             </span>
             {factor.complete ? (
-              <span className="text-caption text-neutral-600">Added</span>
+              <span className="text-caption text-neutral-600">{t("added")}</span>
             ) : (
               <a
                 href={factor.href}
@@ -36,7 +38,7 @@ export function MatchFactorList({ factors, onNavigate }: MatchFactorListProps) {
                 }}
                 className="rounded-sm text-caption text-primary-600 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
               >
-                Add it
+                {t("addIt")}
               </a>
             )}
           </li>

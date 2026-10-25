@@ -7,12 +7,12 @@ import { SectionCard } from "@/src/shared/ui/SectionCard";
 import type { ReferenceNames } from "../../hooks/useReferenceNames";
 import type { ApiEducation } from "../../types/api";
 import { editHandler, type EditingState } from "../common/editing";
-import { REQUIRED_FOR_MATCHING } from "../common/fieldIds";
 import { withNameSkeleton } from "../common/nameSkeleton";
 import { ProfilePageSection } from "../common/ProfilePageSection";
 import { CurrentLevelForm } from "./CurrentLevelForm";
 import { EducationEntry } from "./EducationEntry";
 import { EducationRecordForm } from "./EducationRecordForm";
+import { useTranslations } from "next-intl";
 
 const LEVEL = "education-level";
 const NEW_RECORD = "education:new";
@@ -30,13 +30,14 @@ interface EducationSectionProps {
  * degree as an entry with its own Edit — field of study lives on the entry it belongs to.
  */
 export function EducationSection({ levelId, educations, names, edit }: EducationSectionProps) {
+  const t = useTranslations("profile");
   const addRecord = editHandler(edit, NEW_RECORD);
 
   return (
-    <ProfilePageSection id="education" title="Education">
+    <ProfilePageSection id="education" title={t("sections.education")}>
       <SectionCard
-        title="Education"
-        titleAddon={<Badge tone="gray">Used for matching</Badge>}
+        title={t("education.title")}
+        titleAddon={<Badge tone="gray">{t("usedForMatching")}</Badge>}
         onEdit={editHandler(edit, LEVEL)}
       >
         {edit.editing === LEVEL ? (
@@ -44,8 +45,8 @@ export function EducationSection({ levelId, educations, names, edit }: Education
         ) : (
           <FieldGrid>
             <Field
-              label="Current education level"
-              info={REQUIRED_FOR_MATCHING}
+              label={t("education.currentLevel")}
+              info={t("requiredForMatching")}
               value={withNameSkeleton(names.educationLevel(levelId))}
             />
           </FieldGrid>
@@ -78,7 +79,7 @@ export function EducationSection({ levelId, educations, names, edit }: Education
             addRecord && (
               <div>
                 <AddValueButton
-                  label={educations.length === 0 ? "Add your first education record" : "Add another education record"}
+                  label={educations.length === 0 ? t("education.addFirst") : t("education.addAnother")}
                   onClick={addRecord}
                 />
               </div>
