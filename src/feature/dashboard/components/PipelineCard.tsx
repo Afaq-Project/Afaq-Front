@@ -75,7 +75,7 @@ export function PipelineCard({ counts, closingDaysLeft: closing, attentionVisibl
       <div className="flex justify-between items-baseline gap-3">
         <h2 id="pipeline-heading" className="text-h3 text-neutral-900">
           Your applications
-          {total > 0 && <span className="ml-2 font-normal text-neutral-600 text-small">{total} total</span>}
+          {total > 0 && <span className="ms-2 font-normal text-neutral-600 text-small">{total} total</span>}
         </h2>
         {total > 0 && (
           <Link href="/applications" className={GHOST_LINK_CLASS}>
@@ -136,7 +136,7 @@ export function PipelineCard({ counts, closingDaysLeft: closing, attentionVisibl
                   {index > 0 && (
                     // Same height as the count (36px) so the chevron centers on the number row.
                     <li aria-hidden="true" className="hidden md:flex items-center h-9">
-                      <ChevronRight size={16} strokeWidth={1.5} className="text-neutral-200" />
+                      <ChevronRight size={16} strokeWidth={1.5} className="rtl:-scale-x-100 text-neutral-200" />
                     </li>
                   )}
                   <li className="md:flex-1 min-w-0">

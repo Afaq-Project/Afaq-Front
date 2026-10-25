@@ -117,7 +117,7 @@ function LinkDocumentDialog({
                       type,
                     })
                   }
-                  className="flex items-center gap-3 hover:bg-neutral-50 disabled:hover:bg-transparent px-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 w-full min-h-12 text-left disabled:cursor-default"
+                  className="flex items-center gap-3 hover:bg-neutral-50 disabled:hover:bg-transparent px-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 w-full min-h-12 text-start disabled:cursor-default"
                 >
                   <span aria-hidden="true" className="flex justify-center items-center bg-neutral-50 rounded-md size-9 text-neutral-600 shrink-0">
                     <FileText size={16} strokeWidth={1.75} />

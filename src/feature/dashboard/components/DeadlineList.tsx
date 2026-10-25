@@ -103,18 +103,18 @@ export function DeadlineList({
                   const isLast = index === group.items.length - 1;
 
                   return (
-                    // pl-5 leaves room for the rail; the dot sits on the title line (8px padding + half of 22px).
-                    <li key={application.id} className="relative pl-5">
+                    // ps-5 leaves room for the rail; the dot sits on the title line (8px padding + half of 22px).
+                    <li key={application.id} className="relative ps-5">
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "top-3.5 left-0 absolute rounded-full size-2.5",
+                          "top-3.5 start-0 absolute rounded-full size-2.5",
                           DEADLINE_URGENCY_DOT[getDeadlineUrgency(application.daysLeft)],
                         )}
                       />
                       {!isLast && (
                         // From under this dot to the top of the next one.
-                        <span aria-hidden="true" className="top-6 -bottom-3.5 left-[4.5px] absolute bg-neutral-100 w-px" />
+                        <span aria-hidden="true" className="top-6 -bottom-3.5 start-[4.5px] absolute bg-neutral-100 w-px" />
                       )}
 
                       <Link
@@ -135,7 +135,7 @@ export function DeadlineList({
                           size={16}
                           strokeWidth={1.75}
                           aria-hidden="true"
-                          className="opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 text-neutral-400 transition-opacity shrink-0"
+                          className="rtl:-scale-x-100 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 text-neutral-400 transition-opacity shrink-0"
                         />
                       </Link>
                     </li>

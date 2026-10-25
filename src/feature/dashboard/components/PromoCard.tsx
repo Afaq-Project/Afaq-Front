@@ -29,7 +29,7 @@ export function PromoCard({ icon: Icon, title, eyebrow, description, date, time,
       {/* Soft glow in the corner; decorative. */}
       <span
         aria-hidden="true"
-        className="-top-8 -left-8 absolute bg-primary-100/50 blur-2xl rounded-full size-24 pointer-events-none"
+        className="-top-8 -start-8 absolute bg-primary-100/50 blur-2xl rounded-full size-24 pointer-events-none"
       />
 
       <span className="relative flex justify-center items-center bg-linear-to-br from-primary-400 to-primary-600 shadow-sm rounded-md size-9 text-white shrink-0">

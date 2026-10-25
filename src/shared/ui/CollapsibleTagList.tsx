@@ -29,7 +29,7 @@ export function CollapsibleTagList({
 
   if (items.length === 0) {
     return emptyMessage ? (
-      <span className="text-sm text-on-surface-variant/60 italic pl-1">{emptyMessage}</span>
+      <span className="text-sm text-on-surface-variant/60 italic ps-1">{emptyMessage}</span>
     ) : null;
   }
 

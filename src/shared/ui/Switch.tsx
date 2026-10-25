@@ -37,7 +37,8 @@ export function Switch({ label, checked, onChange, contextId, disabled = false }
         <span
           className={cn(
             "bg-white shadow-sm rounded-full size-4 transition-transform",
-            checked ? "translate-x-4.5" : "translate-x-0.5",
+            // The thumb starts at the inline start, so in RTL it travels the other way.
+            checked ? "translate-x-4.5 rtl:-translate-x-4.5" : "translate-x-0.5 rtl:-translate-x-0.5",
           )}
         />
       </span>

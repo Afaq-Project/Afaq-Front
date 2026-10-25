@@ -10,7 +10,7 @@ import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { MENU_ITEMS, type ShellVariant } from "./shell-config";
 
 const ITEM_CLASS =
-  "flex items-center gap-3 px-4 w-full h-11 md:h-10 text-neutral-800 text-small text-left hover:bg-neutral-50 focus-visible:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-400 transition-colors";
+  "flex items-center gap-3 px-4 w-full h-11 md:h-10 text-neutral-800 text-small text-start hover:bg-neutral-50 focus-visible:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-400 transition-colors";
 
 /** Avatar button with the account menu (menu-button pattern: arrow keys, Home/End, Escape). */
 export function UserMenu({ variant }: { variant: ShellVariant }) {
@@ -103,7 +103,7 @@ export function UserMenu({ variant }: { variant: ShellVariant }) {
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         aria-label={name ? `Account menu, ${name}` : "Account menu"}
-        className="after:absolute relative flex items-center gap-1 hover:bg-neutral-50 py-1 pr-1.5 pl-1 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 h-10 transition-colors after:-inset-0.5 after:content-['']"
+        className="after:absolute relative flex items-center gap-1 hover:bg-neutral-50 py-1 pe-1.5 ps-1 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 h-10 transition-colors after:-inset-0.5 after:content-['']"
       >
         <span
           aria-hidden="true"
@@ -120,7 +120,7 @@ export function UserMenu({ variant }: { variant: ShellVariant }) {
       </button>
 
       {open && (
-        <div className="top-full right-0 z-50 absolute bg-white shadow-sm mt-2 border border-neutral-100 rounded-lg w-60 overflow-hidden">
+        <div className="top-full end-0 z-50 absolute bg-white shadow-sm mt-2 border border-neutral-100 rounded-lg w-60 overflow-hidden">
           <div className="px-4 py-3 border-neutral-100 border-b">
             <p className="font-medium text-neutral-900 text-small truncate">{name || "Your account"}</p>
             {email && <p className="text-caption text-neutral-600 truncate">{email}</p>}

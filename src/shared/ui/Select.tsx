@@ -26,7 +26,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
         <select
           ref={ref}
           id={id}
-          className={`h-11 md:h-10 w-full appearance-none rounded-sm border border-neutral-200 bg-white pl-3 pr-9 text-sm text-neutral-900
+          className={`h-11 md:h-10 w-full appearance-none rounded-sm border border-neutral-200 bg-white ps-3 pe-9 text-sm text-neutral-900
             focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
             disabled:opacity-50 disabled:pointer-events-none
             ${className}`}
@@ -41,7 +41,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
         <ChevronDown
           size={16}
           strokeWidth={1.75}
-          className="top-1/2 right-3 absolute text-neutral-400 -translate-y-1/2 pointer-events-none"
+          className="top-1/2 end-3 absolute text-neutral-400 -translate-y-1/2 pointer-events-none"
         />
       </div>
     </div>

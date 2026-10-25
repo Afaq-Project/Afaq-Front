@@ -20,7 +20,7 @@ function AskLink({ documentId, text, what }: { documentId: string; text: string;
     <Link
       href={askHref(documentId, text)}
       aria-label={`Ask about this ${what}: ${text}`}
-      className={buttonClasses("ghost", "self-start gap-1.5 -ml-2 px-2 h-9 md:h-8 text-small")}
+      className={buttonClasses("ghost", "self-start gap-1.5 -ms-2 px-2 h-9 md:h-8 text-small")}
     >
       <MessageSquare size={14} strokeWidth={1.75} aria-hidden="true" />
       Ask about this
@@ -174,7 +174,7 @@ export function SuggestionsSection({
           // Below 640px "Ask about this" goes under the text so the text keeps the full width.
           <li
             key={index}
-            className="flex sm:flex-row flex-col sm:items-start sm:gap-1 bg-white py-2 pr-4 pl-1 border border-neutral-100 border-l-[3px] border-l-primary-600 rounded-md"
+            className="flex sm:flex-row flex-col sm:items-start sm:gap-1 bg-white py-2 pe-4 ps-1 border border-neutral-100 border-s-[3px] border-s-primary-600 rounded-md"
           >
             <label className="flex flex-1 items-start gap-1 min-w-0 cursor-pointer">
               {/* 44px tap target around the box. */}
@@ -188,7 +188,7 @@ export function SuggestionsSection({
               </span>
               <span className={cn("py-2.5 text-body", checked ? "text-neutral-600 line-through" : "text-neutral-900")}>{text}</span>
             </label>
-            <div className="flex sm:pt-1.5 pl-12 sm:pl-0 shrink-0">
+            <div className="flex sm:pt-1.5 ps-12 sm:ps-0 shrink-0">
               <AskLink documentId={documentId} text={text} what="suggestion" />
             </div>
           </li>

@@ -202,7 +202,7 @@ export function EssayReviewDialog({
                     type="file"
                     accept=".docx,.pdf,.txt"
                     onChange={(event) => onFile(event.target.files?.[0])}
-                    className="file:bg-white file:mr-3 file:px-3 file:border file:border-neutral-200 file:rounded-sm file:h-9 file:font-medium text-neutral-800 text-small file:text-neutral-800 file:cursor-pointer"
+                    className="file:bg-white file:me-3 file:px-3 file:border file:border-neutral-200 file:rounded-sm file:h-9 file:font-medium text-neutral-800 text-small file:text-neutral-800 file:cursor-pointer"
                   />
                 </div>
               </>

@@ -162,7 +162,7 @@ export function NotificationsView() {
           </h1>
           <p className="mt-1 text-body text-neutral-600">Deadlines, reviews, and updates on your applications.</p>
         </div>
-        <div className="flex items-center gap-1 -ml-4 sm:ml-0 shrink-0">
+        <div className="flex items-center gap-1 -ms-4 sm:ms-0 shrink-0">
           <Button variant="ghost" onClick={markAllRead} disabled={!mounted || unreadCount === 0}>
             <CheckCheck size={16} strokeWidth={1.75} aria-hidden="true" />
             Mark all as read

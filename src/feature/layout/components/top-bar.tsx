@@ -79,7 +79,7 @@ export function TopBar({ variant }: { variant: ShellVariant }) {
           })}
         </nav>
 
-        <div className="flex items-center gap-1 md:gap-2 ml-auto">
+        <div className="flex items-center gap-1 md:gap-2 ms-auto">
           {SHOW_GLOBAL_SEARCH && <TopBarSearch />}
           {variant === "user" && (
             <Link

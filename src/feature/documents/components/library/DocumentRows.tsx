@@ -18,7 +18,7 @@ import type { DocumentItem } from "../../types/document";
 const ICON_BUTTON =
   "flex justify-center items-center hover:bg-neutral-50 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 md:size-8 text-neutral-600 hover:text-neutral-900 transition-colors";
 const MENU_ITEM =
-  "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
+  "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
 
 /** Links and link-like buttons on this page underline on hover and focus only. */
 const LINK_CLASS =
@@ -240,7 +240,7 @@ export function DocumentRows({
                 <Link
                   href={reviewPath(item.id)}
                   aria-label={`Review with AI: ${item.name}`}
-                  className={buttonClasses("soft", "mr-1 gap-1.5 px-3 h-9 md:h-8 text-small")}
+                  className={buttonClasses("soft", "me-1 gap-1.5 px-3 h-9 md:h-8 text-small")}
                 >
                   <Sparkles size={14} strokeWidth={2} aria-hidden="true" />
                   Review with AI

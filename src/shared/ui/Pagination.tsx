@@ -26,7 +26,7 @@ export function Pagination({
         onClick={() => onPageChange(page - 1)}
         className="flex justify-center items-center hover:bg-neutral-50 disabled:opacity-40 disabled:pointer-events-none rounded-md w-9 h-9 text-neutral-600 transition-colors"
       >
-        <ChevronLeft size={18} strokeWidth={1.75} />
+        <ChevronLeft size={18} strokeWidth={1.75} className="rtl:-scale-x-100" />
       </button>
 
       <span className="text-neutral-600 text-small">
@@ -40,7 +40,7 @@ export function Pagination({
         onClick={() => onPageChange(page + 1)}
         className="flex justify-center items-center hover:bg-neutral-50 disabled:opacity-40 disabled:pointer-events-none rounded-md w-9 h-9 text-neutral-600 transition-colors"
       >
-        <ChevronRight size={18} strokeWidth={1.75} />
+        <ChevronRight size={18} strokeWidth={1.75} className="rtl:-scale-x-100" />
       </button>
     </div>
   );

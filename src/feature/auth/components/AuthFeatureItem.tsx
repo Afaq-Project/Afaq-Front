@@ -17,7 +17,7 @@ export default function AuthFeatureItem({ feature, index }: AuthFeatureItemProps
   return (
     <li
       className={`group relative flex items-center gap-3 px-5 py-3.5 motion-safe:animate-auth-row
-        ${index > 0 ? "before:absolute before:top-0 before:right-0 before:left-[72px] before:h-px before:bg-neutral-100" : ""}`}
+        ${index > 0 ? "before:absolute before:top-0 before:end-0 before:start-[72px] before:h-px before:bg-neutral-100" : ""}`}
       style={{ animationDelay: `${CARD_FADE_MS + index * STAGGER_MS}ms` }}
     >
       <span className="flex justify-center items-center bg-primary-50 group-hover:bg-primary-100 rounded-md size-10 text-primary-800 transition-colors duration-150 shrink-0">

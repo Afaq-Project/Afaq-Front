@@ -168,7 +168,7 @@ export function DocumentReviewView({ id }: { id: string }) {
 
   const backLinkEl = (
     <Link href={back.href} className={BACK_LINK_CLASS}>
-      <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
+      <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
       {back.label}
     </Link>
   );

@@ -57,7 +57,7 @@ export function AccountSection({
   return (
     <SettingsSection id="account" title="Account">
       <SettingsRow label="Email">
-        <div className="md:text-right">
+        <div className="md:text-end">
           <p className="text-body text-neutral-900 break-all">{email || "—"}</p>
           <p className="text-caption text-neutral-600">Used for login and reminders</p>
         </div>

@@ -137,7 +137,7 @@ const ACTION_LABEL: Record<ApplicationStatus, string> = {
 };
 
 const MENU_ITEM_CLASS =
-  "flex items-center gap-2 px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
+  "flex items-center gap-2 px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
 
 /**
  * One secondary button for every row (Start / Continue / View) and a "more" menu with update
@@ -184,9 +184,9 @@ export function RowActions({
       >
         {ACTION_LABEL[application.status]}
         {ongoing ? (
-          <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
+          <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
         ) : (
-          <ChevronRight size={16} strokeWidth={1.75} aria-hidden="true" />
+          <ChevronRight size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
         )}
       </Link>
 
@@ -224,7 +224,7 @@ export function RowActions({
                   className={cn(MENU_ITEM_CLASS, "text-neutral-800 hover:bg-neutral-50")}
                 >
                   Open official site
-                  <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" className="ml-auto text-neutral-600" />
+                  <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" className="ms-auto text-neutral-600" />
                   <span className="sr-only">(opens in a new tab)</span>
                 </a>
               </li>
@@ -246,7 +246,7 @@ export function RowActions({
         ) : (
           <div>
             <button type="button" onClick={() => setView("main")} className={cn(MENU_ITEM_CLASS, "text-neutral-600 hover:bg-neutral-50")}>
-              <ArrowLeft size={14} strokeWidth={1.75} aria-hidden="true" />
+              <ArrowLeft size={14} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
               Update status
             </button>
             <ul className="flex flex-col mt-1 pt-1 border-neutral-100 border-t">

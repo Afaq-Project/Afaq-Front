@@ -46,7 +46,7 @@ export function SkillPicker({ selected, onChange, max }: SkillPickerProps) {
       <div className="h-px w-full bg-outline-variant/50" />
 
       <div className="relative">
-        <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">
+        <span className="material-symbols-outlined absolute start-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">
           search
         </span>
         <input
@@ -54,17 +54,17 @@ export function SkillPicker({ selected, onChange, max }: SkillPickerProps) {
           value={search.query}
           onChange={(e) => search.setQuery(e.target.value)}
           placeholder="Search skills…"
-          className="w-full pl-11 pr-10 py-2.5 bg-surface-container-low rounded-md text-sm border border-outline-variant focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 placeholder:text-on-surface-variant transition-colors"
+          className="w-full ps-11 pe-10 py-2.5 bg-surface-container-low rounded-md text-sm border border-outline-variant focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 placeholder:text-on-surface-variant transition-colors"
         />
         {search.isFetching && (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="absolute end-3.5 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         )}
         {search.query && !search.isFetching && (
           <button
             type="button"
             onClick={() => search.setQuery("")}
             aria-label="Clear search"
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
+            className="absolute end-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
           >
             <span className="material-symbols-outlined text-[18px]">close</span>
           </button>

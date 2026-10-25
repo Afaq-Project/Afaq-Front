@@ -51,7 +51,7 @@ export function MajorMultiSelect({ label, required, optional, max, selected, onC
       </div>
 
       <div className="relative" ref={containerRef}>
-        <span className="top-1/2 left-3.5 absolute text-on-surface-variant -translate-y-1/2 pointer-events-none material-symbols-outlined">
+        <span className="top-1/2 start-3.5 absolute text-on-surface-variant -translate-y-1/2 pointer-events-none material-symbols-outlined">
           search
         </span>
         <input
@@ -63,24 +63,24 @@ export function MajorMultiSelect({ label, required, optional, max, selected, onC
           }}
           onFocus={() => setOpen(true)}
           placeholder="Type to search fields of study…"
-          className="bg-white py-3 pr-10 pl-11 border focus:border-primary rounded-lg border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/30 w-full text-on-surface placeholder:text-on-surface-variant text-sm transition-all"
+          className="bg-white py-3 pe-10 ps-11 border focus:border-primary rounded-lg border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/30 w-full text-on-surface placeholder:text-on-surface-variant text-sm transition-all"
         />
         {majors.isFetching && (
-          <div className="top-1/2 right-3.5 absolute border-2 border-primary border-t-transparent rounded-full w-4 h-4 -translate-y-1/2 animate-spin" />
+          <div className="top-1/2 end-3.5 absolute border-2 border-primary border-t-transparent rounded-full w-4 h-4 -translate-y-1/2 animate-spin" />
         )}
         {majors.query && !majors.isFetching && (
           <button
             type="button"
             onClick={clearSearch}
             aria-label="Clear search"
-            className="top-1/2 right-3.5 absolute text-on-surface-variant hover:text-on-surface -translate-y-1/2"
+            className="top-1/2 end-3.5 absolute text-on-surface-variant hover:text-on-surface -translate-y-1/2"
           >
             <span className="text-[18px] material-symbols-outlined">close</span>
           </button>
         )}
 
         {open && majors.debouncedQuery.trim().length >= 2 && (
-          <div className="top-full left-0 z-50 absolute bg-white shadow-xl mt-1.5 border border-neutral-200 rounded-lg w-full max-h-64 overflow-y-auto">
+          <div className="top-full start-0 z-50 absolute bg-white shadow-xl mt-1.5 border border-neutral-200 rounded-lg w-full max-h-64 overflow-y-auto">
             {majors.options.length === 0 && !majors.isFetching ? (
               <div className="p-4 text-on-surface-variant text-sm text-center">
                 No fields found for &ldquo;{majors.debouncedQuery}&rdquo;

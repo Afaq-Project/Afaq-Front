@@ -45,7 +45,7 @@ export function OpportunityRow({
           {status}
         </Badge>
       </td>
-      <td className="px-5 py-4 text-right whitespace-nowrap">
+      <td className="px-5 py-4 text-end whitespace-nowrap">
         <div className="inline-flex items-center gap-2">
           <button
             type="button"

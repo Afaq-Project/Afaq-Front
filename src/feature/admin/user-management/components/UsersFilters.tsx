@@ -20,14 +20,14 @@ export function UsersFilters({
         <Search
           size={16}
           strokeWidth={1.75}
-          className="top-1/2 left-3 absolute text-neutral-400 -translate-y-1/2"
+          className="top-1/2 start-3 absolute text-neutral-400 -translate-y-1/2"
         />
         <input
           type="text"
           value={filters.search}
           onChange={(event) => onFiltersChange({ ...filters, search: event.target.value })}
           placeholder="Search by name or email"
-          className="pl-9 border-neutral-200 rounded-sm focus:ring-2 focus:ring-primary-400 w-full h-10 text-sm focus:outline-none focus:border-transparent"
+          className="ps-9 border-neutral-200 rounded-sm focus:ring-2 focus:ring-primary-400 w-full h-10 text-sm focus:outline-none focus:border-transparent"
         />
       </div>
 

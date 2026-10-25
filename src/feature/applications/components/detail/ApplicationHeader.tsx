@@ -200,7 +200,7 @@ export function ApplicationHeader({ application, opportunity, status, onStatusCh
             }}
           />
         </div>
-        <p className="text-caption text-neutral-600 md:text-right shrink-0 md:mt-1" aria-label={`Progress ${STATUS_PROGRESS[status]}%`}>
+        <p className="text-caption text-neutral-600 md:text-end shrink-0 md:mt-1" aria-label={`Progress ${STATUS_PROGRESS[status]}%`}>
           {STATUS_PROGRESS[status]}%
         </p>
       </div>

@@ -228,7 +228,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
             </button>
           )}
 
-          {sort && <div className="md:ml-auto">{sort}</div>}
+          {sort && <div className="md:ms-auto">{sort}</div>}
         </div>
       )}
 
@@ -237,7 +237,7 @@ export function DiscoverControls({ query, update, support, disabled = false, sor
           {chips.map((chip) => (
             <span
               key={chip.key}
-              className="inline-flex items-center gap-1 bg-primary-50 py-0.5 pr-1 pl-2.5 border border-primary-200 rounded-full text-caption text-primary-800"
+              className="inline-flex items-center gap-1 bg-primary-50 py-0.5 pe-1 ps-2.5 border border-primary-200 rounded-full text-caption text-primary-800"
             >
               {chip.label}
               <button

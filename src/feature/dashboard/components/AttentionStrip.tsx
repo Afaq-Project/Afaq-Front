@@ -28,7 +28,7 @@ export function AttentionStrip({ applications }: { applications: ApplicationSumm
   return (
     <section
       aria-label="Needs your attention"
-      className="bg-white border border-neutral-100 border-l-4 border-l-danger-600 rounded-lg"
+      className="bg-white border border-neutral-100 border-s-4 border-s-danger-600 rounded-lg"
     >
       <ul>
         {shown.map((application) => (

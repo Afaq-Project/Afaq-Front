@@ -71,7 +71,7 @@ export function ActivityCard({ items, now }: { items: ApplicationActivityItem[];
           {shown.map((item, index) => (
             <li key={`${item.id}-${index}`} className="relative flex gap-3 pb-4 last:pb-0">
               {index < shown.length - 1 && (
-                <span aria-hidden="true" className="top-3 bottom-0 left-[4.5px] absolute bg-neutral-100 w-px" />
+                <span aria-hidden="true" className="top-3 bottom-0 start-[4.5px] absolute bg-neutral-100 w-px" />
               )}
               <span
                 aria-hidden="true"

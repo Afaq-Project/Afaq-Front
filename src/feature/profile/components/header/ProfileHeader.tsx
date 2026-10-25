@@ -51,7 +51,7 @@ export function ProfileHeader({
               aria-label="Change photo (not available yet)"
               title="Photo upload isn't available yet"
               // after: widens the hit area to 44px without making the icon bigger.
-              className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border border-neutral-100 bg-white text-neutral-600 after:absolute after:-inset-2 after:content-[''] hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed"
+              className="absolute -bottom-1 -end-1 flex size-7 items-center justify-center rounded-full border border-neutral-100 bg-white text-neutral-600 after:absolute after:-inset-2 after:content-[''] hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed"
             >
               <Camera size={14} strokeWidth={1.75} aria-hidden="true" />
             </button>

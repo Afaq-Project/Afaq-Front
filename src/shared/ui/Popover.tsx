@@ -64,7 +64,7 @@ export function Popover({
           // cn() so panelClassName can override the defaults (e.g. width or padding).
           className={cn(
             "absolute z-20 w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-neutral-100 bg-white p-4 shadow-sm",
-            align === "start" ? "left-0" : "right-0",
+            align === "start" ? "start-0" : "end-0",
             side === "top" ? "bottom-full mb-2" : "top-full mt-2",
             panelClassName,
           )}

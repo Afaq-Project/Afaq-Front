@@ -20,7 +20,7 @@ export function ManagedOpportunityDetailView({
         href="/admin/opportunities/manage"
         className="inline-flex items-center gap-1.5 w-fit text-neutral-600 hover:text-neutral-900 text-small transition-colors"
       >
-        <ArrowLeft size={16} strokeWidth={1.75} />
+        <ArrowLeft size={16} strokeWidth={1.75} className="rtl:-scale-x-100" />
         Back to manage opportunities
       </Link>
 

@@ -36,7 +36,7 @@ export function EducationEntry({ education, names, onEdit }: EducationEntryProps
       titleAddon={education.isCurrent ? <Badge tone="blue">Currently enrolled</Badge> : undefined}
       metric={
         gpa && (
-          <div className="text-right">
+          <div className="text-end">
             <p className="text-caption text-neutral-600">GPA</p>
             <p className="text-h2 text-neutral-900">{gpa}</p>
             {/* TODO: show the 4.0-scale equivalent here once the API provides it. */}

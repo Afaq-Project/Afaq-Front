@@ -102,7 +102,7 @@ export function FieldPattern({ id, field, type }: { id: string; field?: string; 
   return (
     <div
       aria-hidden="true"
-      className="top-0 right-0 bottom-0 absolute w-[55%] pointer-events-none [mask-image:linear-gradient(to_left,black_55%,transparent)]"
+      className="top-0 end-0 bottom-0 absolute w-[55%] pointer-events-none [mask-image:linear-gradient(to_left,black_55%,transparent)]"
     >
       {SLOTS.map((slot, index) => {
         const pool = slot.kind === "field" ? fieldIcons : typeIcons;

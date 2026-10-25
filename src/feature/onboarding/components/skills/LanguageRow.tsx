@@ -45,7 +45,7 @@ export function LanguageRow({ item, proficiencyLevels, onChange, onRemove }: Lan
             <option key={level.id} value={level.id}>{level.name}</option>
           ))}
         </select>
-        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+        <span className="material-symbols-outlined absolute end-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
           expand_more
         </span>
       </div>

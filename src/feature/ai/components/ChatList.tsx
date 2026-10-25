@@ -118,7 +118,7 @@ export function ChatList({
                           aria-current={active ? "true" : undefined}
                           onClick={() => onSelect(chat.id)}
                           className={cn(
-                            "flex flex-col items-start px-3 py-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 w-full min-h-11 text-left transition-colors",
+                            "flex flex-col items-start px-3 py-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 w-full min-h-11 text-start transition-colors",
                             active ? "bg-primary-50" : "hover:bg-neutral-50",
                           )}
                         >

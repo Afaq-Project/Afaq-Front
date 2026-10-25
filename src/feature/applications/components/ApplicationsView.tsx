@@ -126,7 +126,7 @@ export function ApplicationsView() {
             <select
               value={query.type}
               onChange={(event) => update({ type: event.target.value as TypeFilter })}
-              className="bg-white pr-9 pl-3 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 h-10 font-medium text-neutral-800 text-small appearance-none cursor-pointer"
+              className="bg-white pe-9 ps-3 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 h-10 font-medium text-neutral-800 text-small appearance-none cursor-pointer"
             >
               {TYPE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -138,7 +138,7 @@ export function ApplicationsView() {
               size={16}
               strokeWidth={1.75}
               aria-hidden="true"
-              className="top-1/2 right-3 absolute text-neutral-600 -translate-y-1/2 pointer-events-none"
+              className="top-1/2 end-3 absolute text-neutral-600 -translate-y-1/2 pointer-events-none"
             />
           </label>
         </div>

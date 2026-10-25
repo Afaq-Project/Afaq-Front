@@ -13,13 +13,13 @@ import type { Notification } from "../types/notification";
 const ICON_BUTTON =
   "flex justify-center items-center hover:bg-neutral-100 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 md:size-8 text-neutral-600 hover:text-neutral-900 transition-colors";
 const MENU_ITEM =
-  "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-left text-neutral-800 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
+  "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-start text-neutral-800 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400";
 
 // On devices that can hover, the ⋯ button sits over the time and shows on hover or focus; on
 // touch screens both are always visible, side by side.
 const HOVER = "[@media(hover:hover)]";
 const TIME_HIDES = `${HOVER}:group-hover:opacity-0 ${HOVER}:group-focus-within:opacity-0`;
-const MENU_SHOWS = `${HOVER}:absolute ${HOVER}:inset-y-0 ${HOVER}:right-0 ${HOVER}:flex ${HOVER}:items-center ${HOVER}:opacity-0 ${HOVER}:group-hover:opacity-100 ${HOVER}:group-focus-within:opacity-100`;
+const MENU_SHOWS = `${HOVER}:absolute ${HOVER}:inset-y-0 ${HOVER}:end-0 ${HOVER}:flex ${HOVER}:items-center ${HOVER}:opacity-0 ${HOVER}:group-hover:opacity-100 ${HOVER}:group-focus-within:opacity-100`;
 
 function IconTile({ view }: { view: NotificationView }) {
   const Icon = view.icon;
@@ -42,7 +42,7 @@ function Content({ notification, view, titleId, compact }: { notification: Notif
     <div className="flex flex-col gap-1 min-w-0">
       <p id={titleId} className={cn("text-body text-neutral-900", notification.read ? "font-normal" : "font-semibold", compact && "truncate")}>
         {!notification.read && <span className="sr-only">Unread: </span>}
-        {view.flag && <FlagTile size="sm" {...view.flag} className="inline-flex mr-1.5 align-[-3px]" />}
+        {view.flag && <FlagTile size="sm" {...view.flag} className="inline-flex me-1.5 align-[-3px]" />}
         {view.title}
       </p>
       <p className={cn("text-neutral-600 text-small", compact ? "truncate" : "line-clamp-2 lg:line-clamp-1")}>{view.body}</p>

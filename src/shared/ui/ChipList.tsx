@@ -40,7 +40,7 @@ export function ChipList({ items, editable = false, onRemove, emptyText, loading
       {items.map((item) => (
         <li
           key={item.key}
-          className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white py-1 pl-3 pr-3 text-caption text-neutral-800 has-[button]:pr-1"
+          className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white py-1 ps-3 pe-3 text-caption text-neutral-800 has-[button]:pe-1"
         >
           {item.label}
           {editable && onRemove && (

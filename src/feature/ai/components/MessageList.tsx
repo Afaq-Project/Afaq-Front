@@ -53,7 +53,7 @@ export function EssayReviewCard({ review }: { review: EssayReview }) {
               <span aria-hidden="true">{section.icon}</span>
               {section.title}
             </p>
-            <ul className="flex flex-col gap-1 mt-1.5 pl-5 text-body text-neutral-800 list-disc">
+            <ul className="flex flex-col gap-1 mt-1.5 ps-5 text-body text-neutral-800 list-disc">
               {section.items.map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -127,7 +127,7 @@ export function MessageList({ messages, isReplying, failed, onRetry, onSuggestio
             )}
             {message.role === "user" ? (
               <div className="group flex flex-col items-end gap-1">
-                <div className="bg-primary-50 px-4 py-2.5 rounded-lg rounded-br-sm max-w-[70%] text-body text-primary-900 whitespace-pre-wrap">
+                <div className="bg-primary-50 px-4 py-2.5 rounded-lg rounded-ee-sm max-w-[70%] text-body text-primary-900 whitespace-pre-wrap">
                   {message.text}
                   {time}
                 </div>

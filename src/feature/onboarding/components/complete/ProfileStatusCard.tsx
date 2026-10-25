@@ -25,7 +25,7 @@ export function ProfileStatusCard({ completionPercentage, isLoading }: ProfileSt
     <div className="bg-surface-container-low w-full rounded-2xl p-5 md:p-6 flex items-center justify-between shadow-sm border border-outline-variant/40 transition-all hover:shadow-md">
       <div className="flex items-center space-x-4">
         <CompletionRing percent={animatedPercent} isLoading={isLoading} />
-        <div className="text-left">
+        <div className="text-start">
           <h3 className="text-sm md:text-base font-semibold text-on-surface">Profile status</h3>
           <p className="text-xs md:text-sm text-on-surface-variant">{status}</p>
         </div>

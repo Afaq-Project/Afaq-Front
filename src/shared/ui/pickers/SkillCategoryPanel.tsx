@@ -24,7 +24,7 @@ export function SkillCategoryPanel({ category, selectedIds, maxReached, onToggle
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="w-full flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors text-left cursor-pointer"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors text-start cursor-pointer"
       >
         <span className="text-sm font-semibold text-on-surface">{category.nameEn}</span>
         <div className="flex items-center gap-2">

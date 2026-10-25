@@ -51,7 +51,7 @@ export function NotificationsDropdown({ className }: { className?: string }) {
         {unreadCount > 0 && (
           <span
             aria-hidden="true"
-            className="top-1 right-1 absolute flex justify-center items-center bg-danger-600 px-1 border-2 border-white rounded-full min-w-4 h-4 font-semibold text-[10px] text-white leading-none"
+            className="top-1 end-1 absolute flex justify-center items-center bg-danger-600 px-1 border-2 border-white rounded-full min-w-4 h-4 font-semibold text-[10px] text-white leading-none"
           >
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
@@ -60,8 +60,8 @@ export function NotificationsDropdown({ className }: { className?: string }) {
 
       {isOpen && (
         // Below 640px the bell isn't at the screen edge, so the panel spans the viewport instead.
-        <div className="top-16 sm:top-full right-4 sm:right-0 left-4 sm:left-auto z-50 fixed sm:absolute bg-white shadow-sm sm:mt-2 border border-neutral-100 rounded-lg sm:w-104 overflow-hidden">
-          <div className="flex justify-between items-center gap-3 py-2 pr-2 pl-4 border-neutral-100 border-b">
+        <div className="top-16 sm:top-full end-4 sm:end-0 start-4 sm:start-auto z-50 fixed sm:absolute bg-white shadow-sm sm:mt-2 border border-neutral-100 rounded-lg sm:w-104 overflow-hidden">
+          <div className="flex justify-between items-center gap-3 py-2 pe-2 ps-4 border-neutral-100 border-b">
             <h2 className="text-h3 text-neutral-900">Notifications</h2>
             <Button variant="ghost" onClick={markAllRead} disabled={unreadCount === 0} className="px-2 md:h-8 text-small">
               <CheckCheck size={16} strokeWidth={1.75} aria-hidden="true" />

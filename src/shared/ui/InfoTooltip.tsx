@@ -24,6 +24,8 @@ export function InfoTooltip({ text }: { text: string }) {
       <span
         role="tooltip"
         id={tooltipId}
+        // Centered with left-1/2 + -translate-x-1/2, which centers in either direction.
+        // eslint-disable-next-line no-restricted-syntax
         className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1 -translate-x-1/2 whitespace-nowrap rounded-sm bg-neutral-900 px-2 py-1 text-caption text-white opacity-0 transition-opacity group-focus-within/tip:opacity-100 group-hover/tip:opacity-100"
       >
         {text}

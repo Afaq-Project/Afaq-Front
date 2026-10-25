@@ -51,7 +51,7 @@ export function YourFileCard({
         </div>
       </div>
       {!item.mock && (
-        <div className="flex flex-wrap gap-1 -ml-2">
+        <div className="flex flex-wrap gap-1 -ms-2">
           <button type="button" onClick={onDownload} className={buttonClasses("ghost", SMALL_GHOST)}>
             <Download size={14} strokeWidth={1.75} aria-hidden="true" />
             Download

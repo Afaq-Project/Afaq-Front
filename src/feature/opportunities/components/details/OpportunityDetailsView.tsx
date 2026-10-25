@@ -66,7 +66,7 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
         href="/discover"
         className="flex items-center gap-1.5 rounded-sm w-fit text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
       >
-        <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
+        <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
         Back to Discover
       </Link>
 
@@ -99,7 +99,7 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
       </div>
 
       {showMobileBar && (
-        <div className="md:hidden right-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 z-30 fixed bg-white px-4 py-3 border-neutral-100 border-t">
+        <div className="md:hidden end-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] start-0 z-30 fixed bg-white px-4 py-3 border-neutral-100 border-t">
           {tracked ? (
             <UpdateStatusMenu status={status} onChange={setStatus} side="top" />
           ) : (

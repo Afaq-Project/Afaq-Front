@@ -293,12 +293,12 @@ export function AiAssistantView() {
       {drawerOpen && (
         <div className="lg:hidden z-50 fixed inset-0">
           <div aria-hidden="true" onClick={closeDrawer} className="absolute inset-0 bg-neutral-900/40" />
-          <div ref={drawerRef} role="dialog" aria-modal="true" aria-label="Your chats" className="top-0 bottom-0 left-0 absolute bg-white shadow-sm w-80 max-w-[85vw]">
+          <div ref={drawerRef} role="dialog" aria-modal="true" aria-label="Your chats" className="top-0 bottom-0 start-0 absolute bg-white shadow-sm w-80 max-w-[85vw]">
             <button
               type="button"
               onClick={closeDrawer}
               aria-label="Close chats"
-              className="top-3 right-14 z-10 absolute flex justify-center items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 text-neutral-600"
+              className="top-3 end-14 z-10 absolute flex justify-center items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 text-neutral-600"
             >
               <X size={18} strokeWidth={1.75} aria-hidden="true" />
             </button>

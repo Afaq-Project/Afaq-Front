@@ -45,7 +45,7 @@ export function FiltersSheet({ open, onClose, onClearAll, children }: FiltersShe
         aria-modal="true"
         aria-labelledby="filters-sheet-title"
         tabIndex={-1}
-        className="right-0 bottom-0 left-0 absolute flex flex-col bg-white pb-[env(safe-area-inset-bottom)] rounded-t-lg max-h-[85vh] focus:outline-none"
+        className="end-0 bottom-0 start-0 absolute flex flex-col bg-white pb-[env(safe-area-inset-bottom)] rounded-t-lg max-h-[85vh] focus:outline-none"
       >
         <div className="flex justify-between items-center px-4 py-3 border-neutral-100 border-b">
           <h2 id="filters-sheet-title" className="text-h3 text-neutral-900">

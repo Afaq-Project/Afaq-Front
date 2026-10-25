@@ -40,7 +40,7 @@ export function AccountSection({ profile, accountEmail, edit }: AccountSectionPr
           className="inline-flex min-h-11 items-center gap-2 rounded-sm text-body font-medium text-primary-600 hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 md:min-h-0"
         >
           Go to settings
-          <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
+          <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" className="rtl:-scale-x-100" />
         </Link>
       </SectionCard>
     </ProfilePageSection>

@@ -34,7 +34,7 @@ export function BottomTabBar({ variant }: { variant: ShellVariant }) {
                   {badge ? (
                     <span
                       aria-hidden="true"
-                      className="-top-1.5 left-3 absolute bg-warning-50 px-1 rounded-full min-w-4 text-[10px] text-warning-800 text-center leading-4"
+                      className="-top-1.5 start-3 absolute bg-warning-50 px-1 rounded-full min-w-4 text-[10px] text-warning-800 text-center leading-4"
                     >
                       {badge > 99 ? "99+" : badge}
                     </span>

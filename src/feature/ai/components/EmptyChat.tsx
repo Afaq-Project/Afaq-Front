@@ -48,7 +48,7 @@ export function EmptyChat({
             <button
               type="button"
               onClick={() => (suggestion === "Review my essay" ? onReviewEssay() : onSuggestion(suggestion))}
-              className="bg-primary-50 hover:bg-primary-100 px-4 py-3 border border-primary-200 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-full min-h-14 font-medium text-primary-800 text-small text-left transition-colors"
+              className="bg-primary-50 hover:bg-primary-100 px-4 py-3 border border-primary-200 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-full min-h-14 font-medium text-primary-800 text-small text-start transition-colors"
             >
               {suggestion}
             </button>

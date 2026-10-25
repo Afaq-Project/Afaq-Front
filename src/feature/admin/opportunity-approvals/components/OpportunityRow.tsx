@@ -32,12 +32,12 @@ export function OpportunityRow({
             onClick={() => onToggleExpand(opportunity.id)}
             aria-label={expanded ? "Collapse details" : "Expand details"}
             aria-expanded={expanded}
-            className="flex items-start gap-2 text-left"
+            className="flex items-start gap-2 text-start"
           >
             {expanded ? (
               <ChevronDown size={16} strokeWidth={1.75} className="flex-shrink-0 mt-0.5 text-neutral-500" />
             ) : (
-              <ChevronRight size={16} strokeWidth={1.75} className="flex-shrink-0 mt-0.5 text-neutral-500" />
+              <ChevronRight size={16} strokeWidth={1.75} className="rtl:-scale-x-100 flex-shrink-0 mt-0.5 text-neutral-500" />
             )}
             <span>
               <span className="block font-medium text-neutral-900 text-small">
@@ -71,7 +71,7 @@ export function OpportunityRow({
         <td className="px-5 py-4 text-neutral-700 text-small whitespace-nowrap">
           {formatDate(opportunity.dateScraped)}
         </td>
-        <td className="px-5 py-4 text-right whitespace-nowrap">
+        <td className="px-5 py-4 text-end whitespace-nowrap">
           <div className="inline-flex items-center gap-2">
             <button
               type="button"

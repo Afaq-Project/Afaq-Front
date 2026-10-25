@@ -37,11 +37,11 @@ export function DocumentSlotCard({ label, slot, upload, onPick, onDelete }: Docu
           type="button"
           onClick={onDelete}
           aria-label={`Delete ${label}`}
-          className="absolute top-3 right-3 w-6 h-6 rounded-full bg-error-container text-error flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+          className="absolute top-3 end-3 w-6 h-6 rounded-full bg-error-container text-error flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
         >
           <span className="material-symbols-outlined" style={{ fontSize: 14 }}>delete</span>
         </button>
-        <div className="flex flex-col min-w-0 pr-8">
+        <div className="flex flex-col min-w-0 pe-8">
           <span className="text-[10px] uppercase tracking-wider font-semibold text-primary mb-0.5">{label}</span>
           <span className="text-sm font-semibold text-on-background truncate">{slot.doc.name}</span>
           <span className="text-xs text-on-surface-variant mt-0.5">{slot.doc.size}</span>
@@ -53,7 +53,7 @@ export function DocumentSlotCard({ label, slot, upload, onPick, onDelete }: Docu
   if (slot.status === "error") {
     return (
       <div className="bg-surface-container-low p-4 rounded-xl flex items-center justify-between border border-error shadow-xs">
-        <div className="flex flex-col min-w-0 pr-2">
+        <div className="flex flex-col min-w-0 pe-2">
           <span className="text-[10px] uppercase tracking-wider font-semibold text-error">
             {slot.errorMessage ?? "Upload failed"}
           </span>

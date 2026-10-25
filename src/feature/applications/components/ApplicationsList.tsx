@@ -48,7 +48,7 @@ export function ApplicationsList({
     <>
       {/* No overflow-hidden: it would clip the row menus at the card's bottom edge. */}
       <div className="hidden md:block bg-white border border-neutral-100 rounded-lg">
-        <table className="w-full text-left">
+        <table className="w-full text-start">
           <thead>
             <tr className="border-neutral-100 border-b">
               <th scope="col" className={TH_CLASS}>
@@ -60,7 +60,7 @@ export function ApplicationsList({
               <th scope="col" className={TH_CLASS}>
                 Progress
               </th>
-              <th scope="col" className={`${TH_CLASS} text-right`}>
+              <th scope="col" className={`${TH_CLASS} text-end`}>
                 Actions
               </th>
             </tr>

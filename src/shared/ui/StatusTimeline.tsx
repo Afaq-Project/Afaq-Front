@@ -62,8 +62,8 @@ export function StatusTimeline({ currentStep, stackOnMobile = false, renderStep 
                 className={cn(
                   "absolute",
                   stackOnMobile
-                    ? "-top-4 left-2.75 w-0.5 h-4 md:top-3 md:right-1/2 md:-left-1/2 md:w-auto md:h-0.5"
-                    : "top-3 right-1/2 -left-1/2 h-0.5",
+                    ? "-top-4 start-2.75 w-0.5 h-4 md:top-3 md:end-1/2 md:-start-1/2 md:w-auto md:h-0.5"
+                    : "top-3 end-1/2 -start-1/2 h-0.5",
                   index <= currentStep ? "bg-primary-400" : "bg-neutral-100",
                 )}
               />

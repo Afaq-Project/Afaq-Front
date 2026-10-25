@@ -78,11 +78,11 @@ export function InlineSearch<T extends { id: string; name: string }>({
     <div className="flex flex-col gap-2 relative" ref={containerRef}>
       <label htmlFor={inputId} className="text-sm font-medium text-on-surface">
         {label}
-        {required && <span className="text-error ml-0.5">*</span>}
-        {hint && <span className="text-xs font-normal text-outline ml-1">({hint})</span>}
+        {required && <span className="text-error ms-0.5">*</span>}
+        {hint && <span className="text-xs font-normal text-outline ms-1">({hint})</span>}
       </label>
       <div className="relative">
-        <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">
+        <span className="material-symbols-outlined absolute start-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">
           search
         </span>
         <input
@@ -101,12 +101,12 @@ export function InlineSearch<T extends { id: string; name: string }>({
           }}
           placeholder={placeholder ?? `Search ${label.toLowerCase()}…`}
           disabled={disabled}
-          className={`w-full pl-10 pr-10 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant ${
+          className={`w-full ps-10 pe-10 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant ${
             disabled ? "opacity-50 cursor-not-allowed bg-neutral-50" : ""
           }`}
         />
         {isFetching ? (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="absolute end-3.5 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         ) : (
           inputValue && !disabled && (
             <button
@@ -117,7 +117,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
                 onClear?.();
                 setOpen(false);
               }}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
+              className="absolute end-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
             >
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
@@ -126,7 +126,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
       </div>
 
       {showDropdown && (
-        <div className="absolute top-full left-0 w-full mt-1.5 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
+        <div className="absolute top-full start-0 w-full mt-1.5 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
           {isFetching ? (
             <div className="p-3 text-center text-xs text-on-surface-variant">Searching…</div>
           ) : displayItems.length === 0 ? (
@@ -142,7 +142,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
                   setOpen(false);
                   onSearch("");
                 }}
-                className={`w-full text-left px-4 py-2.5 hover:bg-neutral-50 transition-colors text-sm flex items-center justify-between cursor-pointer ${
+                className={`w-full text-start px-4 py-2.5 hover:bg-neutral-50 transition-colors text-sm flex items-center justify-between cursor-pointer ${
                   selectedName === item.name
                     ? "text-primary font-semibold bg-primary/5"
                     : "text-on-surface"

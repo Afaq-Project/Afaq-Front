@@ -6,7 +6,7 @@ import { ONBOARDING_STEPS } from "../../services/steps";
 /** Desktop step list with the current step's illustration. */
 export function OnboardingSidebar({ currentStep }: { currentStep: number }) {
   return (
-    <aside className="w-64 flex-shrink-0 bg-white border-r border-neutral-100 flex flex-col py-8 px-6">
+    <aside className="w-64 flex-shrink-0 bg-white border-e border-neutral-100 flex flex-col py-8 px-6">
       <Link href="/dashboard" className="mb-10 hover:opacity-90 transition-opacity inline-block">
         <Brand />
       </Link>
@@ -41,7 +41,7 @@ export function OnboardingSidebar({ currentStep }: { currentStep: number }) {
                 {step.label}
               </span>
               {isActive && (
-                <span className="material-symbols-outlined text-primary text-[18px] ml-auto">
+                <span className="material-symbols-outlined text-primary text-[18px] ms-auto">
                   arrow_forward
                 </span>
               )}

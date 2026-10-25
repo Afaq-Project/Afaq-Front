@@ -62,7 +62,7 @@ export function UpdateStatusMenu({
                 setOpen(false);
               }}
               className={cn(
-                "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-left hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
+                "flex items-center px-3 rounded-sm w-full min-h-11 md:min-h-9 text-small text-start hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400",
                 option === status ? "font-medium text-neutral-900" : "text-neutral-800",
               )}
             >
@@ -155,7 +155,7 @@ export function ActionsCard({
         type="button"
         onClick={share}
         aria-label="Share"
-        className="flex justify-center items-center ml-auto rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 md:size-9 text-neutral-600 hover:text-neutral-900"
+        className="flex justify-center items-center ms-auto rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 md:size-9 text-neutral-600 hover:text-neutral-900"
       >
         <Share2 size={16} strokeWidth={1.75} aria-hidden="true" />
       </button>
@@ -312,7 +312,7 @@ export function AskAiCard({
             {/* The assistant opens the chat for this context and prefills the question. */}
             <Link
               href={hrefFor(question)}
-              className="flex items-center bg-white px-4 py-2 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-full min-h-11 md:min-h-10 font-medium text-primary-600 text-sm text-left transition-colors"
+              className="flex items-center bg-white px-4 py-2 border border-neutral-200 hover:border-neutral-400 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 w-full min-h-11 md:min-h-10 font-medium text-primary-600 text-sm text-start transition-colors"
             >
               {question}
             </Link>

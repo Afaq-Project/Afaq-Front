@@ -27,7 +27,7 @@ export function SortSelect({
           onChange={(event) => onChange(event.target.value as SortOrder)}
           className={cn(
             CONTROL_BUTTON_CLASS,
-            "appearance-none bg-white pr-9 border-neutral-200 hover:border-neutral-400 text-neutral-800 cursor-pointer",
+            "appearance-none bg-white pe-9 border-neutral-200 hover:border-neutral-400 text-neutral-800 cursor-pointer",
           )}
         >
           {SORT_OPTIONS.filter((option) => options.includes(option.value)).map((option) => (
@@ -40,7 +40,7 @@ export function SortSelect({
           size={16}
           strokeWidth={1.75}
           aria-hidden="true"
-          className="top-1/2 right-3 absolute text-neutral-600 -translate-y-1/2 pointer-events-none"
+          className="top-1/2 end-3 absolute text-neutral-600 -translate-y-1/2 pointer-events-none"
         />
       </span>
     </label>

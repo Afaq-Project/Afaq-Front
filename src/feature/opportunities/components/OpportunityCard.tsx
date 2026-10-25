@@ -143,7 +143,7 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
         ) : (
           <DeadlineLabel daysLeft={daysLeft} />
         )}
-        <span dir="auto" className="text-neutral-600 text-right truncate">{remote ? "Remote" : opportunity.location}</span>
+        <span dir="auto" className="text-neutral-600 text-end truncate">{remote ? "Remote" : opportunity.location}</span>
       </div>
     </article>
   );

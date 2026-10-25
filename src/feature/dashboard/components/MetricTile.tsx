@@ -45,7 +45,7 @@ export function MetricTile({
     >
       {CornerIcon && (
         <CornerIcon
-          className="top-3 right-3 absolute w-5 h-5 text-white/60"
+          className="top-3 end-3 absolute w-5 h-5 text-white/60"
           strokeWidth={2}
           aria-hidden="true"
         />
