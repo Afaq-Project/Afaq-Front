@@ -1,4 +1,5 @@
 import type { AuthFeature } from "./authFeatures";
+import { useTranslations } from "next-intl";
 
 interface AuthFeatureItemProps {
   feature: AuthFeature;
@@ -12,7 +13,8 @@ const STAGGER_MS = 80;
 
 /** One decorative row of the feature card: icon tile + title + description. Not interactive. */
 export default function AuthFeatureItem({ feature, index }: AuthFeatureItemProps) {
-  const { icon: Icon, title, description } = feature;
+  const t = useTranslations("auth.features");
+  const { icon: Icon, key } = feature;
 
   return (
     <li
@@ -29,8 +31,8 @@ export default function AuthFeatureItem({ feature, index }: AuthFeatureItemProps
         />
       </span>
       <div className="min-w-0">
-        <p className="font-medium text-body text-neutral-900">{title}</p>
-        <p className="text-neutral-600 text-small line-clamp-2">{description}</p>
+        <p className="font-medium text-body text-neutral-900">{t(`${key}Title`)}</p>
+        <p className="text-neutral-600 text-small line-clamp-2">{t(`${key}Description`)}</p>
       </div>
     </li>
   );

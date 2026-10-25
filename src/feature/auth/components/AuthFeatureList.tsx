@@ -11,7 +11,7 @@ export default function AuthFeatureList() {
       className="bg-white/85 supports-[not(backdrop-filter:blur(0))]:bg-white shadow-sm backdrop-blur-lg backdrop-saturate-140 py-2 border border-white/60 rounded-lg max-w-[440px] animate-auth-card"
     >
       {AUTH_FEATURES.map((feature, index) => (
-        <AuthFeatureItem key={feature.title} feature={feature} index={index} />
+        <AuthFeatureItem key={feature.key} feature={feature} index={index} />
       ))}
     </ul>
   );

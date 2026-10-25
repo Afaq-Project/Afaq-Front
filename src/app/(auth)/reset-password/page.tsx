@@ -13,10 +13,7 @@ export default async function ResetPasswordPage({ searchParams }: ResetPasswordP
   return (
     <AuthLayout
       visual={
-        <AuthVisualPanel
-          headline="Your next opportunity is waiting"
-          subline="Personalized matches, AI guidance, and every deadline in one place."
-        />
+        <AuthVisualPanel />
       }
     >
       <ResetPasswordForm token={typeof token === "string" && token ? token : null} />

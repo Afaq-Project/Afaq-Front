@@ -12,9 +12,13 @@ import {
 import { requestPasswordReset } from "../services/passwordReset";
 import AuthForm from "./AuthForm";
 import TextLink from "./TextLink";
+import { useTranslations } from "next-intl";
+import { useErrorText } from "@/src/shared/lib/validation/useErrorText";
 
 /** Email field that requests a reset link, then a "check your email" message. */
 export default function ForgotPasswordForm() {
+  const t = useTranslations("auth");
+  const errorText = useErrorText();
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -39,24 +43,28 @@ export default function ForgotPasswordForm() {
   if (sentTo) {
     return (
       <div role="status">
-        <h1 className="text-h1 text-neutral-900">Check your email</h1>
+        <h1 className="text-h1 text-neutral-900">{t("forgot.sentTitle")}</h1>
         <p className="mt-1 text-body text-neutral-600">
-          If an account exists for <span className="font-medium text-neutral-900 break-all">{sentTo}</span>, we&apos;ve
-          sent a link to reset your password. It can take a few minutes to arrive.
+          {t.rich("forgot.sentBody", {
+            email: sentTo,
+            strong: (chunks) => <span className="font-medium text-neutral-900 break-all">{chunks}</span>,
+          })}
         </p>
         <p className="mt-8 text-neutral-600 text-small">
-          Didn&apos;t get it? Check your spam folder or{" "}
-          <button
-            type="button"
-            onClick={() => setSentTo(null)}
-            className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 font-medium text-primary-600 hover:underline"
-          >
-            try again
-          </button>
-          .
+          {t.rich("forgot.notReceived", {
+            retry: (chunks) => (
+              <button
+                type="button"
+                onClick={() => setSentTo(null)}
+                className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 font-medium text-primary-600 hover:underline"
+              >
+                {chunks}
+              </button>
+            ),
+          })}
         </p>
         <p className="mt-8 text-small text-center">
-          <TextLink href="/login">Back to sign in</TextLink>
+          <TextLink href="/login">{t("backToSignIn")}</TextLink>
         </p>
       </div>
     );
@@ -64,25 +72,25 @@ export default function ForgotPasswordForm() {
 
   return (
     <AuthForm
-      title="Reset your password"
-      subtitle="Enter your account email and we'll send you a link to choose a new password."
+      title={t("forgot.title")}
+      subtitle={t("forgot.subtitle")}
       onSubmit={handleSubmit(onSubmit)}
-      submitLabel="Send reset link"
-      submittingLabel="Sending link"
+      submitLabel={t("forgot.submit")}
+      submittingLabel={t("forgot.submitting")}
       isSubmitting={isSubmitting}
       errorId="forgot-password-error"
       error={formError}
       showSocial={false}
-      switchLabel="Back to sign in"
+      switchLabel={t("backToSignIn")}
       switchHref="/login"
     >
       <Input
         id="email"
         type="email"
-        label="Email"
+        label={t("email")}
         autoComplete="email"
-        placeholder="name@example.com"
-        error={errors.email?.message}
+        placeholder={t("emailPlaceholder")}
+        error={errorText(errors.email?.message)}
         {...register("email")}
       />
     </AuthForm>

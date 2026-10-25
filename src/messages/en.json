@@ -81,5 +81,92 @@
       "inReview": "In review",
       "decision": "Decision"
     }
+  },
+  "validation": {
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordLetter": "Password must contain at least one letter",
+    "passwordNumber": "Password must contain at least one number",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "currentPasswordRequired": "Enter your current password",
+    "confirmPasswordRequired": "Confirm your new password",
+    "passwordMismatch": "Passwords don't match"
+  },
+  "passwordRules": {
+    "label": "Password must have",
+    "met": "(met)",
+    "minLength": "At least 8 characters",
+    "letter": "A letter",
+    "number": "A number"
+  },
+  "auth": {
+    "panel": {
+      "headline": "Your next opportunity is waiting",
+      "headlineRegister": "Find scholarships and internships that fit you",
+      "subline": "Personalized matches, AI guidance, and every deadline in one place."
+    },
+    "features": {
+      "matchesTitle": "Matches ranked for you",
+      "matchesDescription": "See how well each scholarship and internship fits your profile.",
+      "essaysTitle": "AI guidance on your essays",
+      "essaysDescription": "Get clear feedback and answers while you prepare.",
+      "deadlinesTitle": "Never miss a deadline",
+      "deadlinesDescription": "Track every application and get reminders before it's due."
+    },
+    "orContinueWith": "Or continue with",
+    "email": "Email",
+    "emailPlaceholder": "name@example.com",
+    "password": "Password",
+    "backToSignIn": "Back to sign in",
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back. Sign in to see your matches.",
+      "passwordReset": "Your password was reset. Sign in with your new password.",
+      "sessionExpired": "Your session expired. Sign back in. Your draft is saved.",
+      "submit": "Sign in",
+      "submitting": "Signing in",
+      "invalidCredentials": "That email and password don't match. Try again or <link>reset your password</link>.",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "forgotPassword": "Forgot password?"
+    },
+    "signup": {
+      "title": "Sign up",
+      "subtitle": "Create your account to start finding opportunities.",
+      "consent": "By creating an account, you agree to our <terms>Terms</terms> and <privacy>Privacy policy</privacy>",
+      "submit": "Create account",
+      "submitting": "Creating account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "firstName": "First name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Doe"
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "subtitle": "Enter your account email and we'll send you a link to choose a new password.",
+      "submit": "Send reset link",
+      "submitting": "Sending link",
+      "sentTitle": "Check your email",
+      "sentBody": "If an account exists for <strong>{email}</strong>, we've sent a link to reset your password. It can take a few minutes to arrive.",
+      "notReceived": "Didn't get it? Check your spam folder or <retry>try again</retry>."
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtitle": "Use a password you don't use anywhere else.",
+      "submit": "Reset password",
+      "submitting": "Resetting password",
+      "expired": "If your link has expired, <link>request a new one</link>.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "meetRules": "Choose a password that meets all the rules below.",
+      "brokenTitle": "This link doesn't work",
+      "brokenBody": "The reset link is incomplete. Open it again from your email, or request a new one.",
+      "requestNew": "Request a new link"
+    }
   }
 }

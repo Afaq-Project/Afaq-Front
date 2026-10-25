@@ -16,6 +16,7 @@ import {
   type SetPasswordFormValues,
 } from "@/src/shared/lib/validation/auth-schemas";
 import { changePassword, setPassword } from "../services/accountService";
+import { useErrorText } from "@/src/shared/lib/validation/useErrorText";
 
 /** IDs of the first field in each form, focused when the form opens. */
 export const CURRENT_PASSWORD_ID = "current-password";
@@ -87,6 +88,7 @@ function NewPasswordField({ password, error, field }: { password: string; error?
 
 /** Current, new (with the checklist) and confirm: three columns from 1024px. */
 export function ChangePasswordForm({ onSaved, onCancel }: FormProps) {
+  const errorText = useErrorText();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
@@ -124,7 +126,7 @@ export function ChangePasswordForm({ onSaved, onCancel }: FormProps) {
         id={CURRENT_PASSWORD_ID}
         label="Current password"
         autoComplete="current-password"
-        error={errors.currentPassword?.message}
+        error={errorText(errors.currentPassword?.message)}
         {...register("currentPassword")}
       />
       <NewPasswordField
@@ -136,7 +138,7 @@ export function ChangePasswordForm({ onSaved, onCancel }: FormProps) {
         id="confirm-password"
         label="Confirm new password"
         autoComplete="new-password"
-        error={errors.confirmPassword?.message}
+        error={errorText(errors.confirmPassword?.message)}
         {...register("confirmPassword")}
       />
     </FormFrame>
@@ -145,6 +147,7 @@ export function ChangePasswordForm({ onSaved, onCancel }: FormProps) {
 
 /** For accounts that only log in with a provider: new (with the checklist) and confirm, two columns from 1024px. */
 export function SetPasswordForm({ onSaved, onCancel }: FormProps) {
+  const errorText = useErrorText();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
@@ -187,7 +190,7 @@ export function SetPasswordForm({ onSaved, onCancel }: FormProps) {
         id="confirm-password"
         label="Confirm new password"
         autoComplete="new-password"
-        error={errors.confirmPassword?.message}
+        error={errorText(errors.confirmPassword?.message)}
         {...register("confirmPassword")}
       />
     </FormFrame>
