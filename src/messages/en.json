@@ -823,5 +823,78 @@
       "saved": "Account details saved",
       "emailFixed": "Your sign-in email can't be changed here."
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Deadlines, reviews, and updates on your applications.",
+    "bellLabel": "Notifications",
+    "bellUnread": "Notifications, {count} unread",
+    "markAllRead": "Mark all as read",
+    "caughtUp": "You're all caught up",
+    "caughtUpBody": "We'll let you know before deadlines and when reviews are ready.",
+    "noUnread": "No unread notifications",
+    "settings": "Notification settings",
+    "tabAll": "All",
+    "tabUnread": "Unread",
+    "panelAll": "All notifications",
+    "panelUnread": "Unread notifications",
+    "showOlder": "Show older notifications",
+    "dismissed": "Notification dismissed",
+    "undo": "Undo",
+    "unreadPrefix": "Unread: ",
+    "moreActions": "More actions for {title}",
+    "markRead": "Mark as read",
+    "markUnread": "Mark as unread",
+    "dismiss": "Dismiss",
+    "groups": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "Earlier this week",
+      "earlier": "Earlier"
+    },
+    "time": {
+      "justNow": "Just now",
+      "minutesAgo": "{count} min ago",
+      "hoursAgo": "{count, plural, one {# hour ago} other {# hours ago}}",
+      "yesterday": "Yesterday",
+      "daysAgo": "{count, plural, one {# day ago} other {# days ago}}"
+    },
+    "documentPhrases": {
+      "cv": "a CV",
+      "transcript": "a transcript",
+      "degree": "a degree certificate",
+      "recommendation": "a recommendation letter",
+      "essay": "a personal statement",
+      "id": "a passport or ID copy",
+      "language": "a language certificate",
+      "other": "a document"
+    },
+    "deadline": {
+      "title": "{title} {endsIn}",
+      "missing": "You still need {list}.",
+      "ready": "Make sure everything is ready before the deadline.",
+      "action": "Open application"
+    },
+    "documentNeeded": {
+      "title": "{title} needs {document}",
+      "body": "Upload it once and reuse it for other applications.",
+      "action": "Upload document"
+    },
+    "reviewReady": {
+      "title": "Your essay review is ready",
+      "body": "Feedback on {name}: {count, plural, one {# suggestion} other {# suggestions}}.",
+      "action": "View review"
+    },
+    "newMatches": {
+      "title": "{count, plural, one {# new strong match} other {# new strong matches}} this week",
+      "body": "Based on your profile.",
+      "action": "View matches"
+    },
+    "payment": {
+      "title": "Your last payment didn't go through",
+      "body": "You'll keep Premium until {date}.",
+      "action": "Update payment"
+    },
+    "viewAll": "View all"
   }
 }

@@ -823,5 +823,78 @@
       "saved": "حُفظت بيانات الحساب",
       "emailFixed": "لا يمكن تغيير البريد الإلكتروني لتسجيل الدخول من هنا."
     }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "subtitle": "المواعيد النهائية والمراجعات وتحديثات طلباتك.",
+    "bellLabel": "الإشعارات",
+    "bellUnread": "الإشعارات، {count} غير مقروءة",
+    "markAllRead": "تعليم الكل كمقروء",
+    "caughtUp": "اطّلعت على كل شيء",
+    "caughtUpBody": "سنخبرك قبل المواعيد النهائية وعندما تصبح المراجعات جاهزة.",
+    "noUnread": "لا توجد إشعارات غير مقروءة",
+    "settings": "إعدادات الإشعارات",
+    "tabAll": "الكل",
+    "tabUnread": "غير المقروءة",
+    "panelAll": "جميع الإشعارات",
+    "panelUnread": "الإشعارات غير المقروءة",
+    "showOlder": "عرض الإشعارات الأقدم",
+    "dismissed": "أُخفي الإشعار",
+    "undo": "تراجع",
+    "unreadPrefix": "غير مقروء: ",
+    "moreActions": "مزيد من الإجراءات لـ {title}",
+    "markRead": "تعليم كمقروء",
+    "markUnread": "تعليم كغير مقروء",
+    "dismiss": "إخفاء",
+    "groups": {
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "thisWeek": "في وقت سابق هذا الأسبوع",
+      "earlier": "أقدم"
+    },
+    "time": {
+      "justNow": "الآن",
+      "minutesAgo": "قبل {count} دقيقة",
+      "hoursAgo": "قبل {count, plural, one {ساعة} two {ساعتين} few {# ساعات} many {# ساعة} other {# ساعة}}",
+      "yesterday": "أمس",
+      "daysAgo": "قبل {count, plural, one {يوم} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}"
+    },
+    "documentPhrases": {
+      "cv": "سيرة ذاتية",
+      "transcript": "كشف درجات",
+      "degree": "شهادة تخرج",
+      "recommendation": "خطاب توصية",
+      "essay": "بيان شخصي",
+      "id": "نسخة من جواز السفر أو الهوية",
+      "language": "شهادة لغة",
+      "other": "مستند"
+    },
+    "deadline": {
+      "title": "{title} {endsIn}",
+      "missing": "ما زلت تحتاج إلى {list}.",
+      "ready": "تأكد من جاهزية كل شيء قبل الموعد النهائي.",
+      "action": "فتح الطلب"
+    },
+    "documentNeeded": {
+      "title": "{title} يحتاج إلى {document}",
+      "body": "ارفعه مرة واحدة وأعد استخدامه في طلبات أخرى.",
+      "action": "رفع المستند"
+    },
+    "reviewReady": {
+      "title": "مراجعة مقالك جاهزة",
+      "body": "ملاحظات على {name}: {count, plural, one {اقتراح واحد} two {اقتراحان} few {# اقتراحات} many {# اقتراحًا} other {# اقتراح}}.",
+      "action": "عرض المراجعة"
+    },
+    "newMatches": {
+      "title": "{count, plural, one {مطابقة قوية جديدة} two {مطابقتان قويتان جديدتان} few {# مطابقات قوية جديدة} many {# مطابقة قوية جديدة} other {# مطابقة قوية جديدة}} هذا الأسبوع",
+      "body": "بناءً على ملفك الشخصي.",
+      "action": "عرض المطابقات"
+    },
+    "payment": {
+      "title": "لم تكتمل عملية الدفع الأخيرة",
+      "body": "ستبقى على الباقة المميزة حتى {date}.",
+      "action": "تحديث وسيلة الدفع"
+    },
+    "viewAll": "عرض الكل"
   }
 }

@@ -4,6 +4,7 @@ import { useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Bell, CheckCheck, Settings } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { notify } from "@/src/shared/lib/notify";
 import Button, { buttonClasses } from "@/src/shared/ui/Button";
 import { CountTabs } from "@/src/shared/ui/CountTabs";
@@ -51,6 +52,7 @@ function ListSkeleton() {
  * (Today, Yesterday, Earlier this week, Earlier), one card per group.
  */
 export function NotificationsView() {
+  const t = useTranslations("notifications");
   const items = useDescribedNotifications();
   const mounted = useMounted();
   const [now] = useState(() => new Date());
@@ -95,7 +97,7 @@ export function NotificationsView() {
         const target = nextId && document.querySelector<HTMLElement>(`[data-notification-id="${CSS.escape(nextId)}"] a`);
         (target || headingRef.current)?.focus();
       });
-      notify.withAction("Notification dismissed", { label: "Undo", onClick: undo });
+      notify.withAction(t("dismissed"), { label: t("undo"), onClick: undo });
     }, reduced ? 0 : FADE_MS);
   };
 
@@ -105,16 +107,16 @@ export function NotificationsView() {
   } else if (visible.length === 0) {
     list =
       tab === "unread" ? (
-        <EmptyState variant="page" icon={Bell} title="No unread notifications" />
+        <EmptyState variant="page" icon={Bell} title={t("noUnread")} />
       ) : (
         <EmptyState
           variant="page"
           icon={Bell}
-          title="You're all caught up"
-          message="We'll let you know before deadlines and when reviews are ready."
+          title={t("caughtUp")}
+          message={t("caughtUpBody")}
           action={
             <Link href={SETTINGS_HREF} className={buttonClasses("ghost")}>
-              Notification settings
+              {t("settings")}
             </Link>
           }
         />
@@ -123,8 +125,8 @@ export function NotificationsView() {
     list = (
       <div className="flex flex-col gap-6">
         {groups.map((group) => (
-          <section key={group.label} aria-label={group.label} className="flex flex-col gap-2">
-            <h2 className="font-medium text-caption text-neutral-600">{group.label}</h2>
+          <section key={group.group} aria-label={t(`groups.${group.group}`)} className="flex flex-col gap-2">
+            <h2 className="font-medium text-caption text-neutral-600">{t(`groups.${group.group}`)}</h2>
             <ul className="bg-white border border-neutral-100 rounded-lg">
               {group.items.map((item) => (
                 <NotificationRow
@@ -145,7 +147,7 @@ export function NotificationsView() {
         {visible.length > limit && (
           <div className="flex justify-center">
             <Button variant="ghost" onClick={() => setLimit((prev) => prev + PAGE_SIZE)}>
-              Show older notifications
+              {t("showOlder")}
             </Button>
           </div>
         )}
@@ -158,16 +160,16 @@ export function NotificationsView() {
       <header className="flex sm:flex-row flex-col sm:justify-between sm:items-start gap-3">
         <div>
           <h1 ref={headingRef} tabIndex={-1} className="focus:outline-none text-h1 text-neutral-900">
-            Notifications
+            {t("title")}
           </h1>
-          <p className="mt-1 text-body text-neutral-600">Deadlines, reviews, and updates on your applications.</p>
+          <p className="mt-1 text-body text-neutral-600">{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-1 -ms-4 sm:ms-0 shrink-0">
           <Button variant="ghost" onClick={markAllRead} disabled={!mounted || unreadCount === 0}>
             <CheckCheck size={16} strokeWidth={1.75} aria-hidden="true" />
-            Mark all as read
+            {t("markAllRead")}
           </Button>
-          <Link href={SETTINGS_HREF} aria-label="Notification settings" className={buttonClasses("ghost", "px-0 w-11 md:w-10")}>
+          <Link href={SETTINGS_HREF} aria-label={t("settings")} className={buttonClasses("ghost", "px-0 w-11 md:w-10")}>
             <Settings size={18} strokeWidth={1.75} aria-hidden="true" />
           </Link>
         </div>
@@ -176,17 +178,17 @@ export function NotificationsView() {
       <div className="flex flex-col gap-4">
         <div className="border-neutral-100 border-b">
           <CountTabs
-            label="Notifications"
+            label={t("title")}
             panelId={PANEL_ID}
             active={tab}
             onChange={setTab}
             tabs={[
-              { value: "all", label: "All", count: items.length },
-              { value: "unread", label: "Unread", count: unreadCount },
+              { value: "all", label: t("tabAll"), count: items.length },
+              { value: "unread", label: t("tabUnread"), count: unreadCount },
             ]}
           />
         </div>
-        <div id={PANEL_ID} role="tabpanel" aria-label={tab === "unread" ? "Unread notifications" : "All notifications"}>
+        <div id={PANEL_ID} role="tabpanel" aria-label={tab === "unread" ? t("panelUnread") : t("panelAll")}>
           {list}
         </div>
       </div>
