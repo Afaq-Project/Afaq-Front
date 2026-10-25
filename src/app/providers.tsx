@@ -1,6 +1,6 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { useState, type ReactNode } from "react";
 import { AuthProvider } from "@/src/shared/lib/auth/auth-context";
@@ -16,9 +16,17 @@ function shouldRetry(failureCount: number, error: unknown) {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(
-    () => new QueryClient({ defaultOptions: { queries: { retry: shouldRetry } } }),
-  );
+  const [queryClient] = useState(() => {
+    const client: QueryClient = new QueryClient({
+      defaultOptions: { queries: { retry: shouldRetry } },
+      // Every mutation saves profile data, which match scores are calculated from, so cached
+      // matches go stale with each one.
+      mutationCache: new MutationCache({
+        onSuccess: () => client.invalidateQueries({ queryKey: ["recommendations"] }),
+      }),
+    });
+    return client;
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
