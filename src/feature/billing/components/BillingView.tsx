@@ -1,4 +1,5 @@
 import { ExternalLink } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import Button, { buttonClasses } from "@/src/shared/ui/Button";
 import InlineAlert from "@/src/shared/ui/InlineAlert";
 import { formatDeadlineDay } from "@/src/shared/lib/deadline";
@@ -10,13 +11,15 @@ import { YourPlanCard } from "./YourPlanCard";
 
 /** Plan & billing: the current plan beside the plan picker (1/3 + 2/3 from 1024px), then payment for Premium. */
 export function BillingView() {
+  const t = useTranslations("billing");
+  const locale = useLocale();
   const portal = BILLING_LINKS.portal;
 
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-h1 text-neutral-900">Plan &amp; billing</h1>
-        <p className="mt-1 text-body text-neutral-600">Your plan, AI usage, and payments.</p>
+        <h1 className="text-h1 text-neutral-900">{t("title")}</h1>
+        <p className="mt-1 text-body text-neutral-600">{t("subtitle")}</p>
       </header>
 
       {IS_PREMIUM && SUBSCRIPTION.paymentFailed && (
@@ -25,18 +28,17 @@ export function BillingView() {
           action={
             portal ? (
               <a href={portal} className={buttonClasses("secondary", "bg-white")}>
-                Update payment method
+                {t("updatePayment")}
                 <ExternalLink size={16} strokeWidth={1.75} aria-hidden="true" />
               </a>
             ) : (
               <Button variant="secondary" className="bg-white" disabled>
-                Update payment method
+                {t("updatePayment")}
               </Button>
             )
           }
         >
-          Your last payment didn&apos;t go through. You&apos;ll keep Premium until {formatDeadlineDay(PERIOD_END)}, then
-          move to Free.
+          {t("paymentFailed", { date: formatDeadlineDay(PERIOD_END, locale) })}
         </InlineAlert>
       )}
 

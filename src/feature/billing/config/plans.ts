@@ -5,21 +5,8 @@ export const FREE_LIMITS = { chatMessages: 20, essayReviews: 3 } as const;
 
 /** The two tiers and what each includes (SRS FR-6.1, FR-6.2). */
 export const PLANS: Record<PlanId, Plan> = {
-  free: {
-    id: "free",
-    name: "Free",
-    features: [
-      `${FREE_LIMITS.chatMessages} AI chat messages per month`,
-      `${FREE_LIMITS.essayReviews} essay reviews per month`,
-      "Personalized matches",
-      "Deadline reminders",
-    ],
-  },
-  premium: {
-    id: "premium",
-    name: "Premium",
-    features: ["Unlimited AI chat", "Unlimited essay reviews", "Priority deadline alerts", "Everything in Free"],
-  },
+  free: { id: "free", features: ["freeChats", "freeReviews", "matches", "reminders"] },
+  premium: { id: "premium", features: ["unlimitedChat", "unlimitedReviews", "priorityAlerts", "everythingFree"] },
 };
 
 // TODO: the SRS says Premium is billed monthly or at a discounted annual rate (FR-6.3) but sets no

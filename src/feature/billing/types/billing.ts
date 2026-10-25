@@ -2,10 +2,21 @@ export type PlanId = "free" | "premium";
 
 export type BillingCycle = "monthly" | "annual";
 
+/** A line in a plan's feature list; its text is billing.features.<key>. */
+export type PlanFeature =
+  | "freeChats"
+  | "freeReviews"
+  | "matches"
+  | "reminders"
+  | "unlimitedChat"
+  | "unlimitedReviews"
+  | "priorityAlerts"
+  | "everythingFree";
+
+/** Its name is billing.planNames.<id>. */
 export interface Plan {
   id: PlanId;
-  name: string;
-  features: string[];
+  features: PlanFeature[];
 }
 
 /** Premium prices, in whole currency units. `null` until the real prices are decided. */

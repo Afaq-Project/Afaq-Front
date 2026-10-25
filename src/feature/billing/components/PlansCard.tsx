@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { ConfirmDialog } from "@/src/feature/settings/components/ConfirmDialog";
 import Badge from "@/src/shared/ui/Badge";
@@ -20,16 +21,17 @@ function MissingLink({ todo, note }: { todo: string; note: string }) {
 }
 
 function PlanPrice({ plan, cycle }: { plan: Plan; cycle: BillingCycle }) {
-  const price = displayPrice(plan.id, cycle);
+  const t = useTranslations("billing");
+  const price = displayPrice(plan.id, cycle, useLocale());
   return (
     <div aria-live="polite" className="flex flex-col gap-1 min-h-9">
       {price ? (
         <>
           <p className="flex items-baseline gap-1">
             <span className="font-semibold text-3xl text-neutral-900">{price.perMonth}</span>
-            <span className="text-neutral-600 text-small">/month</span>
+            <span className="text-neutral-600 text-small">{t("perMonth")}</span>
           </p>
-          {price.billedYearly && <p className="text-caption text-neutral-600">billed {price.billedYearly} yearly</p>}
+          {price.billedYearly && <p className="text-caption text-neutral-600">{t("billedYearly", { amount: price.billedYearly })}</p>}
         </>
       ) : (
         <DevTodo>set the Premium {cycle} price in PRICING</DevTodo>
@@ -52,6 +54,7 @@ function PlanOption({
   highlighted: boolean;
   action?: ReactNode;
 }) {
+  const t = useTranslations("billing");
   return (
     <article
       aria-labelledby={`plan-${plan.id}-name`}
@@ -62,9 +65,9 @@ function PlanOption({
     >
       <div className="flex justify-between items-center gap-3">
         <h3 id={`plan-${plan.id}-name`} className="text-h3 text-neutral-900">
-          {plan.name}
+          {t(`planNames.${plan.id}`)}
         </h3>
-        {current && <Badge tone="gray">Current plan</Badge>}
+        {current && <Badge tone="gray">{t("currentPlan")}</Badge>}
       </div>
 
       <PlanPrice plan={plan} cycle={cycle} />
@@ -73,7 +76,7 @@ function PlanOption({
         {plan.features.map((feature) => (
           <li key={feature} className="flex items-start gap-2 text-neutral-800 text-small">
             <Check size={16} strokeWidth={2} aria-hidden="true" className="mt-px text-primary-600 shrink-0" />
-            {feature}
+            {t(`features.${feature}`, { count: feature === "freeReviews" ? FREE_LIMITS.essayReviews : FREE_LIMITS.chatMessages })}
           </li>
         ))}
       </ul>
@@ -85,31 +88,33 @@ function PlanOption({
 
 /** The right column: Monthly / Annual and the two plans, with the one action that applies. */
 export function PlansCard() {
+  const t = useTranslations("billing");
+  const locale = useLocale();
   const [cycle, setCycle] = useState<BillingCycle>(SUBSCRIPTION.cycle ?? "monthly");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const discount = annualDiscountPercent();
   const checkout = BILLING_LINKS.checkout[cycle];
   const portal = BILLING_LINKS.portal;
-  const periodEnd = formatDeadlineDay(PERIOD_END);
+  const periodEnd = formatDeadlineDay(PERIOD_END, locale);
 
   const upgrade = checkout ? (
     <a href={checkout} className={buttonClasses("primary", "w-full")}>
-      Upgrade to Premium
+      {t("upgrade")}
     </a>
   ) : (
     <>
       <Button className="w-full" disabled>
-        Upgrade to Premium
+        {t("upgrade")}
       </Button>
-      <MissingLink todo={`add the ${cycle} Stripe Checkout link to BILLING_LINKS`} note="Online checkout isn't available yet." />
+      <MissingLink todo={`add the ${cycle} Stripe Checkout link to BILLING_LINKS`} note={t("checkoutUnavailable")} />
     </>
   );
 
   const switchToFree = SUBSCRIPTION.cancelAtPeriodEnd ? (
-    <p className="text-caption text-neutral-600">You&apos;ll move to Free on {periodEnd}</p>
+    <p className="text-caption text-neutral-600">{t("movesOn", { date: periodEnd })}</p>
   ) : (
     <Button variant="ghost" className="w-full" onClick={() => setConfirmOpen(true)}>
-      Switch to Free
+      {t("switchToFree")}
     </Button>
   );
 
@@ -117,23 +122,23 @@ export function PlansCard() {
     <section aria-labelledby="plans-heading" className="flex flex-col gap-5 bg-white p-5 h-full border border-neutral-100 rounded-lg">
       <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-3">
         <h2 id="plans-heading" className="text-h2 text-neutral-900">
-          Plans
+          {t("plans")}
         </h2>
         <SegmentedControl
-          label="Billing cycle"
+          label={t("cycle")}
           value={cycle}
           onChange={setCycle}
           className="w-full md:w-auto"
           options={[
-            { value: "monthly", label: "Monthly" },
+            { value: "monthly", label: t("monthly") },
             {
               value: "annual",
               label: (
                 <>
-                  Annual
+                  {t("annual")}
                   {discount !== null ? (
                     <span className="bg-primary-50 px-2 py-0.5 rounded-full font-medium text-caption text-primary-800">
-                      Save {discount}%
+                      {t("save", { percent: discount })}
                     </span>
                   ) : (
                     <DevTodo>discount</DevTodo>
@@ -152,21 +157,18 @@ export function PlansCard() {
 
       <ConfirmDialog
         open={confirmOpen}
-        title="Switch to Free?"
+        title={t("switchTitle")}
         onClose={() => setConfirmOpen(false)}
         onConfirm={async () => {
           if (portal) window.location.assign(portal);
         }}
-        confirmLabel="Continue to Stripe"
-        busyLabel="Opening Stripe…"
+        confirmLabel={t("continueStripe")}
+        busyLabel={t("openingStripe")}
         confirmDisabled={!portal}
       >
-        <p>
-          Your AI limits go back to {FREE_LIMITS.chatMessages} chat messages and {FREE_LIMITS.essayReviews} essay reviews
-          per month, and priority deadline alerts stop.
-        </p>
-        <p>You&apos;ll keep Premium until {periodEnd}.</p>
-        {!portal && <MissingLink todo="add the Stripe customer portal link to BILLING_LINKS" note="Plan changes aren't available online yet." />}
+        <p>{t("switchBody", { chats: FREE_LIMITS.chatMessages, reviews: FREE_LIMITS.essayReviews })}</p>
+        <p>{t("keepUntil", { date: periodEnd })}</p>
+        {!portal && <MissingLink todo="add the Stripe customer portal link to BILLING_LINKS" note={t("changesUnavailable")} />}
       </ConfirmDialog>
     </section>
   );

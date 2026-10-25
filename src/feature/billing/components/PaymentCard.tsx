@@ -1,4 +1,5 @@
 import { CreditCard, ExternalLink } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import Button, { buttonClasses } from "@/src/shared/ui/Button";
 import { BILLING_LINKS } from "../config/plans";
@@ -6,7 +7,7 @@ import { SUBSCRIPTION } from "../mocks/subscription";
 import type { PaymentMethod } from "../types/billing";
 import { DevTodo } from "./DevTodo";
 
-/** Display names for Stripe's card brands; anything else falls back to "Card". */
+/** Display names for Stripe's card brands; anything else falls back to billing.card. */
 const BRAND_NAMES: Record<string, string> = {
   visa: "Visa",
   mastercard: "Mastercard",
@@ -25,6 +26,7 @@ function daysUntilExpiry({ expMonth, expYear }: PaymentMethod, now = new Date())
 }
 
 function CardOnFile({ card }: { card: PaymentMethod }) {
+  const t = useTranslations("billing");
   const expiry = `${String(card.expMonth).padStart(2, "0")}/${card.expYear}`;
   const days = daysUntilExpiry(card);
   const expired = days < 0;
@@ -37,11 +39,11 @@ function CardOnFile({ card }: { card: PaymentMethod }) {
       </span>
       <div className="flex flex-col min-w-0">
         <p className="text-body text-neutral-900">
-          {BRAND_NAMES[card.brand] ?? "Card"} ending in {card.last4}
+          {t("cardEnding", { brand: BRAND_NAMES[card.brand] ?? t("card"), last4: card.last4 })}
         </p>
         <p className={cn("text-caption", expired || soon ? "text-warning-800" : "text-neutral-600")}>
-          {expired ? `Expired ${expiry}` : `Expires ${expiry}`}
-          {soon && " · Expires soon"}
+          {expired ? t("expired", { date: expiry }) : t("expires", { date: expiry })}
+          {soon && t("expiresSoon")}
         </p>
       </div>
     </div>
@@ -50,6 +52,7 @@ function CardOnFile({ card }: { card: PaymentMethod }) {
 
 /** Premium only: cards, invoices and cancellation all live in the Stripe customer portal. */
 export function PaymentCard() {
+  const t = useTranslations("billing");
   const portal = BILLING_LINKS.portal;
   const card = SUBSCRIPTION.paymentMethod;
 
@@ -60,21 +63,21 @@ export function PaymentCard() {
     >
       <div className="flex flex-col flex-1 gap-1 min-w-0">
         <h2 id="payment-heading" className="text-h2 text-neutral-900">
-          Payment
+          {t("payment")}
         </h2>
-        <p className="text-neutral-600 text-small">Payments and invoices are handled securely by Stripe.</p>
+        <p className="text-neutral-600 text-small">{t("paymentHelp")}</p>
         {card && <CardOnFile card={card} />}
       </div>
       <div className="flex flex-col md:items-end gap-2 w-full md:w-auto shrink-0">
         {portal ? (
           <a href={portal} className={buttonClasses("secondary", "w-full md:w-auto")}>
-            Manage payment and invoices
+            {t("managePayment")}
             <ExternalLink size={16} strokeWidth={1.75} aria-hidden="true" />
           </a>
         ) : (
           <>
             <Button variant="secondary" className="w-full md:w-auto" disabled>
-              Manage payment and invoices
+              {t("managePayment")}
               <ExternalLink size={16} strokeWidth={1.75} aria-hidden="true" />
             </Button>
             <DevTodo>add the Stripe customer portal link to BILLING_LINKS</DevTodo>
