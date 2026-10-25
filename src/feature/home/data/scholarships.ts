@@ -27,7 +27,8 @@ export interface PublicScholarship {
 
 /*
  * Example open scholarships, shown when the API has no open scholarship to show (or can't be
- * reached). All fictional. Deadlines are set relative to today so the examples never expire.
+ * reached). All fictional, so they have no official site link. Deadlines are set relative to
+ * today so the examples never expire.
  */
 export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
   {
@@ -41,7 +42,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "Covers tuition, housing, and travel for a two-year master's in any engineering field.",
     deadline: isoDateFromToday(2),
     location: "Berlin, Germany",
-    officialUrl: "#",
   },
   {
     id: "coastal-science",
@@ -54,7 +54,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "Half of tuition for students in marine biology, oceanography, or coastal management.",
     deadline: isoDateFromToday(5),
     location: "Lisbon, Portugal",
-    officialUrl: "#",
   },
   {
     id: "northern-lights",
@@ -67,7 +66,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "A funded four-year doctoral position with a monthly stipend and research budget.",
     deadline: isoDateFromToday(9),
     location: "Stockholm, Sweden",
-    officialUrl: "#",
   },
   {
     id: "open-classroom",
@@ -80,7 +78,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "Reduced tuition for an accredited online bachelor's you can study from home.",
     deadline: isoDateFromToday(14),
     location: "Remote",
-    officialUrl: "#",
   },
   {
     id: "maple-leaf",
@@ -93,7 +90,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "Full tuition and a living allowance for international students in public health.",
     deadline: isoDateFromToday(21),
     location: "Toronto, Canada",
-    officialUrl: "#",
   },
   {
     id: "rising-engineers",
@@ -106,7 +102,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "Four years of tuition, a monthly stipend, and a year of Japanese language classes.",
     deadline: isoDateFromToday(30),
     location: "Tokyo, Japan",
-    officialUrl: "#",
   },
   {
     id: "desert-bloom",
@@ -119,7 +114,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "Fully funded study in renewable energy, with a summer placement at a partner lab.",
     deadline: isoDateFromToday(38),
     location: "Abu Dhabi, United Arab Emirates",
-    officialUrl: "#",
   },
   {
     id: "alpine-innovation",
@@ -132,7 +126,6 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "A yearly stipend toward living costs for doctoral students in applied sciences.",
     deadline: isoDateFromToday(45),
     location: "Zurich, Switzerland",
-    officialUrl: "#",
   },
   {
     id: "thames-leaders",
@@ -145,6 +138,5 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     description: "Tuition, flights, and a stipend for a one-year master's in public policy.",
     deadline: isoDateFromToday(60),
     location: "London, United Kingdom",
-    officialUrl: "#",
   },
 ];
