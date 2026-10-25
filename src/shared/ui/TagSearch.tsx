@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 
 export interface TagSearchProps<T extends { id: string; name: string }> {
   label: string;
-  hint?: string;
+  /** Marks the field "(optional)" next to its label. */
+  optional?: boolean;
   placeholder?: string;
   selectedIds: string[];
   selectedNames: string[];
@@ -21,7 +22,7 @@ export interface TagSearchProps<T extends { id: string; name: string }> {
 /** Multi-select: a search input with a results dropdown, and the selection shown as removable tags. */
 export function TagSearch<T extends { id: string; name: string }>({
   label,
-  hint,
+  optional,
   placeholder,
   selectedIds,
   selectedNames,
@@ -86,9 +87,9 @@ export function TagSearch<T extends { id: string; name: string }>({
       <div className="flex justify-between items-center">
         <label className="font-medium text-on-surface text-sm">
           {label}
-          {hint && (
+          {optional && (
             <span className="ms-1 text-outline font-normal text-xs">
-              ({hint})
+              {t("optionalField")}
             </span>
           )}
         </label>

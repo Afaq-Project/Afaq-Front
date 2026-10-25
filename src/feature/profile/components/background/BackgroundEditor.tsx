@@ -97,7 +97,7 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.country}
           label="Country of residence"
-          hint="optional"
+          optional
           selectedName={labels.country}
           items={countries.options}
           isFetching={countries.isFetching}
@@ -109,7 +109,7 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.city}
           label="City"
-          hint="optional"
+          optional
           selectedName={labels.city}
           items={cities}
           isFetching={loadingCities}

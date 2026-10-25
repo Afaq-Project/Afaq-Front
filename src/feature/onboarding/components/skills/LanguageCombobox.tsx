@@ -5,6 +5,7 @@ import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { useLanguagesSearch } from "@/src/shared/lib/api/hooks/useReferenceData";
 import { useDebounce } from "@/src/shared/lib/hooks/useDebounce";
 import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 interface LanguageComboboxProps {
   value: string;
@@ -15,6 +16,7 @@ interface LanguageComboboxProps {
 /** Searchable language picker. */
 export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxProps) {
   const { name: refName } = useReferenceName();
+  const t = useTranslations("onboarding.skills");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -40,7 +42,7 @@ export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxP
             setQuery("");
             setOpen(true);
           }}
-          placeholder="Search language…"
+          placeholder={t("searchLanguage")}
           className="w-full bg-surface-container text-on-surface border border-outline-variant rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors pe-8"
         />
         {isFetching ? (

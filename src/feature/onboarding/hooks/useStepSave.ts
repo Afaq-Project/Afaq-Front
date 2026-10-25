@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
+import { useTranslations } from "next-intl";
 
 /**
  * Runs a step's server save, then continues. `save` resolves to whether it wrote anything;
@@ -10,6 +11,7 @@ import { getErrorMessage } from "@/src/shared/lib/api/get-error-message";
  * On failure the user stays on the step and sees the error.
  */
 export function useStepSave() {
+  const t = useTranslations("onboarding");
   const queryClient = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export function useStepSave() {
       }
       onSuccess();
     } catch (err) {
-      setError(getErrorMessage(err, "We couldn't save this step. Please try again."));
+      setError(getErrorMessage(err, t("saveError")));
     } finally {
       setIsSaving(false);
     }

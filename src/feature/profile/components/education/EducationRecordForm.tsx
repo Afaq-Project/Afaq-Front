@@ -98,7 +98,7 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.institution}
           label="Institution"
-          hint="optional"
+          optional
           selectedName={labels.institution}
           items={institutions.options}
           isFetching={institutions.isFetching}
@@ -121,7 +121,7 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.minor}
           label="Minor or second field"
-          hint="optional"
+          optional
           selectedName={labels.minor}
           items={minors.options}
           isFetching={minors.isFetching}

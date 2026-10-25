@@ -1,8 +1,9 @@
 export const ONBOARDING_STEPS = [
-  { number: 1, label: "Personal Info", path: "/onboarding/step-1" },
-  { number: 2, label: "Education & Goals", path: "/onboarding/step-2" },
-  { number: 3, label: "Skills & Language", path: "/onboarding/step-3" },
-  { number: 4, label: "Documents", path: "/onboarding/step-4" },
+  // labelKey: under onboarding.steps.
+  { number: 1, labelKey: "personal", path: "/onboarding/step-1" },
+  { number: 2, labelKey: "education", path: "/onboarding/step-2" },
+  { number: 3, labelKey: "skills", path: "/onboarding/step-3" },
+  { number: 4, labelKey: "documents", path: "/onboarding/step-4" },
 ] as const;
 
 export const COMPLETE_PATH = "/onboarding/complete";

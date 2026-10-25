@@ -68,7 +68,7 @@ export function StudyGoalsEditor({ preferences, names, onDone }: StudyGoalsEdito
         <div id={FIELD_IDS.targetInstitutions}>
           <TagSearch<ReferenceOption>
             label="Target institutions"
-            hint="optional"
+            optional
             placeholder="Search institutions you want to apply to…"
             selectedIds={institutions.map((i) => i.id)}
             selectedNames={institutions.map((i) => i.name)}

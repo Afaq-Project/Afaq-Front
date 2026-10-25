@@ -1,13 +1,16 @@
+import { useTranslations } from "next-intl";
+
 const RADIUS = 42;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 /** Profile-completion ring, or a same-sized spinner while the percentage loads. */
 export function CompletionRing({ percent, isLoading }: { percent: number; isLoading: boolean }) {
+  const t = useTranslations("onboarding.complete");
   if (isLoading) {
     return (
       <div
         role="status"
-        aria-label="Loading profile completion"
+        aria-label={t("loadingCompletion")}
         className="w-16 h-16 flex-shrink-0 flex items-center justify-center"
       >
         <div className="w-12 h-12 rounded-full border-[5px] border-surface-container-highest border-t-primary animate-spin" />

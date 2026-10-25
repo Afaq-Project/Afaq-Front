@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 interface OnboardingFooterProps {
   onNext: () => void;
   onBack?: () => void;
@@ -17,12 +18,16 @@ export function OnboardingFooter({
   onNext,
   onBack,
   onSkip,
-  nextLabel = "Next",
+  nextLabel,
   nextIcon = "arrow_forward",
   nextDisabled = false,
   isSaving = false,
   saveError,
 }: OnboardingFooterProps) {
+  const t = useTranslations("onboarding");
+  // The default arrow points forward, so it mirrors in Arabic; a check mark doesn't.
+  const mirrorIcon = nextIcon.startsWith("arrow");
+
   return (
     <>
       {saveError && (
@@ -42,8 +47,8 @@ export function OnboardingFooter({
               disabled={isSaving}
               className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface disabled:cursor-not-allowed disabled:opacity-50 md:py-2"
             >
-              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-              Back
+              <span className="material-symbols-outlined text-[18px] rtl:-scale-x-100">arrow_back</span>
+              {t("back")}
             </button>
           )}
         </div>
@@ -55,7 +60,7 @@ export function OnboardingFooter({
               disabled={isSaving}
               className="cursor-pointer rounded-lg px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary-container/30 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Skip for now
+              {t("skip")}
             </button>
           )}
           <button
@@ -65,8 +70,10 @@ export function OnboardingFooter({
             aria-busy={isSaving}
             className="flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-on-primary shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
           >
-            {isSaving ? "Saving…" : nextLabel}
-            {!isSaving && <span className="material-symbols-outlined text-[18px]">{nextIcon}</span>}
+            {isSaving ? t("saving") : (nextLabel ?? t("next"))}
+            {!isSaving && (
+              <span className={`material-symbols-outlined text-[18px] ${mirrorIcon ? "rtl:-scale-x-100" : ""}`}>{nextIcon}</span>
+            )}
           </button>
         </div>
       </nav>

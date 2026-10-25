@@ -15,9 +15,11 @@ import { OnboardingFooter } from "../layout/OnboardingFooter";
 import { CurrentEducationSection } from "./CurrentEducationSection";
 import { StudyGoalsSection } from "./StudyGoalsSection";
 import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
+import { useTranslations } from "next-intl";
 
 /** Step 2: holds the education and goals forms and saves both on Next. */
 export function EducationStep() {
+  const t = useTranslations("onboarding.education");
   const { name: refName } = useReferenceName();
   const router = useRouter();
   const { draft, updateEducation, updatePreferences } = useOnboardingDraft();
@@ -59,7 +61,7 @@ export function EducationStep() {
   return (
     <div className="flex flex-col flex-grow">
       <main className="flex flex-col flex-grow gap-10 mx-auto px-6 pt-8 pb-24 w-full max-w-3xl">
-        <h1 className="font-semibold text-on-surface text-2xl md:text-3xl tracking-tight">Education</h1>
+        <h1 className="font-semibold text-on-surface text-2xl md:text-3xl tracking-tight">{t("title")}</h1>
 
         <CurrentEducationSection
           education={education}

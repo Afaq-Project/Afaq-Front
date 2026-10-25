@@ -1,16 +1,18 @@
-import type { LanguageItem, Option } from "../../types";
+import type { LanguageItem, ProficiencyOption } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";
 import { LanguageRow } from "./LanguageRow";
+import { useTranslations } from "next-intl";
 
 const MAX_LANGUAGES = 5;
 
 interface LanguagesSectionProps {
   languages: LanguageItem[];
-  proficiencyLevels: Option[];
+  proficiencyLevels: ProficiencyOption[];
   onChange: (languages: LanguageItem[]) => void;
 }
 
 export function LanguagesSection({ languages, proficiencyLevels, onChange }: LanguagesSectionProps) {
+  const t = useTranslations("onboarding.skills");
   const atMax = languages.length >= MAX_LANGUAGES;
 
   const addLanguage = () => {
@@ -36,16 +38,16 @@ export function LanguagesSection({ languages, proficiencyLevels, onChange }: Lan
   return (
     <section className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
-        <StepSectionHeading>Language Proficiency</StepSectionHeading>
+        <StepSectionHeading>{t("languages")}</StepSectionHeading>
         <span className={`text-sm font-medium ${atMax ? "text-warning font-bold" : "text-on-surface-variant"}`}>
-          {languages.length} of {MAX_LANGUAGES} languages
+          {t("languagesCount", { count: languages.length, max: MAX_LANGUAGES })}
         </span>
       </div>
 
       <div className="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3 border border-outline-variant shadow-xs">
         {languages.length === 0 ? (
           <p className="text-sm text-on-surface-variant italic p-2">
-            No languages added yet. Click &quot;Add language&quot; below.
+            {t("noLanguages")}
           </p>
         ) : (
           languages.map((item) => (
@@ -66,7 +68,7 @@ export function LanguagesSection({ languages, proficiencyLevels, onChange }: Lan
             className="flex items-center justify-center gap-2 py-2.5 px-4 w-full sm:w-max rounded-lg border border-dashed border-outline text-primary text-sm font-semibold hover:bg-primary-container/20 hover:border-primary transition-all mt-2 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
-            Add another language
+            {t("addLanguage")}
           </button>
         )}
       </div>

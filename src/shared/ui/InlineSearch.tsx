@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 
 export interface InlineSearchProps<T extends { id: string; name: string }> {
   label: string;
-  hint?: string;
+  /** Marks the field "(optional)" next to its label. */
+  optional?: boolean;
   selectedName?: string;
   placeholder?: string;
   items: T[];
@@ -23,7 +24,7 @@ export interface InlineSearchProps<T extends { id: string; name: string }> {
 
 export function InlineSearch<T extends { id: string; name: string }>({
   label,
-  hint,
+  optional,
   selectedName,
   placeholder,
   items,
@@ -81,7 +82,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
       <label htmlFor={inputId} className="text-sm font-medium text-on-surface">
         {label}
         {required && <span className="text-error ms-0.5">*</span>}
-        {hint && <span className="text-xs font-normal text-outline ms-1">({hint})</span>}
+        {optional && <span className="text-xs font-normal text-outline ms-1">{t("optionalField")}</span>}
       </label>
       <div className="relative">
         <span className="material-symbols-outlined absolute start-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">

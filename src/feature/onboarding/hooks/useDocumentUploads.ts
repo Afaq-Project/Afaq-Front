@@ -14,12 +14,14 @@ import {
   nextSimulatedProgress,
   slotsFromDocuments,
 } from "../services/documentSlots";
+import { useTranslations } from "next-intl";
 
 /**
  * Document state for the documents step: the five slots, uploads in progress, and files
  * dropped on the drop zone that still need a slot. Uploads go to the API immediately.
  */
 export function useDocumentUploads(documentTypes: RefDocumentType[], typesLoading: boolean) {
+  const t = useTranslations("onboarding.documents");
   const [slots, setSlots] = useState<DocumentSlotsState>(EMPTY_SLOTS);
   const [slotUploads, setSlotUploads] = useState<Partial<Record<DocumentSlotKey, SlotUpload>>>({});
   const [staged, setStaged] = useState<StagedFile[]>([]);
@@ -51,12 +53,12 @@ export function useDocumentUploads(documentTypes: RefDocumentType[], typesLoadin
   /** Uploads a file straight into a slot (clicking a slot card). */
   const uploadToSlot = async (slotKey: DocumentSlotKey, file: File) => {
     if (file.size > MAX_FILE_SIZE) {
-      setSlot(slotKey, { status: "error", progress: 0, errorMessage: "File exceeds 5MB limit" });
+      setSlot(slotKey, { status: "error", progress: 0, errorMessage: t("tooLarge") });
       return;
     }
     const documentTypeId = findDocumentTypeId(slotKey, documentTypes);
     if (!documentTypeId) {
-      setSlot(slotKey, { status: "error", progress: 0, errorMessage: "Document type unavailable" });
+      setSlot(slotKey, { status: "error", progress: 0, errorMessage: t("typeUnavailable") });
       return;
     }
 
@@ -82,7 +84,7 @@ export function useDocumentUploads(documentTypes: RefDocumentType[], typesLoadin
         doc: { apiId: doc.id, slotKey, name: file.name, size: formatFileSize(file.size), type: file.type },
       });
     } catch {
-      setSlot(slotKey, { status: "error", progress: 0, errorMessage: "Upload failed. Please try again." });
+      setSlot(slotKey, { status: "error", progress: 0, errorMessage: t("uploadRetry") });
     } finally {
       clearInterval(tick);
       clearSlotUpload(slotKey);

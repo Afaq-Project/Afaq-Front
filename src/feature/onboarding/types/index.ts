@@ -9,6 +9,11 @@ export interface Option {
   name: string;
 }
 
+/** A proficiency level; `native` comes from its English name, whatever language is shown. */
+export interface ProficiencyOption extends Option {
+  native: boolean;
+}
+
 export interface PersonalInfoData {
   firstName?: string;
   lastName?: string;

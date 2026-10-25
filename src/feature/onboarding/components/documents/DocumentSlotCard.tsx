@@ -1,5 +1,6 @@
 import type { SlotState, SlotUpload } from "../../types";
 import { UploadProgressRing } from "./UploadProgressRing";
+import { useTranslations } from "next-intl";
 
 interface DocumentSlotCardProps {
   label: string;
@@ -11,6 +12,7 @@ interface DocumentSlotCardProps {
 
 /** One document slot, rendered for its state: idle, uploading, uploaded or failed. */
 export function DocumentSlotCard({ label, slot, upload, onPick, onDelete }: DocumentSlotCardProps) {
+  const t = useTranslations("onboarding.documents");
   if (slot.status === "uploading") {
     const progress = Math.round(upload?.progress ?? 0);
     return (
@@ -24,7 +26,7 @@ export function DocumentSlotCard({ label, slot, upload, onPick, onDelete }: Docu
         <div className="flex-grow min-w-0">
           <p className="text-sm font-semibold text-on-background">{label}</p>
           {upload?.fileName && <p className="text-xs text-on-surface-variant truncate">{upload.fileName}</p>}
-          <p className="text-xs text-primary font-medium mt-0.5">Uploading… {progress}%</p>
+          <p className="text-xs text-primary font-medium mt-0.5">{t("uploading", { progress })}</p>
         </div>
       </div>
     );
@@ -36,7 +38,7 @@ export function DocumentSlotCard({ label, slot, upload, onPick, onDelete }: Docu
         <button
           type="button"
           onClick={onDelete}
-          aria-label={`Delete ${label}`}
+          aria-label={t("deleteItem", { item: label })}
           className="absolute top-3 end-3 w-6 h-6 rounded-full bg-error-container text-error flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
         >
           <span className="material-symbols-outlined" style={{ fontSize: 14 }}>delete</span>
@@ -55,14 +57,14 @@ export function DocumentSlotCard({ label, slot, upload, onPick, onDelete }: Docu
       <div className="bg-surface-container-low p-4 rounded-xl flex items-center justify-between border border-error shadow-xs">
         <div className="flex flex-col min-w-0 pe-2">
           <span className="text-[10px] uppercase tracking-wider font-semibold text-error">
-            {slot.errorMessage ?? "Upload failed"}
+            {slot.errorMessage ?? t("uploadFailed")}
           </span>
           <span className="text-sm font-semibold text-on-background">{label}</span>
         </div>
         <button
           type="button"
           onClick={onPick}
-          aria-label={`Retry ${label}`}
+          aria-label={t("retryItem", { item: label })}
           className="w-9 h-9 rounded-full bg-error-container text-error flex items-center justify-center hover:opacity-80 transition-colors flex-shrink-0 cursor-pointer"
         >
           <span className="material-symbols-outlined text-sm">refresh</span>
@@ -80,7 +82,7 @@ export function DocumentSlotCard({ label, slot, upload, onPick, onDelete }: Docu
       className="bg-neutral-50 px-5 py-4 rounded-xl flex items-center justify-between border border-neutral-100 hover:border-neutral-300 hover:bg-white transition-all cursor-pointer group"
     >
       <div className="flex flex-col gap-0.5">
-        <span className="text-[10px] uppercase tracking-widest font-semibold text-neutral-400">Optional</span>
+        <span className="text-[10px] uppercase tracking-widest font-semibold text-neutral-400">{t("optional")}</span>
         <p className="text-sm font-semibold text-neutral-900">{label}</p>
       </div>
       <div className="w-9 h-9 rounded-full bg-neutral-200 group-hover:bg-primary/10 text-neutral-500 group-hover:text-primary flex items-center justify-center flex-shrink-0 transition-colors">

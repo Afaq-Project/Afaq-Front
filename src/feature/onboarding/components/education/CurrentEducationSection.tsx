@@ -8,6 +8,7 @@ import { StepSectionHeading } from "../common/StepSectionHeading";
 import { GpaField } from "./GpaField";
 import { MajorMultiSelect } from "@/src/shared/ui/pickers/MajorMultiSelect";
 import { StudyPeriodField } from "./StudyPeriodField";
+import { useTranslations } from "next-intl";
 
 interface CurrentEducationSectionProps {
   education: EducationData;
@@ -28,6 +29,7 @@ export function CurrentEducationSection({
   gpaInvalid,
   periodInvalid,
 }: CurrentEducationSectionProps) {
+  const t = useTranslations("onboarding.education");
   const institutions = useInstitutionOptions();
 
   const setFieldsOfStudy = (selected: Option[]) => {
@@ -37,14 +39,14 @@ export function CurrentEducationSection({
 
   return (
     <div className="flex flex-col gap-8">
-      <StepSectionHeading>Your Education</StepSectionHeading>
+      <StepSectionHeading>{t("yourEducation")}</StepSectionHeading>
 
       <div className="items-start gap-6 grid grid-cols-1 sm:grid-cols-2">
         <InlineSearch<Option>
-          label="Education Level"
+          label={t("level")}
           required
           selectedName={education.educationLevel || undefined}
-          placeholder="Select highest level achieved"
+          placeholder={t("levelPlaceholder")}
           items={educationLevels}
           isFetching={loadingLevels}
           onSearch={() => {}}
@@ -54,10 +56,10 @@ export function CurrentEducationSection({
           minSearchLength={0}
         />
         <InlineSearch<Option>
-          label={isHighSchool ? "School" : "Institution"}
-          hint="optional"
+          label={isHighSchool ? t("school") : t("institution")}
+          optional
           selectedName={education.institutionName}
-          placeholder={isHighSchool ? "Search for your school…" : "Search for your institution…"}
+          placeholder={isHighSchool ? t("schoolPlaceholder") : t("institutionPlaceholder")}
           items={institutions.options}
           isFetching={institutions.isFetching}
           onSearch={institutions.setQuery}
@@ -70,7 +72,7 @@ export function CurrentEducationSection({
       <div className="items-start gap-6 grid grid-cols-1 sm:grid-cols-2">
         {/* Optional for high school, where students may not have a major yet */}
         <MajorMultiSelect
-          label="Field of Study"
+          label={t("fieldOfStudy")}
           required={!isHighSchool}
           optional={isHighSchool}
           max={2}

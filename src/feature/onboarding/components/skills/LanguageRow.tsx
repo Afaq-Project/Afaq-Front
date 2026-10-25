@@ -1,15 +1,17 @@
-import type { LanguageItem, Option } from "../../types";
+import type { LanguageItem, ProficiencyOption } from "../../types";
 import { LanguageCombobox } from "./LanguageCombobox";
+import { useTranslations } from "next-intl";
 
 interface LanguageRowProps {
   item: LanguageItem;
-  proficiencyLevels: Option[];
+  proficiencyLevels: ProficiencyOption[];
   onChange: (item: LanguageItem) => void;
   onRemove: () => void;
 }
 
 /** One language with its proficiency level. */
 export function LanguageRow({ item, proficiencyLevels, onChange, onRemove }: LanguageRowProps) {
+  const t = useTranslations("onboarding.skills");
   const selectLevel = (levelId: string) => {
     const level = proficiencyLevels.find((p) => p.id === levelId);
     if (!level) return;
@@ -17,7 +19,7 @@ export function LanguageRow({ item, proficiencyLevels, onChange, onRemove }: Lan
       ...item,
       level: level.name,
       proficiencyLevelId: level.id,
-      isNative: level.name.toLowerCase().includes("native"),
+      isNative: level.native,
     });
   };
 
@@ -33,12 +35,12 @@ export function LanguageRow({ item, proficiencyLevels, onChange, onRemove }: Lan
         <select
           value={item.proficiencyLevelId ?? ""}
           onChange={(e) => selectLevel(e.target.value)}
-          aria-label="Proficiency level"
+          aria-label={t("proficiency")}
           className="w-full appearance-none bg-surface-container text-on-surface border border-outline-variant rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition-colors"
         >
           {!item.proficiencyLevelId && (
             <option value="" disabled>
-              Select level
+              {t("selectLevel")}
             </option>
           )}
           {proficiencyLevels.map((level) => (
@@ -53,7 +55,7 @@ export function LanguageRow({ item, proficiencyLevels, onChange, onRemove }: Lan
       <button
         type="button"
         onClick={onRemove}
-        aria-label="Remove language"
+        aria-label={t("removeLanguage")}
         className="w-full sm:w-auto flex justify-center text-on-surface-variant hover:text-error hover:bg-error-container p-2.5 rounded-lg transition-colors shrink-0 cursor-pointer"
       >
         <span className="material-symbols-outlined text-[20px]">delete</span>

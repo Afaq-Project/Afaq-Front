@@ -4,12 +4,13 @@ import type { DocumentSlotKey, DocumentSlotsState, SlotState } from "../types";
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const ACCEPTED_FILE_TYPES = ".pdf,.doc,.docx,.png,.jpg,.jpeg";
 
-export const DOCUMENT_SLOTS: { key: DocumentSlotKey; label: string }[] = [
-  { key: "resume", label: "Resume" },
-  { key: "essay", label: "Essay" },
-  { key: "transcript", label: "Transcript" },
-  { key: "recommendation", label: "Recommendation Letter" },
-  { key: "other", label: "Other" },
+/** The slots in display order; their labels are onboarding.documents.slots.<key>. */
+export const DOCUMENT_SLOTS: { key: DocumentSlotKey }[] = [
+  { key: "resume" },
+  { key: "essay" },
+  { key: "transcript" },
+  { key: "recommendation" },
+  { key: "other" },
 ];
 
 const IDLE_SLOT: SlotState = { status: "idle", progress: 0 };
@@ -30,9 +31,6 @@ const SLOT_TYPE_KEYWORDS: Record<DocumentSlotKey, string[]> = {
   other: ["other"],
 };
 
-export function slotLabel(key: DocumentSlotKey): string {
-  return DOCUMENT_SLOTS.find((s) => s.key === key)?.label ?? key;
-}
 
 /** The API document type whose name matches the slot, or undefined. Never falls back to another type. */
 export function findDocumentTypeId(
