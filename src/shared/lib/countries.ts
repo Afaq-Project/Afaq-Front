@@ -1,4 +1,4 @@
-/** Country names by ISO 3166-1 alpha-2 code (lowercase). Add entries as new countries appear. */
+/** Country names by ISO 3166-1 alpha-2 code (lowercase), where the short form reads better. */
 const COUNTRY_NAMES: Record<string, string> = {
   ae: "United Arab Emirates",
   bh: "Bahrain",
@@ -9,7 +9,16 @@ const COUNTRY_NAMES: Record<string, string> = {
   sa: "Saudi Arabia",
 };
 
-/** The country's name, or the uppercase code when it isn't in the list yet. */
+const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
+
+/** The country's name, or the uppercase code when the code isn't a known region. */
 export function countryName(code: string) {
-  return COUNTRY_NAMES[code.toLowerCase()] ?? code.toUpperCase();
+  const known = COUNTRY_NAMES[code.toLowerCase()];
+  if (known) return known;
+  try {
+    return displayNames.of(code.toUpperCase()) ?? code.toUpperCase();
+  } catch {
+    // Not a well-formed region code.
+    return code.toUpperCase();
+  }
 }
