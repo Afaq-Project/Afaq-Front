@@ -1,5 +1,5 @@
 import { Clock, CreditCard, FileText, Sparkles, Target, type LucideIcon } from "lucide-react";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { countryName } from "@/src/shared/lib/countries";
 import { reviewPath } from "@/src/feature/documents/services/reviewStore";
 import { formatDeadlineDay, getDeadlineUrgency } from "@/src/shared/lib/deadline";
@@ -41,7 +41,7 @@ export interface NotificationView {
 }
 
 function flagFor(opportunityId: string) {
-  const opportunity = getOpportunityById(opportunityId);
+  const opportunity = getMockOpportunityById(opportunityId);
   if (!opportunity) return { opportunity: undefined, flag: undefined };
   const flag = {
     countryCode: opportunity.countryCode,

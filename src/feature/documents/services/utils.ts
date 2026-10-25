@@ -1,5 +1,5 @@
 import { APPLICATION_DETAILS } from "@/src/feature/applications/mocks/applicationDetails";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { formatFileSize } from "@/src/feature/onboarding/services/documentSlots";
 import type { ApiDocument } from "@/src/feature/profile/types/api";
 import { documentType, isReviewable, typeForName, type DocumentTypeKey } from "@/src/shared/lib/document-types";
@@ -14,7 +14,7 @@ export const TRACKED_APPLICATIONS: TrackedApplication[] = APPLICATION_DETAILS.ma
   title: application.title,
   status: application.status,
   daysLeft: application.daysLeft,
-  opportunity: application.opportunityId ? getOpportunityById(application.opportunityId) : undefined,
+  opportunity: application.opportunityId ? getMockOpportunityById(application.opportunityId) : undefined,
 }));
 
 /** Not started or in progress: the ones still collecting documents. */

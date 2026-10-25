@@ -1,7 +1,8 @@
 import { OPPORTUNITY_DETAILS } from "../mocks/opportunities";
 import { OpportunityDetail } from "../types/opportunity";
 
-export function getOpportunityById(id: string): OpportunityDetail | undefined {
+/** Lookup for the features still on mock data; the details page loads from the API. */
+export function getMockOpportunityById(id: string): OpportunityDetail | undefined {
   return OPPORTUNITY_DETAILS.find((opportunity) => opportunity.id === id);
 }
 

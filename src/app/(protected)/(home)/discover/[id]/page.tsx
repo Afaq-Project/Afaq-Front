@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { OpportunityDetailsView } from "@/src/feature/opportunities/components/details/OpportunityDetailsView";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 
 export default async function OpportunityDetailsPage({
   params,
@@ -9,7 +9,7 @@ export default async function OpportunityDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const opportunity = getOpportunityById(id);
+  const opportunity = getMockOpportunityById(id);
 
   if (!opportunity) {
     notFound();

@@ -1,5 +1,5 @@
 import { getApplicationDetail } from "@/src/feature/applications/services/utils";
-import { getOpportunityById } from "@/src/feature/opportunities/services/utils";
+import { getMockOpportunityById } from "@/src/feature/opportunities/services/utils";
 import { reviewPath } from "@/src/feature/documents/services/reviewStore";
 import type { Conversation } from "../types/chat";
 
@@ -41,7 +41,7 @@ export function contextFor(
   if (conversation.applicationId) {
     const application = getApplicationDetail(conversation.applicationId);
     if (application) {
-      const opportunity = application.opportunityId ? getOpportunityById(application.opportunityId) : undefined;
+      const opportunity = application.opportunityId ? getMockOpportunityById(application.opportunityId) : undefined;
       return {
         kind: "application",
         key: `application:${application.id}`,
@@ -57,7 +57,7 @@ export function contextFor(
     }
   }
   if (conversation.opportunityId) {
-    const opportunity = getOpportunityById(conversation.opportunityId);
+    const opportunity = getMockOpportunityById(conversation.opportunityId);
     if (opportunity) {
       return {
         kind: "opportunity",
