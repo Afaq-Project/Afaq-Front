@@ -1,3 +1,5 @@
+import { intlLocale } from "@/src/i18n/format";
+
 const GENERIC_REPLIES: { text: string; suggestions?: string[] }[] = [
   {
     text: "Good question — let's break that down together. What specific part would you like to focus on first?",
@@ -39,6 +41,6 @@ export function buildAssistantReply(message: string): {
   return GENERIC_REPLIES[Math.floor(Math.random() * GENERIC_REPLIES.length)];
 }
 
-export function formatMessageTime(date: Date = new Date()): string {
-  return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+export function formatMessageTime(locale: string, date: Date = new Date()): string {
+  return date.toLocaleTimeString(intlLocale(locale), { hour: "numeric", minute: "2-digit" });
 }

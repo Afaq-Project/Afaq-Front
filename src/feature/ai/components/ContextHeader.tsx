@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Info, MessagesSquare, MoreHorizontal } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { GHOST_LINK_CLASS } from "@/src/feature/dashboard/components/styles";
 import { Popover } from "@/src/shared/ui/Popover";
 import type { ChatContext } from "../services/context";
@@ -13,6 +14,7 @@ import { ContextTile } from "./ChatList";
  * application on the right (in a ⋯ menu below 1024px, where a "Chats" button opens the list).
  */
 export function ContextHeader({ context, onOpenChats }: { context: ChatContext; onOpenChats: () => void }) {
+  const t = useTranslations("ai");
   const [menuOpen, setMenuOpen] = useState(false);
   const general = context.kind === "general";
 
@@ -26,7 +28,7 @@ export function ContextHeader({ context, onOpenChats }: { context: ChatContext; 
           className="lg:hidden inline-flex items-center gap-1.5 bg-white px-3 border border-neutral-200 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 h-11 font-medium text-neutral-800 text-small shrink-0"
         >
           <MessagesSquare size={16} strokeWidth={1.75} aria-hidden="true" />
-          Chats
+          {t("chats")}
         </button>
         <ContextTile context={context} />
         <div className="flex-1 min-w-0">
@@ -47,13 +49,13 @@ export function ContextHeader({ context, onOpenChats }: { context: ChatContext; 
               <Popover
                 open={menuOpen}
                 onOpenChange={setMenuOpen}
-                label="Opportunity details"
+                label={t("context.details")}
                 panelClassName="w-56"
                 trigger={(triggerProps) => (
                   <button
                     type="button"
                     {...triggerProps}
-                    aria-label="More about this chat"
+                    aria-label={t("context.more")}
                     className="flex justify-center items-center hover:bg-neutral-50 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 size-11 text-neutral-600"
                   >
                     <MoreHorizontal size={18} strokeWidth={1.75} aria-hidden="true" />
@@ -75,10 +77,12 @@ export function ContextHeader({ context, onOpenChats }: { context: ChatContext; 
       <p className="flex items-center gap-1.5 text-caption text-neutral-600">
         <Info size={14} strokeWidth={1.75} aria-hidden="true" className="shrink-0" />
         {general
-          ? "Answers use your profile."
+          ? t("context.usesProfile")
           : context.kind === "document"
-            ? "Answers use your profile and this document's review."
-            : `Answers use your profile and this ${context.kind === "application" ? "application" : "opportunity"}'s details.`}
+            ? t("context.usesDocument")
+            : context.kind === "application"
+              ? t("context.usesApplication")
+              : t("context.usesOpportunity")}
       </p>
     </div>
   );

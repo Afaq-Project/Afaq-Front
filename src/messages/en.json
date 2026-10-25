@@ -1239,5 +1239,88 @@
     "nextReview": "Next review",
     "allWorkedThrough": "You've worked through every suggestion. Ready for another look?",
     "reviewAgain": "Review again"
+  },
+  "ai": {
+    "title": "AI assistant",
+    "chatsAndUsage": "Chats and usage",
+    "conversation": "Conversation",
+    "yourChats": "Your chats",
+    "closeChats": "Close chats",
+    "newChat": "New chat",
+    "searchChats": "Search chats",
+    "chats": "Chats",
+    "noChats": "No chats match.",
+    "chatMessages": "Chat messages",
+    "essayReviews": "Essay reviews",
+    "reviewMyEssay": "Review my essay: {name}",
+    "context": {
+      "general": "General guidance",
+      "yourDocument": "Your document",
+      "aiReview": "AI review",
+      "openReview": "Open full review",
+      "viewApplication": "View application",
+      "viewOpportunity": "View opportunity",
+      "details": "Opportunity details",
+      "more": "More about this chat",
+      "usesProfile": "Answers use your profile.",
+      "usesDocument": "Answers use your profile and this document's review.",
+      "usesApplication": "Answers use your profile and this application's details.",
+      "usesOpportunity": "Answers use your profile and this opportunity's details."
+    },
+    "empty": {
+      "title": "How can I help with your applications?",
+      "eligibleAny": "Am I eligible for a scholarship I found?",
+      "eligibleFor": "Am I eligible for {title}?",
+      "startStatement": "Help me start my personal statement",
+      "reviewEssay": "Review my essay",
+      "prepare": "What should I prepare before applying?",
+      "firstSuggestion": "Which suggestion should I work on first?",
+      "biggestFix": "What's the biggest thing to fix?",
+      "explainWeaknesses": "Explain the weaknesses you found",
+      "standOut": "How do I make it stand out?"
+    },
+    "reviews": {
+      "title": "Your reviews",
+      "summary": "Reviewed {date} · {count, plural, one {# suggestion} other {# suggestions}}"
+    },
+    "composer": {
+      "limit": "You've used all {limit} chat messages this month.",
+      "resets": " They reset on {date}.",
+      "upgrade": "Upgrade to Premium",
+      "premiumIncludes": "Premium includes unlimited chat and essay reviews.",
+      "message": "Message",
+      "placeholder": "Ask about eligibility, essays, or your application…",
+      "reviewEssay": "Review an essay",
+      "send": "Send message",
+      "disclaimer": "AI guidance can be wrong and doesn't guarantee outcomes. Verify important details on the official page.",
+      "characters": "{count} characters"
+    },
+    "messages": {
+      "today": "Today, {time}",
+      "yesterday": "Yesterday, {time}",
+      "dated": "{date}, {time}",
+      "essayFeedback": "Essay feedback",
+      "forPurpose": " · for {purpose}",
+      "strengths": "Strengths",
+      "weaknesses": "Weaknesses",
+      "suggestions": "Suggestions",
+      "feedbackNote": "AI feedback can miss context. Use it as a starting point, not a final verdict.",
+      "openReview": "Open full review",
+      "copied": "Copied",
+      "copy": "Copy message",
+      "typing": "Assistant is typing",
+      "failed": "Something went wrong on our side. Try again in a moment."
+    },
+    "reviewDialog": {
+      "usedAll": "You've used all {limit} AI reviews this month.",
+      "resetsNextMonth": " They reset next month.",
+      "pasted": "Pasted essay",
+      "document": "Document",
+      "pasteOrUpload": "Paste or upload an essay",
+      "replaces": "This will replace your current review.",
+      "paste": "Paste your essay",
+      "upload": "Or upload a file (.docx, .pdf, .txt)",
+      "submit": "Review essay"
+    }
   }
 }
