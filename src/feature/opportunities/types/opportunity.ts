@@ -12,12 +12,18 @@ export type FundingStatus =
 export interface OpportunitySummary {
   id: string;
   title: string;
-  description: string;
+  /** The matches feed only sends a short summary, so cards can come without one. */
+  description?: string;
   type: OpportunityType;
-  matchScore: number;
-  daysLeft: number;
-  location: string;
-  fieldOfStudy: string;
+  /** Absent when the profile isn't matchable yet, or no match was calculated for it. */
+  matchScore?: number;
+  /** Days until the deadline, negative once closed. Absent for rolling deadlines. */
+  daysLeft?: number;
+  /** Absolute deadline, ISO date (e.g. "2026-10-20"). */
+  deadlineDate?: string;
+  /** City and/or country as shown on the card; absent when the listing has neither. */
+  location?: string;
+  fieldOfStudy?: string;
   /** Organization offering it. Optional: the UI omits it when absent. */
   provider?: string;
   /** Provider logo; the card falls back to the provider's initial. */
@@ -29,8 +35,8 @@ export interface OpportunitySummary {
   countryCode?: string;
   /** Remote / global: the card shows a globe instead of a flag. */
   isRemote?: boolean;
-  /** How the profile fits each weighted match factor; the "Why this match" popover needs it. */
-  matchFactors?: Record<MatchFactorKey, MatchFit>;
+  /** How the profile scored on each weighted factor; the "Why this match" popover needs it. */
+  matchBreakdown?: MatchBreakdown;
   /**
    * False when it fails a hard eligibility filter and is only shown as a relaxed result.
    * Undefined means it passes.
@@ -38,9 +44,18 @@ export interface OpportunitySummary {
   meetsRequirements?: boolean;
 }
 
-/** The five factors of the match score (weights live with the UI that explains them). */
-export type MatchFactorKey = "fieldOfStudy" | "skills" | "gpa" | "language" | "experience";
-export type MatchFit = "strong" | "partial" | "missing";
+/** One weighted factor of the match score, keyed as the API sends it (e.g. "field_of_study"). */
+export interface MatchFactorScore {
+  key: string;
+  /** Share of the total score, in %. */
+  weight: number;
+  /** 0–100; null when the opportunity sets no requirement for it. */
+  score: number | null;
+}
+export type MatchBreakdown = MatchFactorScore[];
+
+/** "notRequired": the opportunity sets no requirement for that factor. */
+export type MatchFit = "strong" | "partial" | "missing" | "notRequired";
 
 /** How the user's profile fits one eligibility criterion. */
 export type EligibilityFit = "met" | "not_met" | "unknown";
@@ -58,12 +73,8 @@ export interface RequiredDocument {
 }
 
 export interface OpportunityDetail extends OpportunitySummary {
-  provider: string;
-  keywords: string[];
-  /** Absolute deadline, ISO date (e.g. "2026-10-20"). The countdown is computed from this. */
-  deadlineDate: string;
-  fundingStatus: FundingStatus;
-  officialLink: string;
+  /** Where to apply; the apply button is disabled without it. */
+  officialLink?: string;
   eligibility: EligibilityCriterion[];
   requiredDocuments: RequiredDocument[];
   /** Provider's own website; the header links to it when present. */

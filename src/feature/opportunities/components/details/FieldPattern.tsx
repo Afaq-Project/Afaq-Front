@@ -91,8 +91,8 @@ const SLOTS: { x: number; y: number; size: number; rotate: number; opacity: numb
  * band's right ~55% and faded out toward the left so the title area stays clean. The
  * opportunity id picks which icon goes in each fixed slot.
  */
-export function FieldPattern({ id, field, type }: { id: string; field: string; type: OpportunityType }) {
-  const fieldIcons = FIELD_ICONS[fieldGroup(field)];
+export function FieldPattern({ id, field, type }: { id: string; field?: string; type: OpportunityType }) {
+  const fieldIcons = FIELD_ICONS[field ? fieldGroup(field) : "other"];
   const typeIcons = TYPE_ICONS[type];
   const seed = hash(id);
 

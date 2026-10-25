@@ -18,8 +18,8 @@ import { OpportunityGrid, OpportunityGridSkeleton } from "./OpportunityGrid";
 import { SortSelect } from "./SortSelect";
 
 const CATALOG = listable(OPPORTUNITIES);
-const LOCATION_OPTIONS = [REMOTE_LOCATION, ...distinct(CATALOG.map((o) => o.location))];
-const FIELD_OPTIONS = distinct(CATALOG.map((o) => o.fieldOfStudy));
+const LOCATION_OPTIONS = [REMOTE_LOCATION, ...distinct(CATALOG.flatMap((o) => o.location ?? []))];
+const FIELD_OPTIONS = distinct(CATALOG.flatMap((o) => o.fieldOfStudy ?? []));
 
 // TODO: enable "Newest" once opportunities carry a published date.
 const NEWEST_AVAILABLE = false;

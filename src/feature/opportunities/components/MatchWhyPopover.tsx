@@ -4,11 +4,11 @@ import { useState } from "react";
 import { Info } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { Popover } from "@/src/shared/ui/Popover";
-import type { MatchFactorKey, MatchFit } from "../types/opportunity";
-import { FIT_LABEL, FIT_TEXT, FitIcon, MATCH_FACTORS } from "./matchFactors";
+import type { MatchBreakdown } from "../types/opportunity";
+import { FIT_LABEL, FIT_TEXT, FitIcon, matchFactorRows } from "./matchFactors";
 
 /** Info button that explains a match score factor by factor. */
-export function MatchWhyPopover({ factors }: { factors: Record<MatchFactorKey, MatchFit> }) {
+export function MatchWhyPopover({ breakdown }: { breakdown: MatchBreakdown }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,20 +30,17 @@ export function MatchWhyPopover({ factors }: { factors: Record<MatchFactorKey, M
     >
       <p className="font-medium text-neutral-900 text-small">Why this match</p>
       <ul className="flex flex-col gap-2 mt-3">
-        {MATCH_FACTORS.map((factor) => {
-          const fit = factors[factor.key];
-          return (
-            <li key={factor.key} className="flex justify-between items-center gap-3 text-small">
-              <span className="text-neutral-800">
-                {factor.label} <span className="text-neutral-600">{factor.weight}%</span>
-              </span>
-              <span className={cn("flex items-center gap-1.5 text-caption shrink-0", FIT_TEXT[fit])}>
-                <FitIcon fit={fit} />
-                {FIT_LABEL[fit]}
-              </span>
-            </li>
-          );
-        })}
+        {matchFactorRows(breakdown).map((factor) => (
+          <li key={factor.key} className="flex justify-between items-center gap-3 text-small">
+            <span className="text-neutral-800">
+              {factor.label} <span className="text-neutral-600">{factor.weight}%</span>
+            </span>
+            <span className={cn("flex items-center gap-1.5 text-caption shrink-0", FIT_TEXT[factor.fit])}>
+              <FitIcon fit={factor.fit} />
+              {FIT_LABEL[factor.fit]}
+            </span>
+          </li>
+        ))}
       </ul>
     </Popover>
   );

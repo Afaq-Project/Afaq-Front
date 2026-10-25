@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useMatchingReadiness } from "@/src/feature/discover/hooks/useMatchingReadiness";
 import { daysUntil } from "@/src/shared/lib/deadline";
 import { notify } from "@/src/shared/lib/notify";
 import type { ApplicationStatusKey } from "@/src/shared/lib/status-colors";
@@ -27,8 +28,8 @@ const AI_QUESTIONS = [
 export function OpportunityDetailsView({ opportunity }: { opportunity: OpportunityDetail }) {
   // The countdown comes from the deadline date, computed now rather than trusting a stored count.
   const [now] = useState(() => new Date());
-  const daysLeft = daysUntil(opportunity.deadlineDate, now);
-  const closed = daysLeft < 0;
+  const daysLeft = opportunity.deadlineDate ? daysUntil(opportunity.deadlineDate, now) : undefined;
+  const closed = daysLeft !== undefined && daysLeft < 0;
 
   // TODO: there's no tracker or saved-list API yet, so tracking, status and saving are local and
   // reset on reload. Wire these to the real actions when they exist.
@@ -52,7 +53,10 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
   };
 
   const actions = <ActionsCard opportunity={opportunity} closed={closed} tracking={tracking} />;
-  const match = <MatchCard opportunity={opportunity} />;
+  const readiness = useMatchingReadiness();
+  const match = (
+    <MatchCard score={opportunity.matchScore} breakdown={opportunity.matchBreakdown} missing={readiness.missing} />
+  );
   const showMobileBar = tracked || !closed;
 
   return (
@@ -76,7 +80,7 @@ export function OpportunityDetailsView({ opportunity }: { opportunity: Opportuni
 
       <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-2 min-w-0">
-          <AboutSection description={opportunity.description} />
+          <AboutSection description={opportunity.description} officialLink={opportunity.officialLink} />
           <EligibilitySection criteria={opportunity.eligibility} />
           <DocumentsSection documents={opportunity.requiredDocuments} />
           <AskAiCard

@@ -51,15 +51,15 @@ export const activeFilterCount = (query: DiscoverQuery) =>
   (query.deadline !== "any" ? 1 : 0) + query.locations.length + query.fields.length + query.quick.length;
 
 const QUICK_TEST: Record<QuickFilter, (o: OpportunitySummary) => boolean> = {
-  strong: (o) => o.matchScore >= 70,
-  closing: (o) => o.daysLeft >= 0 && o.daysLeft <= 7,
+  strong: (o) => (o.matchScore ?? 0) >= 70,
+  closing: (o) => o.daysLeft !== undefined && o.daysLeft >= 0 && o.daysLeft <= 7,
   funded: (o) => o.fundingStatus === "Fully Funded",
   remote: (o) => o.isRemote === true,
 };
 
 /** Open opportunities plus recently closed ones; older closed ones are hidden. */
 export const listable = (opportunities: OpportunitySummary[]) =>
-  opportunities.filter((o) => o.daysLeft >= -CLOSED_GRACE_DAYS);
+  opportunities.filter((o) => (o.daysLeft ?? 0) >= -CLOSED_GRACE_DAYS);
 
 export function filterOpportunities(opportunities: OpportunitySummary[], query: DiscoverQuery) {
   const search = query.q.trim().toLowerCase();
@@ -70,14 +70,14 @@ export function filterOpportunities(opportunities: OpportunitySummary[], query: 
       return false;
     }
     if (query.type !== "all" && o.type.toLowerCase() !== query.type) return false;
-    if (maxDays !== undefined && (o.daysLeft < 0 || o.daysLeft > maxDays)) return false;
+    if (maxDays !== undefined && (o.daysLeft === undefined || o.daysLeft < 0 || o.daysLeft > maxDays)) return false;
     if (
       query.locations.length > 0 &&
       !query.locations.some((location) => (location === REMOTE_LOCATION ? o.isRemote : o.location === location))
     ) {
       return false;
     }
-    if (query.fields.length > 0 && !query.fields.includes(o.fieldOfStudy)) return false;
+    if (query.fields.length > 0 && !query.fields.includes(o.fieldOfStudy ?? "")) return false;
     if (!query.quick.every((quick) => QUICK_TEST[quick](o))) return false;
     return true;
   });
@@ -85,13 +85,13 @@ export function filterOpportunities(opportunities: OpportunitySummary[], query: 
 
 /** Best match (default) or soonest deadline; closed ones always go last. "Newest" has no data yet. */
 export function sortOpportunities(opportunities: OpportunitySummary[], sort: SortOrder) {
-  const byMatch = (a: OpportunitySummary, b: OpportunitySummary) => b.matchScore - a.matchScore;
-  const byDeadline = (a: OpportunitySummary, b: OpportunitySummary) => a.daysLeft - b.daysLeft;
+  const byMatch = (a: OpportunitySummary, b: OpportunitySummary) => (b.matchScore ?? 0) - (a.matchScore ?? 0);
+  const byDeadline = (a: OpportunitySummary, b: OpportunitySummary) => (a.daysLeft ?? Infinity) - (b.daysLeft ?? Infinity);
   const compare = sort === "deadline" ? byDeadline : byMatch;
 
   return [...opportunities].sort((a, b) => {
-    const closedA = a.daysLeft < 0;
-    const closedB = b.daysLeft < 0;
+    const closedA = (a.daysLeft ?? 0) < 0;
+    const closedB = (b.daysLeft ?? 0) < 0;
     if (closedA !== closedB) return closedA ? 1 : -1;
     return compare(a, b);
   });

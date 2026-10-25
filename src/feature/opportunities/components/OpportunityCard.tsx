@@ -42,10 +42,11 @@ function DeadlineLabel({ daysLeft }: { daysLeft: number }) {
 export function OpportunityCard({ opportunity }: { opportunity: OpportunitySummary }) {
   // TODO: wire to a real save action and persist it; there's no saved-opportunities API yet.
   const [saved, setSaved] = useState(false);
-  const closed = opportunity.daysLeft < 0;
+  const { daysLeft, matchScore } = opportunity;
+  const closed = daysLeft !== undefined && daysLeft < 0;
   const relaxed = opportunity.meetsRequirements === false;
-  const remote = Boolean(opportunity.isRemote) || !opportunity.countryCode;
-  const country = opportunity.countryCode ? countryName(opportunity.countryCode) : undefined;
+  const remote = Boolean(opportunity.isRemote);
+  const country = opportunity.countryCode ? countryName(opportunity.countryCode) : opportunity.location;
 
   const chips = [
     opportunity.type,
@@ -82,9 +83,9 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
         <div className="flex-1 min-w-0">
           {/* TODO: every opportunity should have a provider; the line is omitted when it's missing. */}
           {opportunity.provider && (
-            <p className="font-medium text-neutral-800 text-small truncate">{opportunity.provider}</p>
+            <p dir="auto" className="font-medium text-neutral-800 text-small truncate">{opportunity.provider}</p>
           )}
-          <p className="text-caption text-neutral-600 truncate">{remote ? "Remote" : country}</p>
+          <p dir="auto" className="text-caption text-neutral-600 truncate">{remote ? "Remote" : (country ?? "Location not listed")}</p>
         </div>
         {/* Sits above the card's stretched link, so clicking it doesn't open the details page. */}
         <button
@@ -104,7 +105,7 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
         </button>
       </div>
 
-      <h3 className="text-h3 text-neutral-900 line-clamp-2">
+      <h3 dir="auto" className="text-h3 text-neutral-900 line-clamp-2">
         <Link
           href={`/discover/${opportunity.id}`}
           className="after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-primary-400 focus-visible:after:ring-inset after:rounded-lg focus-visible:outline-none after:content-['']"
@@ -113,12 +114,14 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
         </Link>
       </h3>
 
-      {/* Raised while its popover is open so the panel isn't covered by the next card. */}
-      <div className="relative z-10 has-aria-expanded:z-30 flex items-center gap-1">
-        <MatchBadge percent={opportunity.matchScore} muted={closed} />
-        {/* TODO: every opportunity should carry matchFactors once the matching API returns them. */}
-        {opportunity.matchFactors && <MatchWhyPopover factors={opportunity.matchFactors} />}
-      </div>
+      {/* No score until the profile can be matched. Raised while its popover is open so the panel
+          isn't covered by the next card. */}
+      {matchScore !== undefined && (
+        <div className="relative z-10 has-aria-expanded:z-30 flex items-center gap-1">
+          <MatchBadge percent={matchScore} muted={closed} />
+          {opportunity.matchBreakdown && <MatchWhyPopover breakdown={opportunity.matchBreakdown} />}
+        </div>
+      )}
 
       {chips.length > 0 && (
         <ul className="flex flex-wrap gap-1.5">
@@ -130,11 +133,17 @@ export function OpportunityCard({ opportunity }: { opportunity: OpportunitySumma
         </ul>
       )}
 
-      <p className="text-neutral-600 text-small line-clamp-2">{opportunity.description}</p>
+      {opportunity.description && <p dir="auto" className="text-neutral-600 text-small line-clamp-2">{opportunity.description}</p>}
 
       <div className="flex justify-between items-center gap-3 mt-auto pt-3 border-neutral-100 border-t text-small">
-        {closed ? <Badge tone="gray">Closed</Badge> : <DeadlineLabel daysLeft={opportunity.daysLeft} />}
-        <span className="text-neutral-600 text-right truncate">{opportunity.isRemote ? "Remote" : opportunity.location}</span>
+        {daysLeft === undefined ? (
+          <span className="text-neutral-600">No deadline listed</span>
+        ) : closed ? (
+          <Badge tone="gray">Closed</Badge>
+        ) : (
+          <DeadlineLabel daysLeft={daysLeft} />
+        )}
+        <span dir="auto" className="text-neutral-600 text-right truncate">{remote ? "Remote" : opportunity.location}</span>
       </div>
     </article>
   );
