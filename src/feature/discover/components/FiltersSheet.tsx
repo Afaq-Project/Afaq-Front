@@ -7,7 +7,6 @@ import { buttonClasses } from "@/src/shared/ui/Button";
 interface FiltersSheetProps {
   open: boolean;
   onClose: () => void;
-  resultCount: number;
   onClearAll: () => void;
   children: ReactNode;
 }
@@ -16,7 +15,7 @@ interface FiltersSheetProps {
  * Bottom sheet holding every filter on small screens. Filters apply as they change; the footer
  * button just closes it. Escape or the backdrop closes it, and the caller returns focus.
  */
-export function FiltersSheet({ open, onClose, resultCount, onClearAll, children }: FiltersSheetProps) {
+export function FiltersSheet({ open, onClose, onClearAll, children }: FiltersSheetProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,7 +70,7 @@ export function FiltersSheet({ open, onClose, resultCount, onClearAll, children 
             Clear all
           </button>
           <button type="button" onClick={onClose} className={buttonClasses("primary", "flex-1")}>
-            Show {resultCount} {resultCount === 1 ? "result" : "results"}
+            Show results
           </button>
         </div>
       </div>

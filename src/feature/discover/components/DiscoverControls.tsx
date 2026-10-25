@@ -11,6 +11,7 @@ import {
   TYPE_OPTIONS,
   type DeadlineFilter,
   type DiscoverQuery,
+  type DiscoverSupport,
 } from "../types/filters";
 import { activeFilterCount } from "../services/utils";
 import { CheckboxList, RadioList } from "./FilterOptions";
@@ -29,11 +30,12 @@ const controlState = (active: boolean) =>
 interface DiscoverControlsProps {
   query: DiscoverQuery;
   update: (patch: Partial<DiscoverQuery>) => void;
-  locationOptions: string[];
-  fieldOptions: string[];
-  resultCount: number;
-  /** Disables every control (e.g. while the profile is incomplete). */
+  /** What the current endpoint can apply; unsupported controls are hidden. */
+  support: DiscoverSupport;
+  /** Disables every control (e.g. while loading). */
   disabled?: boolean;
+  /** The sort control, at the end of the filter row. */
+  sort?: ReactNode;
 }
 
 function FilterPopover({ label, count, children }: { label: string; count: number; children: ReactNode }) {
@@ -67,17 +69,11 @@ function FilterPopover({ label, count, children }: { label: string; count: numbe
 
 /**
  * Discover's controls card: search, then the type control with the filter buttons (a bottom
- * sheet on phones), then chips for the active filters. Green marks only the selected type,
- * active filters and the focused search. Every change goes straight to the URL.
+ * sheet on phones) and the sort, then chips for the active filters. Filters `support` doesn't allow are
+ * hidden; search always shows, disabled when unsupported. Green marks only the selected type, active filters
+ * and the focused search. Every change goes straight to the URL.
  */
-export function DiscoverControls({
-  query,
-  update,
-  locationOptions,
-  fieldOptions,
-  resultCount,
-  disabled = false,
-}: DiscoverControlsProps) {
+export function DiscoverControls({ query, update, support, disabled = false, sort }: DiscoverControlsProps) {
   // Local copy so typing is instant; it follows the URL when that changes elsewhere (back/forward).
   const [input, setInput] = useState(query.q);
   const [syncedQ, setSyncedQ] = useState(query.q);
@@ -115,10 +111,13 @@ export function DiscoverControls({
     />
   );
   const locationList = (
-    <CheckboxList legend="Location" options={locationOptions} selected={query.locations} onChange={(locations) => update({ locations })} />
+    <CheckboxList legend="Location" options={support.locations} selected={query.locations} onChange={(locations) => update({ locations })} />
   );
+  const hasLocations = support.locations.length > 0;
+  const hasFields = support.fields.length > 0;
+  const hasFilters = support.deadline || hasLocations || hasFields;
   const fieldList = (
-    <CheckboxList legend="Field of study" options={fieldOptions} selected={query.fields} onChange={(fields) => update({ fields })} />
+    <CheckboxList legend="Field of study" options={support.fields} selected={query.fields} onChange={(fields) => update({ fields })} />
   );
 
   const chips = [
@@ -147,65 +146,91 @@ export function DiscoverControls({
     <fieldset disabled={disabled} className="flex flex-col gap-3 bg-white m-0 p-4 border border-neutral-100 rounded-lg min-w-0">
       <legend className="sr-only">Search and filter opportunities</legend>
 
-      <label className="flex items-center gap-2 bg-white px-3 border border-neutral-200 focus-within:border-primary-600 rounded-sm focus-within:ring-2 focus-within:ring-primary-400 h-10 transition-colors">
-        <Search size={16} strokeWidth={1.75} aria-hidden="true" className="text-primary-600 shrink-0" />
+      {/* Always shown; disabled until the API can search, so typing never looks like it failed. */}
+      <label
+        className={cn(
+          "flex items-center gap-2 bg-white px-3 border border-neutral-200 rounded-sm h-10 transition-colors",
+          support.search ? "focus-within:border-primary-600 focus-within:ring-2 focus-within:ring-primary-400" : "bg-neutral-50 cursor-not-allowed",
+        )}
+      >
+        <Search
+          size={16}
+          strokeWidth={1.75}
+          aria-hidden="true"
+          className={cn("shrink-0", support.search ? "text-primary-600" : "text-neutral-400")}
+        />
         <span className="sr-only">Search by title or provider</span>
         <input
           type="search"
           value={input}
           onChange={(event) => onSearch(event.target.value)}
-          placeholder="Search by title or provider"
-          className="flex-1 bg-transparent min-w-0 text-neutral-900 text-small placeholder:text-neutral-400 focus:outline-none"
+          disabled={!support.search}
+          placeholder={support.search ? "Search by title or provider" : "Search by title or provider (coming soon)"}
+          className="flex-1 bg-transparent min-w-0 text-neutral-900 text-small placeholder:text-neutral-400 focus:outline-none disabled:cursor-not-allowed"
         />
       </label>
 
-      <div className="flex md:flex-row flex-col md:items-center gap-3">
-        <div role="group" aria-label="Opportunity type" className="flex bg-neutral-50 p-1 rounded-md w-full md:w-auto">
-          {TYPE_OPTIONS.map((option) => {
-            const active = query.type === option.value;
-            return (
-              <button
-                key={option.value}
-                type="button"
-                aria-pressed={active}
-                onClick={() => update({ type: option.value })}
-                className={cn(
-                  "flex-1 md:flex-none px-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 h-9 md:h-8 text-small whitespace-nowrap transition-colors",
-                  active ? "bg-primary-600 font-medium text-white" : "text-neutral-600 hover:text-neutral-900",
-                )}
-              >
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
+      {(support.type || hasFilters || sort) && (
+        <div className="flex md:flex-row flex-col md:items-center gap-3">
+          {support.type && (
+            <div role="group" aria-label="Opportunity type" className="flex bg-neutral-50 p-1 rounded-md w-full md:w-auto">
+              {TYPE_OPTIONS.map((option) => {
+                const active = query.type === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => update({ type: option.value })}
+                    className={cn(
+                      "flex-1 md:flex-none px-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 h-9 md:h-8 text-small whitespace-nowrap transition-colors",
+                      active ? "bg-primary-600 font-medium text-white" : "text-neutral-600 hover:text-neutral-900",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
-        {/* Tablet and up: one popover per filter. */}
-        <div className="hidden md:flex flex-wrap items-center gap-2">
-          <FilterPopover label="Deadline" count={query.deadline !== "any" ? 1 : 0}>
-            {deadlineList}
-          </FilterPopover>
-          <FilterPopover label="Location" count={query.locations.length}>
-            {locationList}
-          </FilterPopover>
-          <FilterPopover label="Field of study" count={query.fields.length}>
-            {fieldList}
-          </FilterPopover>
-        </div>
+          {/* Tablet and up: one popover per filter. */}
+          <div className="hidden md:flex flex-wrap items-center gap-2">
+            {support.deadline && (
+              <FilterPopover label="Deadline" count={query.deadline !== "any" ? 1 : 0}>
+                {deadlineList}
+              </FilterPopover>
+            )}
+            {hasLocations && (
+              <FilterPopover label="Location" count={query.locations.length}>
+                {locationList}
+              </FilterPopover>
+            )}
+            {hasFields && (
+              <FilterPopover label="Field of study" count={query.fields.length}>
+                {fieldList}
+              </FilterPopover>
+            )}
+          </div>
 
-        {/* Phones: one button for a bottom sheet with every filter. */}
-        <button
-          ref={sheetTrigger}
-          type="button"
-          onClick={() => setSheetOpen(true)}
-          aria-haspopup="dialog"
-          className={cn(CONTROL_BUTTON_CLASS, controlState(filterCount > 0), "md:hidden justify-center h-11")}
-        >
-          <SlidersHorizontal size={16} strokeWidth={1.75} aria-hidden="true" />
-          Filters
-          {filterCount > 0 && <span>· {filterCount}</span>}
-        </button>
-      </div>
+          {/* Phones: one button for a bottom sheet with every filter. */}
+          {hasFilters && (
+            <button
+              ref={sheetTrigger}
+              type="button"
+              onClick={() => setSheetOpen(true)}
+              aria-haspopup="dialog"
+              className={cn(CONTROL_BUTTON_CLASS, controlState(filterCount > 0), "md:hidden justify-center h-11")}
+            >
+              <SlidersHorizontal size={16} strokeWidth={1.75} aria-hidden="true" />
+              Filters
+              {filterCount > 0 && <span>· {filterCount}</span>}
+            </button>
+          )}
+
+          {sort && <div className="md:ml-auto">{sort}</div>}
+        </div>
+      )}
 
       {chips.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
@@ -235,10 +260,10 @@ export function DiscoverControls({
         </div>
       )}
 
-      <FiltersSheet open={sheetOpen} onClose={closeSheet} resultCount={resultCount} onClearAll={clearFilters}>
-        {deadlineList}
-        {locationList}
-        {fieldList}
+      <FiltersSheet open={sheetOpen} onClose={closeSheet} onClearAll={clearFilters}>
+        {support.deadline && deadlineList}
+        {hasLocations && locationList}
+        {hasFields && fieldList}
       </FiltersSheet>
     </fieldset>
   );
