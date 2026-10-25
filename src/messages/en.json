@@ -66,7 +66,11 @@
     "noSkillsYet": "No skills selected yet. Choose from the categories below.",
     "optional": "optional",
     "optionalField": "(optional)",
-    "loading": "Loading"
+    "loading": "Loading",
+    "viewAll": "View all",
+    "dismiss": "Dismiss",
+    "review": "Review",
+    "discoverOpportunities": "Discover opportunities"
   },
   "aiUsage": {
     "title": "Your AI usage this month",
@@ -304,5 +308,125 @@
       "loadingCompletion": "Loading profile completion"
     },
     "progressError": "We couldn't check your progress."
+  },
+  "applicationStatus": {
+    "not_started": "Not started",
+    "in_progress": "In progress",
+    "submitted": "Submitted",
+    "in_review": "In review",
+    "accepted": "Accepted",
+    "rejected": "Rejected"
+  },
+  "deadline": {
+    "endsToday": "Ends today",
+    "endsTomorrow": "Ends tomorrow",
+    "endsIn": "Ends in {count, plural, one {# day} other {# days}}",
+    "endsTodayInline": "ends today",
+    "endsTomorrowInline": "ends tomorrow",
+    "endsInInline": "ends in {count, plural, one {# day} other {# days}}",
+    "inDays": "In {count, plural, one {# day} other {# days}}",
+    "inDaysInline": "in {count, plural, one {# day} other {# days}}",
+    "daysLeft": "{count, plural, one {# day left} other {# days left}}",
+    "monthsLeft": "{count, plural, one {# month left} other {# months left}}"
+  },
+  "matchTier": {
+    "strong": "Strong match",
+    "possible": "Possible match",
+    "low": "Low match",
+    "short": {
+      "strong": "Strong",
+      "possible": "Possible",
+      "low": "Low"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "withName": "{greeting}, {name}"
+    },
+    "deadlinesToday": "{count, plural, one {# deadline} other {# deadlines}} today",
+    "deadlinesThisWeek": "{count, plural, one {# deadline} other {# deadlines}} this week",
+    "moreThisWeek": "{count} more this week",
+    "noDeadlines": "No deadlines this week. A good time to explore new matches. <link>Discover</link>",
+    "welcome": "Welcome - your account is ready.",
+    "welcomeName": "Welcome, {name} - your account is ready.",
+    "attention": {
+      "label": "Needs your attention",
+      "open": "Open application",
+      "more": "+{count} more due soon"
+    },
+    "deadlines": {
+      "title": "Upcoming deadlines",
+      "none": "No deadlines in the next 30 days",
+      "thisWeek": "This week",
+      "nextWeek": "Next week",
+      "later": "Later"
+    },
+    "pipeline": {
+      "title": "Your applications",
+      "total": "{count} total",
+      "empty": "Start tracking your first application",
+      "decision": "Decision",
+      "columnLabel": "{label}, {count, plural, one {# application} other {# applications}}",
+      "columnLabelOutcomes": "{label}, {count, plural, one {# application} other {# applications}}: {outcomes}",
+      "accepted": "{count} accepted",
+      "rejected": "{count} rejected",
+      "closingPlain": "{unfinished} not finished · {count, plural, one {# closes} other {# close}} this week",
+      "closing": "{unfinished} not finished, and {count, plural, one {# closes} other {# close}} this week.",
+      "waiting": "{count} submitted, waiting for a decision."
+    },
+    "matches": {
+      "best": "Best matches for you",
+      "newest": "New opportunities",
+      "error": "We couldn't load opportunities right now.",
+      "loading": "Loading opportunities",
+      "empty": "No open opportunities right now. New ones are added daily."
+    },
+    "snapshot": {
+      "title": "Your matches",
+      "explore": "Explore matches",
+      "empty": "No strong matches yet. New opportunities are added daily.",
+      "strong": "strong {count, plural, one {match} other {matches}}",
+      "possible": "{count} possible {count, plural, one {match} other {matches}}",
+      "newThisWeek": "{count} new this week",
+      "total": "{count} open matches in total",
+      "staleUpdated": "Last updated {when}. Still accurate?",
+      "completeUpdated": "Profile complete · Updated {when}"
+    },
+    "profile": {
+      "title": "Profile progress",
+      "view": "View profile",
+      "complete": "Profile complete",
+      "percentComplete": "Profile {value}% complete",
+      "progress": "{done} of {total}",
+      "stateDone": ", done",
+      "stateInProgress": ", in progress",
+      "stateNotStarted": ", not started",
+      "add": "Add",
+      "finish": "Finish",
+      "addItem": "Add {item}",
+      "finishItem": "Finish {item}",
+      "sections": {
+        "education": "Education",
+        "background": "Background & goals",
+        "skills": "Skills & languages",
+        "documents": "Documents"
+      },
+      "nextSteps": {
+        "education": "Add your education",
+        "educationImpact": "Field of study counts for 30% of your match score.",
+        "background": "Add your background & goals",
+        "backgroundImpact": "Your study goals decide which opportunities you see.",
+        "skills": "Add your skills & languages",
+        "skillsImpact": "Skills count for 25% of your match score.",
+        "documents": "Add your documents",
+        "documentsImpact": "Most applications ask for a resume and transcript."
+      },
+      "momentLabel": "Profile complete",
+      "moment": "Your profile is complete. Your matches are now as accurate as they can be."
+    },
+    "promoLearnMore": "Learn more about {title}"
   }
 }

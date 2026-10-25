@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { useCurrentUserName } from "@/src/feature/profile/hooks/useCurrentUserName";
+import { useTranslations } from "next-intl";
 
 export function WelcomeBanner() {
+  const t = useTranslations();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -28,13 +30,12 @@ export function WelcomeBanner() {
   return (
     <div className="flex justify-between items-center gap-3 bg-primary-50 px-4 py-3 border border-primary-200 rounded-lg">
       <p className="text-primary-800 text-sm">
-        Welcome{firstName ? `, ${firstName}` : ""} - your account is
-        ready.
+        {firstName ? t("dashboard.welcomeName", { name: firstName }) : t("dashboard.welcome")}
       </p>
       <button
         type="button"
         onClick={() => setVisible(false)}
-        aria-label="Dismiss"
+        aria-label={t("common.dismiss")}
         className="text-primary-800 hover:text-primary-900"
       >
         <X size={16} strokeWidth={1.75} />

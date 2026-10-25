@@ -16,7 +16,6 @@ import {
 import { OPPORTUNITIES } from "@/src/feature/opportunities/mocks/opportunities";
 import {
   PROFILE_NEXT_STEP,
-  type NextStep,
 } from "@/src/feature/profile/components/header/completion";
 import { useCurrentUserName } from "@/src/feature/profile/hooks/useCurrentUserName";
 import { useProfileCompletion } from "@/src/feature/profile/hooks/useProfileCompletion";
@@ -34,12 +33,12 @@ import { PipelineCard } from "./PipelineCard";
 import {
   ProfileProgressCard,
   ProfileProgressCardSkeleton,
-  type ProfileSectionStatus,
 } from "./ProfileProgressCard";
 import { PromoCard } from "./PromoCard";
 import { GHOST_LINK_CLASS } from "./styles";
 import { getMatchTier, type MatchTier } from "../types/status";
 import { WelcomeBanner } from "./WelcomeBanner";
+import { useTranslations } from "next-intl";
 
 // Deadlines only matter while there's still work to do: submitted and decided ones drop out.
 const ACTIONABLE: ApplicationStatus[] = ["not_started", "in_progress"];
@@ -52,57 +51,23 @@ const countBy = (status: ApplicationStatus) =>
 // done/not-done flags, which aren't tied to the completion percentage.
 const sectionComplete = (label: string) =>
   PROFILE_SECTIONS.find((s) => s.label === label)?.complete ?? false;
-const PROFILE_CHECKLIST: ProfileSectionStatus[] = [
-  {
-    key: "education",
-    label: "Education",
-    complete: sectionComplete("Education"),
-    href: "/profile#education",
-  },
-  {
-    key: "background",
-    label: "Background & goals",
-    complete: sectionComplete("Background & goals"),
-    href: "/profile#background",
-  },
-  {
-    key: "skills",
-    label: "Skills & languages",
-    complete: sectionComplete("Skills & language"),
-    href: "/profile#skills",
-  },
-  {
-    key: "documents",
-    label: "Documents",
-    complete: sectionComplete("Documents"),
-    href: "/documents",
-  },
-];
+// Labels are dashboard.profile.sections.<key>.
+const PROFILE_CHECKLIST = [
+  { key: "education", complete: sectionComplete("Education"), href: "/profile#education" },
+  { key: "background", complete: sectionComplete("Background & goals"), href: "/profile#background" },
+  { key: "skills", complete: sectionComplete("Skills & language"), href: "/profile#skills" },
+  { key: "documents", complete: sectionComplete("Documents"), href: "/documents" },
+] as const;
 
-// Next step for the first unfinished section. The percentages are the match-score weights
-// (Sprint 3: field of study 30%, skills/interests 25%).
+// Next step for the first unfinished section; its text is dashboard.profile.nextSteps.<key> and
+// <key>Impact. The percentages there are the match-score weights (Sprint 3: field of study 30%,
+// skills/interests 25%).
 // TODO: copy for education and background & goals needs product review.
-const SECTION_NEXT_STEP: Record<string, NextStep> = {
-  education: {
-    label: "Add your education",
-    impact: "Field of study counts for 30% of your match score.",
-    href: "#education",
-  },
-  background: {
-    label: "Add your background & goals",
-    impact: "Your study goals decide which opportunities you see.",
-    href: "#background",
-  },
-  skills: {
-    label: "Add your skills & languages",
-    impact: "Skills count for 25% of your match score.",
-    href: "#skills",
-  },
-  documents: {
-    label: "Add your documents",
-    impact: "Most applications ask for a resume and transcript.",
-    href: "/documents",
-  },
+const SECTION_NEXT_STEP_HREF: Record<(typeof PROFILE_CHECKLIST)[number]["key"], string> = {
+  education: "#education",
+  background: "#background",
+  skills: "#skills",
+  documents: "/documents",
 };
 
 /** Dev preview only: tier counts from the opportunities mock, counting open ones (daysLeft >= 0). */
@@ -122,6 +87,8 @@ const MATCHES_SHOWN = 4;
  * the newest opportunities instead.
  */
 function MatchesSection() {
+  const t = useTranslations("dashboard.matches");
+  const tc = useTranslations("common");
   // The backend scores incomplete profiles too, so matches are always tried first.
   const top = useTopMatches({ limit: MATCHES_SHOWN });
   const showNewest = top.isSuccess && top.opportunities.length === 0;
@@ -132,23 +99,23 @@ function MatchesSection() {
     <section aria-labelledby="matches-heading">
       <div className="flex justify-between items-baseline gap-3">
         <h2 id="matches-heading" className="text-h2 text-neutral-900">
-          {showNewest ? "New opportunities" : "Best matches for you"}
+          {showNewest ? t("newest") : t("best")}
         </h2>
         <Link href="/discover" className={GHOST_LINK_CLASS}>
-          View all
+          {tc("viewAll")}
         </Link>
       </div>
       {feed.isError ? (
-        <p className="mt-4 text-body text-neutral-600">We couldn&apos;t load opportunities right now.</p>
+        <p className="mt-4 text-body text-neutral-600">{t("error")}</p>
       ) : feed.isPending ? (
         <div role="status" className="gap-4 md:gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
-          <span className="sr-only">Loading opportunities</span>
+          <span className="sr-only">{t("loading")}</span>
           {Array.from({ length: MATCHES_SHOWN }, (_, index) => (
             <OpportunityCardSkeleton key={index} />
           ))}
         </div>
       ) : feed.opportunities.length === 0 ? (
-        <p className="mt-4 text-body text-neutral-600">No open opportunities right now. New ones are added daily.</p>
+        <p className="mt-4 text-body text-neutral-600">{t("empty")}</p>
       ) : (
         <div className="gap-4 md:gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
           {feed.opportunities.map((opportunity) => (
@@ -172,6 +139,7 @@ function LiveMatchesSnapshot() {
  * then the profile. Below 1024px it's one column with deadlines moved up under the header.
  */
 export function DashboardView() {
+  const t = useTranslations("dashboard");
   const { firstName } = useCurrentUserName();
   const completion = useProfileCompletion();
   // Until the profile loads, completion is the (possibly stale) value from sign-in, so a complete
@@ -193,9 +161,22 @@ export function DashboardView() {
     (a) => ACTIONABLE.includes(a.status) && a.daysLeft >= 0,
   ).sort((a, b) => a.daysLeft - b.daysLeft);
   const needsAttention = upcoming.filter((a) => a.daysLeft <= 2);
-  const deadlineSummary = summarizeDeadlines(upcoming.map((a) => a.daysLeft));
+  const deadlineCounts = summarizeDeadlines(upcoming.map((a) => a.daysLeft));
 
-  const greeting = greetingFor(hour);
+  const greeting = t(`greeting.${greetingFor(hour)}`);
+  const deadlineSummary = deadlineCounts
+    ? [
+        deadlineCounts.today > 0 && t("deadlinesToday", { count: deadlineCounts.today }),
+        deadlineCounts.thisWeek > 0 &&
+          (deadlineCounts.today > 0
+            ? t("moreThisWeek", { count: deadlineCounts.thisWeek })
+            : t("deadlinesThisWeek", { count: deadlineCounts.thisWeek })),
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : null;
+  const checklist = PROFILE_CHECKLIST.map((section) => ({ ...section, label: t(`profile.sections.${section.key}`) }));
+  const nextKey = PROFILE_CHECKLIST.find((s) => !s.complete)?.key;
   const deadlines = <DeadlineList applications={upcoming} />;
 
   return (
@@ -205,18 +186,19 @@ export function DashboardView() {
       {/* Greeting on the left, the promo pushed to the right; stacked below 768px. */}
       <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-6">
         <PageGreeting
-          title={firstName ? `${greeting}, ${firstName}` : greeting}
+          title={firstName ? t("greeting.withName", { greeting, name: firstName }) : greeting}
         >
           {deadlineSummary ?? (
-            <>
-              No deadlines this week. A good time to explore new matches.{" "}
-              <Link
-                href="/discover"
-                className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 font-medium text-primary-600 hover:text-primary-800"
-              >
-                Discover
-              </Link>
-            </>
+            t.rich("noDeadlines", {
+              link: (chunks) => (
+                <Link
+                  href="/discover"
+                  className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 font-medium text-primary-600 hover:text-primary-800"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })
           )}
         </PageGreeting>
 
@@ -276,12 +258,14 @@ export function DashboardView() {
           ) : (
             <ProfileProgressCard
               percent={completion}
-              sections={PROFILE_CHECKLIST}
+              sections={checklist}
               nextStep={
                 PROFILE_NEXT_STEP ??
-                SECTION_NEXT_STEP[
-                  PROFILE_CHECKLIST.find((s) => !s.complete)?.key ?? ""
-                ]
+                (nextKey && {
+                  label: t(`profile.nextSteps.${nextKey}`),
+                  impact: t(`profile.nextSteps.${nextKey}Impact`),
+                  href: SECTION_NEXT_STEP_HREF[nextKey],
+                })
               }
             />
           )}

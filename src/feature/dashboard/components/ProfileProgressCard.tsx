@@ -6,6 +6,7 @@ import { CompletionDonut } from "@/src/shared/ui/CompletionDonut";
 import { Skeleton } from "@/src/shared/ui/Skeleton";
 import { cn } from "../services/utils";
 import { CARD_CLASS, GHOST_LINK_CLASS } from "./styles";
+import { useTranslations } from "next-intl";
 
 export interface ProfileSectionStatus {
   key: string;
@@ -59,19 +60,20 @@ const profileHref = (href: string) => (href.startsWith("#") ? `/profile${href}` 
  * four sections. At 100% it collapses to a single "Profile complete" row.
  */
 export function ProfileProgressCard({ percent, sections, nextStep, className }: ProfileProgressCardProps) {
+  const t = useTranslations("dashboard.profile");
   const value = Math.min(100, Math.max(0, Math.round(percent)));
   const viewProfile = (
     <Link href="/profile" className={GHOST_LINK_CLASS}>
-      View profile
+      {t("view")}
     </Link>
   );
 
   if (value >= 100) {
     return (
-      <section aria-label="Profile progress" className={cn(CARD_CLASS, "flex justify-between items-center gap-3")}>
+      <section aria-label={t("title")} className={cn(CARD_CLASS, "flex justify-between items-center gap-3")}>
         <Badge tone="green">
           <Check size={12} strokeWidth={2.25} aria-hidden="true" />
-          Profile complete
+          {t("complete")}
         </Badge>
         {viewProfile}
       </section>
@@ -82,13 +84,13 @@ export function ProfileProgressCard({ percent, sections, nextStep, className }: 
     <section aria-labelledby="profile-progress-heading" className={cn(CARD_CLASS, "self-start w-full", className)}>
       <div className="flex justify-between items-baseline gap-3">
         <h2 id="profile-progress-heading" className="text-h3 text-neutral-900">
-          Profile progress
+          {t("title")}
         </h2>
         {viewProfile}
       </div>
 
       <div className="flex items-center gap-4 mt-4">
-        <div role="img" aria-label={`Profile ${value}% complete`}>
+        <div role="img" aria-label={t("percentComplete", { value })}>
           <CompletionDonut percent={value} size={56} />
         </div>
         {nextStep && (
@@ -125,18 +127,18 @@ export function ProfileProgressCard({ percent, sections, nextStep, className }: 
                 <span className="truncate">{section.label}</span>
                 {partial && (
                   <span className="text-neutral-600 whitespace-nowrap">
-                    {progress.done} of {progress.total}
+                    {t("progress", { done: progress.done, total: progress.total })}
                   </span>
                 )}
-                <span className="sr-only">{section.complete ? ", done" : partial ? ", in progress" : ", not started"}</span>
+                <span className="sr-only">{section.complete ? t("stateDone") : partial ? t("stateInProgress") : t("stateNotStarted")}</span>
               </span>
               {!section.complete && (
                 <Link
                   href={section.href}
-                  aria-label={`${partial ? "Finish" : "Add"} ${section.label.toLowerCase()}`}
+                  aria-label={t(partial ? "finishItem" : "addItem", { item: section.label.toLowerCase() })}
                   className={ACTION_LINK_CLASS}
                 >
-                  {partial ? "Finish" : "Add"}
+                  {partial ? t("finish") : t("add")}
                 </Link>
               )}
             </li>

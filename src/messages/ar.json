@@ -66,7 +66,11 @@
     "noSkillsYet": "لم تختر أي مهارة بعد. اختر من الفئات أدناه.",
     "optional": "اختياري",
     "optionalField": "(اختياري)",
-    "loading": "جارٍ التحميل"
+    "loading": "جارٍ التحميل",
+    "viewAll": "عرض الكل",
+    "dismiss": "إغلاق",
+    "review": "مراجعة",
+    "discoverOpportunities": "استكشف الفرص"
   },
   "aiUsage": {
     "title": "استخدامك للذكاء الاصطناعي هذا الشهر",
@@ -304,5 +308,125 @@
       "loadingCompletion": "جارٍ تحميل نسبة اكتمال الملف"
     },
     "progressError": "تعذّر التحقق من تقدمك."
+  },
+  "applicationStatus": {
+    "not_started": "لم يبدأ",
+    "in_progress": "قيد التنفيذ",
+    "submitted": "مُقدَّم",
+    "in_review": "قيد المراجعة",
+    "accepted": "مقبول",
+    "rejected": "مرفوض"
+  },
+  "deadline": {
+    "endsToday": "ينتهي اليوم",
+    "endsTomorrow": "ينتهي غدًا",
+    "endsIn": "ينتهي خلال {count, plural, one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}",
+    "endsTodayInline": "ينتهي اليوم",
+    "endsTomorrowInline": "ينتهي غدًا",
+    "endsInInline": "ينتهي خلال {count, plural, one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}",
+    "inDays": "خلال {count, plural, one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}",
+    "inDaysInline": "خلال {count, plural, one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}",
+    "daysLeft": "متبقٍ {count, plural, one {يوم واحد} two {يومان} few {# أيام} many {# يومًا} other {# يوم}}",
+    "monthsLeft": "متبقٍ {count, plural, one {شهر واحد} two {شهران} few {# أشهر} many {# شهرًا} other {# شهر}}"
+  },
+  "matchTier": {
+    "strong": "تطابق قوي",
+    "possible": "تطابق محتمل",
+    "low": "تطابق منخفض",
+    "short": {
+      "strong": "قوي",
+      "possible": "محتمل",
+      "low": "منخفض"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "صباح الخير",
+      "afternoon": "مساء الخير",
+      "evening": "مساء الخير",
+      "withName": "{greeting}، {name}"
+    },
+    "deadlinesToday": "{count, plural, one {موعد نهائي واحد} two {موعدان نهائيان} few {# مواعيد نهائية} many {# موعدًا نهائيًا} other {# موعد نهائي}} اليوم",
+    "deadlinesThisWeek": "{count, plural, one {موعد نهائي واحد} two {موعدان نهائيان} few {# مواعيد نهائية} many {# موعدًا نهائيًا} other {# موعد نهائي}} هذا الأسبوع",
+    "moreThisWeek": "و{count} أخرى هذا الأسبوع",
+    "noDeadlines": "لا مواعيد نهائية هذا الأسبوع. إنه وقت مناسب لاستكشاف مطابقات جديدة. <link>استكشف</link>",
+    "welcome": "أهلًا بك - حسابك جاهز.",
+    "welcomeName": "أهلًا {name} - حسابك جاهز.",
+    "attention": {
+      "label": "يحتاج إلى انتباهك",
+      "open": "فتح الطلب",
+      "more": "+{count} أخرى تنتهي قريبًا"
+    },
+    "deadlines": {
+      "title": "المواعيد النهائية القادمة",
+      "none": "لا مواعيد نهائية خلال الثلاثين يومًا القادمة",
+      "thisWeek": "هذا الأسبوع",
+      "nextWeek": "الأسبوع القادم",
+      "later": "لاحقًا"
+    },
+    "pipeline": {
+      "title": "طلباتك",
+      "total": "{count} إجمالًا",
+      "empty": "ابدأ بمتابعة أول طلب لك",
+      "decision": "القرار",
+      "columnLabel": "{label}، {count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}}",
+      "columnLabelOutcomes": "{label}، {count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}}: {outcomes}",
+      "accepted": "{count} مقبول",
+      "rejected": "{count} مرفوض",
+      "closingPlain": "{unfinished} غير مكتمل · {count, plural, one {واحد ينتهي} two {اثنان ينتهيان} other {# تنتهي}} هذا الأسبوع",
+      "closing": "{unfinished} غير مكتمل، و{count, plural, one {واحد ينتهي} two {اثنان ينتهيان} other {# تنتهي}} هذا الأسبوع.",
+      "waiting": "{count} مُقدَّم بانتظار القرار."
+    },
+    "matches": {
+      "best": "أفضل المطابقات لك",
+      "newest": "فرص جديدة",
+      "error": "تعذّر تحميل الفرص الآن.",
+      "loading": "جارٍ تحميل الفرص",
+      "empty": "لا توجد فرص مفتوحة حاليًا. تُضاف فرص جديدة يوميًا."
+    },
+    "snapshot": {
+      "title": "مطابقاتك",
+      "explore": "استكشف المطابقات",
+      "empty": "لا توجد مطابقات قوية بعد. تُضاف فرص جديدة يوميًا.",
+      "strong": "{count, plural, one {مطابقة قوية} two {مطابقتان قويتان} few {مطابقات قوية} many {مطابقة قوية} other {مطابقة قوية}}",
+      "possible": "{count} {count, plural, one {مطابقة محتملة} two {مطابقتان محتملتان} few {مطابقات محتملة} other {مطابقة محتملة}}",
+      "newThisWeek": "{count} جديدة هذا الأسبوع",
+      "total": "{count} مطابقة مفتوحة إجمالًا",
+      "staleUpdated": "آخر تحديث {when}. هل ما زالت البيانات دقيقة؟",
+      "completeUpdated": "الملف الشخصي مكتمل · آخر تحديث {when}"
+    },
+    "profile": {
+      "title": "تقدّم الملف الشخصي",
+      "view": "عرض الملف الشخصي",
+      "complete": "الملف الشخصي مكتمل",
+      "percentComplete": "الملف الشخصي مكتمل بنسبة {value}%",
+      "progress": "{done} من {total}",
+      "stateDone": "، مكتمل",
+      "stateInProgress": "، قيد التنفيذ",
+      "stateNotStarted": "، لم يبدأ",
+      "add": "إضافة",
+      "finish": "إكمال",
+      "addItem": "إضافة {item}",
+      "finishItem": "إكمال {item}",
+      "sections": {
+        "education": "التعليم",
+        "background": "الخلفية والأهداف",
+        "skills": "المهارات واللغات",
+        "documents": "المستندات"
+      },
+      "nextSteps": {
+        "education": "أضف تعليمك",
+        "educationImpact": "يشكّل التخصص 30% من نسبة مطابقتك.",
+        "background": "أضف خلفيتك وأهدافك",
+        "backgroundImpact": "أهدافك الدراسية تحدد الفرص التي تظهر لك.",
+        "skills": "أضف مهاراتك ولغاتك",
+        "skillsImpact": "تشكّل المهارات 25% من نسبة مطابقتك.",
+        "documents": "أضف مستنداتك",
+        "documentsImpact": "تطلب معظم الطلبات سيرة ذاتية وكشف درجات."
+      },
+      "momentLabel": "الملف الشخصي مكتمل",
+      "moment": "اكتمل ملفك الشخصي. أصبحت مطابقاتك الآن بأعلى دقة ممكنة."
+    },
+    "promoLearnMore": "اعرف المزيد عن {title}"
   }
 }
