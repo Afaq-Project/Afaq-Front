@@ -172,6 +172,19 @@ body {
 }
 
 /*
+ * In Arabic the Arabic font leads (it has matching Latin letters too). Otherwise the generated
+ * "IBM Plex Sans Fallback" face, which is local Arial, catches Arabic text before it.
+ */
+html:lang(ar) body {
+  font-family:
+    var(--font-ibm-plex-sans-arabic),
+    var(--font-ibm-plex-sans),
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+}
+
+/*
  * Browser autofill paints its own (yellow/blue) background. Delaying the
  * background transition keeps inputs white without overriding box-shadow,
  * which the focus ring relies on.
@@ -254,7 +267,11 @@ input:autofill {
   /* 56px below 1024px, 64px from 1024px. Also the scroll margin for anchor jumps. */
   --landing-header-height: 56px;
   --leading-scale: 1;
-  font-family: var(--font-inter), var(--font-ibm-plex-sans-arabic), system-ui, sans-serif;
+  /* Arabic fonts for body text and for headings and the hero (text-landing-display/h2/h3). */
+  --landing-arabic: var(--font-ibm-plex-sans-arabic);
+  --landing-heading-arabic: var(--landing-arabic);
+  --landing-heading-family: var(--font-inter), var(--landing-heading-arabic), system-ui, sans-serif;
+  font-family: var(--font-inter), var(--landing-arabic), system-ui, sans-serif;
   font-size: 16px;
   line-height: calc(24px * var(--leading-scale));
 
@@ -262,8 +279,12 @@ input:autofill {
     --landing-header-height: 64px;
   }
 
+  /* In Arabic the Arabic font leads: Inter's generated fallback face (local Arial) has Arabic
+     letters and would otherwise catch Arabic text first. */
   &:lang(ar) {
     --leading-scale: 1.2;
+    --landing-heading-family: var(--landing-heading-arabic), var(--font-inter), system-ui, sans-serif;
+    font-family: var(--landing-arabic), var(--font-inter), system-ui, sans-serif;
   }
 }
 
@@ -281,6 +302,7 @@ input:autofill {
 
 /* Landing type scale. Mobile sizes first; display steps up at 768px and 1024px, h2 at 768px. */
 @utility text-landing-display {
+  font-family: var(--landing-heading-family, inherit);
   font-size: 32px;
   line-height: calc(40px * var(--leading-scale, 1));
   font-weight: 600;
@@ -297,6 +319,7 @@ input:autofill {
 }
 
 @utility text-landing-h2 {
+  font-family: var(--landing-heading-family, inherit);
   font-size: 28px;
   line-height: calc(36px * var(--leading-scale, 1));
   font-weight: 600;
@@ -308,6 +331,7 @@ input:autofill {
 }
 
 @utility text-landing-h3 {
+  font-family: var(--landing-heading-family, inherit);
   font-size: 20px;
   line-height: calc(28px * var(--leading-scale, 1));
   font-weight: 600;
