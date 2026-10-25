@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useMajorsByCategory } from "@/src/shared/lib/api/hooks/useReferenceData";
 import type { ReferenceOption as Option } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { SkillChip } from "./SkillChip";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 interface SkillCategoryPanelProps {
   category: { id: string; nameEn: string };
@@ -14,9 +15,10 @@ interface SkillCategoryPanelProps {
 
 /** A collapsible category of skills; its majors load when first expanded. */
 export function SkillCategoryPanel({ category, selectedIds, maxReached, onToggle }: SkillCategoryPanelProps) {
+  const { name: refName } = useReferenceName();
   const [open, setOpen] = useState(false);
   const { data: rawMajors = [], isFetching } = useMajorsByCategory(category.id, open);
-  const skills: Option[] = rawMajors.map((m) => ({ id: m.id, name: m.nameEn }));
+  const skills: Option[] = rawMajors.map((m) => ({ id: m.id, name: refName(m) }));
 
   return (
     <div className="border border-outline-variant rounded-md bg-surface overflow-hidden">
@@ -26,7 +28,7 @@ export function SkillCategoryPanel({ category, selectedIds, maxReached, onToggle
         aria-expanded={open}
         className="w-full flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors text-start cursor-pointer"
       >
-        <span className="text-sm font-semibold text-on-surface">{category.nameEn}</span>
+        <span className="text-sm font-semibold text-on-surface">{refName(category)}</span>
         <div className="flex items-center gap-2">
           {isFetching && (
             <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />

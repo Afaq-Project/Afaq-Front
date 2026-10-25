@@ -5,6 +5,7 @@ import { InlineSearch } from "@/src/shared/ui/InlineSearch";
 import { useCountryOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import type { Option, PersonalInfoData } from "../../types";
 import { StepSectionHeading } from "../common/StepSectionHeading";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 interface LocationSectionProps {
   data: PersonalInfoData;
@@ -12,11 +13,12 @@ interface LocationSectionProps {
 }
 
 export function LocationSection({ data, onChange }: LocationSectionProps) {
+  const { name: refName } = useReferenceName();
   const countries = useCountryOptions();
   const { data: rawCities = [], isLoading: loadingCities } = useAllCitiesForCountry(
     data.countryOfResidenceId ?? "",
   );
-  const cities: Option[] = rawCities.map((c) => ({ id: c.id, name: c.nameEn }));
+  const cities: Option[] = rawCities.map((c) => ({ id: c.id, name: refName(c) }));
 
   // Changing the country invalidates the city.
   const setCountry = (country?: Option) =>

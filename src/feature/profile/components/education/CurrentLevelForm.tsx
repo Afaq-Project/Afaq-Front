@@ -9,6 +9,7 @@ import Select from "@/src/shared/ui/Select";
 import { useUpdatePersonal } from "../../hooks/useProfileQuery";
 import { FIELD_IDS } from "../common/fieldIds";
 import { savedThen } from "../common/saved";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 interface CurrentLevelFormProps {
   levelId?: string | null;
@@ -17,6 +18,7 @@ interface CurrentLevelFormProps {
 
 /** Inline form for the profile's current education level. */
 export function CurrentLevelForm({ levelId, onDone }: CurrentLevelFormProps) {
+  const { name: refName } = useReferenceName();
   const updateMut = useUpdatePersonal();
   const { data: levels = [] } = useEducationLevels();
   const [value, setValue] = useState(levelId ?? "");
@@ -29,7 +31,7 @@ export function CurrentLevelForm({ levelId, onDone }: CurrentLevelFormProps) {
         label="Current education level"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: l.nameEn }))]}
+        options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: refName(l) }))]}
       />
       <EditActions
         onCancel={onDone}

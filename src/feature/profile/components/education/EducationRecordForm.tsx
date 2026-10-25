@@ -22,6 +22,7 @@ import { educationFormFrom, educationPayloadFrom, type EducationForm } from "../
 import type { ApiEducation } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
 import { savedThen } from "../common/saved";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 const GPA_SCALE_OPTIONS = [
   { value: "OUT_OF_4", label: "Out of 4.0" },
@@ -38,6 +39,7 @@ interface EducationRecordFormProps {
 
 /** Inline form for adding or editing an education record, shown in place of its entry. */
 export function EducationRecordForm({ education, names, onDone }: EducationRecordFormProps) {
+  const { name: refName } = useReferenceName();
   const createMut = useCreateEducation();
   const updateMut = useUpdateEducation();
   const deleteMut = useDeleteEducation();
@@ -91,7 +93,7 @@ export function EducationRecordForm({ education, names, onDone }: EducationRecor
           label="Education level"
           value={form.educationLevelId}
           onChange={(e) => set({ educationLevelId: e.target.value })}
-          options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: l.nameEn }))]}
+          options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: refName(l) }))]}
         />
         <InlineSearch<ReferenceOption>
           id={FIELD_IDS.institution}

@@ -2,6 +2,7 @@
 
 import { Check } from "lucide-react";
 import { useEducationLevels } from "@/src/shared/lib/api/hooks/useReferenceData";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 interface DegreeChecklistProps {
   selectedIds: string[];
@@ -10,6 +11,7 @@ interface DegreeChecklistProps {
 
 /** Toggleable chips for the short list of education levels. Selection shows a check, not just color. */
 export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps) {
+  const { name: refName } = useReferenceName();
   const { data: levels = [], isLoading } = useEducationLevels();
 
   const toggle = (id: string) =>
@@ -39,7 +41,7 @@ export function DegreeChecklist({ selectedIds, onChange }: DegreeChecklistProps)
                 }`}
               >
                 {selected && <Check size={16} strokeWidth={1.75} aria-hidden="true" />}
-                {level.nameEn}
+                {refName(level)}
               </button>
             );
           })}

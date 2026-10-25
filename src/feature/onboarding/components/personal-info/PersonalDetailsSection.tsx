@@ -7,6 +7,7 @@ import type { Option, PersonalInfoData } from "../../types";
 import { FieldLabel } from "@/src/shared/ui/FieldLabel";
 import { INPUT_CLASS } from "../common/formStyles";
 import { StepSectionHeading } from "../common/StepSectionHeading";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 const GENDER_OPTIONS = [
   { value: "MALE", label: "Male" },
@@ -29,6 +30,7 @@ export function PersonalDetailsSection({
   maxDateOfBirth,
   dobInFuture,
 }: PersonalDetailsSectionProps) {
+  const { name: refName } = useReferenceName();
   const nationalities = useCountryOptions({ asNationality: true });
   const { data: maritalStatuses = [] } = useMaritalStatuses();
 
@@ -89,13 +91,13 @@ export function PersonalDetailsSection({
             value={data.maritalStatusId ?? ""}
             onChange={(e) => {
               const status = maritalStatuses.find((m) => m.id === e.target.value);
-              onChange({ ...data, maritalStatus: status?.nameEn ?? "", maritalStatusId: e.target.value });
+              onChange({ ...data, maritalStatus: status ? refName(status) : "", maritalStatusId: e.target.value });
             }}
             className={INPUT_CLASS}
           >
             <option value="">Select marital status</option>
             {maritalStatuses.map((status) => (
-              <option key={status.id} value={status.id}>{status.nameEn}</option>
+              <option key={status.id} value={status.id}>{refName(status)}</option>
             ))}
           </select>
         </div>

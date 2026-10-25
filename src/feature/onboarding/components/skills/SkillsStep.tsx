@@ -12,9 +12,11 @@ import type { Option, SkillsData } from "../../types";
 import { OnboardingFooter } from "../layout/OnboardingFooter";
 import { LanguagesSection } from "./LanguagesSection";
 import { SkillsSection } from "./SkillsSection";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 /** Step 3 (optional): holds skills and languages and saves them on Next. */
 export function SkillsStep() {
+  const { name: refName } = useReferenceName();
   const router = useRouter();
   const { draft, updateSkills } = useOnboardingDraft();
   const { isSaving, error, run } = useStepSave();
@@ -23,7 +25,7 @@ export function SkillsStep() {
 
   // Only real levels from the API — their IDs are what the backend validates.
   const { data: rawLevels = [] } = useProficiencyLevels();
-  const proficiencyLevels: Option[] = rawLevels.map((p) => ({ id: p.id, name: p.nameEn }));
+  const proficiencyLevels: Option[] = rawLevels.map((p) => ({ id: p.id, name: refName(p) }));
 
   const handleNext = () =>
     run(

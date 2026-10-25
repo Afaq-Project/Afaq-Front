@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useDebounce } from "@/src/shared/lib/hooks/useDebounce";
 import { useCountriesSearch, useInstitutionsSearch, useMajorsSearch } from "./useReferenceData";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 /** A reference item (country, major, institution…) as pickers display it. */
 export interface ReferenceOption {
@@ -23,24 +24,27 @@ function useSearchQuery() {
 /** Countries by name, or by nationality name ("Jordanian") when `asNationality` is set. */
 export function useCountryOptions({ asNationality = false } = {}) {
   const search = useSearchQuery();
+  const refName = useReferenceName();
   const { data = [], isFetching } = useCountriesSearch(search.debouncedQuery);
   const options: ReferenceOption[] = data.map((c) => ({
     id: c.id,
-    name: asNationality ? c.nationalityNameEn ?? c.nameEn : c.nameEn,
+    name: asNationality ? refName.nationality(c) : refName.name(c),
   }));
   return { ...search, options, isFetching: isFetching || search.isDebouncing };
 }
 
 export function useInstitutionOptions() {
   const search = useSearchQuery();
+  const { name: refName } = useReferenceName();
   const { data = [], isFetching } = useInstitutionsSearch(search.debouncedQuery);
-  const options: ReferenceOption[] = data.map((i) => ({ id: i.id, name: i.nameEn }));
+  const options: ReferenceOption[] = data.map((i) => ({ id: i.id, name: refName(i) }));
   return { ...search, options, isFetching: isFetching || search.isDebouncing };
 }
 
 export function useMajorOptions() {
   const search = useSearchQuery();
+  const { name: refName } = useReferenceName();
   const { data = [], isFetching } = useMajorsSearch(search.debouncedQuery);
-  const options: ReferenceOption[] = data.map((m) => ({ id: m.id, name: m.nameEn }));
+  const options: ReferenceOption[] = data.map((m) => ({ id: m.id, name: refName(m) }));
   return { ...search, options, isFetching };
 }

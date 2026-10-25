@@ -16,6 +16,7 @@ import { nonEmptyFields } from "../../services/payloads";
 import type { ApiProfile } from "../../types/api";
 import { FIELD_IDS } from "../common/fieldIds";
 import { savedThen } from "../common/saved";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 const GENDER_OPTIONS = [
   { value: "", label: "Select gender" },
@@ -32,6 +33,7 @@ interface BackgroundEditorProps {
 }
 
 export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorProps) {
+  const { name: refName } = useReferenceName();
   useAutoFocus(FIELD_IDS.nationality);
   const updateMut = useUpdatePersonal();
   const countries = useCountryOptions();
@@ -57,7 +59,7 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
   const setLabel = (patch: Partial<typeof labels>) => setLabels((prev) => ({ ...prev, ...patch }));
 
   const { data: rawCities = [], isLoading: loadingCities } = useAllCitiesForCountry(form.countryOfResidenceId);
-  const cities: ReferenceOption[] = rawCities.map((c) => ({ id: c.id, name: c.nameEn }));
+  const cities: ReferenceOption[] = rawCities.map((c) => ({ id: c.id, name: refName(c) }));
 
   // Changing the country invalidates the city.
   const setCountry = (country?: ReferenceOption) => {
@@ -144,7 +146,7 @@ export function BackgroundEditor({ profile, names, onDone }: BackgroundEditorPro
           label="Marital status"
           value={form.maritalStatusId}
           onChange={(e) => set({ maritalStatusId: e.target.value })}
-          options={[{ value: "", label: "Select status" }, ...maritalStatuses.map((m) => ({ value: m.id, label: m.nameEn }))]}
+          options={[{ value: "", label: "Select status" }, ...maritalStatuses.map((m) => ({ value: m.id, label: refName(m) }))]}
         />
         <div className="sm:col-span-2">
           <Textarea

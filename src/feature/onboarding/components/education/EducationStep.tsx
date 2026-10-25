@@ -14,9 +14,11 @@ import type { EducationData, Option, PreferencesData } from "../../types";
 import { OnboardingFooter } from "../layout/OnboardingFooter";
 import { CurrentEducationSection } from "./CurrentEducationSection";
 import { StudyGoalsSection } from "./StudyGoalsSection";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 /** Step 2: holds the education and goals forms and saves both on Next. */
 export function EducationStep() {
+  const { name: refName } = useReferenceName();
   const router = useRouter();
   const { draft, updateEducation, updatePreferences } = useOnboardingDraft();
   const { hasEducationLevel, hasTargetPreferences } = useOnboardingProgress();
@@ -27,7 +29,7 @@ export function EducationStep() {
 
   // Only real levels from the API are selectable — their IDs are what the backend validates.
   const { data: rawLevels = [], isLoading: loadingLevels } = useEducationLevels();
-  const educationLevels: Option[] = rawLevels.map((l) => ({ id: l.id, name: l.nameEn }));
+  const educationLevels: Option[] = rawLevels.map((l) => ({ id: l.id, name: refName(l) }));
 
   const { isHighSchool, gpaInvalid, periodInvalid, isComplete } = validateEducationStep(education, preferences);
 

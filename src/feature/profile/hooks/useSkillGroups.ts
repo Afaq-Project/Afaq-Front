@@ -3,6 +3,7 @@
 import { useAllMajors, useMajorCategories } from "@/src/shared/lib/api/hooks/useReferenceData";
 import { formatReferenceName } from "../services/format";
 import type { ReferenceNames } from "./useReferenceNames";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 export interface SkillGroup {
   category: string;
@@ -17,11 +18,12 @@ const OTHER = "Other";
  * the name lookups, so it adds no requests.
  */
 export function useSkillGroups(experiences: string[], names: ReferenceNames): SkillGroup[] {
+  const { name: refName } = useReferenceName();
   const { data: majors = [] } = useAllMajors(experiences.length > 0);
   const { data: categories = [] } = useMajorCategories();
 
   const categoryOf = new Map(majors.map((m) => [m.id, m.categoryId]));
-  const categoryName = new Map(categories.map((c) => [c.id, formatReferenceName(c.nameEn)]));
+  const categoryName = new Map(categories.map((c) => [c.id, formatReferenceName(refName(c))]));
 
   const groups = new Map<string, SkillGroup["skills"]>();
   experiences.forEach((value) => {

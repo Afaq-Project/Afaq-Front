@@ -8,6 +8,7 @@ import Button from "@/src/shared/ui/Button";
 import { InlineSearch } from "@/src/shared/ui/InlineSearch";
 import Select from "@/src/shared/ui/Select";
 import type { LanguageDraft } from "../../hooks/useSaveLanguages";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 interface AddLanguageFormProps {
   /** Languages already in the list — they can't be added twice. */
@@ -18,12 +19,13 @@ interface AddLanguageFormProps {
 
 /** Picks a language and level to add to the list being edited (saved with the card). */
 export function AddLanguageForm({ excludeIds, onAdd, onCancel }: AddLanguageFormProps) {
+  const { name: refName } = useReferenceName();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
   const { data: rawLanguages = [], isFetching } = useLanguagesSearch(debouncedQuery);
   const options: ReferenceOption[] = rawLanguages
     .filter((l) => !excludeIds.includes(l.id))
-    .map((l) => ({ id: l.id, name: l.nameEn }));
+    .map((l) => ({ id: l.id, name: refName(l) }));
   const { data: levels = [] } = useProficiencyLevels();
 
   const [language, setLanguage] = useState<ReferenceOption | null>(null);
@@ -48,7 +50,7 @@ export function AddLanguageForm({ excludeIds, onAdd, onCancel }: AddLanguageForm
           label="Proficiency"
           value={levelId}
           onChange={(e) => setLevelId(e.target.value)}
-          options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: l.nameEn }))]}
+          options={[{ value: "", label: "Select a level" }, ...levels.map((l) => ({ value: l.id, label: refName(l) }))]}
         />
       </div>
       <label className="flex min-h-11 cursor-pointer select-none items-center gap-2 md:min-h-0">

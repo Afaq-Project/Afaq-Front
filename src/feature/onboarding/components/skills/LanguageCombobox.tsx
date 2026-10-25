@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { useLanguagesSearch } from "@/src/shared/lib/api/hooks/useReferenceData";
 import { useDebounce } from "@/src/shared/lib/hooks/useDebounce";
+import { useReferenceName } from "@/src/shared/lib/api/hooks/useReferenceName";
 
 interface LanguageComboboxProps {
   value: string;
@@ -13,6 +14,7 @@ interface LanguageComboboxProps {
 
 /** Searchable language picker. */
 export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxProps) {
+  const { name: refName } = useReferenceName();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -61,13 +63,13 @@ export function LanguageCombobox({ value, valueId, onChange }: LanguageComboboxP
                 type="button"
                 onMouseDown={(e) => {
                   e.preventDefault();
-                  onChange(lang.nameEn, lang.id);
+                  onChange(refName(lang), lang.id);
                   setOpen(false);
                   setQuery("");
                 }}
                 className={`w-full text-start px-4 py-2.5 text-sm hover:bg-neutral-50 transition-colors cursor-pointer ${valueId === lang.id ? "text-primary font-semibold bg-primary/5" : "text-on-surface"}`}
               >
-                {lang.nameEn}
+                {refName(lang)}
               </button>
             ))
           )}
