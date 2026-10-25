@@ -101,7 +101,8 @@
   --breakpoint-2xl: 90rem;
 
   /* ---- Typography ---- */
-  --font-sans: var(--font-ibm-plex-sans);
+  /* Latin glyphs from Plex Sans, Arabic from its Arabic sibling, so mixed text matches. */
+  --font-sans: var(--font-ibm-plex-sans), var(--font-ibm-plex-sans-arabic);
 
   /* Hero — large marketing headline (auth visual panel). Scales 44px → 48px. */
   --text-hero: clamp(44px, 3.4vw, 48px);

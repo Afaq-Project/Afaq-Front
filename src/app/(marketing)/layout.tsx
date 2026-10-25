@@ -8,6 +8,12 @@ const inter = Inter({
   weight: ["400", "500", "600"],
 });
 
+// The landing page is English-only until its own translation pass, so it stays left-to-right
+// whatever language the app is set to.
 export default function MarketingLayout({ children }: { children: ReactNode }) {
-  return <div className={`${inter.variable} flex flex-col flex-1`}>{children}</div>;
+  return (
+    <div lang="en" dir="ltr" className={`${inter.variable} flex flex-col flex-1`}>
+      {children}
+    </div>
+  );
 }
