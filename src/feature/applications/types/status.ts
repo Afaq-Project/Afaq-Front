@@ -12,15 +12,6 @@ export const APPLICATION_STATUSES: ApplicationStatus[] = [
   "rejected",
 ];
 
-export const STATUS_LABEL: Record<ApplicationStatus, string> = {
-  not_started: "Not started",
-  in_progress: "In progress",
-  submitted: "Submitted",
-  in_review: "In review",
-  accepted: "Accepted",
-  rejected: "Rejected",
-};
-
 export const STATUS_PROGRESS: Record<ApplicationStatus, number> = {
   not_started: 0,
   in_progress: 40,

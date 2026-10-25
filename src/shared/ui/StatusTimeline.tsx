@@ -25,6 +25,7 @@ interface StatusTimelineProps {
  */
 export function StatusTimeline({ currentStep, stackOnMobile = false, renderStep }: StatusTimelineProps) {
   const t = useTranslations("statusTimeline.steps");
+  const tTimeline = useTranslations("statusTimeline");
   const contentClass = stackOnMobile
     ? "flex md:flex-col items-center gap-3 md:gap-1.5 md:text-center"
     : "flex flex-col items-center gap-1.5 text-center";
@@ -47,7 +48,7 @@ export function StatusTimeline({ currentStep, stackOnMobile = false, renderStep 
             </span>
             <span className={cn("text-caption leading-tight", current ? "font-medium text-neutral-900" : "text-neutral-600")}>
               {t(step)}
-              {done && <span className="sr-only"> (done)</span>}
+              {done && <span className="sr-only"> {tTimeline("done")}</span>}
             </span>
           </>
         );

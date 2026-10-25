@@ -193,7 +193,8 @@
       "submitted": "مُقدَّم",
       "inReview": "قيد المراجعة",
       "decision": "القرار"
-    }
+    },
+    "done": "(مكتملة)"
   },
   "validation": {
     "emailRequired": "البريد الإلكتروني مطلوب",
@@ -951,5 +952,140 @@
     "expires": "تنتهي في {date}",
     "expiresSoon": " · تنتهي قريبًا",
     "managePayment": "إدارة المدفوعات والفواتير"
+  },
+  "documentTypes": {
+    "cv": "السيرة الذاتية",
+    "transcript": "كشف الدرجات",
+    "degree": "شهادة التخرج",
+    "recommendation": "خطاب التوصية",
+    "essay": "البيان الشخصي / المقال",
+    "id": "جواز السفر / الهوية",
+    "language": "شهادة اللغة",
+    "other": "أخرى"
+  },
+  "applications": {
+    "title": "طلباتك",
+    "subtitle": "تابع كل فرصة من البداية حتى القرار.",
+    "findOpportunities": "ابحث عن فرص",
+    "tabs": {
+      "label": "التصفية حسب الحالة",
+      "all": "الكل",
+      "not_started": "لم يبدأ",
+      "in_progress": "قيد التنفيذ",
+      "submitted": "مُقدَّم",
+      "in_review": "قيد المراجعة",
+      "decision": "القرار"
+    },
+    "types": {
+      "all": "جميع الأنواع",
+      "scholarship": "المنح الدراسية",
+      "internship": "التدريب"
+    },
+    "search": "البحث في الطلبات",
+    "searchPlaceholder": "ابحث بالعنوان أو الجهة المقدّمة",
+    "type": "النوع",
+    "emptyTitle": "ابدأ بمتابعة طلبك الأول",
+    "emptyBody": "عندما تتابع فرصة، تظهر هنا مع تذكيرات قبل الموعد النهائي.",
+    "noMatch": "لا توجد طلبات مطابقة",
+    "clearFilters": "مسح عوامل التصفية",
+    "sorted": "مرتبة حسب الموعد النهائي",
+    "removed": "أُزيل من طلباتك",
+    "removeTitle": "إزالة من المتابعة؟",
+    "removeBody": "ستُزال {title} من طلباتك وستتوقف تذكيرات موعدها النهائي.",
+    "remove": "إزالة",
+    "showing": "عرض {from}–{to} من {total}",
+    "loading": "جارٍ تحميل الطلبات",
+    "columns": {
+      "opportunity": "الفرصة",
+      "deadline": "الموعد النهائي",
+      "progress": "التقدم",
+      "actions": "الإجراءات"
+    },
+    "timelineLabel": "{status}، الخطوة {step} من {steps}، {percent}%",
+    "deadlinePassed": "انتهى الموعد النهائي",
+    "submittedOn": "قُدّم في {date}",
+    "submitted": "مُقدَّم",
+    "decidedOn": "صدر القرار في {date}",
+    "decided": "صدر القرار",
+    "actions": {
+      "not_started": "ابدأ",
+      "in_progress": "تابِع",
+      "view": "عرض"
+    },
+    "moreActions": "مزيد من الإجراءات لـ {title}",
+    "updateStatus": "تحديث الحالة",
+    "openOfficial": "فتح الموقع الرسمي",
+    "removeFromTracker": "إزالة من المتابعة",
+    "detail": {
+      "back": "العودة إلى الطلبات",
+      "askAi": "اسأل عن هذا الطلب",
+      "questions": {
+        "remaining": "ما الذي ما زلت بحاجة إلى تقديمه؟",
+        "reviewStatement": "راجِع خطاب الغرض من الدراسة",
+        "plan": "ساعدني في التخطيط قبل الموعد النهائي",
+        "afterSubmit": "ماذا يحدث بعد الإرسال؟",
+        "followUp": "كيف أتابع طلبي؟",
+        "interview": "جهّزني لمقابلة",
+        "nextStep": "ما الخطوة التالية؟",
+        "thankYou": "ساعدني في كتابة رسالة شكر",
+        "similar": "ابحث عن فرص مشابهة"
+      },
+      "statusUpdated": "حُدّثت الحالة إلى {status}",
+      "documentLinked": "رُبط المستند",
+      "reminders": "تذكيرات قبل {days} أيام",
+      "recordDecision": "تسجيل القرار",
+      "moveBackTo": "الرجوع إلى {label}",
+      "currentStatus": "{label} (الحالة الحالية)",
+      "setStatusTo": "تعيين الحالة إلى {label}",
+      "whatDecision": "ما القرار؟",
+      "accepted": "مقبول",
+      "notSelected": "لم يتم الاختيار",
+      "moveBackQuestion": "الرجوع إلى {label}؟",
+      "moveBack": "رجوع",
+      "progress": "التقدم {percent}%",
+      "continueOfficial": "المتابعة على الموقع الرسمي",
+      "updated": "حُدّث {when}"
+    },
+    "activity": {
+      "title": "النشاط",
+      "empty": "لا شيء بعد.",
+      "started": "بدأت المتابعة",
+      "movedTo": "انتقل إلى {status}",
+      "accepted": "القرار: مقبول",
+      "rejected": "القرار: لم يتم الاختيار",
+      "linked": "رُبط {name}",
+      "reminder": "أُرسل تذكير بالموعد النهائي",
+      "showLess": "عرض أقل",
+      "showAll": "عرض الكل ({count})"
+    },
+    "notes": {
+      "title": "ملاحظاتك",
+      "saved": "حُفظت",
+      "placeholder": "أضف ملاحظات، مثل من طلبت منه خطاب توصية ومتى."
+    },
+    "documents": {
+      "title": "المستندات",
+      "link": "ربط",
+      "linkDocument": "ربط مستند",
+      "linkItem": "ربط {name}",
+      "progress": "رُبط {linked} من {total} من المستندات المطلوبة",
+      "notLinked": "لم يُربط بعد",
+      "others": "مستندات أخرى",
+      "none": "لم تُربط أي مستندات بعد.",
+      "reviewed": "روجع في {date}",
+      "openReview": "فتح المراجعة",
+      "download": "تنزيل {name} (غير متاح بعد)",
+      "downloadUnavailable": "التنزيل غير متاح بعد",
+      "file": "ملف",
+      "linkTitle": "ربط: {name}",
+      "linkTitleAny": "ربط مستند",
+      "loadingDocs": "جارٍ تحميل مستنداتك…",
+      "loadFailed": "تعذّر تحميل مستنداتك الآن.",
+      "noneUploaded": "لم ترفع أي مستندات بعد.",
+      "untitled": "مستند بلا عنوان",
+      "noType": "بلا نوع",
+      "linked": "مرتبط",
+      "uploadNew": "رفع جديد"
+    }
   }
 }

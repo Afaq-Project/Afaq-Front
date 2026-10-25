@@ -40,14 +40,14 @@ function documentsFor(application: ApplicationSummary): ApplicationDocument[] {
 /** A plausible history for the application's status, newest first, dated relative to today. */
 function activityFor(application: ApplicationSummary): ApplicationActivityItem[] {
   const items: ApplicationActivityItem[] = [
-    { id: "tracked", kind: "status", status: "not_started", label: "Started tracking", at: isoDateFromToday(-21) },
+    { id: "tracked", kind: "tracked", status: "not_started", at: isoDateFromToday(-21) },
   ];
   const { status } = application;
   if (status !== "not_started") {
     items.unshift(
-      { id: "progress", kind: "status", status: "in_progress", label: "Moved to In progress", at: isoDateFromToday(-14) },
-      { id: "doc-transcript", kind: "document", label: "Linked Academic_Transcript.pdf", at: isoDateFromToday(-12) },
-      { id: "reminder-14", kind: "reminder", label: "Deadline reminder sent", at: isoDateFromToday(-9) },
+      { id: "progress", kind: "status", status: "in_progress", at: isoDateFromToday(-14) },
+      { id: "doc-transcript", kind: "document", documentName: TRANSCRIPT.name, at: isoDateFromToday(-12) },
+      { id: "reminder-14", kind: "reminder", at: isoDateFromToday(-9) },
     );
     items.sort((a, b) => b.at.localeCompare(a.at));
   }
@@ -56,19 +56,17 @@ function activityFor(application: ApplicationSummary): ApplicationActivityItem[]
       id: "submitted",
       kind: "status",
       status: "submitted",
-      label: "Moved to Submitted",
       at: application.submittedAt ?? isoDateFromToday(-6),
     });
   }
   if (status === "in_review" || status === "accepted" || status === "rejected") {
-    items.unshift({ id: "review", kind: "status", status: "in_review", label: "Moved to In review", at: isoDateFromToday(-3) });
+    items.unshift({ id: "review", kind: "status", status: "in_review", at: isoDateFromToday(-3) });
   }
   if (status === "accepted" || status === "rejected") {
     items.unshift({
       id: "decision",
       kind: "status",
       status,
-      label: status === "accepted" ? "Decision: accepted" : "Decision: not selected",
       at: application.decidedAt ?? isoDateFromToday(-1),
     });
   }

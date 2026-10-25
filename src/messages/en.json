@@ -193,7 +193,8 @@
       "submitted": "Submitted",
       "inReview": "In review",
       "decision": "Decision"
-    }
+    },
+    "done": "(done)"
   },
   "validation": {
     "emailRequired": "Email is required",
@@ -951,5 +952,140 @@
     "expires": "Expires {date}",
     "expiresSoon": " · Expires soon",
     "managePayment": "Manage payment and invoices"
+  },
+  "documentTypes": {
+    "cv": "CV / resume",
+    "transcript": "Transcript",
+    "degree": "Degree certificate",
+    "recommendation": "Recommendation letter",
+    "essay": "Personal statement / essay",
+    "id": "Passport / ID",
+    "language": "Language certificate",
+    "other": "Other"
+  },
+  "applications": {
+    "title": "Your applications",
+    "subtitle": "Track every opportunity from start to decision.",
+    "findOpportunities": "Find opportunities",
+    "tabs": {
+      "label": "Filter by status",
+      "all": "All",
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "submitted": "Submitted",
+      "in_review": "In review",
+      "decision": "Decision"
+    },
+    "types": {
+      "all": "All types",
+      "scholarship": "Scholarships",
+      "internship": "Internships"
+    },
+    "search": "Search applications",
+    "searchPlaceholder": "Search by title or provider",
+    "type": "Type",
+    "emptyTitle": "Start tracking your first application",
+    "emptyBody": "When you track an opportunity, it shows up here with reminders before the deadline.",
+    "noMatch": "No applications match",
+    "clearFilters": "Clear filters",
+    "sorted": "Sorted by deadline",
+    "removed": "Removed from your applications",
+    "removeTitle": "Remove from tracker?",
+    "removeBody": "{title} will be removed from your applications and its deadline reminders stop.",
+    "remove": "Remove",
+    "showing": "Showing {from}–{to} of {total}",
+    "loading": "Loading applications",
+    "columns": {
+      "opportunity": "Opportunity",
+      "deadline": "Deadline",
+      "progress": "Progress",
+      "actions": "Actions"
+    },
+    "timelineLabel": "{status}, step {step} of {steps}, {percent}%",
+    "deadlinePassed": "Deadline passed",
+    "submittedOn": "Submitted {date}",
+    "submitted": "Submitted",
+    "decidedOn": "Decided {date}",
+    "decided": "Decided",
+    "actions": {
+      "not_started": "Start",
+      "in_progress": "Continue",
+      "view": "View"
+    },
+    "moreActions": "More actions for {title}",
+    "updateStatus": "Update status",
+    "openOfficial": "Open official site",
+    "removeFromTracker": "Remove from tracker",
+    "detail": {
+      "back": "Back to applications",
+      "askAi": "Ask about this application",
+      "questions": {
+        "remaining": "What do I still need to submit?",
+        "reviewStatement": "Review my statement of purpose",
+        "plan": "Help me plan before the deadline",
+        "afterSubmit": "What happens after submitting?",
+        "followUp": "How should I follow up?",
+        "interview": "Prepare me for an interview",
+        "nextStep": "What should I do next?",
+        "thankYou": "Help me write a thank-you note",
+        "similar": "Find similar opportunities"
+      },
+      "statusUpdated": "Status updated to {status}",
+      "documentLinked": "Document linked",
+      "reminders": "Reminders {days} days before",
+      "recordDecision": "Record the decision",
+      "moveBackTo": "Move back to {label}",
+      "currentStatus": "{label} (current status)",
+      "setStatusTo": "Set status to {label}",
+      "whatDecision": "What was the decision?",
+      "accepted": "Accepted",
+      "notSelected": "Not selected",
+      "moveBackQuestion": "Move back to {label}?",
+      "moveBack": "Move back",
+      "progress": "Progress {percent}%",
+      "continueOfficial": "Continue on official site",
+      "updated": "Updated {when}"
+    },
+    "activity": {
+      "title": "Activity",
+      "empty": "Nothing yet.",
+      "started": "Started tracking",
+      "movedTo": "Moved to {status}",
+      "accepted": "Decision: accepted",
+      "rejected": "Decision: not selected",
+      "linked": "Linked {name}",
+      "reminder": "Deadline reminder sent",
+      "showLess": "Show less",
+      "showAll": "Show all ({count})"
+    },
+    "notes": {
+      "title": "Your notes",
+      "saved": "Saved",
+      "placeholder": "Add notes, like who you asked for a recommendation and when."
+    },
+    "documents": {
+      "title": "Documents",
+      "link": "Link",
+      "linkDocument": "Link document",
+      "linkItem": "Link {name}",
+      "progress": "{linked} of {total} required documents linked",
+      "notLinked": "Not linked yet",
+      "others": "Other documents",
+      "none": "No documents linked yet.",
+      "reviewed": "Reviewed {date}",
+      "openReview": "Open review",
+      "download": "Download {name} (not available yet)",
+      "downloadUnavailable": "Downloads aren't available yet",
+      "file": "File",
+      "linkTitle": "Link: {name}",
+      "linkTitleAny": "Link a document",
+      "loadingDocs": "Loading your documents…",
+      "loadFailed": "We couldn't load your documents right now.",
+      "noneUploaded": "You haven't uploaded any documents yet.",
+      "untitled": "Untitled document",
+      "noType": "No type",
+      "linked": "Linked",
+      "uploadNew": "Upload new"
+    }
   }
 }

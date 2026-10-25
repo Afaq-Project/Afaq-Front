@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Pagination } from "@/src/shared/ui/Pagination";
 import { Skeleton } from "@/src/shared/ui/Skeleton";
 import type { ApplicationSummary } from "../types/application";
@@ -35,10 +36,11 @@ export function ApplicationsList({
   onStatusChange,
   onRemove,
 }: ApplicationsListProps) {
+  const t = useTranslations("applications");
   const footer = (
     <div className="flex justify-between items-center gap-3 px-5 py-3 border-neutral-100 border-t">
       <p className="text-neutral-600 text-small">
-        Showing {offset + 1}–{offset + applications.length} of {total}
+        {t("showing", { from: offset + 1, to: offset + applications.length, total })}
       </p>
       <Pagination page={page} pageCount={pageCount} onPageChange={onPageChange} />
     </div>
@@ -52,16 +54,16 @@ export function ApplicationsList({
           <thead>
             <tr className="border-neutral-100 border-b">
               <th scope="col" className={TH_CLASS}>
-                Opportunity
+                {t("columns.opportunity")}
               </th>
               <th scope="col" className={TH_CLASS}>
-                Deadline
+                {t("columns.deadline")}
               </th>
               <th scope="col" className={TH_CLASS}>
-                Progress
+                {t("columns.progress")}
               </th>
               <th scope="col" className={`${TH_CLASS} text-end`}>
-                Actions
+                {t("columns.actions")}
               </th>
             </tr>
           </thead>
@@ -110,9 +112,10 @@ export function ApplicationsList({
 
 /** Loading placeholder shaped like the table rows. */
 export function ApplicationsSkeleton() {
+  const t = useTranslations("applications");
   return (
     <div role="status" className="bg-white border border-neutral-100 rounded-lg overflow-hidden">
-      <span className="sr-only">Loading applications</span>
+      <span className="sr-only">{t("loading")}</span>
       <div className="px-5 py-3 border-neutral-100 border-b">
         <Skeleton className="w-24 h-3" />
       </div>
