@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useId } from "react";
+import { useTranslations } from "next-intl";
 
 export interface InlineSearchProps<T extends { id: string; name: string }> {
   label: string;
@@ -36,6 +37,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
   required,
   id,
 }: InlineSearchProps<T>) {
+  const t = useTranslations("common");
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const [inputValue, setInputValue] = useState(selectedName ?? "");
@@ -99,7 +101,7 @@ export function InlineSearch<T extends { id: string; name: string }>({
           onFocus={() => {
             if (inputValue.length >= minSearchLength) setOpen(true);
           }}
-          placeholder={placeholder ?? `Search ${label.toLowerCase()}…`}
+          placeholder={placeholder ?? t("searchItems", { items: label.toLowerCase() })}
           disabled={disabled}
           className={`w-full ps-10 pe-10 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant ${
             disabled ? "opacity-50 cursor-not-allowed bg-neutral-50" : ""

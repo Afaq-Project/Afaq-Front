@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { InfoTooltip } from "./InfoTooltip";
+import { useTranslations } from "next-intl";
 
 interface FieldProps {
   label: string;
@@ -18,6 +19,7 @@ function isEmpty(value: ReactNode) {
 
 /** A read-only label/value pair: Caption neutral-600 label, Body neutral-900 value. */
 export function Field({ label, value, info, icon: Icon }: FieldProps) {
+  const t = useTranslations("common");
   return (
     <div className="min-w-0">
       <dt className="flex items-center gap-1 text-caption text-neutral-600">
@@ -26,7 +28,7 @@ export function Field({ label, value, info, icon: Icon }: FieldProps) {
       </dt>
       <dd className="mt-1 break-words text-body text-neutral-900">
         {isEmpty(value) ? (
-          <span className="text-neutral-400">Not added yet</span>
+          <span className="text-neutral-400">{t("notAddedYet")}</span>
         ) : Icon ? (
           <span className="inline-flex items-center gap-1.5">
             <Icon size={16} strokeWidth={1.75} className="shrink-0 text-neutral-600" aria-hidden="true" />

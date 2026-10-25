@@ -17,6 +17,7 @@ import { formatDeadline } from "../../services/utils";
 import type { ApplicationDetail } from "../../types/detail";
 import { STATUS_PROGRESS, STATUS_STAGE_INDEX, type ApplicationStatus } from "../../types/status";
 import { StatusChip } from "../StatusChip";
+import { useTranslations } from "next-intl";
 
 /** The status each of the first four steps sets; the last ("Decision") asks for the outcome. */
 const STEP_STATUS: ApplicationStatus[] = ["not_started", "in_progress", "submitted", "in_review"];
@@ -89,6 +90,7 @@ interface ApplicationHeaderProps {
  * progress %; and the actions.
  */
 export function ApplicationHeader({ application, opportunity, status, onStatusChange, updatedAt, now }: ApplicationHeaderProps) {
+  const tSteps = useTranslations("statusTimeline.steps");
   const [openStep, setOpenStep] = useState<number | null>(null);
   const currentStep = STATUS_STAGE_INDEX[status];
   const remote = Boolean(opportunity?.isRemote) || !opportunity?.countryCode;
@@ -141,7 +143,7 @@ export function ApplicationHeader({ application, opportunity, status, onStatusCh
             currentStep={currentStep}
             stackOnMobile
             renderStep={(index, content, className) => {
-              const label = STATUS_STEPS[index];
+              const label = tSteps(STATUS_STEPS[index]);
               const backwards = index < currentStep;
               return (
                 <Popover

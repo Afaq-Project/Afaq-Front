@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { BottomTabBar } from "./bottom-tab-bar";
 import type { ShellVariant } from "./shell-config";
 import { TopBar } from "./top-bar";
@@ -9,13 +10,15 @@ import { TopBar } from "./top-bar";
  * bar never covers it.
  */
 export function AppShell({ variant, children }: { variant: ShellVariant; children: ReactNode }) {
+  const t = useTranslations("shell");
+
   return (
     <div className="flex flex-col flex-1 min-h-screen">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:top-2 focus:start-2 focus:z-50 focus:fixed bg-white shadow-sm px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 font-medium text-primary-800 text-small"
       >
-        Skip to content
+        {t("skipToContent")}
       </a>
 
       <TopBar variant={variant} />

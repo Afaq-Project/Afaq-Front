@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { formatDeadlineDay } from "@/src/shared/lib/deadline";
+import { useLocale, useTranslations } from "next-intl";
 
 export interface UsageRow {
   label: string;
@@ -37,16 +38,18 @@ export function AiUsageCard({
   headingLevel?: "h2" | "h3";
   className?: string;
 }) {
+  const t = useTranslations("aiUsage");
+  const locale = useLocale();
   const Heading = headingLevel;
 
   if (premium) {
-    return <p className={cn("text-caption text-neutral-600", className)}>Unlimited AI guidance with Premium</p>;
+    return <p className={cn("text-caption text-neutral-600", className)}>{t("premium")}</p>;
   }
 
   return (
     <section aria-labelledby="ai-usage-heading" className={cn("flex flex-col gap-3", className)}>
       <Heading id="ai-usage-heading" className="font-medium text-neutral-900 text-small">
-        Your AI usage this month
+        {t("title")}
       </Heading>
       {rows.map((row) => {
         const atLimit = row.used >= row.limit;
@@ -56,7 +59,7 @@ export function AiUsageCard({
             <div className="flex justify-between items-baseline gap-2 text-small">
               <span className="text-neutral-800">{row.label}</span>
               <span className={atLimit ? "font-medium text-danger-800" : "text-neutral-600"}>
-                {atLimit ? "Limit reached" : `${row.used} of ${row.limit} used`}
+                {atLimit ? t("limitReached") : t("used", { used: row.used, limit: row.limit })}
               </span>
             </div>
             <div aria-hidden="true" className="bg-neutral-100 rounded-full h-1.5 overflow-hidden">
@@ -66,13 +69,13 @@ export function AiUsageCard({
         );
       })}
       <div className="flex justify-between items-center gap-2">
-        {resetsOn && <p className="text-caption text-neutral-600">Resets {formatDeadlineDay(resetsOn)}</p>}
+        {resetsOn && <p className="text-caption text-neutral-600">{t("resets", { date: formatDeadlineDay(resetsOn, locale) })}</p>}
         {showUpgrade && (
           <Link
             href="/billing"
             className="rounded-sm min-h-11 md:min-h-0 inline-flex items-center font-medium text-neutral-600 text-small hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
           >
-            Upgrade to Premium
+            {t("upgrade")}
           </Link>
         )}
       </div>

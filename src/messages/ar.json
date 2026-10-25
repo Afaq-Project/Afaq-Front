@@ -5,5 +5,81 @@
       "label": "لغة العرض",
       "help": "اللغة التي يستخدمها آفاق في القوائم والرسائل."
     }
+  },
+  "shell": {
+    "brand": "آفاق",
+    "admin": "المشرف",
+    "skipToContent": "انتقل إلى المحتوى",
+    "mainNav": "التنقل الرئيسي",
+    "documents": "مستنداتك",
+    "search": "ابحث في الفرص",
+    "pendingCount": "، {count} بانتظار المراجعة",
+    "nav": {
+      "home": "الرئيسية",
+      "discover": "استكشف",
+      "applications": "الطلبات",
+      "ai": "المساعد الذكي",
+      "dashboard": "لوحة التحكم",
+      "approvals": "الموافقات",
+      "opportunities": "الفرص",
+      "users": "المستخدمون",
+      "subscriptions": "الاشتراكات"
+    },
+    "menu": {
+      "profile": "ملفك الشخصي",
+      "billing": "الخطة والفوترة",
+      "settings": "الإعدادات",
+      "account": "الحساب",
+      "accountMenu": "قائمة الحساب",
+      "accountMenuFor": "قائمة الحساب، {name}",
+      "yourAccount": "حسابك",
+      "logout": "تسجيل الخروج"
+    }
+  },
+  "common": {
+    "cancel": "إلغاء",
+    "saveChanges": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ…",
+    "edit": "تعديل",
+    "editItem": "تعديل {item}",
+    "remove": "إزالة {item}",
+    "close": "إغلاق",
+    "moreInfo": "مزيد من المعلومات",
+    "tryAgain": "حاول مرة أخرى",
+    "checkConnection": "تحقّق من اتصالك وحاول مرة أخرى.",
+    "notAddedYet": "لم تُضف بعد",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "pageOf": "الصفحة {page} من {count}",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "searchItems": "ابحث في {items}…",
+    "searching": "جارٍ البحث…",
+    "noResults": "لا توجد نتائج",
+    "maxSelected": "الحد الأقصى {count} اختيارات",
+    "clearSearch": "مسح البحث",
+    "countOfMax": "{count} من {max}",
+    "searchFields": "اكتب للبحث في التخصصات…",
+    "noFieldsFound": "لا توجد تخصصات تطابق «{query}»",
+    "searchSkills": "ابحث في المهارات…",
+    "noSkillsFound": "لا توجد مهارات تطابق «{query}»",
+    "noSkillsYet": "لم تختر أي مهارة بعد. اختر من الفئات أدناه."
+  },
+  "aiUsage": {
+    "title": "استخدامك للذكاء الاصطناعي هذا الشهر",
+    "premium": "إرشاد غير محدود بالذكاء الاصطناعي مع الباقة المميزة",
+    "limitReached": "بلغت الحد",
+    "used": "استخدمت {used} من {limit}",
+    "resets": "يتجدد في {date}",
+    "upgrade": "الترقية إلى الباقة المميزة"
+  },
+  "statusTimeline": {
+    "steps": {
+      "notStarted": "لم يبدأ",
+      "inProgress": "قيد التنفيذ",
+      "submitted": "مُقدَّم",
+      "inReview": "قيد المراجعة",
+      "decision": "القرار"
+    }
   }
 }

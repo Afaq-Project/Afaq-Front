@@ -5,5 +5,81 @@
       "label": "Display language",
       "help": "The language Afaq uses for menus and messages."
     }
+  },
+  "shell": {
+    "brand": "Afaq",
+    "admin": "Admin",
+    "skipToContent": "Skip to content",
+    "mainNav": "Main",
+    "documents": "Your documents",
+    "search": "Search opportunities",
+    "pendingCount": ", {count} pending",
+    "nav": {
+      "home": "Home",
+      "discover": "Discover",
+      "applications": "Applications",
+      "ai": "AI assistant",
+      "dashboard": "Dashboard",
+      "approvals": "Approvals",
+      "opportunities": "Opportunities",
+      "users": "Users",
+      "subscriptions": "Subscriptions"
+    },
+    "menu": {
+      "profile": "Your profile",
+      "billing": "Plan & billing",
+      "settings": "Settings",
+      "account": "Account",
+      "accountMenu": "Account menu",
+      "accountMenuFor": "Account menu, {name}",
+      "yourAccount": "Your account",
+      "logout": "Log out"
+    }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "saveChanges": "Save changes",
+    "saving": "Saving…",
+    "edit": "Edit",
+    "editItem": "Edit {item}",
+    "remove": "Remove {item}",
+    "close": "Close",
+    "moreInfo": "More info",
+    "tryAgain": "Try again",
+    "checkConnection": "Check your connection and try again.",
+    "notAddedYet": "Not added yet",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "pageOf": "Page {page} of {count}",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "searchItems": "Search {items}…",
+    "searching": "Searching…",
+    "noResults": "No results found",
+    "maxSelected": "Max {count} selected",
+    "clearSearch": "Clear search",
+    "countOfMax": "{count} of {max}",
+    "searchFields": "Type to search fields of study…",
+    "noFieldsFound": "No fields found for “{query}”",
+    "searchSkills": "Search skills…",
+    "noSkillsFound": "No skills found for “{query}”",
+    "noSkillsYet": "No skills selected yet. Choose from the categories below."
+  },
+  "aiUsage": {
+    "title": "Your AI usage this month",
+    "premium": "Unlimited AI guidance with Premium",
+    "limitReached": "Limit reached",
+    "used": "{used} of {limit} used",
+    "resets": "Resets {date}",
+    "upgrade": "Upgrade to Premium"
+  },
+  "statusTimeline": {
+    "steps": {
+      "notStarted": "Not started",
+      "inProgress": "In progress",
+      "submitted": "Submitted",
+      "inReview": "In review",
+      "decision": "Decision"
+    }
   }
 }

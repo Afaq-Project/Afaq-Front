@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export interface TagSearchProps<T extends { id: string; name: string }> {
   label: string;
@@ -32,6 +33,7 @@ export function TagSearch<T extends { id: string; name: string }>({
   maxItems = 5,
   minSearchLength = 1,
 }: TagSearchProps<T>) {
+  const t = useTranslations("common");
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -110,8 +112,8 @@ export function TagSearch<T extends { id: string; name: string }>({
           }}
           placeholder={
             isAtMax
-              ? `Max ${maxItems} selected`
-              : (placeholder ?? `Search ${label.toLowerCase()}…`)
+              ? t("maxSelected", { count: maxItems })
+              : (placeholder ?? t("searchItems", { items: label.toLowerCase() }))
           }
           disabled={isAtMax}
           className={`w-full ps-10 pe-10 py-3 border border-outline-variant rounded-lg bg-white text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant ${
@@ -137,11 +139,11 @@ export function TagSearch<T extends { id: string; name: string }>({
           <div className="top-full start-0 z-50 absolute bg-white shadow-xl mt-1.5 border border-neutral-200 rounded-lg w-full max-h-64 overflow-y-auto">
             {isFetching ? (
               <div className="p-3 text-on-surface-variant text-xs text-center">
-                Searching…
+                {t("searching")}
               </div>
             ) : items.length === 0 ? (
               <div className="p-3 text-on-surface-variant text-xs text-center">
-                No results found
+                {t("noResults")}
               </div>
             ) : (
               items.map((item) => {

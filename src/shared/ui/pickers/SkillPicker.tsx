@@ -6,6 +6,7 @@ import { useSkillCategories } from "@/src/shared/lib/api/hooks/useSkillCategorie
 import type { ReferenceOption as Option } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { SkillCategoryPanel } from "./SkillCategoryPanel";
 import { SkillChip } from "./SkillChip";
+import { useTranslations } from "next-intl";
 
 /** Most skills a profile can hold. */
 export const MAX_SKILLS = 20;
@@ -18,6 +19,7 @@ interface SkillPickerProps {
 
 /** Pick skills (majors) by searching or browsing categories; picks show as removable tags. */
 export function SkillPicker({ selected, onChange, max }: SkillPickerProps) {
+  const t = useTranslations("common");
   const search = useMajorOptions();
   const { categories, isLoading: categoriesLoading } = useSkillCategories();
 
@@ -39,7 +41,7 @@ export function SkillPicker({ selected, onChange, max }: SkillPickerProps) {
         <CollapsibleTagList
           items={selected.map((skill) => ({ key: skill.id, label: skill.name, onRemove: () => toggle(skill) }))}
           defaultVisible={3}
-          emptyMessage="No skills selected yet. Choose from the categories below."
+          emptyMessage={t("noSkillsYet")}
         />
       </div>
 
@@ -53,7 +55,7 @@ export function SkillPicker({ selected, onChange, max }: SkillPickerProps) {
           type="text"
           value={search.query}
           onChange={(e) => search.setQuery(e.target.value)}
-          placeholder="Search skills…"
+          placeholder={t("searchSkills")}
           className="w-full ps-11 pe-10 py-2.5 bg-surface-container-low rounded-md text-sm border border-outline-variant focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 placeholder:text-on-surface-variant transition-colors"
         />
         {search.isFetching && (
@@ -63,7 +65,7 @@ export function SkillPicker({ selected, onChange, max }: SkillPickerProps) {
           <button
             type="button"
             onClick={() => search.setQuery("")}
-            aria-label="Clear search"
+            aria-label={t("clearSearch")}
             className="absolute end-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
           >
             <span className="material-symbols-outlined text-[18px]">close</span>
@@ -79,7 +81,7 @@ export function SkillPicker({ selected, onChange, max }: SkillPickerProps) {
             </div>
           ) : search.options.length === 0 ? (
             <p className="text-sm text-on-surface-variant text-center w-full py-4">
-              No skills found for &ldquo;{search.debouncedQuery}&rdquo;
+              {t("noSkillsFound", { query: search.debouncedQuery })}
             </p>
           ) : (
             search.options.map((skill) => {

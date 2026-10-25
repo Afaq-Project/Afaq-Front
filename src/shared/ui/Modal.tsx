@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+import { useTranslations } from "next-intl";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -20,6 +21,7 @@ interface ModalProps {
  * the first control in the body on open and gives focus back to whatever had it on close.
  */
 export default function Modal({ open, onClose, title, children, className = "" }: ModalProps) {
+  const t = useTranslations("common");
   const dialogRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   // An autoFocus field takes focus before the effect below runs; its focus event still says
@@ -96,7 +98,7 @@ export default function Modal({ open, onClose, title, children, className = "" }
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("close")}
             className="flex justify-center items-center hover:bg-neutral-100 rounded-md w-8 h-8 text-neutral-500 transition-colors"
           >
             <X size={18} strokeWidth={1.75} />

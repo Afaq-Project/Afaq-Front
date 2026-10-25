@@ -1,4 +1,5 @@
 import { CalendarDays, Clock, type LucideIcon } from "lucide-react";
+import { intlLocale } from "@/src/i18n/format";
 
 export type DeadlineUrgency = "urgent" | "soon" | "later";
 
@@ -38,10 +39,10 @@ export function daysUntil(isoDate: string, now: Date) {
   return Math.round((deadline.getTime() - today.getTime()) / 86_400_000);
 }
 
-/** "Tue, Oct 20, 2026" for an ISO date (YYYY-MM-DD), read as a local calendar day. */
-export function formatDeadlineDay(isoDate: string) {
+/** "Tue, Oct 20, 2026" for an ISO date (YYYY-MM-DD), read as a local calendar day, in `locale`. */
+export function formatDeadlineDay(isoDate: string, locale = "en") {
   const [year, month, day] = isoDate.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+  return new Date(year, month - 1, day).toLocaleDateString(intlLocale(locale), {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -57,20 +58,20 @@ export function isoDateFromToday(days: number) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
-/** "today", "yesterday", "3 days ago", "2 weeks ago" for an ISO date (YYYY-MM-DD), relative to `now`. */
-export function relativeDay(isoDate: string, now: Date) {
+/** "today", "yesterday", "3 days ago", "2 weeks ago" for an ISO date (YYYY-MM-DD), relative to `now`, in `locale`. */
+export function relativeDay(isoDate: string, now: Date, locale = "en") {
   const days = daysUntil(isoDate, now);
-  const format = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  const format = new Intl.RelativeTimeFormat(intlLocale(locale), { numeric: "auto" });
   if (Math.abs(days) < 7) return format.format(days, "day");
   if (Math.abs(days) < 30) return format.format(Math.round(days / 7), "week");
   if (Math.abs(days) < 365) return format.format(Math.round(days / 30), "month");
   return format.format(Math.round(days / 365), "year");
 }
 
-/** "Thu, Oct 15" for an ISO date (YYYY-MM-DD), read as a local calendar day. */
-export function formatShortDay(isoDate: string) {
+/** "Thu, Oct 15" for an ISO date (YYYY-MM-DD), read as a local calendar day, in `locale`. */
+export function formatShortDay(isoDate: string, locale = "en") {
   const [year, month, day] = isoDate.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  return new Date(year, month - 1, day).toLocaleDateString(intlLocale(locale), { weekday: "short", month: "short", day: "numeric" });
 }
 
 /** ISO date (YYYY-MM-DD) of the 1st of next month in local time: when monthly quotas reset. Never in the past. */

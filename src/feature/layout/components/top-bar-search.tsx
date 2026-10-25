@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ICON_BUTTON_CLASS } from "./shell-config";
 
 const FIELD_CLASS =
@@ -14,6 +15,7 @@ const INPUT_CLASS =
  * under the bar. Not wired to anything yet, so the shell hides it behind SHOW_GLOBAL_SEARCH.
  */
 export function TopBarSearch() {
+  const t = useTranslations("shell");
   const [open, setOpen] = useState(false);
   const rowId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -27,15 +29,15 @@ export function TopBarSearch() {
     <>
       <label className={`hidden lg:flex w-64 ${FIELD_CLASS}`}>
         <Search size={16} strokeWidth={1.75} aria-hidden="true" />
-        <span className="sr-only">Search opportunities</span>
-        <input type="search" placeholder="Search opportunities" className={INPUT_CLASS} />
+        <span className="sr-only">{t("search")}</span>
+        <input type="search" placeholder={t("search")} className={INPUT_CLASS} />
       </label>
 
       <button
         ref={buttonRef}
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        aria-label="Search opportunities"
+        aria-label={t("search")}
         aria-expanded={open}
         aria-controls={rowId}
         className={`lg:hidden ${ICON_BUTTON_CLASS}`}
@@ -51,11 +53,11 @@ export function TopBarSearch() {
         >
           <label className={FIELD_CLASS}>
             <Search size={16} strokeWidth={1.75} aria-hidden="true" />
-            <span className="sr-only">Search opportunities</span>
+            <span className="sr-only">{t("search")}</span>
             <input
               ref={inputRef}
               type="search"
-              placeholder="Search opportunities"
+              placeholder={t("search")}
               onKeyDown={(event) => {
                 if (event.key === "Escape") {
                   setOpen(false);

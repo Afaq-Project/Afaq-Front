@@ -1,6 +1,7 @@
 import { CircleAlert } from "lucide-react";
 import { buttonClasses } from "./Button";
 import { STATE_CARD_CLASS } from "./EmptyState";
+import { useTranslations } from "next-intl";
 
 interface ErrorStateProps {
   /** What failed, plainly: "We couldn't load your documents". */
@@ -17,21 +18,23 @@ interface ErrorStateProps {
 /** A centered card for content that failed to load, with "Try again". */
 export function ErrorState({
   title,
-  message = "Check your connection and try again.",
+  message,
   onRetry,
-  retryLabel = "Try again",
+  retryLabel,
   titleAs: Title = "h2",
 }: ErrorStateProps) {
+  const t = useTranslations("common");
+
   return (
     <div role="alert" className={STATE_CARD_CLASS}>
       <span aria-hidden="true" className="flex justify-center items-center bg-danger-50 mb-2 rounded-md size-12 text-danger-800">
         <CircleAlert size={22} strokeWidth={1.75} />
       </span>
       <Title className="text-h2 text-neutral-900">{title}</Title>
-      <p className="max-w-md text-body text-neutral-600">{message}</p>
+      <p className="max-w-md text-body text-neutral-600">{message ?? t("checkConnection")}</p>
       {onRetry && (
         <button type="button" onClick={onRetry} className={buttonClasses("secondary", "mt-3")}>
-          {retryLabel}
+          {retryLabel ?? t("tryAgain")}
         </button>
       )}
     </div>

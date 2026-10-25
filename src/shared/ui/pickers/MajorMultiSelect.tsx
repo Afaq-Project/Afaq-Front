@@ -5,6 +5,7 @@ import { useClickOutside } from "@/src/shared/hooks/useClickOutside";
 import { useMajorOptions } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import type { ReferenceOption as Option } from "@/src/shared/lib/api/hooks/useReferenceOptions";
 import { FieldLabel } from "../FieldLabel";
+import { useTranslations } from "next-intl";
 
 interface MajorMultiSelectProps {
   label: string;
@@ -17,6 +18,7 @@ interface MajorMultiSelectProps {
 
 /** Search majors and pick up to `max`; picks show as chips, collapsed to the first one. */
 export function MajorMultiSelect({ label, required, optional, max, selected, onChange }: MajorMultiSelectProps) {
+  const t = useTranslations("common");
   const majors = useMajorOptions();
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -46,7 +48,7 @@ export function MajorMultiSelect({ label, required, optional, max, selected, onC
       <div className="flex justify-between items-end">
         <FieldLabel required={required} optional={optional}>{label}</FieldLabel>
         <span className={`text-sm font-medium ${isAtMax ? "text-warning font-semibold" : "text-on-surface-variant"}`}>
-          {selected.length} of {max}
+          {t("countOfMax", { count: selected.length, max })}
         </span>
       </div>
 
@@ -62,7 +64,7 @@ export function MajorMultiSelect({ label, required, optional, max, selected, onC
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          placeholder="Type to search fields of study…"
+          placeholder={t("searchFields")}
           className="bg-white py-3 pe-10 ps-11 border focus:border-primary rounded-lg border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/30 w-full text-on-surface placeholder:text-on-surface-variant text-sm transition-all"
         />
         {majors.isFetching && (
@@ -72,7 +74,7 @@ export function MajorMultiSelect({ label, required, optional, max, selected, onC
           <button
             type="button"
             onClick={clearSearch}
-            aria-label="Clear search"
+            aria-label={t("clearSearch")}
             className="top-1/2 end-3.5 absolute text-on-surface-variant hover:text-on-surface -translate-y-1/2"
           >
             <span className="text-[18px] material-symbols-outlined">close</span>
@@ -83,7 +85,7 @@ export function MajorMultiSelect({ label, required, optional, max, selected, onC
           <div className="top-full start-0 z-50 absolute bg-white shadow-xl mt-1.5 border border-neutral-200 rounded-lg w-full max-h-64 overflow-y-auto">
             {majors.options.length === 0 && !majors.isFetching ? (
               <div className="p-4 text-on-surface-variant text-sm text-center">
-                No fields found for &ldquo;{majors.debouncedQuery}&rdquo;
+                {t("noFieldsFound", { query: majors.debouncedQuery })}
               </div>
             ) : (
               majors.options.map((major) => {
@@ -123,7 +125,7 @@ export function MajorMultiSelect({ label, required, optional, max, selected, onC
               <button
                 type="button"
                 onClick={() => toggle(option)}
-                aria-label={`Remove ${option.name}`}
+                aria-label={t("remove", { item: option.name })}
                 className="flex items-center hover:opacity-70"
               >
                 <span className="text-[15px] material-symbols-outlined">close</span>

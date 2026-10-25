@@ -5,6 +5,7 @@ import {
   type ReactNode,
 } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PasswordInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
@@ -28,6 +29,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
     },
     ref,
   ) {
+    const t = useTranslations("common");
     const [visible, setVisible] = useState(false);
     const errorId = error && id ? `${id}-error` : undefined;
 
@@ -61,7 +63,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           <button
             type="button"
             onClick={() => setVisible((prev) => !prev)}
-            aria-label={visible ? "Hide password" : "Show password"}
+            aria-label={visible ? t("hidePassword") : t("showPassword")}
             aria-controls={id}
             className="top-0 end-0 absolute flex justify-center items-center rounded-sm w-11 md:w-10 h-full text-neutral-400 hover:text-neutral-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
           >

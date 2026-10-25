@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export interface PaginationProps {
   page: number;
@@ -13,6 +14,8 @@ export function Pagination({
   onPageChange,
   className = "",
 }: PaginationProps) {
+  const t = useTranslations("common");
+
   if (pageCount <= 1) return null;
 
   return (
@@ -21,7 +24,7 @@ export function Pagination({
     >
       <button
         type="button"
-        aria-label="Previous page"
+        aria-label={t("previousPage")}
         disabled={page === 1}
         onClick={() => onPageChange(page - 1)}
         className="flex justify-center items-center hover:bg-neutral-50 disabled:opacity-40 disabled:pointer-events-none rounded-md w-9 h-9 text-neutral-600 transition-colors"
@@ -30,12 +33,12 @@ export function Pagination({
       </button>
 
       <span className="text-neutral-600 text-small">
-        Page {page} of {pageCount}
+        {t("pageOf", { page, count: pageCount })}
       </span>
 
       <button
         type="button"
-        aria-label="Next page"
+        aria-label={t("nextPage")}
         disabled={page === pageCount}
         onClick={() => onPageChange(page + 1)}
         className="flex justify-center items-center hover:bg-neutral-50 disabled:opacity-40 disabled:pointer-events-none rounded-md w-9 h-9 text-neutral-600 transition-colors"

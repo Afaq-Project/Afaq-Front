@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { ChevronDown, Loader2, LogOut, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { useCurrentUserName } from "@/src/feature/profile/hooks/useCurrentUserName";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
@@ -14,6 +15,7 @@ const ITEM_CLASS =
 
 /** Avatar button with the account menu (menu-button pattern: arrow keys, Home/End, Escape). */
 export function UserMenu({ variant }: { variant: ShellVariant }) {
+  const t = useTranslations("shell");
   const { logout } = useAuth();
   const { name, initials, email } = useCurrentUserName();
   const [open, setOpen] = useState(false);
@@ -102,7 +104,7 @@ export function UserMenu({ variant }: { variant: ShellVariant }) {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        aria-label={name ? `Account menu, ${name}` : "Account menu"}
+        aria-label={name ? t("menu.accountMenuFor", { name }) : t("menu.accountMenu")}
         className="after:absolute relative flex items-center gap-1 hover:bg-neutral-50 py-1 pe-1.5 ps-1 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 h-10 transition-colors after:-inset-0.5 after:content-['']"
       >
         <span
@@ -122,7 +124,7 @@ export function UserMenu({ variant }: { variant: ShellVariant }) {
       {open && (
         <div className="top-full end-0 z-50 absolute bg-white shadow-sm mt-2 border border-neutral-100 rounded-lg w-60 overflow-hidden">
           <div className="px-4 py-3 border-neutral-100 border-b">
-            <p className="font-medium text-neutral-900 text-small truncate">{name || "Your account"}</p>
+            <p className="font-medium text-neutral-900 text-small truncate">{name || t("menu.yourAccount")}</p>
             {email && <p className="text-caption text-neutral-600 truncate">{email}</p>}
           </div>
 
@@ -130,11 +132,11 @@ export function UserMenu({ variant }: { variant: ShellVariant }) {
             ref={menuRef}
             id={menuId}
             role="menu"
-            aria-label="Account"
+            aria-label={t("menu.account")}
             onKeyDown={handleMenuKeyDown}
             className="py-1"
           >
-            {MENU_ITEMS[variant].map(({ href, label, icon: Icon, mobileOnly }) => (
+            {MENU_ITEMS[variant].map(({ href, labelKey, icon: Icon, mobileOnly }) => (
               <Link
                 key={href}
                 href={href}
@@ -144,7 +146,7 @@ export function UserMenu({ variant }: { variant: ShellVariant }) {
                 className={cn(ITEM_CLASS, mobileOnly && "md:hidden")}
               >
                 <Icon size={16} strokeWidth={1.75} aria-hidden="true" className="text-neutral-600" />
-                {label}
+                {t(labelKey)}
               </Link>
             ))}
 
@@ -171,7 +173,7 @@ export function UserMenu({ variant }: { variant: ShellVariant }) {
               ) : (
                 <LogOut size={16} strokeWidth={1.75} aria-hidden="true" className="text-neutral-600" />
               )}
-              Log out
+              {t("menu.logout")}
             </button>
           </div>
         </div>
