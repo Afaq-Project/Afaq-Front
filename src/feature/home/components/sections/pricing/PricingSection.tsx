@@ -1,7 +1,9 @@
 import { Check } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { APP_SIGNUP_URL, type SectionTone } from "../../../constants";
-import { content, type PricingPlan } from "../../../content/en";
+import { useLocale } from "next-intl";
+import { intlLocale } from "@/src/i18n/format";
+import { useLandingContent, type PricingPlan } from "../../../content";
 import { Section } from "../../layout/Section";
 import { SectionHeader } from "../../layout/SectionHeader";
 import { Button } from "../../ui/Button";
@@ -13,8 +15,8 @@ const PLAN_HREF: Record<PricingPlan["id"], string> = {
   premium: `${APP_SIGNUP_URL}?plan=premium`,
 };
 
-const formatPrice = (amount: number) =>
-  new Intl.NumberFormat("en", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(amount);
+const formatPrice = (amount: number, locale: string) =>
+  new Intl.NumberFormat(intlLocale(locale), { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(amount);
 
 /**
  * One plan. Premium gets the section's primary button and is highlighted by a 2px green border
@@ -22,6 +24,8 @@ const formatPrice = (amount: number) =>
  * buttons line up. Free gets a secondary button. Buttons are pinned to the bottom of each card.
  */
 function PlanCard({ plan }: { plan: PricingPlan }) {
+  const content = useLandingContent();
+  const locale = useLocale();
   const { pricing } = content;
   const premium = plan.id === "premium";
 
@@ -29,11 +33,11 @@ function PlanCard({ plan }: { plan: PricingPlan }) {
     <Card className={cn("flex flex-col p-7 lg:p-7 h-full", premium && "border-primary-600 ring-1 ring-primary-600")}>
       <h3 className={cn("font-semibold text-landing-small", premium ? "text-primary-800" : "text-neutral-900")}>{plan.label}</h3>
       <p className="flex items-baseline gap-1.5 mt-2">
-        <span className="font-semibold text-[40px] text-neutral-900 leading-12">{formatPrice(plan.monthlyPrice)}</span>
+        <span className="font-semibold text-[40px] text-neutral-900 leading-12">{formatPrice(plan.monthlyPrice, locale)}</span>
         <span className="text-landing-small text-neutral-600">{plan.monthlyPrice === 0 ? pricing.forever : pricing.perMonth}</span>
       </p>
       {plan.annualPrice !== undefined && (
-        <p className="text-landing-caption text-neutral-600">{pricing.perYear.replace("{price}", formatPrice(plan.annualPrice))}</p>
+        <p className="text-landing-caption text-neutral-600">{pricing.perYear.replace("{price}", formatPrice(plan.annualPrice, locale))}</p>
       )}
       <p className="mt-2 text-landing-small text-neutral-600">{plan.description}</p>
 
@@ -57,6 +61,7 @@ function PlanCard({ plan }: { plan: PricingPlan }) {
 
 /** Pricing: two equal-height plan cards centered as a pair (max 880px), Free first; one column below 768px. */
 export function PricingSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { pricing } = content;
 
   return (

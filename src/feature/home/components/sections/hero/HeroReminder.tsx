@@ -1,7 +1,7 @@
 import { Bell } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { getDeadlineUrgency } from "@/src/shared/lib/deadline";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Card } from "../../ui/Card";
 import { DEADLINE_TEXT } from "../../ui/DeadlineText";
 
@@ -15,6 +15,7 @@ function StackedCard({ className }: { className: string }) {
  * lower, 20px narrower each, at 80% and 50% opacity). Hidden from assistive tech.
  */
 export function HeroReminder({ className }: { className?: string }) {
+  const content = useLandingContent();
   const { reminder } = content.hero;
 
   return (

@@ -4,7 +4,7 @@ import { useRef, useState, type KeyboardEvent } from "react";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { APP_SIGNUP_URL } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import type { Funding, PublicScholarship } from "../../../data/scholarships";
 import { Button } from "../../ui/Button";
 import { Card } from "../../ui/Card";
@@ -22,10 +22,11 @@ const FADE_MS = 150;
 
 /** One public scholarship. Not a link itself: only "Official site" and "See your match" are interactive. */
 function ScholarshipCard({ item }: { item: ScholarshipItem }) {
+  const content = useLandingContent();
   const copy = content.openScholarships;
   const chips: { label: string; tone: ChipTone }[] = [
     ...(item.funding ? [{ label: copy.funding[item.funding], tone: item.funding === "full" ? ("green" as const) : ("neutral" as const) }] : []),
-    ...(item.level ? [{ label: item.level, tone: "neutral" as const }] : []),
+    ...(item.level ? [{ label: content.common.levels[item.level], tone: "neutral" as const }] : []),
     ...(item.isRemote ? [{ label: content.common.remote, tone: "neutral" as const }] : []),
   ];
   const location = item.location ?? (item.isRemote ? content.common.remote : undefined);
@@ -88,6 +89,7 @@ function ScholarshipCard({ item }: { item: ScholarshipItem }) {
  *    also fade in, 60ms apart, when first scrolled to. No motion with reduced motion.
  */
 export function ScholarshipsBrowser({ items, titleId }: { items: ScholarshipItem[]; titleId: string }) {
+  const content = useLandingContent();
   const copy = content.openScholarships;
   const tabs = TABS.filter((tab) => tab === "all" || items.some((item) => item.funding === tab));
   const [tab, setTab] = useState<Tab>("all");

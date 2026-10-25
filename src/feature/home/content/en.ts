@@ -1,12 +1,13 @@
 /**
- * All landing page copy. Components import `content` from here and never hardcode text, so a
- * translation can later be added as a second file with the same shape (LandingContent).
+ * All English landing page copy. Components read it through useLandingContent() and never
+ * hardcode text; ar.ts holds the Arabic copy with the same shape (LandingContent).
  *
  * Copy rules: short, warm, honest. Verb-first buttons, "Log in" / "Sign up", no em dashes,
  * no social proof, no promised outcomes, scholarships only.
  */
 
 import type { ApplicationStatusKey } from "@/src/shared/lib/status-colors";
+import type { StudyLevel } from "../data/scholarships";
 
 /** Plural forms by Intl.PluralRules category; `{count}` is replaced with the number. */
 export type PluralForms = Partial<Record<Intl.LDMLPluralRule, string>> & {
@@ -595,6 +596,12 @@ export const content = {
       closed: "Closed",
     },
     remote: "Remote",
+    /** Study level names for the example scholarships. */
+    levels: {
+      "Bachelor's": "Bachelor's",
+      "Master's": "Master's",
+      PhD: "PhD",
+    } as Record<StudyLevel, string>,
     /** Match factor score; `{score}` and `{max}` are replaced with the numbers. */
     factorScore: "{score} of {max}",
   },

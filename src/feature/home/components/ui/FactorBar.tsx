@@ -1,11 +1,12 @@
 import { cn } from "@/src/feature/dashboard/services/utils";
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 
 /**
  * One match factor: label and "x of y" on one line, then a 4px bar (green-600 on a neutral-50
  * track) filled by score / max. For the Matching section's breakdown.
  */
 export function FactorBar({ label, score, max, className }: { label: string; score: number; max: number; className?: string }) {
+  const content = useLandingContent();
   const value = content.common.factorScore.replace("{score}", String(score)).replace("{max}", String(max));
 
   return (

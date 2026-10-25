@@ -1,6 +1,7 @@
+import { getLocale } from "next-intl/server";
 import { daysUntil } from "@/src/shared/lib/deadline";
 import type { SectionTone } from "../../../constants";
-import { PUBLIC_SCHOLARSHIPS } from "../../../data/scholarships";
+import { PUBLIC_SCHOLARSHIPS, localizedScholarship } from "../../../data/scholarships";
 import { getOpenScholarships } from "../../../services/openScholarships";
 import { Section } from "../../layout/Section";
 import { ScholarshipsBrowser, type ScholarshipItem } from "./ScholarshipsBrowser";
@@ -14,10 +15,11 @@ const TITLE_ID = "scholarships-title";
  * soonest-closing first.
  */
 export async function ScholarshipsSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const locale = await getLocale();
   const now = new Date();
-  const live = await getOpenScholarships(now);
+  const live = await getOpenScholarships(now, locale);
   const items: ScholarshipItem[] = live.length > 0 ? live : PUBLIC_SCHOLARSHIPS.map((scholarship) => ({
-    ...scholarship,
+    ...localizedScholarship(scholarship, locale),
     daysLeft: daysUntil(scholarship.deadline, now),
   }))
     .filter((item) => item.daysLeft >= 0)

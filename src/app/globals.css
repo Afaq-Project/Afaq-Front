@@ -246,20 +246,24 @@ input:autofill {
 
 /*
  * Landing page (public marketing site). Scoped to `.landing` so the app keeps its own
- * font and type scale. English only for now; layouts use logical properties so a
- * right-to-left version needs no rework. --leading-scale multiplies every landing
- * line-height (an Arabic version would set it to 1.2).
+ * font and type scale. Layouts use logical properties, so Arabic (right to left) needs no
+ * overrides. --leading-scale multiplies every landing line-height: 1.2 in Arabic, whose
+ * script needs taller lines.
  */
 .landing {
   /* 56px below 1024px, 64px from 1024px. Also the scroll margin for anchor jumps. */
   --landing-header-height: 56px;
   --leading-scale: 1;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-inter), var(--font-ibm-plex-sans-arabic), system-ui, sans-serif;
   font-size: 16px;
   line-height: calc(24px * var(--leading-scale));
 
   @media (width >= 64rem) {
     --landing-header-height: 64px;
+  }
+
+  &:lang(ar) {
+    --leading-scale: 1.2;
   }
 }
 

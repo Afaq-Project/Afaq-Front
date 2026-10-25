@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Globe } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 
 const SIZES = {
   sm: { tile: "w-6 h-4.5", width: 24, height: 18, icon: 12 },
@@ -26,6 +26,7 @@ interface FlagTileProps {
  * fails to load, shows a globe. Flags are never mirrored, even right to left.
  */
 export function FlagTile({ code, size = "md", label, className }: FlagTileProps) {
+  const content = useLandingContent();
   const [failed, setFailed] = useState(false);
   const dims = SIZES[size];
   const remote = code === "remote";

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { HorizonLines } from "@/src/shared/ui/HorizonLines";
 import { APP_SIGNUP_URL, type SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Section } from "../../layout/Section";
 import { Button } from "../../ui/Button";
 
@@ -13,6 +13,7 @@ const TITLE_ID = "get-started-title";
  * button, centered. Bottom padding is 64px since the footer follows.
  */
 export function GetStartedSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { getStarted } = content;
 
   return (

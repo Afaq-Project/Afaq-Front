@@ -1,4 +1,4 @@
-import type { LandingContent } from "./content/en";
+import type { LandingContent } from "./content";
 
 export type SectionTone = "white" | "offwhite" | "green";
 

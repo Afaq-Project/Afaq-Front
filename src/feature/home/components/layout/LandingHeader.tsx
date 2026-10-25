@@ -6,7 +6,8 @@ import { cn } from "@/src/feature/dashboard/services/utils";
 import { APP_LOGIN_URL, APP_SIGNUP_URL, MENU_PANEL_ID } from "../../constants";
 import { useActiveSection } from "../../hooks/useActiveSection";
 import { useScrolledPast } from "../../hooks/useScrolledPast";
-import { content } from "../../content/en";
+import { LanguageToggle } from "@/src/shared/ui/LanguageToggle";
+import { useLandingContent } from "../../content";
 import { Logo } from "../nav/Logo";
 import { MobileMenu } from "../nav/MobileMenu";
 import { Button } from "../ui/Button";
@@ -22,6 +23,7 @@ const FOCUS_RING = "focus-visible:outline-2 focus-visible:outline-primary-400 fo
  * smaller screens show Sign up and a menu button that opens MobileMenu.
  */
 export function LandingHeader() {
+  const content = useLandingContent();
   const { nav } = content;
   const scrolled = useScrolledPast(8);
   const activeId = useActiveSection(nav.links.map((link) => link.href.slice(1)));
@@ -76,6 +78,8 @@ export function LandingHeader() {
           </nav>
 
           <div className="flex items-center lg:justify-self-end gap-2 ms-auto">
+            {/* Globe only on phones; the language name stays its accessible label. */}
+            <LanguageToggle className="text-landing-small" labelClassName="max-sm:sr-only" />
             <Button href={APP_LOGIN_URL} variant="secondary" size="sm" className="hidden lg:inline-flex">
               {nav.logIn}
             </Button>

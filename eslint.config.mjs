@@ -13,8 +13,6 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     files: ["src/**/*.{ts,tsx}"],
-    // The landing page is English-only and left-to-right for now.
-    ignores: ["src/feature/home/**"],
     rules: {
       "no-restricted-syntax": [
         "error",

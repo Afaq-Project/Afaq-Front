@@ -140,3 +140,69 @@ export const PUBLIC_SCHOLARSHIPS: PublicScholarship[] = [
     location: "London, United Kingdom",
   },
 ];
+
+type ScholarshipCopy = Pick<PublicScholarship, "title" | "provider" | "description" | "location">;
+
+/** The example scholarships' text in Arabic, by id. Fictional, like the English. */
+const ARABIC_COPY: Record<string, ScholarshipCopy> = {
+  "bright-horizons": {
+    title: "منحة الآفاق المشرقة",
+    provider: "صندوق هورايزن للتعليم",
+    description: "تغطي الرسوم الدراسية والسكن والسفر لماجستير مدته سنتان في أي تخصص هندسي.",
+    location: "برلين، ألمانيا",
+  },
+  "coastal-science": {
+    title: "منحة علوم السواحل",
+    provider: "معهد لشبونة البحري",
+    description: "نصف الرسوم الدراسية لطلاب الأحياء البحرية أو علوم المحيطات أو إدارة السواحل.",
+    location: "لشبونة، البرتغال",
+  },
+  "northern-lights": {
+    title: "منحة الشفق القطبي البحثية",
+    provider: "مجلس أورورا للبحث العلمي",
+    description: "وظيفة دكتوراه ممولة لأربع سنوات مع راتب شهري وميزانية للبحث.",
+    location: "ستوكهولم، السويد",
+  },
+  "open-classroom": {
+    title: "منحة الفصل المفتوح",
+    provider: "صندوق التعلّم العالمي",
+    description: "رسوم مخفّضة لبكالوريوس معتمد عبر الإنترنت تدرسه من منزلك.",
+    location: "عن بُعد",
+  },
+  "maple-leaf": {
+    title: "منحة ورقة القيقب للدراسات العليا",
+    provider: "جامعة نورثفيلد",
+    description: "رسوم دراسية كاملة وبدل معيشة للطلاب الدوليين في الصحة العامة.",
+    location: "تورنتو، كندا",
+  },
+  "rising-engineers": {
+    title: "منحة المهندسين الصاعدين",
+    provider: "معهد كانتو للتكنولوجيا",
+    description: "رسوم أربع سنوات دراسية وراتب شهري وسنة من دروس اللغة اليابانية.",
+    location: "طوكيو، اليابان",
+  },
+  "desert-bloom": {
+    title: "منحة زهرة الصحراء",
+    provider: "مؤسسة الواحة",
+    description: "دراسة ممولة بالكامل في الطاقة المتجددة، مع تدريب صيفي في مختبر شريك.",
+    location: "أبوظبي، الإمارات العربية المتحدة",
+  },
+  "alpine-innovation": {
+    title: "منحة الابتكار الألبي",
+    provider: "مؤسسة هلفيتيا للعلوم",
+    description: "راتب سنوي يساعد في تكاليف المعيشة لطلاب الدكتوراه في العلوم التطبيقية.",
+    location: "زيورخ، سويسرا",
+  },
+  "thames-leaders": {
+    title: "منحة قادة التايمز",
+    provider: "معهد لندن المدني",
+    description: "رسوم دراسية وتذاكر طيران وراتب لماجستير مدته سنة في السياسات العامة.",
+    location: "لندن، المملكة المتحدة",
+  },
+};
+
+/** An example scholarship with its text in `locale`; English when there's no translation. */
+export function localizedScholarship(scholarship: PublicScholarship, locale: string): PublicScholarship {
+  const copy = locale === "ar" ? ARABIC_COPY[scholarship.id] : undefined;
+  return copy ? { ...scholarship, ...copy } : scholarship;
+}

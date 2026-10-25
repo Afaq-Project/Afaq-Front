@@ -1,7 +1,9 @@
 import { Check, Lightbulb } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import type { SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLocale } from "next-intl";
+import { intlLocale } from "@/src/i18n/format";
+import { useLandingContent } from "../../../content";
 import { Card } from "../../ui/Card";
 import { Chip } from "../../ui/Chip";
 import { FlagTile } from "../../ui/FlagTile";
@@ -16,9 +18,11 @@ const isGap = (score: number, max: number) => score / max < 0.5;
  * corner at the inline-start side (16px, over the bottom padding only).
  */
 function MatchingPreview() {
+  const content = useLandingContent();
   const preview = content.matching.preview;
+  const locale = useLocale();
   const { factorScore, match } = content.common;
-  const percent = new Intl.NumberFormat("en", { style: "percent" }).format(preview.percent / 100);
+  const percent = new Intl.NumberFormat(intlLocale(locale), { style: "percent" }).format(preview.percent / 100);
 
   return (
     <>
@@ -83,6 +87,7 @@ function MatchingPreview() {
 
 /** Section 5: how matching works, text at the inline-start and the example match at the inline-end. */
 export function MatchingSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { matching } = content;
   return (
     <FeatureSection

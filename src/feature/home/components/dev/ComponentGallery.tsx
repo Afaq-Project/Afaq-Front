@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
 import type { ApplicationStatusKey } from "@/src/shared/lib/status-colors";
 import { HorizonLines } from "@/src/shared/ui/HorizonLines";
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 import { Section } from "../layout/Section";
 import { SectionHeader } from "../layout/SectionHeader";
 import { SectionPlaceholder } from "../layout/SectionPlaceholder";
@@ -62,6 +62,7 @@ function Demo({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function ComponentGallery() {
+  const content = useLandingContent();
   return (
     <main className="flex-1">
       <Section id="tokens" tone="white">

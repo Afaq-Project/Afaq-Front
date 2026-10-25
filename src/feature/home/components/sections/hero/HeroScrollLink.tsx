@@ -3,7 +3,7 @@
 import { useEffect, useState, type MouseEvent } from "react";
 import { ArrowDown } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { scrollToSection } from "../../../lib/scrollToSection";
 
 const TARGET_ID = "scholarships";
@@ -16,6 +16,7 @@ const TARGET_ID = "scholarships";
  * mixed with white so it stays opaque) and fill the circle green.
  */
 export function HeroScrollLink({ className }: { className?: string }) {
+  const content = useLandingContent();
   const [bouncing, setBouncing] = useState(true);
 
   useEffect(() => {

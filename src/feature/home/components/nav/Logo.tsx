@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { MouseEvent } from "react";
 import { cn } from "@/src/feature/dashboard/services/utils";
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 
 /**
  * The Afaq mark (/public/afaq.png). The image has ~14% transparent padding around the tile, so
@@ -28,6 +28,7 @@ export function Logo({
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   className?: string;
 }) {
+  const content = useLandingContent();
   return (
     <a
       href="#"

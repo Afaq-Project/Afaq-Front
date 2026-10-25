@@ -1,7 +1,8 @@
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 
 /** Stand-in for a section that hasn't been built yet: its name, its anchor and a short note. */
 export function SectionPlaceholder({ name, anchor }: { name: string; anchor: string }) {
+  const content = useLandingContent();
   const { placeholder } = content;
 
   return (

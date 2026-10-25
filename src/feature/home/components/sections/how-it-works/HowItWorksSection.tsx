@@ -1,7 +1,7 @@
 import { CalendarCheck, Search, Sparkles, UserRound } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { APP_SIGNUP_URL, type SectionTone } from "../../../constants";
-import { content } from "../../../content/en";
+import { useLandingContent } from "../../../content";
 import { Section } from "../../layout/Section";
 import { SectionHeader } from "../../layout/SectionHeader";
 import { Button } from "../../ui/Button";
@@ -32,6 +32,7 @@ const STEP_GRID = cn(
  * it works" button lands focus on this section's h2.
  */
 export function HowItWorksSection({ id, tone }: { id: string; tone: SectionTone }) {
+  const content = useLandingContent();
   const { howItWorks } = content;
   const lastIndex = howItWorks.steps.length - 1;
 

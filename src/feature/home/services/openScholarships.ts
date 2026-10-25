@@ -10,6 +10,7 @@ const TIMEOUT_MS = 5000;
 
 interface Country {
   nameEn: string;
+  nameAr: string | null;
   isoCode2: string;
 }
 
@@ -32,11 +33,12 @@ async function getPublic<T>(path: string): Promise<T | null> {
  * Open scholarships for the public landing page, soonest deadline first. Logged-out visitors can
  * only use GET /opportunities/recent: the 10 newest listings of every type, summary fields only
  * (no funding, study level, description or official link), so most cards are slimmer than the
- * examples. Empty when none of them is an open scholarship or the API can't be reached.
+ * examples. In English, listings with Arabic titles are left out (as in the app); country names
+ * follow `locale`. Empty when none of them is an open scholarship or the API can't be reached.
  * TODO: switch to a public endpoint with type, open-deadline and funding filters and the card
  * fields once the backend adds one.
  */
-export async function getOpenScholarships(now: Date): Promise<(PublicScholarship & { daysLeft: number })[]> {
+export async function getOpenScholarships(now: Date, locale: string): Promise<(PublicScholarship & { daysLeft: number })[]> {
   const [recent, countries] = await Promise.all([
     getPublic<ApiOpportunitySummary[]>("/opportunities/recent"),
     getPublic<Country[]>("/reference/countries"),
@@ -46,10 +48,12 @@ export async function getOpenScholarships(now: Date): Promise<(PublicScholarship
   const countryCodes: CountryCodes = new Map(
     (countries ?? []).map((country) => [country.nameEn.toLowerCase(), country.isoCode2.toLowerCase()]),
   );
+  const arabicNames = new Map((countries ?? []).map((country) => [country.nameEn.toLowerCase(), country.nameAr]));
+  const placeName = (english?: string) =>
+    english && locale === "ar" ? (arabicNames.get(english.toLowerCase()) ?? english) : english;
 
   return recent
-    // The landing page is English-only for now, so Arabic listings stay out.
-    .map((listing) => fromOpportunity(listing, { countryCodes, now, hideArabic: true, levelLabel: (level) => level }))
+    .map((listing) => fromOpportunity(listing, { countryCodes, now, hideArabic: locale !== "ar", levelLabel: (level) => level }))
     .filter((item) => item !== null)
     .filter((item) => item.type === "Scholarship" && item.daysLeft !== undefined && item.daysLeft >= 0)
     .map((item) => ({
@@ -58,7 +62,7 @@ export async function getOpenScholarships(now: Date): Promise<(PublicScholarship
       provider: item.provider,
       countryCode: item.countryCode ?? "",
       isRemote: Boolean(item.isRemote) || !item.countryCode,
-      location: item.location,
+      location: placeName(item.location),
       deadline: item.deadlineDate!,
       daysLeft: item.daysLeft!,
     }))

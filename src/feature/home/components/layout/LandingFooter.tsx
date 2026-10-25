@@ -1,7 +1,7 @@
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { InstagramIcon, LinkedInIcon } from "@/src/shared/ui/icons/SocialIcons";
 import { APP_SIGNUP_URL, PRIVACY_URL, SOCIAL_LINKS, SUPPORT_EMAIL, TERMS_URL } from "../../constants";
-import { content } from "../../content/en";
+import { useLandingContent } from "../../content";
 import { Logo } from "../nav/Logo";
 import { Container } from "./Container";
 
@@ -14,6 +14,7 @@ const SOCIAL_ICONS = { linkedin: LinkedInIcon, instagram: InstagramIcon };
 
 /** Configured social profiles only (SOCIAL_LINKS); renders nothing when none are set. */
 function SocialLinks({ className }: { className?: string }) {
+  const content = useLandingContent();
   const { footer } = content;
   const entries = (Object.keys(SOCIAL_ICONS) as (keyof typeof SOCIAL_ICONS)[]).filter((key) => SOCIAL_LINKS[key]);
   if (entries.length === 0) return null;
@@ -65,6 +66,7 @@ function LinkGroup({ title, links, className }: { title: string; links: { label:
  *    links get a 32px tap height.
  */
 export function LandingFooter() {
+  const content = useLandingContent();
   const { footer } = content;
   const { product, scholarships, support } = footer.groups;
   const year = new Date().getFullYear();

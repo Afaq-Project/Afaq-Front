@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { CircleCheck } from "lucide-react";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import type { SectionTone } from "../../../constants";
-import type { FeaturePoint } from "../../../content/en";
+import type { FeaturePoint } from "../../../content";
 import { Section } from "../../layout/Section";
 import { SectionHeader } from "../../layout/SectionHeader";
 import { Chip } from "../../ui/Chip";
