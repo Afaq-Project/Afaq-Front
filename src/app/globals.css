@@ -102,7 +102,7 @@
 
   /* ---- Typography ---- */
   /* Latin glyphs from Plex Sans, Arabic from its Arabic sibling, so mixed text matches. */
-  --font-sans: var(--font-ibm-plex-sans), var(--font-ibm-plex-sans-arabic);
+  --font-sans: var(--font-ibm-plex-sans), var(--font-arabic);
 
   /* Hero — large marketing headline (auth visual panel). Scales 44px → 48px. */
   --text-hero: clamp(44px, 3.4vw, 48px);
@@ -172,12 +172,12 @@ body {
 }
 
 /*
- * In Arabic the Arabic font leads (it has matching Latin letters too). Otherwise the generated
+ * In Arabic the Arabic font (Cairo) leads; it has Latin letters too. Otherwise the generated
  * "IBM Plex Sans Fallback" face, which is local Arial, catches Arabic text before it.
  */
 html:lang(ar) body {
   font-family:
-    var(--font-ibm-plex-sans-arabic),
+    var(--font-arabic),
     var(--font-ibm-plex-sans),
     -apple-system,
     "Segoe UI",
@@ -267,9 +267,9 @@ input:autofill {
   /* 56px below 1024px, 64px from 1024px. Also the scroll margin for anchor jumps. */
   --landing-header-height: 56px;
   --leading-scale: 1;
-  /* Arabic fonts for body text and for headings and the hero (text-landing-display/h2/h3). */
-  --landing-arabic: var(--font-ibm-plex-sans-arabic);
-  --landing-heading-arabic: var(--landing-arabic);
+  /* Arabic fonts: Cairo for body text, Almarai for headings and the hero (text-landing-display/h2/h3). */
+  --landing-arabic: var(--font-arabic);
+  --landing-heading-arabic: var(--font-arabic-heading, var(--landing-arabic));
   --landing-heading-family: var(--font-inter), var(--landing-heading-arabic), system-ui, sans-serif;
   font-family: var(--font-inter), var(--landing-arabic), system-ui, sans-serif;
   font-size: 16px;

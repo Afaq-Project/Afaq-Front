@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Cairo, IBM_Plex_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { LOCALE_DIR } from "@/src/i18n/config";
@@ -12,12 +12,11 @@ const ibmPlexSans = IBM_Plex_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-// With Latin too: in Arabic it comes first in the font stack (see globals.css), so it draws the
-// odd Latin word as well.
-const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
-  variable: "--font-ibm-plex-sans-arabic",
+// The Arabic font (variable weight). With Latin too: in Arabic it comes first in the font stack
+// (see globals.css), so it draws the odd Latin word as well.
+const cairo = Cairo({
+  variable: "--font-arabic",
   subsets: ["arabic", "latin"],
-  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -42,7 +41,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={LOCALE_DIR[locale]}
-      className={`${ibmPlexSans.variable} ${ibmPlexSansArabic.variable} h-full antialiased`}
+      className={`${ibmPlexSans.variable} ${cairo.variable} h-full antialiased`}
     >
       <body className="flex flex-col min-h-full">
         <NextIntlClientProvider>

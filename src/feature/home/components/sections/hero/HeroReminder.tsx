@@ -34,7 +34,7 @@ export function HeroReminder({ className }: { className?: string }) {
             <p className="text-landing-caption text-neutral-600">{reminder.meta}</p>
             <p className="font-medium text-landing-small text-neutral-800">
               {reminder.text}{" "}
-              <span className={cn(DEADLINE_TEXT[getDeadlineUrgency(reminder.daysLeft)], "font-semibold")}>{reminder.deadline}</span>
+              <span className={cn(DEADLINE_TEXT[getDeadlineUrgency(reminder.daysLeft)], "font-semibold whitespace-nowrap")}>{reminder.deadline}</span>
             </p>
           </div>
         </Card>
