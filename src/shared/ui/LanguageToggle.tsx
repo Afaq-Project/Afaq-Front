@@ -18,7 +18,14 @@ const OTHER: Record<Locale, { locale: Locale; name: string }> = {
  * Switches to the other language, for pages without Settings (sign-in and sign-up). Saves the
  * choice and refreshes, so the whole page renders in it.
  */
-export function LanguageToggle({ className }: { className?: string }) {
+export function LanguageToggle({
+  className,
+  labelClassName,
+}: {
+  className?: string;
+  /** E.g. "max-sm:sr-only" to show only the globe on phones; the name stays the accessible label. */
+  labelClassName?: string;
+}) {
   const router = useRouter();
   const target = OTHER[useLocale()];
   const [pending, startTransition] = useTransition();
@@ -42,7 +49,7 @@ export function LanguageToggle({ className }: { className?: string }) {
       )}
     >
       <Globe size={16} strokeWidth={1.75} aria-hidden="true" />
-      {target.name}
+      <span className={labelClassName}>{target.name}</span>
     </button>
   );
 }

@@ -7,6 +7,7 @@ import { FolderOpen } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/src/feature/dashboard/services/utils";
 import { NotificationsDropdown } from "@/src/feature/notifications/components/NotificationsDropdown";
+import { LanguageToggle } from "@/src/shared/ui/LanguageToggle";
 import {
   HOME_HREF,
   ICON_BUTTON_CLASS,
@@ -81,6 +82,11 @@ export function TopBar({ variant }: { variant: ShellVariant }) {
 
         <div className="flex items-center gap-1 md:gap-2 ms-auto">
           {SHOW_GLOBAL_SEARCH && <TopBarSearch />}
+          {/* One tap to the other language; Settings has the same choice. */}
+          <LanguageToggle
+            className="justify-center hover:bg-neutral-50 rounded-md min-w-10 h-10 min-h-0 md:min-h-0"
+            labelClassName="max-sm:sr-only"
+          />
           {variant === "user" && (
             <Link
               href="/documents"
