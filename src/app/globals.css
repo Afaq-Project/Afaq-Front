@@ -45,9 +45,11 @@
   --color-info-800: #0c447c;
 
   --color-warning-50: #faeeda;
+  --color-warning-100: #fac775;
   --color-warning-400: #a2773f;
   --color-warning-600: #854f0b;
   --color-warning-800: #633806;
+  --color-warning-900: #412402;
 
   --color-success-50: #e1f5ee;
   --color-success-400: #44907c;
@@ -55,10 +57,12 @@
   --color-success-800: #085041;
 
   --color-danger-50: #fcebeb;
+  --color-danger-100: #f7c1c1;
   --color-danger-200: #f09595;
   --color-danger-400: #b95d5d;
   --color-danger-600: #a32d2d;
   --color-danger-800: #791f1f;
+  --color-danger-900: #501313;
 
   /* ---- Color: Purple — application statuses only (submitted, in review) ----
    * 800 on 50 = 8.9:1, 900 on 100 = 9.3:1. */
@@ -213,6 +217,9 @@ input:autofill {
   --animate-landing-fade: auth-fade-in 400ms ease-out both;
   /* Hero scroll link arrow: bounces 4px inside its circle, starting 1s after load (stopped by script on scroll). */
   --animate-landing-bounce: landing-bounce 1.4s ease-in-out 1s infinite;
+  /* Dashboard hero: the sunrise glow fades in, then the horizon arcs draw (delays set where used). */
+  --animate-sunrise-glow: auth-fade-in 600ms ease-out both;
+  --animate-horizon-draw: horizon-draw 900ms ease-out both;
 
   @keyframes landing-bounce {
     50% {
@@ -223,6 +230,16 @@ input:autofill {
   @keyframes auth-fade-in {
     from {
       opacity: 0;
+    }
+  }
+
+  /* For shapes with pathLength="1" and stroke-dasharray: 1. */
+  @keyframes horizon-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
     }
   }
 
@@ -355,6 +372,31 @@ input:autofill {
 @utility text-landing-caption {
   font-size: 12px;
   line-height: calc(16px * var(--leading-scale, 1));
+}
+
+/*
+ * Dashboard hero background: a radial "sunrise" low in the end corner, mirrored in RTL, a little
+ * higher and further in on phones. The later stops sit between primary-600 and primary-900; the
+ * darkest (#1a3a05) stays a little lighter than primary-900 so the start side never reads as black.
+ */
+@utility bg-sunrise-glow {
+  --sunrise-at: 85% 110%;
+  background: radial-gradient(
+    ellipse 120% 170% at var(--sunrise-at),
+    var(--color-primary-600) 0%,
+    #2a560c 35%,
+    #1e4207 65%,
+    #1a3a05 100%
+  );
+  &:where([dir="rtl"], [dir="rtl"] *) {
+    --sunrise-at: 15% 110%;
+  }
+  @media (width >= 48rem) {
+    --sunrise-at: 88% 120%;
+    &:where([dir="rtl"], [dir="rtl"] *) {
+      --sunrise-at: 12% 120%;
+    }
+  }
 }
 
 /* Directional icons (arrows, chevrons) point the other way in right-to-left layouts. */

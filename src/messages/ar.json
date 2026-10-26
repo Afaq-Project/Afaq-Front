@@ -460,10 +460,28 @@
     "noDeadlines": "لا مواعيد نهائية هذا الأسبوع. إنه وقت مناسب لاستكشاف مطابقات جديدة. <link>استكشف</link>",
     "welcome": "أهلًا بك - حسابك جاهز.",
     "welcomeName": "أهلًا {name} - حسابك جاهز.",
-    "attention": {
-      "label": "يحتاج إلى انتباهك",
-      "open": "فتح الطلب",
-      "more": "+{count} أخرى تنتهي قريبًا"
+    "hero": {
+      "dueToday": "ينتهي اليوم",
+      "dueTomorrow": "ينتهي غدًا، {date}",
+      "dueIn": "ينتهي خلال {count, plural, one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}، {date}",
+      "progress": "{done} من {total} خطوات مكتملة",
+      "steps": {
+        "documents": "إرفاق المستندات",
+        "essay": "مراجعة المقال",
+        "submitted": "تحديد كمُقدَّم",
+        "documentsShort": "المستندات",
+        "essayShort": "المقال",
+        "submittedShort": "التقديم",
+        "stateDone": "، مكتملة",
+        "stateCurrent": "، الخطوة التالية",
+        "stateUpcoming": "، لم تكتمل بعد"
+      },
+      "actions": {
+        "documents": "أرفق مستنداتك",
+        "essay": "راجع مقالك",
+        "submitted": "حدّده كمُقدَّم",
+        "open": "فتح الطلب"
+      }
     },
     "deadlines": {
       "title": "المواعيد النهائية القادمة",
@@ -472,18 +490,18 @@
       "nextWeek": "الأسبوع القادم",
       "later": "لاحقًا"
     },
-    "pipeline": {
+    "applicationMetrics": {
       "title": "طلباتك",
-      "total": "{count} إجمالًا",
-      "empty": "ابدأ بمتابعة أول طلب لك",
-      "decision": "القرار",
-      "columnLabel": "{label}، {count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}}",
-      "columnLabelOutcomes": "{label}، {count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}}: {outcomes}",
-      "accepted": "{count} مقبول",
-      "rejected": "{count} مرفوض",
-      "closingPlain": "{unfinished} غير مكتمل · {count, plural, one {واحد ينتهي} two {اثنان ينتهيان} other {# تنتهي}} هذا الأسبوع",
-      "closing": "{unfinished} غير مكتمل، و{count, plural, one {واحد ينتهي} two {اثنان ينتهيان} other {# تنتهي}} هذا الأسبوع.",
-      "waiting": "{count} مُقدَّم بانتظار القرار."
+      "loading": "جارٍ تحميل طلباتك",
+      "inProgress": "قيد التنفيذ",
+      "inProgressLabel": "{count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}} قيد التنفيذ",
+      "submitted": "تم التقديم",
+      "submittedLabel": "{count, plural, one {طلب واحد مُقدَّم} two {طلبان مُقدَّمان} few {# طلبات مُقدَّمة} many {# طلبًا مُقدَّمًا} other {# طلب مُقدَّم}}",
+      "accepted": "عروض مقبولة",
+      "acceptedLabel": "{count, plural, one {عرض واحد مقبول} two {عرضان مقبولان} few {# عروض مقبولة} many {# عرضًا مقبولًا} other {# عرض مقبول}}",
+      "deadlines": "مواعيد خلال 14 يومًا",
+      "deadlinesLabel": "{count, plural, one {موعد نهائي واحد} two {موعدان نهائيان} few {# مواعيد نهائية} many {# موعدًا نهائيًا} other {# موعد نهائي}} خلال 14 يومًا",
+      "deadlinesUrgentLabel": "{count, plural, one {موعد نهائي واحد} two {موعدان نهائيان} few {# مواعيد نهائية} many {# موعدًا نهائيًا} other {# موعد نهائي}} خلال 14 يومًا، منها {urgent} خلال يومين أو أقل"
     },
     "matches": {
       "best": "أفضل المطابقات لك",
@@ -535,8 +553,7 @@
       "momentLabel": "الملف الشخصي مكتمل",
       "moment": "اكتمل ملفك الشخصي. أصبحت مطابقاتك الآن بأعلى دقة ممكنة.",
       "loading": "جارٍ تحميل تقدّم الملف الشخصي"
-    },
-    "promoLearnMore": "اعرف المزيد عن {title}"
+    }
   },
   "opportunityType": {
     "Scholarship": "منحة",

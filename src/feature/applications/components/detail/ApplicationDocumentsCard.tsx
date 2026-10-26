@@ -189,7 +189,8 @@ export function ApplicationDocumentsCard({
   const linkedCount = requirements.filter((r) => matchFor(r)).length;
 
   return (
-    <section aria-labelledby="documents-heading" className={CARD_CLASS}>
+    // id: the dashboard links here ("Link your documents"); scroll-mt clears the sticky top bar.
+    <section id="documents" aria-labelledby="documents-heading" className={cn(CARD_CLASS, "scroll-mt-20")}>
       <div className="flex justify-between items-center gap-3">
         <h2 id="documents-heading" className="text-h2 text-neutral-900">
           {t("title")}

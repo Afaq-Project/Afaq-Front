@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CalendarDays } from "lucide-react";
 import { APPLICATIONS } from "@/src/feature/applications/mocks/applications";
 import type { ApplicationStatus } from "@/src/feature/applications/types/status";
 import { OpportunityCard } from "@/src/feature/opportunities/components/OpportunityCard";
@@ -22,19 +21,16 @@ import { useProfileCompletion } from "@/src/feature/profile/hooks/useProfileComp
 import { useProfileQuery } from "@/src/feature/profile/hooks/useProfileQuery";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { PROFILE_SECTIONS } from "../mocks/dashboard";
-import { WORKSHOP_PROMO } from "../mocks/promos";
-import { AttentionStrip } from "./AttentionStrip";
+import { ApplicationMetrics } from "./ApplicationMetrics";
 import { DeadlineList } from "./DeadlineList";
-import { greetingFor, summarizeDeadlines } from "./format";
+import { DashboardHero } from "./DashboardHero";
+import { greetingFor, pickFocusApplication, summarizeDeadlines } from "./format";
 import { MatchesSnapshotCard } from "./MatchesSnapshotCard";
-import { PageGreeting } from "./PageGreeting";
 import { ProfileCompleteMoment } from "./ProfileCompleteMoment";
-import { PipelineCard } from "./PipelineCard";
 import {
   ProfileProgressCard,
   ProfileProgressCardSkeleton,
 } from "./ProfileProgressCard";
-import { PromoCard } from "./PromoCard";
 import { GHOST_LINK_CLASS } from "./styles";
 import { getMatchTier, type MatchTier } from "../types/status";
 import { WelcomeBanner } from "./WelcomeBanner";
@@ -80,10 +76,10 @@ function mockMatchCounts(): Record<MatchTier, number> {
   return counts;
 }
 
-const MATCHES_SHOWN = 4;
+const MATCHES_SHOWN = 6;
 
 /**
- * The best four matches; without any (profile not matchable, or scores not calculated yet),
+ * The best six matches; without any (profile not matchable, or scores not calculated yet),
  * the newest opportunities instead.
  */
 function MatchesSection() {
@@ -160,7 +156,6 @@ export function DashboardView() {
   const upcoming = APPLICATIONS.filter(
     (a) => ACTIONABLE.includes(a.status) && a.daysLeft >= 0,
   ).sort((a, b) => a.daysLeft - b.daysLeft);
-  const needsAttention = upcoming.filter((a) => a.daysLeft <= 2);
   const deadlineCounts = summarizeDeadlines(upcoming.map((a) => a.daysLeft));
 
   const greeting = t(`greeting.${greetingFor(hour)}`);
@@ -177,74 +172,55 @@ export function DashboardView() {
     : null;
   const checklist = PROFILE_CHECKLIST.map((section) => ({ ...section, label: t(`profile.sections.${section.key}`) }));
   const nextKey = PROFILE_CHECKLIST.find((s) => !s.complete)?.key;
-  const deadlines = <DeadlineList applications={upcoming} />;
+  const deadlines = <DeadlineList applications={upcoming} className="flex-1" />;
 
   return (
     <div className="flex flex-col gap-8">
       <WelcomeBanner />
 
-      {/* Greeting on the left, the promo pushed to the right; stacked below 768px. */}
-      <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-6">
-        <PageGreeting
-          title={firstName ? t("greeting.withName", { greeting, name: firstName }) : greeting}
-        >
-          {deadlineSummary ?? (
-            t.rich("noDeadlines", {
-              link: (chunks) => (
-                <Link
-                  href="/discover"
-                  className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 font-medium text-primary-600 hover:text-primary-800"
-                >
-                  {chunks}
-                </Link>
-              ),
-            })
-          )}
-        </PageGreeting>
+      <DashboardHero
+        title={firstName ? t("greeting.withName", { greeting, name: firstName }) : greeting}
+        summary={
+          deadlineSummary ??
+          t.rich("noDeadlines", {
+            link: (chunks) => (
+              <Link
+                href="/discover"
+                className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900 font-medium text-white underline underline-offset-2 hover:text-primary-50"
+              >
+                {chunks}
+              </Link>
+            ),
+          })
+        }
+        application={pickFocusApplication(upcoming)}
+      />
 
-        {/* TODO: the promo has no description yet; its date, time and link are placeholders (see promos.ts). */}
-        {WORKSHOP_PROMO && (
-          <div className="md:w-100 shrink-0">
-            <PromoCard
-              icon={CalendarDays}
-              eyebrow={WORKSHOP_PROMO.eyebrow}
-              title={WORKSHOP_PROMO.title}
-              date={WORKSHOP_PROMO.date}
-              time={WORKSHOP_PROMO.time}
-              href={WORKSHOP_PROMO.href}
-            />
-          </div>
-        )}
-      </div>
-
-      <AttentionStrip applications={needsAttention} />
-
-      {/* items-start: each column is as tall as its own cards, so nothing stretches to match the other side. */}
-      <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
+      {/* On desktop both columns are as tall as the taller one; the deadlines card takes up the
+          right column's slack so its last card ends level with the matches. */}
+      <div className="gap-6 grid grid-cols-1 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2 min-w-0">
-          <PipelineCard
+          {/* TODO: pass `loading` once applications come from the tracker API instead of the mock. */}
+          <ApplicationMetrics
             counts={{
-              not_started: countBy("not_started"),
               in_progress: countBy("in_progress"),
               submitted: countBy("submitted"),
               in_review: countBy("in_review"),
               accepted: countBy("accepted"),
-              rejected: countBy("rejected"),
             }}
-            closingDaysLeft={upcoming
-              .filter((a) => a.daysLeft <= 7)
+            deadlineDaysLeft={upcoming
+              .filter((a) => a.daysLeft <= 14)
               .map((a) => a.daysLeft)}
-            attentionVisible={needsAttention.length > 0}
           />
 
-          {/* Below 1024px deadlines follow the applications card; on desktop they're in the right column. */}
+          {/* Below 1024px deadlines follow the applications cards; on desktop they're in the right column. */}
           <div className="lg:hidden">{deadlines}</div>
 
           <MatchesSection />
         </div>
 
         <div className="flex flex-col gap-6 min-w-0">
-          <div className="hidden lg:block">{deadlines}</div>
+          <div className="hidden lg:flex lg:flex-col lg:flex-1">{deadlines}</div>
           {previewSnapshot ? (
             <MatchesSnapshotCard counts={mockMatchCounts()} />
           ) : !completionKnown ? (

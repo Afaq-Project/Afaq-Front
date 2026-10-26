@@ -87,6 +87,8 @@ interface ApplicationHeaderProps {
   onStatusChange: (status: ApplicationStatus) => void;
   updatedAt?: string;
   now: Date;
+  /** Open "Update status" on arrival (the dashboard's "Mark as submitted"). */
+  statusMenuOpen?: boolean;
 }
 
 /**
@@ -94,7 +96,7 @@ interface ApplicationHeaderProps {
  * interactive status timeline (each step sets the status, moving back asks first) with the
  * progress %; and the actions.
  */
-export function ApplicationHeader({ application, opportunity, status, onStatusChange, updatedAt, now }: ApplicationHeaderProps) {
+export function ApplicationHeader({ application, opportunity, status, onStatusChange, updatedAt, now, statusMenuOpen = false }: ApplicationHeaderProps) {
   const tSteps = useTranslations("statusTimeline.steps");
   const t = useTranslations("applications.detail");
   const tCommon = useTranslations("common");
@@ -220,7 +222,7 @@ export function ApplicationHeader({ application, opportunity, status, onStatusCh
         <div className="flex flex-wrap items-center gap-2">
           {/* Phones get "Update status" in the sticky bottom bar instead. */}
           <div className="hidden md:block">
-            <UpdateStatusMenu status={status} onChange={onStatusChange} className="w-auto" />
+            <UpdateStatusMenu status={status} onChange={onStatusChange} className="w-auto" defaultOpen={statusMenuOpen} />
           </div>
           {/* TODO: unlinked applications have no official link to continue on. */}
           {officialLink && (

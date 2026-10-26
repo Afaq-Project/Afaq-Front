@@ -28,14 +28,17 @@ export function UpdateStatusMenu({
   onChange,
   side = "bottom",
   className,
+  defaultOpen = false,
 }: {
   status: ApplicationStatusKey;
   onChange: (status: ApplicationStatusKey) => void;
   side?: "top" | "bottom";
   className?: string;
+  /** Start open, e.g. when a link asked for the status control. */
+  defaultOpen?: boolean;
 }) {
   const t = useTranslations();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <Popover
