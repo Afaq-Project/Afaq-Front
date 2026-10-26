@@ -76,10 +76,10 @@ function mockMatchCounts(): Record<MatchTier, number> {
   return counts;
 }
 
-const MATCHES_SHOWN = 4;
+const MATCHES_SHOWN = 6;
 
 /**
- * The best four matches; without any (profile not matchable, or scores not calculated yet),
+ * The best six matches; without any (profile not matchable, or scores not calculated yet),
  * the newest opportunities instead.
  */
 function MatchesSection() {
@@ -172,7 +172,7 @@ export function DashboardView() {
     : null;
   const checklist = PROFILE_CHECKLIST.map((section) => ({ ...section, label: t(`profile.sections.${section.key}`) }));
   const nextKey = PROFILE_CHECKLIST.find((s) => !s.complete)?.key;
-  const deadlines = <DeadlineList applications={upcoming} />;
+  const deadlines = <DeadlineList applications={upcoming} className="flex-1" />;
 
   return (
     <div className="flex flex-col gap-8">
@@ -196,8 +196,9 @@ export function DashboardView() {
         application={pickFocusApplication(upcoming)}
       />
 
-      {/* items-start: each column is as tall as its own cards, so nothing stretches to match the other side. */}
-      <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
+      {/* On desktop both columns are as tall as the taller one; the deadlines card takes up the
+          right column's slack so its last card ends level with the matches. */}
+      <div className="gap-6 grid grid-cols-1 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2 min-w-0">
           {/* TODO: pass `loading` once applications come from the tracker API instead of the mock. */}
           <ApplicationMetrics
@@ -219,7 +220,7 @@ export function DashboardView() {
         </div>
 
         <div className="flex flex-col gap-6 min-w-0">
-          <div className="hidden lg:block">{deadlines}</div>
+          <div className="hidden lg:flex lg:flex-col lg:flex-1">{deadlines}</div>
           {previewSnapshot ? (
             <MatchesSnapshotCard counts={mockMatchCounts()} />
           ) : !completionKnown ? (
