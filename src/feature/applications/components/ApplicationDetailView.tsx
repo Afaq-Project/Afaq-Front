@@ -37,6 +37,13 @@ export function ApplicationDetailView({ application }: { application: Applicatio
   const tStatus = useTranslations("applicationStatus");
   const opportunity = application.opportunityId ? getMockOpportunityById(application.opportunityId) : undefined;
   const [now] = useState(() => new Date());
+  // #update-status (the dashboard's "Mark as submitted") opens the status menu: the header's from
+  // 768px, the bottom bar's on phones. Signed-in pages render on the client only, so window is there.
+  const [statusMenuOpen] = useState(() =>
+    typeof window !== "undefined" && window.location.hash === "#update-status"
+      ? window.matchMedia("(min-width: 768px)").matches ? "header" : "bar"
+      : null,
+  );
 
   // TODO: there's no tracker API yet, so status, linked documents and the activity they add are
   // local and reset on reload.
@@ -94,6 +101,7 @@ export function ApplicationDetailView({ application }: { application: Applicatio
             onStatusChange={changeStatus}
             updatedAt={updatedAt}
             now={now}
+            statusMenuOpen={statusMenuOpen === "header"}
           />
           <ApplicationDocumentsCard applicationId={application.id} required={opportunity?.requiredDocuments} linked={documents} onLink={linkDocument} />
           {/* Below 1024px the AI card comes right after documents. */}
@@ -108,7 +116,7 @@ export function ApplicationDetailView({ application }: { application: Applicatio
       </div>
 
       <div className="md:hidden end-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] start-0 z-30 fixed bg-white px-4 py-3 border-neutral-100 border-t">
-        <UpdateStatusMenu status={status} onChange={changeStatus} side="top" />
+        <UpdateStatusMenu status={status} onChange={changeStatus} side="top" defaultOpen={statusMenuOpen === "bar"} />
       </div>
     </div>
   );
