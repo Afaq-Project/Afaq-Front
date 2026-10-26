@@ -472,18 +472,18 @@
       "nextWeek": "الأسبوع القادم",
       "later": "لاحقًا"
     },
-    "pipeline": {
+    "applicationMetrics": {
       "title": "طلباتك",
-      "total": "{count} إجمالًا",
-      "empty": "ابدأ بمتابعة أول طلب لك",
-      "decision": "القرار",
-      "columnLabel": "{label}، {count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}}",
-      "columnLabelOutcomes": "{label}، {count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}}: {outcomes}",
-      "accepted": "{count} مقبول",
-      "rejected": "{count} مرفوض",
-      "closingPlain": "{unfinished} غير مكتمل · {count, plural, one {واحد ينتهي} two {اثنان ينتهيان} other {# تنتهي}} هذا الأسبوع",
-      "closing": "{unfinished} غير مكتمل، و{count, plural, one {واحد ينتهي} two {اثنان ينتهيان} other {# تنتهي}} هذا الأسبوع.",
-      "waiting": "{count} مُقدَّم بانتظار القرار."
+      "loading": "جارٍ تحميل طلباتك",
+      "inProgress": "قيد التنفيذ",
+      "inProgressLabel": "{count, plural, one {طلب واحد} two {طلبان} few {# طلبات} many {# طلبًا} other {# طلب}} قيد التنفيذ",
+      "submitted": "تم التقديم",
+      "submittedLabel": "{count, plural, one {طلب واحد مُقدَّم} two {طلبان مُقدَّمان} few {# طلبات مُقدَّمة} many {# طلبًا مُقدَّمًا} other {# طلب مُقدَّم}}",
+      "accepted": "عروض مقبولة",
+      "acceptedLabel": "{count, plural, one {عرض واحد مقبول} two {عرضان مقبولان} few {# عروض مقبولة} many {# عرضًا مقبولًا} other {# عرض مقبول}}",
+      "deadlines": "مواعيد خلال 14 يومًا",
+      "deadlinesLabel": "{count, plural, one {موعد نهائي واحد} two {موعدان نهائيان} few {# مواعيد نهائية} many {# موعدًا نهائيًا} other {# موعد نهائي}} خلال 14 يومًا",
+      "deadlinesUrgentLabel": "{count, plural, one {موعد نهائي واحد} two {موعدان نهائيان} few {# مواعيد نهائية} many {# موعدًا نهائيًا} other {# موعد نهائي}} خلال 14 يومًا، منها {urgent} خلال يومين أو أقل"
     },
     "matches": {
       "best": "أفضل المطابقات لك",

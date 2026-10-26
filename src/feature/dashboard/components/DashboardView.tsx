@@ -23,13 +23,13 @@ import { useProfileQuery } from "@/src/feature/profile/hooks/useProfileQuery";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { PROFILE_SECTIONS } from "../mocks/dashboard";
 import { WORKSHOP_PROMO } from "../mocks/promos";
+import { ApplicationMetrics } from "./ApplicationMetrics";
 import { AttentionStrip } from "./AttentionStrip";
 import { DeadlineList } from "./DeadlineList";
 import { greetingFor, summarizeDeadlines } from "./format";
 import { MatchesSnapshotCard } from "./MatchesSnapshotCard";
 import { PageGreeting } from "./PageGreeting";
 import { ProfileCompleteMoment } from "./ProfileCompleteMoment";
-import { PipelineCard } from "./PipelineCard";
 import {
   ProfileProgressCard,
   ProfileProgressCardSkeleton,
@@ -222,22 +222,20 @@ export function DashboardView() {
       {/* items-start: each column is as tall as its own cards, so nothing stretches to match the other side. */}
       <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2 min-w-0">
-          <PipelineCard
+          {/* TODO: pass `loading` once applications come from the tracker API instead of the mock. */}
+          <ApplicationMetrics
             counts={{
-              not_started: countBy("not_started"),
               in_progress: countBy("in_progress"),
               submitted: countBy("submitted"),
               in_review: countBy("in_review"),
               accepted: countBy("accepted"),
-              rejected: countBy("rejected"),
             }}
-            closingDaysLeft={upcoming
-              .filter((a) => a.daysLeft <= 7)
+            deadlineDaysLeft={upcoming
+              .filter((a) => a.daysLeft <= 14)
               .map((a) => a.daysLeft)}
-            attentionVisible={needsAttention.length > 0}
           />
 
-          {/* Below 1024px deadlines follow the applications card; on desktop they're in the right column. */}
+          {/* Below 1024px deadlines follow the applications cards; on desktop they're in the right column. */}
           <div className="lg:hidden">{deadlines}</div>
 
           <MatchesSection />

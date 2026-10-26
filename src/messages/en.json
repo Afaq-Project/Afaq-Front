@@ -472,18 +472,18 @@
       "nextWeek": "Next week",
       "later": "Later"
     },
-    "pipeline": {
+    "applicationMetrics": {
       "title": "Your applications",
-      "total": "{count} total",
-      "empty": "Start tracking your first application",
-      "decision": "Decision",
-      "columnLabel": "{label}, {count, plural, one {# application} other {# applications}}",
-      "columnLabelOutcomes": "{label}, {count, plural, one {# application} other {# applications}}: {outcomes}",
-      "accepted": "{count} accepted",
-      "rejected": "{count} rejected",
-      "closingPlain": "{unfinished} not finished · {count, plural, one {# closes} other {# close}} this week",
-      "closing": "{unfinished} not finished, and {count, plural, one {# closes} other {# close}} this week.",
-      "waiting": "{count} submitted, waiting for a decision."
+      "loading": "Loading your applications",
+      "inProgress": "In progress",
+      "inProgressLabel": "{count, plural, one {# application} other {# applications}} in progress",
+      "submitted": "Submitted",
+      "submittedLabel": "{count, plural, one {# application} other {# applications}} submitted",
+      "accepted": "Accepted offers",
+      "acceptedLabel": "{count, plural, one {# accepted offer} other {# accepted offers}}",
+      "deadlines": "Due in 14 days",
+      "deadlinesLabel": "{count, plural, one {# deadline} other {# deadlines}} in the next 14 days",
+      "deadlinesUrgentLabel": "{count, plural, one {# deadline} other {# deadlines}} in the next 14 days, {urgent} within 2 days"
     },
     "matches": {
       "best": "Best matches for you",
