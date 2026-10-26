@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CalendarDays } from "lucide-react";
 import { APPLICATIONS } from "@/src/feature/applications/mocks/applications";
 import type { ApplicationStatus } from "@/src/feature/applications/types/status";
 import { OpportunityCard } from "@/src/feature/opportunities/components/OpportunityCard";
@@ -22,19 +21,16 @@ import { useProfileCompletion } from "@/src/feature/profile/hooks/useProfileComp
 import { useProfileQuery } from "@/src/feature/profile/hooks/useProfileQuery";
 import { useAuth } from "@/src/shared/lib/auth/auth-context";
 import { PROFILE_SECTIONS } from "../mocks/dashboard";
-import { WORKSHOP_PROMO } from "../mocks/promos";
 import { ApplicationMetrics } from "./ApplicationMetrics";
-import { AttentionStrip } from "./AttentionStrip";
 import { DeadlineList } from "./DeadlineList";
-import { greetingFor, summarizeDeadlines } from "./format";
+import { DashboardHero } from "./DashboardHero";
+import { greetingFor, pickFocusApplication, summarizeDeadlines } from "./format";
 import { MatchesSnapshotCard } from "./MatchesSnapshotCard";
-import { PageGreeting } from "./PageGreeting";
 import { ProfileCompleteMoment } from "./ProfileCompleteMoment";
 import {
   ProfileProgressCard,
   ProfileProgressCardSkeleton,
 } from "./ProfileProgressCard";
-import { PromoCard } from "./PromoCard";
 import { GHOST_LINK_CLASS } from "./styles";
 import { getMatchTier, type MatchTier } from "../types/status";
 import { WelcomeBanner } from "./WelcomeBanner";
@@ -160,7 +156,6 @@ export function DashboardView() {
   const upcoming = APPLICATIONS.filter(
     (a) => ACTIONABLE.includes(a.status) && a.daysLeft >= 0,
   ).sort((a, b) => a.daysLeft - b.daysLeft);
-  const needsAttention = upcoming.filter((a) => a.daysLeft <= 2);
   const deadlineCounts = summarizeDeadlines(upcoming.map((a) => a.daysLeft));
 
   const greeting = t(`greeting.${greetingFor(hour)}`);
@@ -183,41 +178,23 @@ export function DashboardView() {
     <div className="flex flex-col gap-8">
       <WelcomeBanner />
 
-      {/* Greeting on the left, the promo pushed to the right; stacked below 768px. */}
-      <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-6">
-        <PageGreeting
-          title={firstName ? t("greeting.withName", { greeting, name: firstName }) : greeting}
-        >
-          {deadlineSummary ?? (
-            t.rich("noDeadlines", {
-              link: (chunks) => (
-                <Link
-                  href="/discover"
-                  className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 font-medium text-primary-600 hover:text-primary-800"
-                >
-                  {chunks}
-                </Link>
-              ),
-            })
-          )}
-        </PageGreeting>
-
-        {/* TODO: the promo has no description yet; its date, time and link are placeholders (see promos.ts). */}
-        {WORKSHOP_PROMO && (
-          <div className="md:w-100 shrink-0">
-            <PromoCard
-              icon={CalendarDays}
-              eyebrow={WORKSHOP_PROMO.eyebrow}
-              title={WORKSHOP_PROMO.title}
-              date={WORKSHOP_PROMO.date}
-              time={WORKSHOP_PROMO.time}
-              href={WORKSHOP_PROMO.href}
-            />
-          </div>
-        )}
-      </div>
-
-      <AttentionStrip applications={needsAttention} />
+      <DashboardHero
+        title={firstName ? t("greeting.withName", { greeting, name: firstName }) : greeting}
+        summary={
+          deadlineSummary ??
+          t.rich("noDeadlines", {
+            link: (chunks) => (
+              <Link
+                href="/discover"
+                className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900 font-medium text-white underline underline-offset-2 hover:text-primary-50"
+              >
+                {chunks}
+              </Link>
+            ),
+          })
+        }
+        application={pickFocusApplication(upcoming)}
+      />
 
       {/* items-start: each column is as tall as its own cards, so nothing stretches to match the other side. */}
       <div className="items-start gap-6 grid grid-cols-1 lg:grid-cols-3">

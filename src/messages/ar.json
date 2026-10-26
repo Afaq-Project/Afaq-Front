@@ -460,10 +460,28 @@
     "noDeadlines": "لا مواعيد نهائية هذا الأسبوع. إنه وقت مناسب لاستكشاف مطابقات جديدة. <link>استكشف</link>",
     "welcome": "أهلًا بك - حسابك جاهز.",
     "welcomeName": "أهلًا {name} - حسابك جاهز.",
-    "attention": {
-      "label": "يحتاج إلى انتباهك",
-      "open": "فتح الطلب",
-      "more": "+{count} أخرى تنتهي قريبًا"
+    "hero": {
+      "dueToday": "ينتهي اليوم",
+      "dueTomorrow": "ينتهي غدًا، {date}",
+      "dueIn": "ينتهي خلال {count, plural, one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}، {date}",
+      "progress": "{done} من {total} خطوات مكتملة",
+      "steps": {
+        "documents": "إرفاق المستندات",
+        "essay": "مراجعة المقال",
+        "submitted": "تحديد كمُقدَّم",
+        "documentsShort": "المستندات",
+        "essayShort": "المقال",
+        "submittedShort": "التقديم",
+        "stateDone": "، مكتملة",
+        "stateCurrent": "، الخطوة التالية",
+        "stateUpcoming": "، لم تكتمل بعد"
+      },
+      "actions": {
+        "documents": "أرفق مستنداتك",
+        "essay": "راجع مقالك",
+        "submitted": "حدّده كمُقدَّم",
+        "open": "فتح الطلب"
+      }
     },
     "deadlines": {
       "title": "المواعيد النهائية القادمة",
@@ -535,8 +553,7 @@
       "momentLabel": "الملف الشخصي مكتمل",
       "moment": "اكتمل ملفك الشخصي. أصبحت مطابقاتك الآن بأعلى دقة ممكنة.",
       "loading": "جارٍ تحميل تقدّم الملف الشخصي"
-    },
-    "promoLearnMore": "اعرف المزيد عن {title}"
+    }
   },
   "opportunityType": {
     "Scholarship": "منحة",
